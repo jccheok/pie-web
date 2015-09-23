@@ -13,12 +13,23 @@ import org.json.JSONObject;
 import pie.service.UserService;
 import pie.service.UserService.LoginResult;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
+@Singleton
 public class LoginServlet extends HttpServlet {
 
 	UserService userService;
 	
+	@Inject
 	public LoginServlet(UserService userService) {
 		this.userService = userService;
+	}
+	
+	public void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		PrintWriter out = response.getWriter();
+		out.write("Hello World");
 	}
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response)

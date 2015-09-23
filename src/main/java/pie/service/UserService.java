@@ -5,11 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Date;
 
-import pie.Country;
 import pie.User;
 import pie.UserType;
+import pie.util.DatabaseConnector;
 
-public class UserService extends DatabaseService {
+public class UserService {
 
 	public enum LoginResult {
 		SUCCESS, NOT_VERIFIED, NOT_MATCHING, NOT_VALID, NOT_REGISTERED;
@@ -19,11 +19,7 @@ public class UserService extends DatabaseService {
 		}
 	}
 
-	private Connection conn;
-
-	public UserService(Connection conn) {
-		super(conn);
-	}
+	private Connection conn = DatabaseConnector.getConnection();
 
 	public boolean isRegistered(String userEmail) {
 
@@ -152,7 +148,7 @@ public class UserService extends DatabaseService {
 				user.setUserID(userID);
 				user.setUserType(UserType.getUserType(resultSet
 						.getInt("userTypeID")));
-				user.setUserAddress(new AddressService(conn)
+				user.setUserAddress(new AddressService()
 						.getAddress(resultSet.getInt("addressID")));
 				user.setUserFirstName(resultSet.getString("userFirstName"));
 				user.setUserLastName(resultSet.getString("userLastName"));

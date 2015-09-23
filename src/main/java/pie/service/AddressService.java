@@ -7,18 +7,17 @@ import java.sql.ResultSet;
 import pie.Address;
 import pie.City;
 import pie.Country;
+import pie.util.DatabaseConnector;
 
-public class AddressService extends DatabaseService {
-
-	public AddressService(Connection conn) {
-		super(conn);
-	}
-
+public class AddressService {
+	
+	private Connection conn = DatabaseConnector.getConnection();
+	
 	public Address getAddress(int addressID) {
 		Address address = null;
 
 		try {
-
+			
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
