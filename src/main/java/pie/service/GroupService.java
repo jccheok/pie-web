@@ -7,6 +7,7 @@ import java.util.Date;
 
 import pie.Group;
 import pie.GroupType;
+import pie.Teacher;
 import pie.util.DatabaseConnector;
 
 public class GroupService {
@@ -59,6 +60,32 @@ public class GroupService {
 		
 	}
 	
+	public Teacher getAdministrator(int groupID){
+		
+		Teacher administrator = null;
+		
+		//Write codes to retrieve Administrator of the group
+		
+		return administrator;
+	}
+	
+	public boolean setAdministrator(int groupID){
+		
+		boolean result = false;
+		
+		//Write codes to set the Administrator for the group
+		
+		return result;
+	}
+	
+	public Teacher[] getTeacherMembers(int groupID){
+		
+		Teacher[] teacherMembers = {};
+		
+		//Write codes to retrieve the Members of Group that are Teachers
+		
+		return teacherMembers;
+	}
 	
 	
 	
