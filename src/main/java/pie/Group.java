@@ -9,7 +9,7 @@ public class Group {
 	private String groupName;
 	private String groupDescription;
 	private int groupMaxDailyHomeworkMinutes;
-	private GroupType grouptype;
+	private GroupType groupType;
 	private String groupCode;
 	private boolean groupIsOpen;
 	private Date groupLastUpdate;
@@ -55,12 +55,12 @@ public class Group {
 		this.groupMaxDailyHomeworkMinutes = groupMaxDailyHomeworkMinutes;
 	}
 	
-	public GroupType getGrouptype() {
-		return grouptype;
+	public GroupType getGroupType() {
+		return groupType;
 	}
 	
-	public void setGrouptype(GroupType grouptype) {
-		this.grouptype = grouptype;
+	public void setGroupType(GroupType groupType) {
+		this.groupType = groupType;
 	}
 	
 	public String getGroupCode() {
