@@ -127,6 +127,6 @@ public class User {
 	}
 	
 	public User toUser() {
-		return this;
+		return (User) this;
 	}
 }
