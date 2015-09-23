@@ -9,7 +9,7 @@ import pie.Country;
 import pie.User;
 import pie.UserType;
 
-public class UserService {
+public class UserService extends DatabaseService {
 
 	public enum LoginResult {
 		SUCCESS, NOT_VERIFIED, NOT_MATCHING, NOT_VALID, NOT_REGISTERED;
@@ -22,7 +22,7 @@ public class UserService {
 	private Connection conn;
 
 	public UserService(Connection conn) {
-		this.conn = conn;
+		super(conn);
 	}
 
 	public boolean isRegistered(String userEmail) {

@@ -22,13 +22,11 @@ public class LoginServletTest {
 	String PASSWORD = "root";
 	
 	UserService userService = mock(UserService.class);
-	LoginServlet servlet = new LoginServlet(userService);
-	
 	HttpServletRequest request = mock(HttpServletRequest.class);
 	HttpServletResponse response = mock(HttpServletResponse.class);
 	PrintWriter writer = mock(PrintWriter.class);
 	
-	
+	LoginServlet servlet = new LoginServlet(userService);
 	
 	@Test
 	public void testSuccess() throws ServletException, IOException {

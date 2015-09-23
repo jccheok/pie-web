@@ -8,12 +8,10 @@ import pie.Address;
 import pie.City;
 import pie.Country;
 
-public class AddressService {
-
-	private Connection conn;
+public class AddressService extends DatabaseService {
 
 	public AddressService(Connection conn) {
-		this.conn = conn;
+		super(conn);
 	}
 
 	public Address getAddress(int addressID) {
