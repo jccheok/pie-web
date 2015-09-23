@@ -26,12 +26,6 @@ public class LoginServlet extends HttpServlet {
 		this.userService = userService;
 	}
 	
-	public void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		PrintWriter out = response.getWriter();
-		out.write("Hello World");
-	}
-	
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
