@@ -1,4 +1,4 @@
-package pie;
+package pie.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

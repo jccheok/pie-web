@@ -1,4 +1,4 @@
-package pie;
+package pie.service;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -9,6 +9,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import pie.util.DatabaseConnector;
 
 public class TestService extends HttpServlet {
 	
