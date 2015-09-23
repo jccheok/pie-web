@@ -13,13 +13,11 @@ public class UserService {
 
 	public enum LoginResult {
 		SUCCESS, NOT_VERIFIED, NOT_MATCHING, NOT_VALID, NOT_REGISTERED;
-		
+
 		public String toString() {
 			return this.name();
 		}
 	}
-
-	private Connection conn = DatabaseConnector.getConnection();
 
 	public boolean isRegistered(String userEmail) {
 
@@ -27,6 +25,7 @@ public class UserService {
 
 		try {
 
+			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
 			String sql = "SELECT * FROM `User` WHERE userEmail";
@@ -34,6 +33,7 @@ public class UserService {
 			pst.setString(1, userEmail);
 
 			isRegistered = pst.executeQuery().next();
+			conn.close();
 
 		} catch (Exception e) {
 			System.out.println(e);
@@ -47,6 +47,7 @@ public class UserService {
 
 		try {
 
+			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
@@ -59,6 +60,7 @@ public class UserService {
 			if (resultSet.next()) {
 				isVerified = resultSet.getInt(1) == 1;
 			}
+			conn.close();
 
 		} catch (Exception e) {
 			System.out.println(e);
@@ -72,6 +74,7 @@ public class UserService {
 
 		try {
 
+			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
@@ -84,6 +87,7 @@ public class UserService {
 			if (resultSet.next()) {
 				isValid = resultSet.getInt(1) == 1;
 			}
+			conn.close();
 
 		} catch (Exception e) {
 			System.out.println(e);
@@ -98,6 +102,7 @@ public class UserService {
 		if (isRegistered(userEmail)) {
 			try {
 
+				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
 
 				String sql = "SELECT * FROM `User` WHERE userEmail AND userPassword = ?";
@@ -119,6 +124,7 @@ public class UserService {
 				} else {
 					loginResult = LoginResult.NOT_MATCHING;
 				}
+				conn.close();
 			} catch (Exception e) {
 				System.out.println(e);
 			}
@@ -129,11 +135,12 @@ public class UserService {
 		return loginResult;
 	}
 
-	public User getUser(int userID) {
+	public static User getUser(int userID) {
 		User user = null;
 
 		try {
 
+			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
@@ -148,8 +155,8 @@ public class UserService {
 				user.setUserID(userID);
 				user.setUserType(UserType.getUserType(resultSet
 						.getInt("userTypeID")));
-				user.setUserAddress(new AddressService()
-						.getAddress(resultSet.getInt("addressID")));
+				user.setUserAddress(new AddressService().getAddress(resultSet
+						.getInt("addressID")));
 				user.setUserFirstName(resultSet.getString("userFirstName"));
 				user.setUserLastName(resultSet.getString("userLastName"));
 				user.setUserEmail(resultSet.getString("userEmail"));
@@ -164,6 +171,7 @@ public class UserService {
 				user.setUserLastUpdate(new Date(resultSet.getTimestamp(
 						"userLastUpdate").getTime()));
 			}
+			conn.close();
 
 		} catch (Exception e) {
 			System.out.println(e);

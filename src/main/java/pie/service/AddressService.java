@@ -3,6 +3,7 @@ package pie.service;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 
 import pie.Address;
 import pie.City;
@@ -10,14 +11,13 @@ import pie.Country;
 import pie.util.DatabaseConnector;
 
 public class AddressService {
-	
-	private Connection conn = DatabaseConnector.getConnection();
-	
+
 	public Address getAddress(int addressID) {
 		Address address = null;
 
 		try {
-			
+
+			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
@@ -35,6 +35,7 @@ public class AddressService {
 						.getString("addressPostalCode"));
 				address.setAddressCity(getCity(resultSet.getInt("cityID")));
 			}
+			conn.close();
 
 		} catch (Exception e) {
 			System.out.println(e);
@@ -48,6 +49,7 @@ public class AddressService {
 
 		try {
 
+			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
@@ -63,6 +65,7 @@ public class AddressService {
 				city.setCityName(resultSet.getString("cityName"));
 				city.setCityCountry(getCountry(resultSet.getInt("countryID")));
 			}
+			conn.close();
 
 		} catch (Exception e) {
 			System.out.println(e);
@@ -70,12 +73,13 @@ public class AddressService {
 
 		return city;
 	}
-	
+
 	public Country getCountry(int countryID) {
 		Country country = null;
 
 		try {
 
+			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
@@ -90,8 +94,10 @@ public class AddressService {
 				country.setCountryID(countryID);
 				country.setCountryName(resultSet.getString("countryName"));
 				country.setCountryISO(resultSet.getString("countryISO"));
-				country.setCountryPhoneCode(resultSet.getString("countryPhoneCode"));
+				country.setCountryPhoneCode(resultSet
+						.getString("countryPhoneCode"));
 			}
+			conn.close();
 
 		} catch (Exception e) {
 			System.out.println(e);
