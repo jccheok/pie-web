@@ -87,6 +87,7 @@ public class UserService {
 			if (resultSet.next()) {
 				isValid = resultSet.getInt(1) == 1;
 			}
+			
 			conn.close();
 
 		} catch (Exception e) {
@@ -115,6 +116,11 @@ public class UserService {
 					if (isVerifiedUser(userEmail)) {
 						if (isValidUser(userEmail)) {
 
+							sql = "UPDATE `User` SET userLastLogin = NOW() WHERE userEmail = ?";
+							pst = conn.prepareStatement(sql);
+							pst.setString(1, userEmail);
+							pst.executeUpdate();
+
 						} else {
 							loginResult = LoginResult.NOT_VALID;
 						}
@@ -124,7 +130,9 @@ public class UserService {
 				} else {
 					loginResult = LoginResult.NOT_MATCHING;
 				}
+				
 				conn.close();
+				
 			} catch (Exception e) {
 				System.out.println(e);
 			}
