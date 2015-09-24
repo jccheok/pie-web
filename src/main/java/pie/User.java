@@ -125,7 +125,7 @@ public class User {
 	public void setUserType(UserType userType) {
 		this.userType = userType;
 	}
-	
+
 	public User toUser() {
 		return (User) this;
 	}
