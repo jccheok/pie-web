@@ -2,26 +2,26 @@ package pie;
 
 public enum UserType {
 
-	TEACHER, PARENT, STUDENT, ADMIN;
+	TEACHER(1), PARENT(2), STUDENT(3), ADMIN(4);
+	
+	private int userTypeID;
+	
+	UserType(int userTypeID) {
+		this.userTypeID = userTypeID;
+	}
+	
+	public int getUserTypeID() {
+		return userTypeID;
+	}
 
 	public static UserType getUserType(int userTypeID) {
-		UserType userType = null;
-
-		switch (userTypeID) {
-		case 1:
-			userType = TEACHER;
-			break;
-		case 2:
-			userType = PARENT;
-			break;
-		case 3:
-			userType = STUDENT;
-			break;
-		case 4:
-			userType = ADMIN;
-			break;
+		
+		for(UserType userType: UserType.values()) {
+			if (userTypeID == userType.getUserTypeID()) {
+				return userType;
+			}
 		}
-
-		return userType;
+		
+		return null;
 	}
 }
