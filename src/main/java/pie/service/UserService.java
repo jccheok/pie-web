@@ -19,7 +19,7 @@ public class UserService {
 		}
 	}
 
-	public boolean isRegistered(String userEmail) {
+	public boolean isRegisteredUser(String userEmail) {
 
 		boolean isRegistered = false;
 
@@ -42,7 +42,7 @@ public class UserService {
 		return isRegistered;
 	}
 
-	public boolean isVerified(String userEmail) {
+	public boolean isVerifiedUser(String userEmail) {
 		boolean isVerified = false;
 
 		try {
@@ -69,7 +69,7 @@ public class UserService {
 		return isVerified;
 	}
 
-	public boolean isValid(String userEmail) {
+	public boolean isValidUser(String userEmail) {
 		boolean isValid = false;
 
 		try {
@@ -96,10 +96,10 @@ public class UserService {
 		return isValid;
 	}
 
-	public LoginResult login(String userEmail, String userPassword) {
+	public LoginResult loginUser(String userEmail, String userPassword) {
 		LoginResult loginResult = LoginResult.SUCCESS;
 
-		if (isRegistered(userEmail)) {
+		if (isRegisteredUser(userEmail)) {
 			try {
 
 				Connection conn = DatabaseConnector.getConnection();
@@ -112,8 +112,8 @@ public class UserService {
 
 				if (pst.executeQuery().next()) {
 
-					if (isVerified(userEmail)) {
-						if (isValid(userEmail)) {
+					if (isVerifiedUser(userEmail)) {
+						if (isValidUser(userEmail)) {
 
 						} else {
 							loginResult = LoginResult.NOT_VALID;

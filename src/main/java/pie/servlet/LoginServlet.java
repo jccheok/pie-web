@@ -35,7 +35,7 @@ public class LoginServlet extends HttpServlet {
 		String userEmail = request.getParameter("userEmail");
 		String userPassword = request.getParameter("userPassword");
 
-		LoginResult loginResult = userService.login(userEmail, userPassword);
+		LoginResult loginResult = userService.loginUser(userEmail, userPassword);
 		
 		JSONObject responseObject = new JSONObject();
 		
