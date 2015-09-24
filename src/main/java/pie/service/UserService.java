@@ -135,7 +135,6 @@ public class UserService {
 		return loginResult;
 	}
 
-	public static User getUser(int userID) {
 		User user = null;
 
 		try {

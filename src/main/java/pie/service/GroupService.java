@@ -11,7 +11,7 @@ import pie.util.DatabaseConnector;
 
 public class GroupService {
 
-	public static Group getGroup(int groupID) {
+	public Group getGroup(int groupID) {
 		Group group = null;
 
 		try {
