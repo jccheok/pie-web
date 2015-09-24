@@ -174,6 +174,35 @@ public class UserService {
 		return loginResult;
 	}
 
+	public int getUserID(String userEmail) {
+		int userID = -1;
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT userID FROM `User` WHERE userEmail = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setString(1, userEmail);
+
+			resultSet = pst.executeQuery();
+
+			if (resultSet.next()) {
+				userID = resultSet.getInt(1);
+			}
+			
+			conn.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+		return userID;
+	}
+
+	public User getUser(int userID) {
 		User user = null;
 
 		try {
