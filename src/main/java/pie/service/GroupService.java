@@ -32,7 +32,7 @@ public class GroupService {
 			if (resultSet.next()) {
 				group = new Group();
 				group.setGroupID(groupID);
-				group.setSchool(SchoolService.getSchool(resultSet
+				group.setSchool(new SchoolService().getSchool(resultSet
 						.getInt("schoolID")));
 				group.setGroupDescription(resultSet
 						.getString("groupDescription"));
