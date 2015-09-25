@@ -13,7 +13,7 @@ import pie.util.DatabaseConnector;
 
 public class SchoolService {
 
-	public static School getSchool(int schoolID) {
+	public School getSchool(int schoolID) {
 		
 		School school = null;
 
