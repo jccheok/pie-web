@@ -249,7 +249,7 @@ public class UserService {
 	}
 
 	public int registerUser(UserType userType, Address userAddress,
-			String userFirstName, String userLastName, String userPassword,
+			String userFirstName, String userLastName, String userEmail, String userPassword,
 			String userMobile) {
 		int userID = -1;
 
@@ -265,8 +265,9 @@ public class UserService {
 			pst.setInt(2, userAddress.getAddressID());
 			pst.setString(3, userFirstName);
 			pst.setString(4, userLastName);
-			pst.setString(5, userPassword);
-			pst.setString(6, userMobile);
+			pst.setString(5, userEmail);
+			pst.setString(6, userPassword);
+			pst.setString(7, userMobile);
 			pst.executeUpdate();
 
 			resultSet = pst.getGeneratedKeys();
