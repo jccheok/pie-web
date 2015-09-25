@@ -64,7 +64,7 @@ public class HomeworkService {
 	public Group[] getGroupRecipient(int homeworkID) {
 		Group[] groupRecipient = {};
 
-		// Write codes to retrieve Group Recipients of Note
+		// Write codes to retrieve Group Recipients of Event
 
 		return groupRecipient;
 	}
@@ -72,12 +72,12 @@ public class HomeworkService {
 	public User[] getUserRecipient(int homeworkID) {
 		User[] userRecipient = {};
 
-		// Write codes to retrieve User Recipients of Note
+		// Write codes to retrieve User Recipients of Event
 
 		return userRecipient;
 	}
 
-	public int createHomework(String homeworkTitle, String homeworkSubject,
+	public int createHomework(String homeworkTitle, Teacher teacher, String homeworkSubject,
 			String homeworkDescription, int homeworkMinutesRequired,
 			Date homeworkDueDate, boolean homeworkIsOpen) {
 		int homeworkID = -1;
@@ -87,7 +87,7 @@ public class HomeworkService {
 		return homeworkID;
 	}
 	
-	public int createHomeworkAsDraft (String homeworkTitle, String homeworkSubject,
+	public int createHomeworkAsDraft (String homeworkTitle, Teacher teacher, String homeworkSubject,
 			String homeworkDescription, int homeworkMinutesRequired,
 			Date homeworkDueDate, boolean homeworkIsOpen){
 		int homeworkID = -1;
@@ -98,7 +98,7 @@ public class HomeworkService {
 		return homeworkID;
 	}
 	
-	public int createHomeworkAsTemplate(String homeworkTitle, String homeworkSubject,
+	public int createHomeworkAsTemplate(String homeworkTitle, Teacher teacher, String homeworkSubject,
 			String homeworkDescription, int homeworkMinutesRequired,
 			Date homeworkDueDate, boolean homeworkIsOpen){
 		int homeworkID = -1;
