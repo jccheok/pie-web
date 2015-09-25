@@ -116,7 +116,7 @@ public class NoteService {
 		return sendResult;
 	}
 
-	public Note[] getNoteIsDraft(Teacher teacher) {
+	public Note[] getNotesIsDraft(Teacher teacher) {
 		Note[] notes = {};
 
 		// Write codes to retrieve Notes that are drafted by Teacher
@@ -124,7 +124,7 @@ public class NoteService {
 		return notes;
 	}
 
-	public Note[] getNoteIsTemplate(Teacher teacher) {
+	public Note[] getNotesIsTemplate(Teacher teacher) {
 		Note[] notes = {};
 
 		// Write codes to retrieve Notes that are saved as Template by Teacher
