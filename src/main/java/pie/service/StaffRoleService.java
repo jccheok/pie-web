@@ -6,15 +6,15 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import pie.TeacherRole;
+import pie.StaffRole;
 import pie.util.DatabaseConnector;
 
-public class TeacherRoleService {
+public class StaffRoleService {
 
 	public enum RegistrationResult {
-		SUCCESS("Teacher role registered."), NAME_TAKEN(
-				"The teacher role name you have entered is already taken!"), OWNER_EXISTS(
-				"An owner teacher role already exists!");
+		SUCCESS("Staff role registered."), NAME_TAKEN(
+				"The staff role name you have entered is already taken!"), OWNER_EXISTS(
+				"An owner staff role already exists!");
 
 		private String defaultMessage;
 
@@ -31,8 +31,8 @@ public class TeacherRoleService {
 		}
 	}
 
-	public int getTeacherRoleID(String teacherRoleName) {
-		int teacherRoleID = -1;
+	public int getStaffRoleID(String staffRoleName) {
+		int staffRoleID = -1;
 
 		try {
 
@@ -40,14 +40,14 @@ public class TeacherRoleService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT teacherRoleID FROM `TeacherRole` WHERE teacherRoleName = ?";
+			String sql = "SELECT staffRoleID FROM `StaffRole` WHERE staffRoleName = ?";
 			pst = conn.prepareStatement(sql);
-			pst.setString(1, teacherRoleName);
+			pst.setString(1, staffRoleName);
 
 			resultSet = pst.executeQuery();
 
 			if (resultSet.next()) {
-				teacherRoleID = resultSet.getInt(1);
+				staffRoleID = resultSet.getInt(1);
 			}
 
 			conn.close();
@@ -56,33 +56,33 @@ public class TeacherRoleService {
 			System.out.println(e);
 		}
 
-		return teacherRoleID;
+		return staffRoleID;
 	}
 
-	public TeacherRole getTeacherRole(int teacherRoleID) {
-		TeacherRole teacherRole = null;
+	public StaffRole getStaffRole(int staffRoleID) {
+		StaffRole staffRole = null;
 
 		try {
-
+			
+			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
-			Connection conn = DatabaseConnector.getConnection();
-
-			String sql = "SELECT * FROM `TeacherRole` WHERE teacherRoleID = ?";
+		
+			String sql = "SELECT * FROM `StaffRole` WHERE staffRoleID = ?";
 			pst = conn.prepareStatement(sql);
-			pst.setInt(1, teacherRoleID);
+			pst.setInt(1, staffRoleID);
 
 			resultSet = pst.executeQuery();
 
 			if (resultSet.next()) {
-				teacherRole = new TeacherRole();
-				teacherRole.setTeacherRoleID(teacherRoleID);
-				teacherRole.setTeacherRoleName(resultSet
-						.getString("teacherRoleName"));
-				teacherRole.setTeacherRoleIsAdmin(resultSet
-						.getInt("teacherRoleIsAdmin") == 1);
-				teacherRole.setTeacherRoleIsOwner(resultSet
-						.getInt("teacherRoleIsOwner") == 1);
+				staffRole = new StaffRole();
+				staffRole.setStaffRoleID(staffRoleID);
+				staffRole.setStaffRoleName(resultSet
+						.getString("staffRoleName"));
+				staffRole.setStaffRoleIsAdmin(resultSet
+						.getInt("staffRoleIsAdmin") == 1);
+				staffRole.setStaffRoleIsOwner(resultSet
+						.getInt("staffRoleIsOwner") == 1);
 			}
 
 			conn.close();
@@ -91,12 +91,12 @@ public class TeacherRoleService {
 			System.out.println(e);
 		}
 
-		return teacherRole;
+		return staffRole;
 	}
 
-	public TeacherRole[] getAllTeacherRoles() {
+	public StaffRole[] getAllStaffRoles() {
 
-		TeacherRole[] teacherRolesList = {};
+		StaffRole[] staffRolesList = {};
 
 		try {
 
@@ -104,18 +104,18 @@ public class TeacherRoleService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT teacherRoleID FROM `TeacherRole`";
+			String sql = "SELECT staffRoleID FROM `StaffRole`";
 			pst = conn.prepareStatement(sql);
 
 			resultSet = pst.executeQuery();
 
-			List<TeacherRole> tempTeacherRolesList = new ArrayList<TeacherRole>();
+			List<StaffRole> tempStaffRolesList = new ArrayList<StaffRole>();
 
 			while (resultSet.next()) {
-				tempTeacherRolesList.add(getTeacherRole(resultSet.getInt(1)));
+				tempStaffRolesList.add(getStaffRole(resultSet.getInt(1)));
 			}
 
-			teacherRolesList = tempTeacherRolesList.toArray(teacherRolesList);
+			staffRolesList = tempStaffRolesList.toArray(staffRolesList);
 
 			conn.close();
 
@@ -123,11 +123,11 @@ public class TeacherRoleService {
 			System.out.println(e);
 		}
 
-		return teacherRolesList;
+		return staffRolesList;
 	}
 
-	public TeacherRole getAdminTeacherRole() {
-		TeacherRole adminTeacherRole = null;
+	public StaffRole getAdminStaffRole() {
+		StaffRole adminStaffRole = null;
 
 		try {
 
@@ -135,7 +135,7 @@ public class TeacherRoleService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT teacherRoleID FROM `TeacherRole` WHERE teacherRoleIsAdmin = ? AND teacherRoleIsOwner = ? AND teacherRoleIsDefault = ?";
+			String sql = "SELECT staffRoleID FROM `StaffRole` WHERE staffRoleIsAdmin = ? AND staffRoleIsOwner = ? AND staffRoleIsDefault = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, 1);
 			pst.setInt(2, 0);
@@ -144,7 +144,7 @@ public class TeacherRoleService {
 			resultSet = pst.executeQuery();
 
 			if (resultSet.next()) {
-				adminTeacherRole = getTeacherRole(resultSet.getInt(1));
+				adminStaffRole = getStaffRole(resultSet.getInt(1));
 			}
 
 			conn.close();
@@ -153,11 +153,11 @@ public class TeacherRoleService {
 			System.out.println(e);
 		}
 
-		return adminTeacherRole;
+		return adminStaffRole;
 	}
 
-	public TeacherRole getOwnerTeacherRole() {
-		TeacherRole ownerTeacherRole = null;
+	public StaffRole getOwnerStaffRole() {
+		StaffRole ownerStaffRole = null;
 		
 		try {
 
@@ -165,7 +165,7 @@ public class TeacherRoleService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT teacherRoleID FROM `TeacherRole` WHERE teacherRoleIsAdmin = ? AND teacherRoleIsOwner = ? AND teacherRoleIsDefault = ?";
+			String sql = "SELECT staffRoleID FROM `StaffRole` WHERE staffRoleIsAdmin = ? AND staffRoleIsOwner = ? AND staffRoleIsDefault = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, 1);
 			pst.setInt(2, 1);
@@ -174,7 +174,7 @@ public class TeacherRoleService {
 			resultSet = pst.executeQuery();
 
 			if (resultSet.next()) {
-				ownerTeacherRole = getTeacherRole(resultSet.getInt(1));
+				ownerStaffRole = getStaffRole(resultSet.getInt(1));
 			}
 
 			conn.close();
@@ -183,11 +183,11 @@ public class TeacherRoleService {
 			System.out.println(e);
 		}
 		
-		return ownerTeacherRole;
+		return ownerStaffRole;
 	}
 	
-	public TeacherRole getDefaultTeacherRole() {
-		TeacherRole defaultTeacherRole = null;
+	public StaffRole getDefaultStaffRole() {
+		StaffRole defaultStaffRole = null;
 		
 		try {
 
@@ -195,7 +195,7 @@ public class TeacherRoleService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT teacherRoleID FROM `TeacherRole` WHERE teacherRoleIsAdmin = ? AND teacherRoleIsOwner = ? AND teacherRoleIsDefault = ?";
+			String sql = "SELECT staffRoleID FROM `StaffRole` WHERE staffRoleIsAdmin = ? AND staffRoleIsOwner = ? AND staffRoleIsDefault = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, 0);
 			pst.setInt(2, 0);
@@ -204,7 +204,7 @@ public class TeacherRoleService {
 			resultSet = pst.executeQuery();
 
 			if (resultSet.next()) {
-				defaultTeacherRole = getTeacherRole(resultSet.getInt(1));
+				defaultStaffRole = getStaffRole(resultSet.getInt(1));
 			}
 
 			conn.close();
@@ -213,17 +213,17 @@ public class TeacherRoleService {
 			System.out.println(e);
 		}
 		
-		return defaultTeacherRole;
+		return defaultStaffRole;
 	}
 
-	public RegistrationResult registerTeacherRole(String teacherRoleName, boolean teacherRoleIsAdmin, boolean teacherRoleIsOwner) {
+	public RegistrationResult registerStaffRole(String staffRoleName, boolean staffRoleIsAdmin, boolean staffRoleIsOwner) {
 		RegistrationResult registrationResult = RegistrationResult.SUCCESS;
 		
-		if (teacherRoleIsOwner) {
-			if (getOwnerTeacherRole() != null) {
-				// error
+		if (staffRoleIsOwner) {
+			if (getOwnerStaffRole() != null) {
+				registrationResult = RegistrationResult.OWNER_EXISTS;
 			} else {
-				if (getTeacherRoleID(teacherRoleName) > -1) {
+				if (getStaffRoleID(staffRoleName) > -1) {
 					registrationResult = RegistrationResult.NAME_TAKEN;
 				} else {
 
@@ -231,11 +231,11 @@ public class TeacherRoleService {
 						Connection conn = DatabaseConnector.getConnection();
 						PreparedStatement pst = null;
 
-						String sql = "INSERT INTO `TeacherRole` (teacherRoleName, teacherRoleIsAdmin, teacherRoleIsOwner) VALUES (?, ?, ?)";
+						String sql = "INSERT INTO `StaffRole` (staffRoleName, staffRoleIsAdmin, staffRoleIsOwner) VALUES (?, ?, ?)";
 						pst = conn.prepareStatement(sql);
-						pst.setString(1, teacherRoleName);
-						pst.setInt(2, teacherRoleIsAdmin? 1:0);
-						pst.setInt(3, teacherRoleIsOwner? 1:0);
+						pst.setString(1, staffRoleName);
+						pst.setInt(2, staffRoleIsAdmin? 1:0);
+						pst.setInt(3, staffRoleIsOwner? 1:0);
 						pst.executeUpdate();
 
 						conn.close();

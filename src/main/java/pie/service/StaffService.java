@@ -6,13 +6,13 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 import pie.School;
-import pie.Teacher;
-import pie.TeacherRole;
+import pie.Staff;
+import pie.StaffRole;
 import pie.User;
 import pie.UserType;
 import pie.util.DatabaseConnector;
 
-public class TeacherService {
+public class StaffService {
 
 	public enum RegistrationResult {
 		SUCCESS(
@@ -35,12 +35,12 @@ public class TeacherService {
 		}
 	}
 	
-	public Teacher getTeacher(int teacherID) {
+	public Staff getStaff(int staffID) {
 		
 		SchoolService schoolService = new SchoolService();
 		UserService userService = new UserService();
 		
-		Teacher teacher = null;
+		Staff teacher = null;
 
 		try {
 
@@ -48,20 +48,20 @@ public class TeacherService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT * FROM `Teacher` WHERE teacherID = ?";
+			String sql = "SELECT * FROM `Staff` WHERE staffID = ?";
 			pst = conn.prepareStatement(sql);
-			pst.setInt(1, teacherID);
+			pst.setInt(1, staffID);
 
 			resultSet = pst.executeQuery();
 
 			if (resultSet.next()) {
 				
-				User user = userService.getUser(teacherID);
-				School teacherSchool = schoolService.getSchool(resultSet.getInt("schoolID"));
-				String teacherTitle = resultSet.getString("teacherTitle");
-				boolean teacherIsSchoolAdmin = resultSet.getInt("teacherIsSchoolAdmin") == 1;
+				User user = userService.getUser(staffID);
+				School staffSchool = schoolService.getSchool(resultSet.getInt("schoolID"));
+				String staffTitle = resultSet.getString("staffTitle");
+				boolean staffIsSchoolAdmin = resultSet.getInt("staffIsSchoolAdmin") == 1;
 				
-				teacher = new Teacher(user, teacherSchool, teacherTitle, teacherIsSchoolAdmin);
+				teacher = new Staff(user, staffSchool, staffTitle, staffIsSchoolAdmin);
 			}
 
 			conn.close();
@@ -73,7 +73,7 @@ public class TeacherService {
 		return teacher;
 	}
 	
-	public boolean isMember(int teacherID, int groupID) {
+	public boolean isMember(int staffID, int groupID) {
 		boolean isMember = false;
 		
 		try {
@@ -81,9 +81,9 @@ public class TeacherService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "SELECT * FROM `TeacherGroup` WHERE teacherID = ? AND groupID = ? AND teacherGroupIsValid = ?";
+			String sql = "SELECT * FROM `StaffGroup` WHERE staffID = ? AND groupID = ? AND staffGroupIsValid = ?";
 			pst = conn.prepareStatement(sql);
-			pst.setInt(1, teacherID);
+			pst.setInt(1, staffID);
 			pst.setInt(2, groupID);
 			pst.setInt(3, 1);
 
@@ -99,21 +99,21 @@ public class TeacherService {
 		
 	}
 	
-	public boolean setTeacherRole(int teacherID, int groupID, TeacherRole teacherRole) {
+	public boolean setStaffRole(int staffID, int groupID, StaffRole staffRole) {
 		boolean setResult = false;
 		
-		if (isMember(teacherID, groupID)) {
-			if (!getTeacherRole(teacherID, groupID).equals(teacherRole)) {
+		if (isMember(staffID, groupID)) {
+			if (!getStaffRole(staffID, groupID).equals(staffRole)) {
 				
 				try {
 					
 					Connection conn = DatabaseConnector.getConnection();
 					PreparedStatement pst = null;
 					
-					String sql = "UPDATE `TeacherGroup` SET teacherRoleID = ? WHERE teacherID = ? AND groupID = ?";
+					String sql = "UPDATE `StaffGroup` SET staffRoleID = ? WHERE staffID = ? AND groupID = ?";
 					pst = conn.prepareStatement(sql);
-					pst.setInt(1, teacherRole.getTeacherRoleID());
-					pst.setInt(2, teacherID);
+					pst.setInt(1, staffRole.getStaffRoleID());
+					pst.setInt(2, staffID);
 					pst.setInt(3, groupID);
 					pst.executeUpdate();
 					
@@ -130,10 +130,10 @@ public class TeacherService {
 		return setResult;
 	}
 	
-	public TeacherRole getTeacherRole(int teacherID, int groupID) {
+	public StaffRole getStaffRole(int staffID, int groupID) {
 		
-		TeacherRoleService teacherRoleService = new TeacherRoleService();
-		TeacherRole teacherRole = null;
+		StaffRoleService staffRoleService = new StaffRoleService();
+		StaffRole staffRole = null;
 		
 		try {
 			
@@ -141,14 +141,14 @@ public class TeacherService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT teacherRoleID FROM `TeacherGroup` WHERE teacherID = ? AND groupID = ?";
+			String sql = "SELECT staffRoleID FROM `StaffGroup` WHERE staffID = ? AND groupID = ?";
 			pst = conn.prepareStatement(sql);
-			pst.setInt(1, teacherID);
+			pst.setInt(1, staffID);
 			pst.setInt(2, groupID);
 			resultSet = pst.executeQuery();
 			
 			if (resultSet.next()) {
-				teacherRole = teacherRoleService.getTeacherRole(resultSet.getInt(1));
+				staffRole = staffRoleService.getStaffRole(resultSet.getInt(1));
 			}
 
 			conn.close();
@@ -157,12 +157,12 @@ public class TeacherService {
 			System.out.println(e);
 		}
 		
-		return teacherRole;
+		return staffRole;
 	}
 
-	public RegistrationResult registerTeacher(String userFirstName,
+	public RegistrationResult registerStaff(String userFirstName,
 			String userLastName, String userEmail, String userPassword,
-			String userMobile, String schoolCode, String teacherTitle) {
+			String userMobile, String schoolCode, String staffTitle) {
 		
 		UserService userService = new UserService();
 		SchoolService schoolService = new SchoolService();
@@ -182,7 +182,7 @@ public class TeacherService {
 
 					String sql = "INSERT INTO `User` (userTypeID, userFirstName, userLastName, userEmail, userPassword, userMobile) VALUES (?, ?, ?, ?, ?, ?, ?)";
 					pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-					pst.setInt(1, UserType.TEACHER.getUserTypeID());
+					pst.setInt(1, UserType.STAFF.getUserTypeID());
 					pst.setString(2, userFirstName);
 					pst.setString(3, userLastName);
 					pst.setString(4, userEmail);
@@ -196,11 +196,11 @@ public class TeacherService {
 
 						int newUserID = resultSet.getInt(1);
 
-						sql = "INSERT INTO `Teacher` (teacherID, schoolID, teacherTitle) VALUES (?, ?, ?)";
+						sql = "INSERT INTO `Staff` (staffID, schoolID, staffTitle) VALUES (?, ?, ?)";
 						pst = conn.prepareStatement(sql);
 						pst.setInt(1, newUserID);
 						pst.setInt(2, schoolService.getSchoolID(schoolCode));
-						pst.setString(3, teacherTitle);
+						pst.setString(3, staffTitle);
 						pst.executeUpdate();
 
 					}
