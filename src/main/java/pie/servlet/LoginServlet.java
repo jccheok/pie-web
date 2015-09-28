@@ -2,6 +2,7 @@ package pie.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
 
 import pie.User;
+import pie.service.AuthService;
 import pie.service.UserService;
 import pie.service.UserService.LoginResult;
 
@@ -54,6 +56,7 @@ public class LoginServlet extends HttpServlet {
 		if (loginResult == LoginResult.SUCCESS) {
 			
 			User user = userService.getUser(userService.getUserID(userEmail));
+			
 			JSONObject userJSON = new JSONObject();
 			userJSON.put("userID", user.getUserID());
 			userJSON.put("userFirstName", user.getUserFirstName());
@@ -62,7 +65,13 @@ public class LoginServlet extends HttpServlet {
 			userJSON.put("userEmail", user.getUserEmail());
 			userJSON.put("userMobile", user.getUserMobile());
 			
+			HashMap<String,Object> claims = new HashMap<String,Object>();
+			claims.put("userID", Integer.toString(user.getUserID()));
+			claims.put("name", user.getUserFullName());
+			String token = AuthService.createToken("login",86400000,claims);
+			
 			responseObject.put("user", userJSON);
+			response.addHeader("X-auth", token);
 		}
 		
 		PrintWriter out = response.getWriter();
