@@ -45,15 +45,8 @@ public class RegisterTeacherServlet extends HttpServlet {
 		RegistrationResult registrationResult = teacherService.registerStaff(userFirstName, userLastName, userEmail, userPassword, userMobile, studentCode, teacherTitle);
 		
 		JSONObject responseObject = new JSONObject();
-		
-		for (RegistrationResult result : RegistrationResult.values()) {
-			if (result == registrationResult) {
-				
-				responseObject.put("result", result.toString());
-				responseObject.put("message", result.getDefaultMessage());
-				break;
-			}
-		}
+		responseObject.put("result", registrationResult.toString());
+		responseObject.put("message", registrationResult.getDefaultMessage());
 		
 		if (registrationResult == RegistrationResult.SUCCESS) {
 
