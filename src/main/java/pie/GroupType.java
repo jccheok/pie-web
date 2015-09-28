@@ -2,7 +2,17 @@ package pie;
 
 public enum GroupType {
 
-	CLASS, CCA;
+	CLASS(1), CCA(2);
+	
+	private int groupTypeID;
+	
+	GroupType(int userTypeID) {
+		this.groupTypeID = userTypeID;
+	}
+	
+	public int getGroupTypeID() {
+		return groupTypeID;
+	}
 
 	public static GroupType getGroupType(int groupTypeID) {
 		
