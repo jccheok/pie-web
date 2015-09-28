@@ -36,23 +36,28 @@
 		<maven.compiler.target>1.6</maven.compiler.target>
 	</properties>
 	<dependencies>
-		<!-- For JWT parsing-->
+		<!-- For JWT parsing -->
 		<dependency>
-    		<groupId>io.jsonwebtoken</groupId>
-   			<artifactId>jjwt</artifactId>
-   			<version>0.5.1</version>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.5.1</version>
 		</dependency>
 		<dependency>
-      		<groupId>com.fasterxml.jackson.core</groupId>
-      		<artifactId>jackson-databind</artifactId>
-      		<version>2.0.1</version>
-    	</dependency>
-    	<dependency>
-      		<groupId>commons-codec</groupId>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
 			<version>1.4</version>
-    	</dependency>
-		<!-- For JWT parsing-->
+		</dependency>
+		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+		<!-- For JWT parsing -->
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
