@@ -5,7 +5,7 @@ import java.util.Date;
 public class Event {
 
 	private int eventID;
-	private Teacher teacher;
+	private Staff eventAuthor;
 	private Address address;
 	private String eventTitle;
 	private String eventDescription;
@@ -26,14 +26,6 @@ public class Event {
 	
 	public void setEventID(int eventID) {
 		this.eventID = eventID;
-	}
-	
-	public Teacher getTeacher() {
-		return teacher;
-	}
-	
-	public void setTeacher(Teacher teacher) {
-		this.teacher = teacher;
 	}
 	
 	public Address getAddress() {
@@ -138,6 +130,14 @@ public class Event {
 	
 	public void setEventIsRequired(boolean eventIsRequired) {
 		this.eventIsRequired = eventIsRequired;
+	}
+
+	public Staff getEventAuthor() {
+		return eventAuthor;
+	}
+
+	public void setEventAuthor(Staff eventAuthor) {
+		this.eventAuthor = eventAuthor;
 	}
 	
 	

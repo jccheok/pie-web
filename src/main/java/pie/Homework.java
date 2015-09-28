@@ -5,7 +5,7 @@ import java.util.Date;
 public class Homework {
 
 	private int homeworkID;
-	private Teacher teacher;
+	private Staff homeworkAuthor;
 	private String homeworkTitle;
 	private String homeworkSubject;
 	private String homeworkDescription;
@@ -24,14 +24,6 @@ public class Homework {
 	
 	public void setHomeworkID(int homeworkID) {
 		this.homeworkID = homeworkID;
-	}
-	
-	public Teacher getTeacher() {
-		return teacher;
-	}
-	
-	public void setTeacher(Teacher teacher) {
-		this.teacher = teacher;
 	}
 	
 	public String getHomeworkTitle() {
@@ -120,6 +112,14 @@ public class Homework {
 	
 	public void setHomeworkDateDeleted(Date homeworkDateDeleted) {
 		this.homeworkDateDeleted = homeworkDateDeleted;
+	}
+
+	public Staff getHomeworkAuthor() {
+		return homeworkAuthor;
+	}
+
+	public void setHomeworkAuthor(Staff homeworkAuthor) {
+		this.homeworkAuthor = homeworkAuthor;
 	}
 	
 }

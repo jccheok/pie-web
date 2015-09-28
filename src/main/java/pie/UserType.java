@@ -2,7 +2,7 @@ package pie;
 
 public enum UserType {
 
-	TEACHER(1), PARENT(2), STUDENT(3), ADMIN(4);
+	STAFF(1), PARENT(2), STUDENT(3), ADMIN(4);
 	
 	private int userTypeID;
 	

@@ -7,7 +7,7 @@ import java.util.Date;
 
 import pie.Group;
 import pie.Homework;
-import pie.Teacher;
+import pie.Staff;
 import pie.User;
 import pie.util.DatabaseConnector;
 
@@ -31,7 +31,7 @@ public class HomeworkService {
 			if (resultSet.next()) {
 				homework = new Homework();
 				homework.setHomeworkID(homeworkID);
-				homework.setTeacher(new TeacherService().getTeacher(resultSet
+				homework.setHomeworkAuthor(new StaffService().getStaff(resultSet
 						.getInt("teacherID")));
 				homework.setHomeworkTitle(resultSet.getString("homworkTitle"));
 				homework.setHomeworkDescription(resultSet
@@ -77,7 +77,7 @@ public class HomeworkService {
 		return userRecipient;
 	}
 
-	public int createHomework(String homeworkTitle, Teacher teacher, String homeworkSubject,
+	public int createHomework(String homeworkTitle, Staff teacher, String homeworkSubject,
 			String homeworkDescription, int homeworkMinutesRequired,
 			Date homeworkDueDate, boolean homeworkIsOpen) {
 		int homeworkID = -1;
@@ -87,7 +87,7 @@ public class HomeworkService {
 		return homeworkID;
 	}
 	
-	public int createHomeworkAsDraft (String homeworkTitle, Teacher teacher, String homeworkSubject,
+	public int createHomeworkAsDraft (String homeworkTitle, Staff teacher, String homeworkSubject,
 			String homeworkDescription, int homeworkMinutesRequired,
 			Date homeworkDueDate, boolean homeworkIsOpen){
 		int homeworkID = -1;
@@ -98,7 +98,7 @@ public class HomeworkService {
 		return homeworkID;
 	}
 	
-	public int createHomeworkAsTemplate(String homeworkTitle, Teacher teacher, String homeworkSubject,
+	public int createHomeworkAsTemplate(String homeworkTitle, Staff teacher, String homeworkSubject,
 			String homeworkDescription, int homeworkMinutesRequired,
 			Date homeworkDueDate, boolean homeworkIsOpen){
 		int homeworkID = -1;
@@ -126,7 +126,7 @@ public class HomeworkService {
 		return sendResult;
 	}
 
-	public Homework[] getHomeworksIsDraft(Teacher teacher){
+	public Homework[] getHomeworksIsDraft(Staff teacher){
 		Homework[] homework = {};
 		
 		//Write codes to retrieve Homework that are drafted by Teacher
@@ -134,7 +134,7 @@ public class HomeworkService {
 		return homework;
 	}
 	
-	public Homework[] getHomeworkIsTemplate(Teacher teacher){
+	public Homework[] getHomeworkIsTemplate(Staff teacher){
 		Homework[] homework = {};
 		
 		// Write codes to retrieve Homework Templates that are saved by Teacher

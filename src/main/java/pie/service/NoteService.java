@@ -7,7 +7,7 @@ import java.util.Date;
 
 import pie.Group;
 import pie.Note;
-import pie.Teacher;
+import pie.Staff;
 import pie.User;
 import pie.util.DatabaseConnector;
 
@@ -31,7 +31,7 @@ public class NoteService {
 			if (resultSet.next()) {
 				note = new Note();
 				note.setNoteID(noteID);
-				note.setTeacher(new TeacherService().getTeacher(resultSet
+				note.setNoteAuthor(new StaffService().getStaff(resultSet
 						.getInt("teacherID")));
 				note.setNoteTitle(resultSet.getString("noteTitle"));
 				note.setNoteDescription(resultSet.getString("noteDescription"));
@@ -69,7 +69,7 @@ public class NoteService {
 		return userRecipient;
 	}
 
-	public int createNote(Teacher teacher, String noteTitle,
+	public int createNote(Staff teacher, String noteTitle,
 			String noteDescription) {
 		int noteID = -1;
 
@@ -78,7 +78,7 @@ public class NoteService {
 		return noteID;
 	}
 
-	public int createNoteAsDraft(Teacher teacher, String noteTitle,
+	public int createNoteAsDraft(Staff teacher, String noteTitle,
 			String noteDescription) {
 		int noteID = -1;
 		int noteIsDraft = 1;
@@ -88,7 +88,7 @@ public class NoteService {
 		return noteID;
 	}
 
-	public int createNoteAsTemplate(Teacher teacher, String noteTitle,
+	public int createNoteAsTemplate(Staff teacher, String noteTitle,
 			String noteDescription) {
 		int noteID = -1;
 		int noteIsTemplate = 1;
@@ -116,7 +116,7 @@ public class NoteService {
 		return sendResult;
 	}
 
-	public Note[] getNotesIsDraft(Teacher teacher) {
+	public Note[] getNotesIsDraft(Staff teacher) {
 		Note[] notes = {};
 
 		// Write codes to retrieve Notes that are drafted by Teacher
@@ -124,7 +124,7 @@ public class NoteService {
 		return notes;
 	}
 
-	public Note[] getNotesIsTemplate(Teacher teacher) {
+	public Note[] getNotesIsTemplate(Staff teacher) {
 		Note[] notes = {};
 
 		// Write codes to retrieve Notes that are saved as Template by Teacher

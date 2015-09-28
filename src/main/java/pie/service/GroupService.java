@@ -10,8 +10,8 @@ import pie.Group;
 import pie.GroupType;
 import pie.School;
 import pie.Student;
-import pie.Teacher;
-import pie.TeacherRole;
+import pie.Staff;
+import pie.StaffRole;
 import pie.util.DatabaseConnector;
 
 public class GroupService {
@@ -165,12 +165,12 @@ public class GroupService {
 		return totalMinutes;
 	}
 
-	public Teacher getGroupOwner(int groupID) {
+	public Staff getGroupOwner(int groupID) {
 
-		TeacherRoleService teacherRoleService = new TeacherRoleService();
-		TeacherService teacherService = new TeacherService();
+		StaffRoleService staffRoleService = new StaffRoleService();
+		StaffService teacherService = new StaffService();
 
-		Teacher groupOwner = null;
+		Staff groupOwner = null;
 
 		try {
 
@@ -178,16 +178,16 @@ public class GroupService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT teacherID FROM `Group`,`TeacherGroup` WHERE `Group`.groupID = `TeacherGroup`.groupID AND teacherRoleID = ? AND `Group`.groupID = ?";
+			String sql = "SELECT staffID FROM `Group`,`StaffGroup` WHERE `Group`.groupID = `StaffGroup`.groupID AND staffRoleID = ? AND `Group`.groupID = ?";
 			pst = conn.prepareStatement(sql);
-			pst.setInt(1, teacherRoleService.getOwnerTeacherRole()
-					.getTeacherRoleID());
+			pst.setInt(1, staffRoleService.getOwnerStaffRole()
+					.getStaffRoleID());
 			pst.setInt(2, groupID);
 
 			resultSet = pst.executeQuery();
 
 			if (resultSet.next()) {
-				groupOwner = teacherService.getTeacher(resultSet.getInt(1));
+				groupOwner = teacherService.getStaff(resultSet.getInt(1));
 			}
 
 			conn.close();
@@ -201,23 +201,23 @@ public class GroupService {
 
 	public boolean setGroupOwner(int groupID, int teacherID) {
 
-		TeacherService teacherService = new TeacherService();
-		TeacherRoleService teacherRoleService = new TeacherRoleService();
+		StaffService staffService = new StaffService();
+		StaffRoleService teacherRoleService = new StaffRoleService();
 
 		boolean setResult = false;
 		
 		if (getGroupOwner(groupID) != null) {
-			TeacherRole defaultTeacherRole = teacherRoleService.getDefaultTeacherRole();
-			teacherService.setTeacherRole(teacherID, groupID, defaultTeacherRole);
+			StaffRole defaultTeacherRole = teacherRoleService.getDefaultStaffRole();
+			staffService.setStaffRole(teacherID, groupID, defaultTeacherRole);
 		}
 		
-		TeacherRole ownerTeacherRole = teacherRoleService.getOwnerTeacherRole();
-		if (hasTeacherMember(groupID, teacherID)) {
-			if (teacherService.setTeacherRole(teacherID, groupID, ownerTeacherRole)) {
+		StaffRole ownerTeacherRole = teacherRoleService.getOwnerStaffRole();
+		if (hasStaffMember(groupID, teacherID)) {
+			if (staffService.setStaffRole(teacherID, groupID, ownerTeacherRole)) {
 				setResult = true;
 			}
 		} else {
-			if (addTeacherToGroup(groupID, teacherID, ownerTeacherRole.getTeacherRoleID())) {
+			if (addStaffToGroup(groupID, teacherID, ownerTeacherRole.getStaffRoleID())) {
 				setResult = true;
 			}
 		}
@@ -250,7 +250,7 @@ public class GroupService {
 		return hasMember;
 	}
 
-	public boolean hasTeacherMember(int groupID, int teacherID) {
+	public boolean hasStaffMember(int groupID, int staffID) {
 		boolean hasMember = false;
 
 		try {
@@ -258,9 +258,9 @@ public class GroupService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "SELECT * FROM `TeacherGroup` WHERE teacherID = ? AND groupID = ? AND teacherGroupIsValid = ?";
+			String sql = "SELECT * FROM `StaffGroup` WHERE staffID = ? AND groupID = ? AND staffGroupIsValid = ?";
 			pst = conn.prepareStatement(sql);
-			pst.setInt(1, teacherID);
+			pst.setInt(1, staffID);
 			pst.setInt(2, groupID);
 			pst.setInt(3, 1);
 
@@ -305,22 +305,22 @@ public class GroupService {
 		return addResult;
 	}
 
-	public boolean addTeacherToGroup(int groupID, int teacherID, int teacherRoleID) {
+	public boolean addStaffToGroup(int groupID, int staffID, int staffRoleID) {
 
 		boolean addResult = false;
 
-		if (!hasTeacherMember(groupID, teacherID)) {
+		if (!hasStaffMember(groupID, staffID)) {
 
 			try {
 
 				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
 
-				String sql = "INSERT INTO `TeacherGroup` (groupID, teacherID, teacherRoleID) VALUES (?, ?, ?)";
+				String sql = "INSERT INTO `StaffGroup` (groupID, staffID, staffRoleID) VALUES (?, ?, ?)";
 				pst = conn.prepareStatement(sql);
 				pst.setInt(1, groupID);
-				pst.setInt(2, teacherID);
-				pst.setInt(3, teacherRoleID);
+				pst.setInt(2, staffID);
+				pst.setInt(3, staffRoleID);
 				pst.executeQuery();
 
 				addResult = true;
@@ -335,13 +335,13 @@ public class GroupService {
 		return addResult;
 	}
 
-	public Teacher[] getTeacherMembers(int groupID) {
+	public Staff[] getStaffMembers(int groupID) {
 
-		Teacher[] teacherMembers = {};
+		Staff[] staffMembers = {};
 
 		// Write codes to retrieve the Members of Group that are Teachers
 
-		return teacherMembers;
+		return staffMembers;
 	}
 
 	public Student[] getStudentMembers(int groupID) {
@@ -352,7 +352,7 @@ public class GroupService {
 		return studentMembers;
 	}
 
-	public RegistrationResult registerGroup(Teacher groupOwner,
+	public RegistrationResult registerGroup(Staff groupOwner,
 			String groupName, String groupDescription,
 			int groupMaxDailyHomeworkMinutes, GroupType groupType,
 			String groupCode) {
