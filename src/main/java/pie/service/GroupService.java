@@ -338,16 +338,64 @@ public class GroupService {
 	public Teacher[] getTeacherMembers(int groupID) {
 
 		Teacher[] teacherMembers = {};
+		try {
 
-		// Write codes to retrieve the Members of Group that are Teachers
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT teacherID FROM `TeacherGroup` WHERE groupID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, groupID);
+
+			resultSet = pst.executeQuery();
+
+			TeacherService teacherService = new TeacherService();
+			ArrayList<Teacher> tempTeacherMembers = new ArrayList<Teacher>();
+
+			while (resultSet.next()) {
+				tempTeacherMembers.add(teacherService.getTeacher(resultSet
+						.getInt(1)));
+
+			}
+			teacherMembers = tempTeacherMembers.toArray(teacherMembers);
+			conn.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
 
 		return teacherMembers;
 	}
 
 	public Student[] getStudentMembers(int groupID) {
 		Student[] studentMembers = {};
+		try {
 
-		// Write codes to retrieve the Members of Group that are Students
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT studentID FROM `StudentGroup` WHERE groupID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, groupID);
+
+			resultSet = pst.executeQuery();
+
+			StudentService studentService = new StudentService();
+			ArrayList<Student> tempStudentMembers = new ArrayList<Student>();
+
+			while (resultSet.next()) {
+				tempStudentMembers.add(studentService.getStudent(resultSet
+						.getInt(1)));
+
+			}
+			studentMembers = tempStudentMembers.toArray(studentMembers);
+			conn.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
 
 		return studentMembers;
 	}
