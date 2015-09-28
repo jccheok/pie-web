@@ -3,7 +3,6 @@ package pie.service;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.Date;
 
 import pie.Address;
@@ -14,10 +13,24 @@ import pie.util.DatabaseConnector;
 public class UserService {
 
 	public enum LoginResult {
-		SUCCESS, NOT_VERIFIED, NOT_MATCHING, NOT_VALID, NOT_REGISTERED;
+		SUCCESS("Login success!"), NOT_VERIFIED(
+				"Please verify your email account."), NOT_MATCHING(
+				"Incorrect email/password!"), NOT_VALID(
+				"Your account is currently invalidated."), NOT_REGISTERED(
+				"Incorrect email/password!");
+
+		private String defaultMessage;
+
+		LoginResult(String defaultMessage) {
+			this.defaultMessage = defaultMessage;
+		}
 
 		public String toString() {
 			return this.name();
+		}
+
+		public String getDefaultMessage() {
+			return defaultMessage;
 		}
 	}
 

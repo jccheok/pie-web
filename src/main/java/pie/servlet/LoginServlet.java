@@ -46,6 +46,7 @@ public class LoginServlet extends HttpServlet {
 			if (result == loginResult) {
 				
 				responseObject.put("result", result.toString());
+				responseObject.put("message", result.getDefaultMessage());
 				break;
 			}
 		}
