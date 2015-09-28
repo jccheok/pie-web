@@ -18,14 +18,16 @@ import io.jsonwebtoken.impl.crypto.MacProvider;
 public class AuthService {
 
 	private static final String secretKey = "pTaByTe28915";
+	//Enter the web address when we have it.
+	private static final String issuer = "link here";
 	
 	public static String getSecretKey(){
 		return secretKey;
 	}
 
-	public static String createToken(String id, String issuer, String subject, long ttlMillis, HashMap<String,Object> claims) {
+	public static String createToken(String subject, long ttlMillis, HashMap<String,Object> claims) {
 		
-		SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+		SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS512;
 		
 		long nowMillis = System.currentTimeMillis();
 		Date now = new Date(nowMillis);
@@ -33,7 +35,7 @@ public class AuthService {
 		byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(secretKey);
 		Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 
-		JwtBuilder builder = Jwts.builder().setId(id).setIssuedAt(now).setSubject(subject).setIssuer(issuer)
+		JwtBuilder builder = Jwts.builder().setIssuedAt(now).setSubject(subject).setIssuer(issuer)
 				.signWith(signatureAlgorithm, signingKey);
 
 		if (ttlMillis >= 0) {
