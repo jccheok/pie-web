@@ -14,6 +14,34 @@ import pie.util.DatabaseConnector;
 
 public class GroupService {
 
+	public int getGroupID(String groupCode) {
+		int groupID = -1;
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT groupID FROM `Group` WHERE groupCode = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setString(1, groupCode);
+
+			resultSet = pst.executeQuery();
+
+			if (resultSet.next()) {
+				groupID = resultSet.getInt(1);
+			}
+
+			conn.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+		return groupID;
+	}
+
 	public Group getGroup(int groupID) {
 		Group group = null;
 
@@ -30,23 +58,27 @@ public class GroupService {
 			resultSet = pst.executeQuery();
 
 			if (resultSet.next()) {
-				group = new Group();
-				group.setGroupID(groupID);
-				group.setSchool(new SchoolService().getSchool(resultSet
-						.getInt("schoolID")));
-				group.setGroupDescription(resultSet
-						.getString("groupDescription"));
-				group.setGroupName(resultSet.getString("groupName"));
-				group.setGroupMaxDailyHomeworkMinutes(resultSet
-						.getInt("groupMaxDailyHomeworkMinutes"));
-				group.setGroupType(GroupType.getGroupType(resultSet
-						.getInt("groupTypeID")));
-				group.setGroupCode(resultSet.getString("groupCode"));
-				group.setGroupIsOpen(resultSet.getInt("groupIsOpen") == 1);
-				group.setGroupLastUpdate(new Date(resultSet.getTimestamp(
-						"groupLastUpdate").getTime()));
-				group.setGroupDateCreated(new Date(resultSet.getTimestamp(
-						"groupDateCreated").getTime()));
+
+				School groupSchool = new SchoolService().getSchool(resultSet
+						.getInt("schoolID"));
+				String groupName = resultSet.getString("groupName");
+				String groupDescription = resultSet
+						.getString("groupDescription");
+				int groupMaxDailyHomeworkMinutes = resultSet
+						.getInt("groupMaxDailyHomeworkMinutes");
+				GroupType groupType = GroupType.getGroupType(resultSet
+						.getInt("groupTypeID"));
+				String groupCode = resultSet.getString("groupCode");
+				boolean groupIsOpen = resultSet.getInt("groupCodeIsOpen") == 1;
+				Date groupLastUpdate = new Date(resultSet.getTimestamp(
+						"groupLastUpdate").getTime());
+				Date groupDateCreated = new Date(resultSet.getTimestamp(
+						"groupDateCreated").getTime());
+
+				group = new Group(groupID, groupSchool, groupName,
+						groupDescription, groupMaxDailyHomeworkMinutes,
+						groupType, groupCode, groupIsOpen, groupLastUpdate,
+						groupDateCreated);
 			}
 
 		} catch (Exception e) {

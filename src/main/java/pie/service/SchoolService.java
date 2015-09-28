@@ -13,8 +13,36 @@ import pie.util.DatabaseConnector;
 
 public class SchoolService {
 
+	public int getSchoolID(String schoolCode) {
+		int schoolID = -1;
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT schoolID FROM `School` WHERE schoolCode = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setString(1, schoolCode);
+
+			resultSet = pst.executeQuery();
+
+			if (resultSet.next()) {
+				schoolID = resultSet.getInt(1);
+			}
+
+			conn.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+		return schoolID;
+	}
+
 	public School getSchool(int schoolID) {
-		
+
 		School school = null;
 
 		try {
@@ -22,7 +50,7 @@ public class SchoolService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 			Connection conn = DatabaseConnector.getConnection();
-			
+
 			String sql = "SELECT * FROM `School` WHERE schoolID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, schoolID);
@@ -33,14 +61,14 @@ public class SchoolService {
 				school = new School();
 				school.setSchoolID(schoolID);
 				school.setSchoolAddress(new AddressService()
-				.getAddress(resultSet.getInt("addressID")));
+						.getAddress(resultSet.getInt("addressID")));
 				school.setSchoolName(resultSet.getString("schoolName"));
 				school.setSchoolCreatedDate(new Date(resultSet.getTimestamp(
 						"schoolDateCreated").getTime()));
 				school.setSchoolLastUpdate(new Date(resultSet.getTimestamp(
 						"schoolLastUpdate").getTime()));
 				school.setSchoolCode(resultSet.getString("schoolCode"));
-			
+
 			}
 
 		} catch (Exception e) {

@@ -28,12 +28,13 @@ public class AddressService {
 			resultSet = pst.executeQuery();
 
 			if (resultSet.next()) {
-				address = new Address();
-				address.setAddressID(addressID);
-				address.setAddressStreet(resultSet.getString("addressStreet"));
-				address.setAddressPostalCode(resultSet
-						.getString("addressPostalCode"));
-				address.setAddressCity(getCity(resultSet.getInt("cityID")));
+				
+				String addressStreet = resultSet.getString("addressStreet");
+				String addressPostalCode = resultSet
+						.getString("addressPostalCode");
+				City addressCity = getCity(resultSet.getInt("cityID"));
+				
+				address = new Address(addressID, addressCity, addressStreet, addressPostalCode);
 			}
 			conn.close();
 
@@ -60,10 +61,11 @@ public class AddressService {
 			resultSet = pst.executeQuery();
 
 			if (resultSet.next()) {
-				city = new City();
-				city.setCityID(cityID);
-				city.setCityName(resultSet.getString("cityName"));
-				city.setCityCountry(getCountry(resultSet.getInt("countryID")));
+				
+				String cityName = resultSet.getString("cityName");
+				Country cityCountry = getCountry(resultSet.getInt("countryID"));
+				
+				city = new City(cityID, cityCountry, cityName);
 			}
 			conn.close();
 
@@ -90,12 +92,13 @@ public class AddressService {
 			resultSet = pst.executeQuery();
 
 			if (resultSet.next()) {
-				country = new Country();
-				country.setCountryID(countryID);
-				country.setCountryName(resultSet.getString("countryName"));
-				country.setCountryISO(resultSet.getString("countryISO"));
-				country.setCountryPhoneCode(resultSet
-						.getString("countryPhoneCode"));
+				
+				String countryName = resultSet.getString("countryName");
+				String countryISO = resultSet.getString("countryISO");
+				String countryPhoneCode = resultSet
+						.getString("countryPhoneCode");
+				
+				country = new Country(countryID, countryName, countryPhoneCode, countryISO);
 			}
 			conn.close();
 

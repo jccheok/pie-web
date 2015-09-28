@@ -203,6 +203,9 @@ public class UserService {
 	}
 
 	public User getUser(int userID) {
+
+		AddressService addressService = new AddressService();
+
 		User user = null;
 
 		try {
@@ -218,27 +221,32 @@ public class UserService {
 			resultSet = pst.executeQuery();
 
 			if (resultSet.next()) {
-				user = new User();
-				user.setUserID(userID);
-				user.setUserType(UserType.getUserType(resultSet
-						.getInt("userTypeID")));
-				user.setUserAddress(new AddressService().getAddress(resultSet
-						.getInt("addressID")));
-				user.setUserFirstName(resultSet.getString("userFirstName"));
-				user.setUserLastName(resultSet.getString("userLastName"));
-				user.setUserEmail(resultSet.getString("userEmail"));
-				user.setUserPassword(resultSet.getString("userPassword"));
-				user.setUserMobile(resultSet.getString("userMobile"));
-				user.setUserIsVerified(resultSet.getInt("userIsVerified") == 1);
-				user.setUserIsValid(resultSet.getInt("userIsValid") == 1);
-				user.setUserLastLogin(new Date(resultSet.getTimestamp(
-						"userLastLogin").getTime()));
-				user.setUserRegistrationDate(new Date(resultSet.getTimestamp(
-						"userRegistrationDate").getTime()));
-				user.setUserLastUpdate(new Date(resultSet.getTimestamp(
-						"userLastUpdate").getTime()));
+
+				UserType userType = UserType.getUserType(resultSet
+						.getInt("userTypeID"));
+				Address userAddress = addressService.getAddress(resultSet
+						.getInt("addressID"));
+				String userFirstName = resultSet.getString("userFirstName");
+				String userLastName = resultSet.getString("userLastName");
+				String userEmail = resultSet.getString("userEmail");
+				String userPassword = resultSet.getString("userPassword");
+				String userMobile = resultSet.getString("userMobile");
+				boolean userIsVerified = resultSet.getInt("userIsVerified") == 1;
+				boolean userIsValid = resultSet.getInt("userIsValid") == 1;
+				Date userLastLogin = new Date(resultSet.getTimestamp(
+						"userLastLogin").getTime());
+				Date userRegistrationDate = new Date(resultSet.getTimestamp(
+						"userRegistrationDate").getTime());
+				Date userLastUpdate = new Date(resultSet.getTimestamp(
+						"userLastUpdate").getTime());
+
+				user = new User(userID, userAddress, userFirstName,
+						userLastName, userType, userEmail, userPassword,
+						userMobile, userIsValid, userIsVerified, userLastLogin,
+						userRegistrationDate, userLastUpdate);
+
 			}
-			
+
 			conn.close();
 
 		} catch (Exception e) {
@@ -247,42 +255,4 @@ public class UserService {
 
 		return user;
 	}
-
-	public int registerUser(UserType userType, Address userAddress,
-			String userFirstName, String userLastName, String userEmail, String userPassword,
-			String userMobile) {
-		int userID = -1;
-
-		try {
-
-			Connection conn = DatabaseConnector.getConnection();
-			PreparedStatement pst = null;
-			ResultSet resultSet = null;
-
-			String sql = "INSERT INTO `User` (userTypeID, addressID, userFirstName, userLastName, userEmail, userPassword, userMobile) VALUES (?, ?, ?, ?, ?, ?, ?)";
-			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-			pst.setInt(1, userType.getUserTypeID());
-			pst.setInt(2, userAddress.getAddressID());
-			pst.setString(3, userFirstName);
-			pst.setString(4, userLastName);
-			pst.setString(5, userEmail);
-			pst.setString(6, userPassword);
-			pst.setString(7, userMobile);
-			pst.executeUpdate();
-
-			resultSet = pst.getGeneratedKeys();
-
-			if (resultSet.next()) {
-				userID = resultSet.getInt(1);
-			}
-			
-			conn.close();
-
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-
-		return userID;
-	}
-
 }

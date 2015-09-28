@@ -10,6 +10,10 @@ import pie.util.DatabaseConnector;
 public class TeacherService {
 
 	public Teacher getTeacher(int teacherID) {
+		
+		SchoolService schoolService = new SchoolService();
+		UserService userService = new UserService();
+		
 		Teacher teacher = null;
 
 		try {
@@ -25,13 +29,13 @@ public class TeacherService {
 			resultSet = pst.executeQuery();
 
 			if (resultSet.next()) {
-				teacher = new Teacher();
-				teacher.setUserID(resultSet.getInt("teacherID"));
-				teacher.setTeacherTitle(resultSet.getString("teacherTitle"));
-				teacher.setSchool(new SchoolService().getSchool(resultSet
-						.getInt("schoolID")));
-				teacher.setTeacherIsSchoolAdmin(resultSet
-						.getInt("teacherIsSchoolAdmin") == 1);
+				
+				User user = userService.getUser(teacherID);
+				School teacherSchool = schoolService.getSchool(resultSet.getInt("schoolID"));
+				String teacherTitle = resultSet.getString("teacherTitle");
+				boolean teacherIsSchoolAdmin = resultSet.getInt("teacherIsSchoolAdmin") == 1;
+				
+				teacher = new Teacher(user, teacherSchool, teacherTitle, teacherIsSchoolAdmin);
 			}
 
 			conn.close();
