@@ -450,4 +450,32 @@ public class GroupService {
 		return registrationResult;
 	}
 
+	public int getNextStudentIndexNumber(int groupID) {
+		int studentIndexNum = -1;
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT LAST(studentGroupIndexNumber) FROM `StudentGroup` WHERE groupID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, groupID);
+
+			resultSet = pst.executeQuery();
+
+			if (resultSet.next()) {
+				studentIndexNum = resultSet.getInt(1) + 1;
+			}
+			conn.close();
+
+		} catch (Exception e) {
+
+			System.out.println(e);
+		}
+
+		return studentIndexNum;
+	}
+
 }
