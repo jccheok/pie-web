@@ -117,36 +117,97 @@ public class SchoolService {
 
 		return registrationResult;
 	}
-	
-	public School[] getAllSchools(){
+
+	public School[] getAllSchools() {
 		School[] schools = {};
-		
-		//Write codes for GetAllSchools
-		
+
+		// Write codes for GetAllSchools
+
 		return schools;
 	}
-	
-	public Group[] getSchoolGroups(int schoolID){
-		Group[] groups = {};
-		
-		//Write codes for retrieving all Groups in the School
-		
-		return groups;
+
+	public Group[] getSchoolValidGroups(int schoolID) {
+		GroupService groupService = new GroupService();
+
+		Group[] schoolGroups = {};
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT groupID FROM `Group` WHERE schoolID = ? AND groupIsValid = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, schoolID);
+			pst.setInt(2, 1);
+
+			resultSet = pst.executeQuery();
+
+			List<Group> tempSchoolGroups = new ArrayList<Group>();
+
+			while (resultSet.next()) {
+
+				tempSchoolGroups.add(groupService
+						.getGroup(resultSet.getInt(1)));
+			}
+
+			schoolGroups = tempSchoolGroups
+					.toArray(schoolGroups);
+			
+			conn.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+		return schoolGroups;
 	}
-	
-	public Teacher[] getSchoolTeachers(int schoolID){
+
+	public Teacher[] getSchoolTeachers(int schoolID) {
 		Teacher[] teachers = {};
-		
-		//Write codes for retrieving all Teachers in School
-		
+
+		// Write codes for retrieving all Teachers in School
+
 		return teachers;
 	}
-	
-	public Teacher[] getSchoolTeacherAdmins(int schoolID){
-		Teacher[] admins = {};
-		
-		//Write codes for retrieving all Teachers that are Admins in the School
-		
-		return admins;
+
+	public Teacher[] getSchoolTeacherAdministrators(int schoolID) {
+
+		TeacherService teacherService = new TeacherService();
+
+		Teacher[] schoolTeacherAdministrators = {};
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT teacherID FROM `Teacher` WHERE schoolID = ? AND teacherIsSchoolAdmin = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, schoolID);
+			pst.setInt(2, 1);
+
+			resultSet = pst.executeQuery();
+
+			List<Teacher> tempSchoolTeachersAdministrators = new ArrayList<Teacher>();
+
+			while (resultSet.next()) {
+
+				tempSchoolTeachersAdministrators.add(teacherService
+						.getTeacher(resultSet.getInt(1)));
+			}
+
+			schoolTeacherAdministrators = tempSchoolTeachersAdministrators
+					.toArray(schoolTeacherAdministrators);
+			
+			conn.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+		return schoolTeacherAdministrators;
 	}
 }
