@@ -24,4 +24,8 @@ public enum UserType {
 		
 		return null;
 	}
+	
+	public String toString() {
+		return this.name();
+	}
 }

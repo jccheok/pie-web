@@ -57,7 +57,7 @@ public class LoginServlet extends HttpServlet {
 			userJSON.put("userID", user.getUserID());
 			userJSON.put("userFirstName", user.getUserFirstName());
 			userJSON.put("userLastName", user.getUserLastName());
-			userJSON.put("userType", user.getUserType().name());
+			userJSON.put("userType", user.getUserType().toString());
 			userJSON.put("userEmail", user.getUserEmail());
 			userJSON.put("userMobile", user.getUserMobile());
 			

@@ -17,5 +17,7 @@ public enum GroupType {
 		}
 
 		return groupType;
+	public String toString() {
+		return this.name();
 	}
 }
