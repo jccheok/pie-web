@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Date;
 
 import pie.Group;
@@ -168,7 +169,7 @@ public class GroupService {
 	public Staff getGroupOwner(int groupID) {
 
 		StaffRoleService staffRoleService = new StaffRoleService();
-		StaffService teacherService = new StaffService();
+		StaffService staffService = new StaffService();
 
 		Staff groupOwner = null;
 
@@ -180,14 +181,13 @@ public class GroupService {
 
 			String sql = "SELECT staffID FROM `Group`,`StaffGroup` WHERE `Group`.groupID = `StaffGroup`.groupID AND staffRoleID = ? AND `Group`.groupID = ?";
 			pst = conn.prepareStatement(sql);
-			pst.setInt(1, staffRoleService.getOwnerStaffRole()
-					.getStaffRoleID());
+			pst.setInt(1, staffRoleService.getOwnerStaffRole().getStaffRoleID());
 			pst.setInt(2, groupID);
 
 			resultSet = pst.executeQuery();
 
 			if (resultSet.next()) {
-				groupOwner = teacherService.getStaff(resultSet.getInt(1));
+				groupOwner = staffService.getStaff(resultSet.getInt(1));
 			}
 
 			conn.close();
@@ -202,22 +202,24 @@ public class GroupService {
 	public boolean setGroupOwner(int groupID, int teacherID) {
 
 		StaffService staffService = new StaffService();
-		StaffRoleService teacherRoleService = new StaffRoleService();
+		StaffRoleService staffRoleService = new StaffRoleService();
 
 		boolean setResult = false;
-		
+
 		if (getGroupOwner(groupID) != null) {
-			StaffRole defaultTeacherRole = teacherRoleService.getDefaultStaffRole();
+			StaffRole defaultTeacherRole = staffRoleService
+					.getDefaultStaffRole();
 			staffService.setStaffRole(teacherID, groupID, defaultTeacherRole);
 		}
-		
-		StaffRole ownerTeacherRole = teacherRoleService.getOwnerStaffRole();
+
+		StaffRole ownerTeacherRole = staffRoleService.getOwnerStaffRole();
 		if (hasStaffMember(groupID, teacherID)) {
 			if (staffService.setStaffRole(teacherID, groupID, ownerTeacherRole)) {
 				setResult = true;
 			}
 		} else {
-			if (addStaffToGroup(groupID, teacherID, ownerTeacherRole.getStaffRoleID())) {
+			if (addStaffToGroup(groupID, teacherID,
+					ownerTeacherRole.getStaffRoleID())) {
 				setResult = true;
 			}
 		}
@@ -275,7 +277,8 @@ public class GroupService {
 		return hasMember;
 	}
 
-	public boolean addStudentToGroup(int groupID, int studentID, int studentGroupIndexNumber) {
+	public boolean addStudentToGroup(int groupID, int studentID,
+			int studentGroupIndexNumber) {
 
 		boolean addResult = false;
 
@@ -339,23 +342,71 @@ public class GroupService {
 
 		Staff[] staffMembers = {};
 
-		// Write codes to retrieve the Members of Group that are Teachers
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT staffID FROM `StaffGroup` WHERE groupID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, groupID);
+
+			resultSet = pst.executeQuery();
+
+			StaffService staffService = new StaffService();
+			ArrayList<Staff> tempStaffMembers = new ArrayList<Staff>();
+
+			while (resultSet.next()) {
+				tempStaffMembers
+						.add(staffService.getStaff(resultSet.getInt(1)));
+
+			}
+			staffMembers = tempStaffMembers.toArray(staffMembers);
+			conn.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
 
 		return staffMembers;
 	}
 
 	public Student[] getStudentMembers(int groupID) {
 		Student[] studentMembers = {};
+		try {
 
-		// Write codes to retrieve the Members of Group that are Students
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT studentID FROM `StudentGroup` WHERE groupID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, groupID);
+
+			resultSet = pst.executeQuery();
+
+			StudentService studentService = new StudentService();
+			ArrayList<Student> tempStudentMembers = new ArrayList<Student>();
+
+			while (resultSet.next()) {
+				tempStudentMembers.add(studentService.getStudent(resultSet
+						.getInt(1)));
+
+			}
+			studentMembers = tempStudentMembers.toArray(studentMembers);
+			conn.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
 
 		return studentMembers;
 	}
 
-	public RegistrationResult registerGroup(Staff groupOwner,
-			String groupName, String groupDescription,
-			int groupMaxDailyHomeworkMinutes, GroupType groupType,
-			String groupCode) {
+	public RegistrationResult registerGroup(Staff groupOwner, String groupName,
+			String groupDescription, int groupMaxDailyHomeworkMinutes,
+			GroupType groupType, String groupCode) {
 		RegistrationResult registrationResult = RegistrationResult.SUCCESS;
 
 		if (isRegisteredGroup(groupName)) {
@@ -400,6 +451,34 @@ public class GroupService {
 		}
 
 		return registrationResult;
+	}
+
+	public int getNextStudentIndexNumber(int groupID) {
+		int studentIndexNum = -1;
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT LAST(studentGroupIndexNumber) FROM `StudentGroup` WHERE groupID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, groupID);
+
+			resultSet = pst.executeQuery();
+
+			if (resultSet.next()) {
+				studentIndexNum = resultSet.getInt(1) + 1;
+			}
+			conn.close();
+
+		} catch (Exception e) {
+
+			System.out.println(e);
+		}
+
+		return studentIndexNum;
 	}
 
 }

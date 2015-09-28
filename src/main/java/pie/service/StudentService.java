@@ -37,6 +37,28 @@ public class StudentService {
 		}
 	}
 
+	public enum JoinGroupResult {
+		SUCCESS("Successfully joined Group!"), WRONG_GROUP_CODE(
+				"The Group Code you've entered is wrong"), MISSING_GROUP_CODE(
+				"A Group Code is required"), GROUP_IS_NOT_OPEN(
+				"The Group you are trying to join is not open"), GROUP_IS_NOT_VALID(
+				"The Group you are attempting to join is not valid");
+
+		private String defaultMessage;
+
+		JoinGroupResult(String defaultMessage) {
+			this.defaultMessage = defaultMessage;
+		}
+
+		public String toString() {
+			return this.name();
+		}
+
+		public String getDefaultMessage() {
+			return defaultMessage;
+		}
+	}
+
 	public boolean isAvailableStudentCode(String studentCode) {
 		boolean isAvailable = false;
 
@@ -244,4 +266,36 @@ public class StudentService {
 		return registrationResult;
 	}
 
+	public JoinGroupResult joinGroup(int studentID, int groupID,
+			String groupCode) {
+		JoinGroupResult joinGroupResult = JoinGroupResult.SUCCESS;
+
+		GroupService groupService = new GroupService();
+
+		Group group = groupService.getGroup(groupID);
+		
+		if(group.getGroupCode() != null && groupCode == null){
+			return JoinGroupResult.MISSING_GROUP_CODE;
+		}
+		
+		if (group.groupIsOpen()) {
+			if (group.groupIsValid()) {
+				if (group.getGroupCode() == groupCode) {
+					boolean result = false;
+					int nextStudentIndexNumber = groupService
+							.getNextStudentIndexNumber(groupID);
+					result = groupService.addStudentToGroup(groupID, studentID,
+							nextStudentIndexNumber);
+				} else {
+					joinGroupResult = JoinGroupResult.WRONG_GROUP_CODE;
+				}
+			} else {
+				joinGroupResult = JoinGroupResult.GROUP_IS_NOT_VALID;
+			}
+		} else {
+			joinGroupResult = JoinGroupResult.GROUP_IS_NOT_OPEN;
+		}
+
+		return joinGroupResult;
+	}
 }

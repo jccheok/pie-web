@@ -5,11 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import pie.Group;
 import pie.School;
 import pie.Staff;
 import pie.StaffRole;
 import pie.User;
 import pie.UserType;
+import pie.service.StudentService.JoinGroupResult;
 import pie.util.DatabaseConnector;
 
 public class StaffService {
@@ -216,6 +218,28 @@ public class StaffService {
 		}
 
 		return registrationResult;
+	}
+
+	public JoinGroupResult joinGroup(int groupID, int staffID, String staffRoleName) {
+		JoinGroupResult joinGroupResult = JoinGroupResult.SUCCESS;
+
+		GroupService groupService = new GroupService();
+		StaffRoleService staffRoleService = new StaffRoleService();
+
+		Group group = groupService.getGroup(groupID);
+		
+		if (group.groupIsOpen()) {
+			if (group.groupIsValid()) {
+				int staffRoleID = staffRoleService.getStaffRoleID(staffRoleName);
+				groupService.addStaffToGroup(groupID, staffID, staffRoleID);
+			} else {
+				joinGroupResult = JoinGroupResult.GROUP_IS_NOT_VALID;
+			}
+		} else {
+			joinGroupResult = JoinGroupResult.GROUP_IS_NOT_OPEN;
+		}
+
+		return joinGroupResult;
 	}
 
 }
