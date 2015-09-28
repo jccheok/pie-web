@@ -238,4 +238,29 @@ public class TeacherService {
 		return registrationResult;
 	}
 
+	public JoinGroupResult joinGroup(int teacherID, int groupID,
+			String teacherRoleName) {
+		JoinGroupResult joinGroupResult = JoinGroupResult.SUCCESS;
+
+		GroupService groupService = new GroupService();
+		TeacherRoleService teacherRoleService = new TeacherRoleService();
+
+		Group group = groupService.getGroup(groupID);
+
+		if (group.groupIsOpen()) {
+			if (group.groupIsValid()) {
+				boolean result = false;
+				int teacherRoleID = teacherRoleService
+						.getTeacherRoleID(teacherRoleName);
+				result = groupService.addTeacherToGroup(groupID, teacherID,
+						teacherRoleID);
+			} else {
+				joinGroupResult = JoinGroupResult.GROUP_IS_NOT_VALID;
+			}
+		} else {
+			joinGroupResult = JoinGroupResult.GROUP_IS_NOT_OPEN;
+		}
+
+		return joinGroupResult;
+	}
 }
