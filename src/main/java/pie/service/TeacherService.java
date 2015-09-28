@@ -5,11 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import pie.Group;
 import pie.School;
 import pie.Teacher;
 import pie.TeacherRole;
 import pie.User;
 import pie.UserType;
+import pie.service.StudentService.JoinGroupResult;
 import pie.util.DatabaseConnector;
 
 public class TeacherService {
@@ -56,10 +58,10 @@ public class TeacherService {
 	}
 
 	public Teacher getTeacher(int teacherID) {
-		
+
 		SchoolService schoolService = new SchoolService();
 		UserService userService = new UserService();
-		
+
 		Teacher teacher = null;
 
 		try {
@@ -75,13 +77,16 @@ public class TeacherService {
 			resultSet = pst.executeQuery();
 
 			if (resultSet.next()) {
-				
+
 				User user = userService.getUser(teacherID);
-				School teacherSchool = schoolService.getSchool(resultSet.getInt("schoolID"));
+				School teacherSchool = schoolService.getSchool(resultSet
+						.getInt("schoolID"));
 				String teacherTitle = resultSet.getString("teacherTitle");
-				boolean teacherIsSchoolAdmin = resultSet.getInt("teacherIsSchoolAdmin") == 1;
-				
-				teacher = new Teacher(user, teacherSchool, teacherTitle, teacherIsSchoolAdmin);
+				boolean teacherIsSchoolAdmin = resultSet
+						.getInt("teacherIsSchoolAdmin") == 1;
+
+				teacher = new Teacher(user, teacherSchool, teacherTitle,
+						teacherIsSchoolAdmin);
 			}
 
 			conn.close();
@@ -92,10 +97,10 @@ public class TeacherService {
 
 		return teacher;
 	}
-	
+
 	public boolean isMember(int teacherID, int groupID) {
 		boolean isMember = false;
-		
+
 		try {
 
 			Connection conn = DatabaseConnector.getConnection();
@@ -114,49 +119,50 @@ public class TeacherService {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		
+
 		return isMember;
-		
+
 	}
-	
-	public boolean setTeacherRole(int teacherID, int groupID, TeacherRole teacherRole) {
+
+	public boolean setTeacherRole(int teacherID, int groupID,
+			TeacherRole teacherRole) {
 		boolean setResult = false;
-		
+
 		if (isMember(teacherID, groupID)) {
 			if (!getTeacherRole(teacherID, groupID).equals(teacherRole)) {
-				
+
 				try {
-					
+
 					Connection conn = DatabaseConnector.getConnection();
 					PreparedStatement pst = null;
-					
+
 					String sql = "UPDATE `TeacherGroup` SET teacherRoleID = ? WHERE teacherID = ? AND groupID = ?";
 					pst = conn.prepareStatement(sql);
 					pst.setInt(1, teacherRole.getTeacherRoleID());
 					pst.setInt(2, teacherID);
 					pst.setInt(3, groupID);
 					pst.executeUpdate();
-					
+
 					setResult = true;
-					
+
 					conn.close();
-					
+
 				} catch (Exception e) {
 					System.out.println(e);
 				}
 			}
 		}
-		
+
 		return setResult;
 	}
-	
+
 	public TeacherRole getTeacherRole(int teacherID, int groupID) {
-		
+
 		TeacherRoleService teacherRoleService = new TeacherRoleService();
 		TeacherRole teacherRole = null;
-		
+
 		try {
-			
+
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
@@ -166,34 +172,35 @@ public class TeacherService {
 			pst.setInt(1, teacherID);
 			pst.setInt(2, groupID);
 			resultSet = pst.executeQuery();
-			
+
 			if (resultSet.next()) {
-				teacherRole = teacherRoleService.getTeacherRole(resultSet.getInt(1));
+				teacherRole = teacherRoleService.getTeacherRole(resultSet
+						.getInt(1));
 			}
 
 			conn.close();
-			
+
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		
+
 		return teacherRole;
 	}
 
 	public RegistrationResult registerTeacher(String userFirstName,
 			String userLastName, String userEmail, String userPassword,
 			String userMobile, String schoolCode, String teacherTitle) {
-		
+
 		UserService userService = new UserService();
 		SchoolService schoolService = new SchoolService();
-		
+
 		RegistrationResult registrationResult = RegistrationResult.SUCCESS;
 
 		if (userService.isRegisteredUser(userEmail)) {
 			registrationResult = RegistrationResult.EMAIL_TAKEN;
 		} else {
 			if (!schoolService.isAvailableSchoolCode(schoolCode)) {
-				
+
 				try {
 
 					Connection conn = DatabaseConnector.getConnection();
@@ -201,7 +208,8 @@ public class TeacherService {
 					ResultSet resultSet = null;
 
 					String sql = "INSERT INTO `User` (userTypeID, userFirstName, userLastName, userEmail, userPassword, userMobile) VALUES (?, ?, ?, ?, ?, ?, ?)";
-					pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+					pst = conn.prepareStatement(sql,
+							Statement.RETURN_GENERATED_KEYS);
 					pst.setInt(1, UserType.TEACHER.getUserTypeID());
 					pst.setString(2, userFirstName);
 					pst.setString(3, userLastName);
