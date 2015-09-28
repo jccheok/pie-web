@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import pie.Country;
 import pie.Group;
 import pie.School;
 import pie.Staff;
@@ -124,16 +123,31 @@ public class SchoolService {
 		return school;
 	}
 
-	public boolean registerSchool(String schoolName, String schoolPassword,
-			Country schoolCountry, String schoolCity, String schoolAddress,
-			String schoolPostalCode) {
+	public RegistrationResult registerSchool(String schoolName, String schoolCode) {
 
-		boolean registrationResult = false;
+		RegistrationResult registrationResult = RegistrationResult.SUCCESS;
 
-		try {
+		if (isAvailableSchoolCode(schoolCode)) {
 			
-		} catch (Exception e) {
+			try {
+				
+				Connection conn = DatabaseConnector.getConnection();
+				PreparedStatement pst = null;
+				
+				String sql = "INSERT INTO `School` (schoolname, schoolCode) VALUES (?, ?)";
+				pst = conn.prepareStatement(sql);
+				pst.setString(1, schoolName);
+				pst.setString(2, schoolCode);
+				pst.executeUpdate();
+				
+				conn.close();
+				
+			} catch (Exception e) {
+				System.out.println(e);
+			}
 			
+		} else {
+			registrationResult = RegistrationResult.SCHOOL_CODE_TAKEN;
 		}
 
 		return registrationResult;
@@ -142,7 +156,32 @@ public class SchoolService {
 	public School[] getAllSchools() {
 		School[] schools = {};
 
-		// Write codes for GetAllSchools
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT schoolID FROM `School`";
+			pst = conn.prepareStatement(sql);
+
+			resultSet = pst.executeQuery();
+
+			List<School> tempSchools = new ArrayList<School>();
+
+			while (resultSet.next()) {
+
+				tempSchools.add(getSchool(resultSet.getInt(1)));
+			}
+
+			schools = tempSchools
+					.toArray(schools);
+			
+			conn.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
 
 		return schools;
 	}
