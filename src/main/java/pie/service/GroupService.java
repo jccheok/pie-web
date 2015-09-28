@@ -65,22 +65,174 @@ public class GroupService {
 		return totalMinutes;
 	}
 
-	public Teacher getAdministrator(int groupID) {
+	public Teacher getGroupOwner(int groupID) {
 
-		Teacher administrator = null;
+		TeacherRoleService teacherRoleService = new TeacherRoleService();
+		TeacherService teacherService = new TeacherService();
 
-		// Write codes to retrieve Administrator of the group
+		Teacher groupOwner = null;
 
-		return administrator;
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT teacherID FROM `Group`,`TeacherGroup` WHERE `Group`.groupID = `TeacherGroup`.groupID AND teacherRoleID = ? AND `Group`.groupID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, teacherRoleService.getOwnerTeacherRole()
+					.getTeacherRoleID());
+			pst.setInt(2, groupID);
+
+			resultSet = pst.executeQuery();
+
+			if (resultSet.next()) {
+				groupOwner = teacherService.getTeacher(resultSet.getInt(1));
+			}
+
+			conn.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+		return groupOwner;
 	}
 
-	public boolean setAdministrator(int groupID) {
+	public boolean setGroupOwner(int groupID, int teacherID) {
 
-		boolean result = false;
+		TeacherService teacherService = new TeacherService();
+		TeacherRoleService teacherRoleService = new TeacherRoleService();
 
-		// Write codes to set the Administrator for the group
+		boolean setResult = false;
+		
+		if (getGroupOwner(groupID) != null) {
+			TeacherRole defaultTeacherRole = teacherRoleService.getDefaultTeacherRole();
+			teacherService.setTeacherRole(teacherID, groupID, defaultTeacherRole);
+		}
+		
+		TeacherRole ownerTeacherRole = teacherRoleService.getOwnerTeacherRole();
+		if (hasTeacherMember(groupID, teacherID)) {
+			if (teacherService.setTeacherRole(teacherID, groupID, ownerTeacherRole)) {
+				setResult = true;
+			}
+		} else {
+			if (addTeacherToGroup(groupID, teacherID, ownerTeacherRole.getTeacherRoleID())) {
+				setResult = true;
+			}
+		}
 
-		return result;
+		return setResult;
+	}
+
+	public boolean hasStudentMember(int groupID, int studentID) {
+		boolean hasMember = false;
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+
+			String sql = "SELECT * FROM `StudentGroup` WHERE studentID = ? AND groupID = ? AND studentGroupIsValid = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, studentID);
+			pst.setInt(2, groupID);
+			pst.setInt(3, 1);
+
+			hasMember = pst.executeQuery().next();
+
+			conn.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+		return hasMember;
+	}
+
+	public boolean hasTeacherMember(int groupID, int teacherID) {
+		boolean hasMember = false;
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+
+			String sql = "SELECT * FROM `TeacherGroup` WHERE teacherID = ? AND groupID = ? AND teacherGroupIsValid = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, teacherID);
+			pst.setInt(2, groupID);
+			pst.setInt(3, 1);
+
+			hasMember = pst.executeQuery().next();
+
+			conn.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+		return hasMember;
+	}
+
+	public boolean addStudentToGroup(int groupID, int studentID, int studentGroupIndexNumber) {
+
+		boolean addResult = false;
+
+		if (!hasStudentMember(groupID, studentID)) {
+
+			try {
+
+				Connection conn = DatabaseConnector.getConnection();
+				PreparedStatement pst = null;
+
+				String sql = "INSERT INTO `StudentGroup` (groupID, studentID, studentGroupIndexNumber) VALUES (?, ?, ?)";
+				pst = conn.prepareStatement(sql);
+				pst.setInt(1, groupID);
+				pst.setInt(2, studentID);
+				pst.setInt(3, studentGroupIndexNumber);
+				pst.executeQuery();
+
+				addResult = true;
+
+				conn.close();
+
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+		}
+
+		return addResult;
+	}
+
+	public boolean addTeacherToGroup(int groupID, int teacherID, int teacherRoleID) {
+
+		boolean addResult = false;
+
+		if (!hasTeacherMember(groupID, teacherID)) {
+
+			try {
+
+				Connection conn = DatabaseConnector.getConnection();
+				PreparedStatement pst = null;
+
+				String sql = "INSERT INTO `TeacherGroup` (groupID, teacherID, teacherRoleID) VALUES (?, ?, ?)";
+				pst = conn.prepareStatement(sql);
+				pst.setInt(1, groupID);
+				pst.setInt(2, teacherID);
+				pst.setInt(3, teacherRoleID);
+				pst.executeQuery();
+
+				addResult = true;
+
+				conn.close();
+
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+		}
+
+		return addResult;
 	}
 
 	public Teacher[] getTeacherMembers(int groupID) {
@@ -100,22 +252,17 @@ public class GroupService {
 		return studentMembers;
 	}
 
-	public boolean addStudentToGroup(int groupID) {
-		boolean addResult = false;
 	public RegistrationResult registerGroup(Teacher groupOwner,
 			String groupName, String groupDescription,
 			int groupMaxDailyHomeworkMinutes, GroupType groupType,
 			String groupCode) {
 		RegistrationResult registrationResult = RegistrationResult.SUCCESS;
 
-		// Add Student to Group
 		if (isRegisteredGroup(groupName)) {
 			registrationResult = RegistrationResult.NAME_TAKEN;
 		} else {
 			if (isAvailableGroupCode(groupCode)) {
 
-		return addResult;
-	}
 				try {
 
 					Connection conn = DatabaseConnector.getConnection();
