@@ -14,6 +14,25 @@ import pie.Staff;
 import pie.util.DatabaseConnector;
 
 public class SchoolService {
+	
+	public enum RegistrationResult {
+		SUCCESS("School successfully registered."), SCHOOL_CODE_TAKEN(
+				"The school code you have entered is already taken!");
+
+		private String defaultMessage;
+
+		RegistrationResult(String defaultMessage) {
+			this.defaultMessage = defaultMessage;
+		}
+
+		public String toString() {
+			return this.name();
+		}
+
+		public String getDefaultMessage() {
+			return defaultMessage;
+		}
+	}
 
 	public boolean isAvailableSchoolCode(String schoolCode) {
 		boolean isRegistered = false;
@@ -95,6 +114,8 @@ public class SchoolService {
 				school.setSchoolCode(resultSet.getString("schoolCode"));
 
 			}
+			
+			conn.close();
 
 		} catch (Exception e) {
 			System.out.println(e);
