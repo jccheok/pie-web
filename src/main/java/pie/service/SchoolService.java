@@ -3,7 +3,9 @@ package pie.service;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import pie.Country;
 import pie.Group;
@@ -12,6 +14,29 @@ import pie.Teacher;
 import pie.util.DatabaseConnector;
 
 public class SchoolService {
+
+	public boolean isAvailableSchoolCode(String schoolCode) {
+		boolean isRegistered = false;
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+
+			String sql = "SELECT * FROM `School` WHERE schoolCode = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setString(1, schoolCode);
+
+			isRegistered = pst.executeQuery().next();
+
+			conn.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+		return isRegistered;
+	}
 
 	public int getSchoolID(String schoolCode) {
 		int schoolID = -1;
@@ -77,14 +102,20 @@ public class SchoolService {
 
 		return school;
 	}
-	
-	public boolean createSchool(String schoolName, String schoolPassword, Country schoolCountry, String schoolCity, String schoolAddress, String schoolPostalCode){
-		
-		boolean createdSchool = false;
-		
-		//Write codes for Create School
-		
-		return createdSchool;
+
+	public boolean registerSchool(String schoolName, String schoolPassword,
+			Country schoolCountry, String schoolCity, String schoolAddress,
+			String schoolPostalCode) {
+
+		boolean registrationResult = false;
+
+		try {
+			
+		} catch (Exception e) {
+			
+		}
+
+		return registrationResult;
 	}
 	
 	public School[] getAllSchools(){

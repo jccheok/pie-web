@@ -3,6 +3,7 @@ package pie.service;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Date;
 
 import pie.Group;
@@ -10,9 +11,76 @@ import pie.GroupType;
 import pie.School;
 import pie.Student;
 import pie.Teacher;
+import pie.TeacherRole;
 import pie.util.DatabaseConnector;
 
 public class GroupService {
+
+	public enum RegistrationResult {
+		SUCCESS("Group successfully registered."), NAME_TAKEN(
+				"The group name you have entered is already taken!"), GROUP_CODE_TAKEN(
+				"The group code you have entered is already taken!");
+
+		private String defaultMessage;
+
+		RegistrationResult(String defaultMessage) {
+			this.defaultMessage = defaultMessage;
+		}
+
+		public String toString() {
+			return this.name();
+		}
+
+		public String getDefaultMessage() {
+			return defaultMessage;
+		}
+	}
+
+	public boolean isRegisteredGroup(String groupName) {
+		boolean isRegistered = false;
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+
+			String sql = "SELECT * FROM `Group` WHERE groupName = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setString(1, groupName);
+
+			isRegistered = pst.executeQuery().next();
+
+			conn.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+		return isRegistered;
+	}
+
+	public boolean isAvailableGroupCode(String groupCode) {
+		boolean isAvailable = false;
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+
+			String sql = "SELECT * FROM `Group` WHERE groupCode = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setString(1, groupCode);
+
+			isAvailable = !pst.executeQuery().next();
+
+			conn.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+		return isAvailable;
+	}
 
 	public int getGroupID(String groupCode) {
 		int groupID = -1;

@@ -30,12 +30,12 @@ public class UserService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "SELECT * FROM `User` WHERE userEmail";
+			String sql = "SELECT * FROM `User` WHERE userEmail = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, userEmail);
 
 			isRegistered = pst.executeQuery().next();
-			
+
 			conn.close();
 
 		} catch (Exception e) {
@@ -54,7 +54,7 @@ public class UserService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT isVerified FROM `User` WHERE userEmail";
+			String sql = "SELECT isVerified FROM `User` WHERE userEmail = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, userEmail);
 
@@ -63,7 +63,7 @@ public class UserService {
 			if (resultSet.next()) {
 				isVerified = resultSet.getInt(1) == 1;
 			}
-			
+
 			conn.close();
 
 		} catch (Exception e) {
@@ -73,9 +73,10 @@ public class UserService {
 		return isVerified;
 	}
 
-	public boolean verifyUser(String userEmail) {
+	public boolean verifyUser(User user) {
 		boolean verifyResult = true;
 
+		String userEmail = user.getUserEmail();
 		if (isValidUser(userEmail)) {
 			verifyResult = false;
 		} else {
@@ -89,7 +90,7 @@ public class UserService {
 				pst.setInt(1, 1);
 				pst.setString(2, userEmail);
 				pst.executeUpdate();
-				
+
 				conn.close();
 
 			} catch (Exception e) {
@@ -109,7 +110,7 @@ public class UserService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT isValid FROM `User` WHERE userEmail";
+			String sql = "SELECT isValid FROM `User` WHERE userEmail = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, userEmail);
 
@@ -118,7 +119,7 @@ public class UserService {
 			if (resultSet.next()) {
 				isValid = resultSet.getInt(1) == 1;
 			}
-			
+
 			conn.close();
 
 		} catch (Exception e) {
@@ -161,9 +162,9 @@ public class UserService {
 				} else {
 					loginResult = LoginResult.NOT_MATCHING;
 				}
-				
+
 				conn.close();
-				
+
 			} catch (Exception e) {
 				System.out.println(e);
 			}
@@ -192,7 +193,7 @@ public class UserService {
 			if (resultSet.next()) {
 				userID = resultSet.getInt(1);
 			}
-			
+
 			conn.close();
 
 		} catch (Exception e) {
