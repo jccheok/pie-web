@@ -37,6 +37,28 @@ public class StudentService {
 		}
 	}
 
+	public enum JoinGroupResult {
+		SUCCESS("Successfully joined Group!"), WRONG_GROUP_CODE(
+				"The Group Code you've entered is wrong"), MISSING_GROUP_CODE(
+				"A Group Code is required"), GROUP_IS_NOT_OPEN(
+				"The Group you are trying to join is not open"), GROUP_IS_NOT_VALID(
+				"The Group you are attempting to join is not valid");
+
+		private String defaultMessage;
+
+		JoinGroupResult(String defaultMessage) {
+			this.defaultMessage = defaultMessage;
+		}
+
+		public String toString() {
+			return this.name();
+		}
+
+		public String getDefaultMessage() {
+			return defaultMessage;
+		}
+	}
+
 	public boolean isAvailableStudentCode(String studentCode) {
 		boolean isAvailable = false;
 
