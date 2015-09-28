@@ -16,6 +16,27 @@ public class Group {
 	private Date groupDateCreated;
 	private Date groupDateDeleted;
 	private boolean groupIsValid;
+
+	public Group() {
+		
+	}
+
+	public Group(int groupID, School school, String groupName,
+			String groupDescription, int groupMaxDailyHomeworkMinutes,
+			GroupType groupType, String groupCode, boolean groupIsOpen,
+			Date groupLastUpdate, Date groupDateCreated) {
+		this.groupID = groupID;
+		this.school = school;
+		this.groupName = groupName;
+		this.groupDescription = groupDescription;
+		this.groupMaxDailyHomeworkMinutes = groupMaxDailyHomeworkMinutes;
+		this.groupType = groupType;
+		this.groupCode = groupCode;
+		this.groupIsOpen = groupIsOpen;
+		this.groupLastUpdate = groupLastUpdate;
+		this.groupDateCreated = groupDateCreated;
+	}
+
 	public int getGroupID() {
 		return groupID;
 	}

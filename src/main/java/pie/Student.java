@@ -7,6 +7,18 @@ public class Student extends User {
 	private School school;
 	private String studentCode;
 	private Date studentEnlistmentDate;
+	
+	public Student() {
+
+	}
+
+	public Student(User user, School studentSchool, String studentCode,
+			Date studentEnlistmentDate) {
+		super(user);
+		setStudentCode(studentCode);
+		setSchool(studentSchool);
+		setStudentEnlistmentDate(studentEnlistmentDate);
+	}
 
 	public School getSchool() {
 		return school;

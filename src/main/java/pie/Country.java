@@ -7,6 +7,19 @@ public class Country {
 	private String countryPhoneCode;
 	private String countryISO;
 
+	public Country() {
+
+	}
+
+	public Country(int countryID, String countryName, String countryPhoneCode,
+			String countryISO) {
+		
+		this.countryID = countryID;
+		this.countryName = countryName;
+		this.countryPhoneCode = countryPhoneCode;
+		this.countryISO = countryISO;
+	}
+
 	public int getCountryID() {
 		return countryID;
 	}

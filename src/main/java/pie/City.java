@@ -6,6 +6,17 @@ public class City {
 	private Country cityCountry;
 	private String cityName;
 
+	public City() {
+
+	}
+
+	public City(int cityID, Country cityCountry, String cityName) {
+
+		this.cityID = cityID;
+		this.cityCountry = cityCountry;
+		this.cityName = cityName;
+	}
+
 	public int getCityID() {
 		return cityID;
 	}
