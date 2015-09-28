@@ -6,6 +6,16 @@ public class Teacher extends User {
 	private School school;
 	private boolean teacherIsSchoolAdmin;
 
+	public Teacher() {}
+
+	public Teacher(User user, School teacherSchool, String teacherTitle,
+			boolean teacherIsSchoolAdmin) {
+		super(user);
+		setTeacherTitle(teacherTitle);
+		setSchool(teacherSchool);
+		setTeacherIsSchoolAdmin(teacherIsSchoolAdmin);
+	}
+
 	public String getTeacherTitle() {
 		return teacherTitle;
 	}

@@ -2,20 +2,30 @@ package pie;
 
 public enum GroupType {
 
-	CLASS, CCA;
+	CLASS(1), CCA(2);
+	
+	private int groupTypeID;
+	
+	GroupType(int userTypeID) {
+		this.groupTypeID = userTypeID;
+	}
+	
+	public int getGroupTypeID() {
+		return groupTypeID;
+	}
 
 	public static GroupType getGroupType(int groupTypeID) {
-		GroupType groupType = null;
-
-		switch (groupTypeID) {
-		case 1:
-			groupType = CLASS;
-			break;
-		case 2:
-			groupType = CCA;
-			break;
+		
+		for(GroupType groupType: GroupType.values()) {
+			if (groupTypeID == groupType.getGroupTypeID()) {
+				return groupType;
+			}
 		}
-
-		return groupType;
+		
+		return null;
+	}
+	
+	public String toString() {
+		return this.name();
 	}
 }

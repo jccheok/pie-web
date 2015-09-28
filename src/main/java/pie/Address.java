@@ -6,6 +6,19 @@ public class Address {
 	private City addressCity;
 	private String addressStreet;
 	private String addressPostalCode;
+	
+	public Address() {
+		
+	}
+
+	public Address(int addressID, City addressCity, String addressStreet,
+			String addressPostalCode) {
+		
+		this.addressID = addressID;
+		this.addressCity = addressCity;
+		this.addressStreet = addressStreet;
+		this.addressPostalCode = addressPostalCode;
+	}
 
 	public int getAddressID() {
 		return addressID;

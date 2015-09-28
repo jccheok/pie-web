@@ -18,6 +18,46 @@ public class User {
 	private Date userRegistrationDate;
 	private Date userLastUpdate;
 
+	public User() {}
+	
+	public User(int userID, Address userAddress, String userFirstName,
+			String userLastName, UserType userType, String userEmail,
+			String userPassword, String userMobile, boolean userIsValid,
+			boolean userIsVerified, Date userLastLogin,
+			Date userRegistrationDate, Date userLastUpdate) {
+		
+		setUserID(userID);
+		setUserAddress(userAddress);
+		setUserFirstName(userFirstName);
+		setUserLastName(userLastName);
+		setUserType(userType);
+		setUserEmail(userEmail);
+		setUserPassword(userPassword);
+		setUserMobile(userMobile);
+		setUserIsValid(userIsValid);
+		setUserIsVerified(userIsVerified);
+		setUserLastLogin(userLastLogin);
+		setUserRegistrationDate(userRegistrationDate);
+		setUserLastUpdate(userLastUpdate);
+	}
+	
+public User(User user) {
+		
+		setUserID(user.getUserID());
+		setUserAddress(user.getUserAddress());
+		setUserFirstName(user.getUserFirstName());
+		setUserLastName(user.getUserLastName());
+		setUserType(user.getUserType());
+		setUserEmail(user.getUserEmail());
+		setUserPassword(user.getUserPassword());
+		setUserMobile(user.getUserMobile());
+		setUserIsValid(user.userIsValid());
+		setUserIsVerified(user.userIsVerified());
+		setUserLastLogin(user.getUserLastLogin());
+		setUserRegistrationDate(user.getUserRegistrationDate());
+		setUserLastUpdate(user.getUserLastUpdate());
+	}
+
 	public int getUserID() {
 		return userID;
 	}

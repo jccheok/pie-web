@@ -111,7 +111,7 @@ public class LoginServletTest {
 		JSONObject servletResponse = new JSONObject(stringCapture.getValue());
 		
 		assertTrue(servletResponse.has("result"));
-		assertEquals(servletResponse.get("result"), LoginResult.NOT_MATCHING.name());
+		assertEquals(servletResponse.get("result"), LoginResult.NOT_MATCHING.toString());
 		
 		assertFalse(servletResponse.has("user"));
 	}

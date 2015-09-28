@@ -46,6 +46,7 @@ public class LoginServlet extends HttpServlet {
 			if (result == loginResult) {
 				
 				responseObject.put("result", result.toString());
+				responseObject.put("message", result.getDefaultMessage());
 				break;
 			}
 		}
@@ -57,7 +58,7 @@ public class LoginServlet extends HttpServlet {
 			userJSON.put("userID", user.getUserID());
 			userJSON.put("userFirstName", user.getUserFirstName());
 			userJSON.put("userLastName", user.getUserLastName());
-			userJSON.put("userType", user.getUserType().name());
+			userJSON.put("userType", user.getUserType().toString());
 			userJSON.put("userEmail", user.getUserEmail());
 			userJSON.put("userMobile", user.getUserMobile());
 			
