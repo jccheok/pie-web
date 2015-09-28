@@ -10,48 +10,42 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
-import pie.service.StudentService;
-import pie.service.StudentService.RegistrationResult;
+import pie.service.SchoolService.RegistrationResult;
+import pie.service.SchoolService;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class RegisterStudentServlet extends HttpServlet {
+public class RegisterSchoolServlet extends HttpServlet {
 
-	private static final long serialVersionUID = -7966834264489316794L;
+	private static final long serialVersionUID = -3878265942477329631L;
 	
-	StudentService studentService;
-
+	private SchoolService schoolService;
+	
 	@Inject
-	public RegisterStudentServlet(StudentService studentService) {
-		this.studentService = studentService;
+	public RegisterSchoolServlet(SchoolService schoolService) {
+		this.schoolService = schoolService;
 	}
-
+	
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
 		response.setContentType("application/json");
 		response.addHeader("Access-Control-Allow-Origin", "*");
 
-		String userEmail = request.getParameter("userEmail");
-		String userPassword = request.getParameter("userPassword");
-		String userMobile = request.getParameter("userMobile");
-		String studentCode = request.getParameter("studentCode");
-		
-		RegistrationResult registrationResult = studentService.registerStudent(userEmail, userPassword, userMobile, studentCode);
-		
+		String schoolName = request.getParameter("schoolName");
+		String schoolCode = request.getParameter("schoolCode");
+
+		RegistrationResult registrationResult = schoolService.registerSchool(schoolName, schoolCode);
+
 		JSONObject responseObject = new JSONObject();
 		responseObject.put("result", registrationResult.toString());
 		responseObject.put("message", registrationResult.getDefaultMessage());
-		
-		if (registrationResult == RegistrationResult.SUCCESS) {
-
-			// send email
-		}
 
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
 
 	}
+
 }

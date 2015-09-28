@@ -10,20 +10,20 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
-import pie.service.TeacherService;
-import pie.service.TeacherService.JoinGroupResult;
+import pie.service.StaffService;
+import pie.service.StudentService.JoinGroupResult;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class JoinGroupTeacherServlet extends HttpServlet {
+public class JoinGroupStaffServlet extends HttpServlet {
 
-	TeacherService teacherService;
+	StaffService staffService;
 
 	@Inject
-	public JoinGroupTeacherServlet(TeacherService teacherService) {
-		this.teacherService = teacherService;
+	public JoinGroupStaffServlet(StaffService staffService) {
+		this.staffService = staffService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -35,7 +35,7 @@ public class JoinGroupTeacherServlet extends HttpServlet {
 		int teacherID = Integer.parseInt(request.getParameter("teacherID"));
 		String teacherRoleName = request.getParameter("teacherRoleName");
 
-		JoinGroupResult joinGroupResult = teacherService.joinGroup(groupID,
+		JoinGroupResult joinGroupResult = staffService.joinGroup(groupID,
 				teacherID, teacherRoleName);
 
 		JSONObject responseObject = new JSONObject();

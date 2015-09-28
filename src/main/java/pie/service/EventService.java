@@ -9,7 +9,7 @@ import pie.Address;
 import pie.Event;
 import pie.Group;
 import pie.ResponseQuestion;
-import pie.Teacher;
+import pie.Staff;
 import pie.User;
 import pie.util.DatabaseConnector;
 
@@ -33,7 +33,7 @@ public class EventService {
 			if (resultSet.next()) {
 				event = new Event();
 				event.setEventID(eventID);
-				event.setTeacher(new TeacherService().getTeacher(resultSet
+				event.setEventAuthor(new StaffService().getStaff(resultSet
 						.getInt("teacherID")));
 				event.setEventTitle(resultSet.getString("eventTitle"));
 				event.setAddress(new AddressService().getAddress(resultSet
@@ -83,7 +83,7 @@ public class EventService {
 		return userRecipient;
 	}
 
-	public int createEvent(String eventTitle, Teacher teacher, Address address,
+	public int createEvent(String eventTitle, Staff teacher, Address address,
 			String eventDescription, String eventAttire, Date eventStartDate,
 			Date eventEndDate, ResponseQuestion responseQuestion) {
 		int eventID = -1;
@@ -93,7 +93,7 @@ public class EventService {
 		return eventID;
 	}
 
-	public int createEventAsDraft(String eventTitle, Teacher teacher,
+	public int createEventAsDraft(String eventTitle, Staff teacher,
 			Address address, String eventDescription, String eventAttire,
 			Date eventStartDate, Date eventEndDate,
 			ResponseQuestion responseQuestion) {
@@ -105,7 +105,7 @@ public class EventService {
 		return eventID;
 	}
 
-	public int createEventAsTemplate(String eventTitle, Teacher teacher,
+	public int createEventAsTemplate(String eventTitle, Staff teacher,
 			Address address, String eventDescription, String eventAttire,
 			Date eventStartDate, Date eventEndDate,
 			ResponseQuestion responseQuestion) {
@@ -133,7 +133,7 @@ public class EventService {
 		return sendResult;
 	}
 
-	public Event[] getEventsIsDraft(Teacher teacher) {
+	public Event[] getEventsIsDraft(Staff teacher) {
 		Event[] events = {};
 
 		// Write codes to retrieve all the Events that are saved as Drafts by
@@ -142,7 +142,7 @@ public class EventService {
 		return events;
 	}
 
-	public Event[] getEventsIsTemplate(Teacher teacher) {
+	public Event[] getEventsIsTemplate(Staff teacher) {
 		Event[] events = {};
 
 		// Write codes to retrieve all Events that are saved as Template by

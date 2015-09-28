@@ -7,13 +7,31 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import pie.Country;
 import pie.Group;
 import pie.School;
-import pie.Teacher;
+import pie.Staff;
 import pie.util.DatabaseConnector;
 
 public class SchoolService {
+	
+	public enum RegistrationResult {
+		SUCCESS("School successfully registered."), SCHOOL_CODE_TAKEN(
+				"The school code you have entered is already taken!");
+
+		private String defaultMessage;
+
+		RegistrationResult(String defaultMessage) {
+			this.defaultMessage = defaultMessage;
+		}
+
+		public String toString() {
+			return this.name();
+		}
+
+		public String getDefaultMessage() {
+			return defaultMessage;
+		}
+	}
 
 	public boolean isAvailableSchoolCode(String schoolCode) {
 		boolean isRegistered = false;
@@ -95,6 +113,8 @@ public class SchoolService {
 				school.setSchoolCode(resultSet.getString("schoolCode"));
 
 			}
+			
+			conn.close();
 
 		} catch (Exception e) {
 			System.out.println(e);
@@ -103,16 +123,31 @@ public class SchoolService {
 		return school;
 	}
 
-	public boolean registerSchool(String schoolName, String schoolPassword,
-			Country schoolCountry, String schoolCity, String schoolAddress,
-			String schoolPostalCode) {
+	public RegistrationResult registerSchool(String schoolName, String schoolCode) {
 
-		boolean registrationResult = false;
+		RegistrationResult registrationResult = RegistrationResult.SUCCESS;
 
-		try {
+		if (isAvailableSchoolCode(schoolCode)) {
 			
-		} catch (Exception e) {
+			try {
+				
+				Connection conn = DatabaseConnector.getConnection();
+				PreparedStatement pst = null;
+				
+				String sql = "INSERT INTO `School` (schoolname, schoolCode) VALUES (?, ?)";
+				pst = conn.prepareStatement(sql);
+				pst.setString(1, schoolName);
+				pst.setString(2, schoolCode);
+				pst.executeUpdate();
+				
+				conn.close();
+				
+			} catch (Exception e) {
+				System.out.println(e);
+			}
 			
+		} else {
+			registrationResult = RegistrationResult.SCHOOL_CODE_TAKEN;
 		}
 
 		return registrationResult;
@@ -121,7 +156,32 @@ public class SchoolService {
 	public School[] getAllSchools() {
 		School[] schools = {};
 
-		// Write codes for GetAllSchools
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT schoolID FROM `School`";
+			pst = conn.prepareStatement(sql);
+
+			resultSet = pst.executeQuery();
+
+			List<School> tempSchools = new ArrayList<School>();
+
+			while (resultSet.next()) {
+
+				tempSchools.add(getSchool(resultSet.getInt(1)));
+			}
+
+			schools = tempSchools
+					.toArray(schools);
+			
+			conn.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
 
 		return schools;
 	}
@@ -164,19 +224,19 @@ public class SchoolService {
 		return schoolGroups;
 	}
 
-	public Teacher[] getSchoolTeachers(int schoolID) {
-		Teacher[] teachers = {};
+	public Staff[] getSchoolStaff(int schoolID) {
+		Staff[] staff = {};
 
 		// Write codes for retrieving all Teachers in School
 
-		return teachers;
+		return staff;
 	}
 
-	public Teacher[] getSchoolTeacherAdministrators(int schoolID) {
+	public Staff[] getSchoolStaffAdministrators(int schoolID) {
 
-		TeacherService teacherService = new TeacherService();
+		StaffService staffService = new StaffService();
 
-		Teacher[] schoolTeacherAdministrators = {};
+		Staff[] schoolStaffAdministrators = {};
 
 		try {
 
@@ -184,23 +244,22 @@ public class SchoolService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT teacherID FROM `Teacher` WHERE schoolID = ? AND teacherIsSchoolAdmin = ?";
+			String sql = "SELECT staffID FROM `Staff` WHERE schoolID = ? AND staffIsSchoolAdmin = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, schoolID);
 			pst.setInt(2, 1);
 
 			resultSet = pst.executeQuery();
 
-			List<Teacher> tempSchoolTeachersAdministrators = new ArrayList<Teacher>();
+			List<Staff> tempSchoolStaffAdministrators = new ArrayList<Staff>();
 
 			while (resultSet.next()) {
 
-				tempSchoolTeachersAdministrators.add(teacherService
-						.getTeacher(resultSet.getInt(1)));
+				tempSchoolStaffAdministrators.add(staffService.getStaff(resultSet.getInt(1)));
 			}
 
-			schoolTeacherAdministrators = tempSchoolTeachersAdministrators
-					.toArray(schoolTeacherAdministrators);
+			schoolStaffAdministrators = tempSchoolStaffAdministrators
+					.toArray(schoolStaffAdministrators);
 			
 			conn.close();
 
@@ -208,6 +267,6 @@ public class SchoolService {
 			System.out.println(e);
 		}
 
-		return schoolTeacherAdministrators;
+		return schoolStaffAdministrators;
 	}
 }

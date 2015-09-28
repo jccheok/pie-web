@@ -43,15 +43,8 @@ public class LoginServlet extends HttpServlet {
 		LoginResult loginResult = userService.loginUser(userEmail, userPassword);
 		
 		JSONObject responseObject = new JSONObject();
-		
-		for (LoginResult result : LoginResult.values()) {
-			if (result == loginResult) {
-				
-				responseObject.put("result", result.toString());
-				responseObject.put("message", result.getDefaultMessage());
-				break;
-			}
-		}
+		responseObject.put("result", loginResult.toString());
+		responseObject.put("message", loginResult.getDefaultMessage());
 		
 		if (loginResult == LoginResult.SUCCESS) {
 			

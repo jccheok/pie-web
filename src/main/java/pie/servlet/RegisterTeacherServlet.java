@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
-import pie.service.TeacherService.RegistrationResult;
-import pie.service.TeacherService;
+import pie.service.StaffService.RegistrationResult;
+import pie.service.StaffService;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -21,10 +21,10 @@ public class RegisterTeacherServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 8776151424113551105L;
 	
-	TeacherService teacherService;
+	StaffService teacherService;
 
 	@Inject
-	public RegisterTeacherServlet(TeacherService teacherService) {
+	public RegisterTeacherServlet(StaffService teacherService) {
 		this.teacherService = teacherService;
 	}
 
@@ -42,18 +42,11 @@ public class RegisterTeacherServlet extends HttpServlet {
 		String studentCode = request.getParameter("schoolCode");
 		String teacherTitle = request.getParameter("teacherTitle");
 		
-		RegistrationResult registrationResult = teacherService.registerTeacher(userFirstName, userLastName, userEmail, userPassword, userMobile, studentCode, teacherTitle);
+		RegistrationResult registrationResult = teacherService.registerStaff(userFirstName, userLastName, userEmail, userPassword, userMobile, studentCode, teacherTitle);
 		
 		JSONObject responseObject = new JSONObject();
-		
-		for (RegistrationResult result : RegistrationResult.values()) {
-			if (result == registrationResult) {
-				
-				responseObject.put("result", result.toString());
-				responseObject.put("message", result.getDefaultMessage());
-				break;
-			}
-		}
+		responseObject.put("result", registrationResult.toString());
+		responseObject.put("message", registrationResult.getDefaultMessage());
 		
 		if (registrationResult == RegistrationResult.SUCCESS) {
 
