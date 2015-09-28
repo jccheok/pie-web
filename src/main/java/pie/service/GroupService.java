@@ -102,20 +102,57 @@ public class GroupService {
 
 	public boolean addStudentToGroup(int groupID) {
 		boolean addResult = false;
+	public RegistrationResult registerGroup(Teacher groupOwner,
+			String groupName, String groupDescription,
+			int groupMaxDailyHomeworkMinutes, GroupType groupType,
+			String groupCode) {
+		RegistrationResult registrationResult = RegistrationResult.SUCCESS;
 
 		// Add Student to Group
+		if (isRegisteredGroup(groupName)) {
+			registrationResult = RegistrationResult.NAME_TAKEN;
+		} else {
+			if (isAvailableGroupCode(groupCode)) {
 
 		return addResult;
 	}
+				try {
 
-	public int registerGroup(String groupName, School school,
-			String groupDescription, int groupMaxDailyHomeworkMinutes,
-			GroupType groupType, String groupCode, boolean groupIsOpen) {
-		int groupID = -1;
+					Connection conn = DatabaseConnector.getConnection();
+					PreparedStatement pst = null;
+					ResultSet resultSet = null;
 
-		// Write codes to Register Group
+					String sql = "INSERT INTO `Group` (schoolID, groupName, groupDescription, groupMaxDailyHomeworkMinutes, groupTypeID, groupCode) VALUES (?, ?, ?, ?, ?, ?)";
+					pst = conn.prepareStatement(sql,
+							Statement.RETURN_GENERATED_KEYS);
+					pst.setInt(1, groupOwner.getSchool().getSchoolID());
+					pst.setString(2, groupName);
+					pst.setString(3, groupDescription);
+					pst.setInt(4, groupMaxDailyHomeworkMinutes);
+					pst.setInt(5, groupType.getGroupTypeID());
+					pst.setString(6, groupCode);
+					pst.executeUpdate();
 
-		return groupID;
+					resultSet = pst.getGeneratedKeys();
+
+					if (resultSet.next()) {
+
+						int newGroupID = resultSet.getInt(1);
+						setGroupOwner(newGroupID, groupOwner.getUserID());
+					}
+
+					conn.close();
+
+				} catch (Exception e) {
+
+					System.out.println(e);
+				}
+			} else {
+				registrationResult = RegistrationResult.GROUP_CODE_TAKEN;
+			}
+		}
+
+		return registrationResult;
 	}
-	
+
 }
