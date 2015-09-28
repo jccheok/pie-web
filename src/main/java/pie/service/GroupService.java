@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Date;
 
 import pie.Group;
@@ -205,19 +206,23 @@ public class GroupService {
 		TeacherRoleService teacherRoleService = new TeacherRoleService();
 
 		boolean setResult = false;
-		
+
 		if (getGroupOwner(groupID) != null) {
-			TeacherRole defaultTeacherRole = teacherRoleService.getDefaultTeacherRole();
-			teacherService.setTeacherRole(teacherID, groupID, defaultTeacherRole);
+			TeacherRole defaultTeacherRole = teacherRoleService
+					.getDefaultTeacherRole();
+			teacherService.setTeacherRole(teacherID, groupID,
+					defaultTeacherRole);
 		}
-		
+
 		TeacherRole ownerTeacherRole = teacherRoleService.getOwnerTeacherRole();
 		if (hasTeacherMember(groupID, teacherID)) {
-			if (teacherService.setTeacherRole(teacherID, groupID, ownerTeacherRole)) {
+			if (teacherService.setTeacherRole(teacherID, groupID,
+					ownerTeacherRole)) {
 				setResult = true;
 			}
 		} else {
-			if (addTeacherToGroup(groupID, teacherID, ownerTeacherRole.getTeacherRoleID())) {
+			if (addTeacherToGroup(groupID, teacherID,
+					ownerTeacherRole.getTeacherRoleID())) {
 				setResult = true;
 			}
 		}
@@ -275,7 +280,8 @@ public class GroupService {
 		return hasMember;
 	}
 
-	public boolean addStudentToGroup(int groupID, int studentID, int studentGroupIndexNumber) {
+	public boolean addStudentToGroup(int groupID, int studentID,
+			int studentGroupIndexNumber) {
 
 		boolean addResult = false;
 
@@ -305,7 +311,8 @@ public class GroupService {
 		return addResult;
 	}
 
-	public boolean addTeacherToGroup(int groupID, int teacherID, int teacherRoleID) {
+	public boolean addTeacherToGroup(int groupID, int teacherID,
+			int teacherRoleID) {
 
 		boolean addResult = false;
 
