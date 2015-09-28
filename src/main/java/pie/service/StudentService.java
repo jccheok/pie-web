@@ -266,4 +266,36 @@ public class StudentService {
 		return registrationResult;
 	}
 
+	public JoinGroupResult joinGroup(int studentID, int groupID,
+			String groupCode) {
+		JoinGroupResult joinGroupResult = JoinGroupResult.SUCCESS;
+
+		GroupService groupService = new GroupService();
+
+		Group group = groupService.getGroup(groupID);
+		
+		if(group.getGroupCode() != null && groupCode == null){
+			return JoinGroupResult.MISSING_GROUP_CODE;
+		}
+		
+		if (group.groupIsOpen()) {
+			if (group.groupIsValid()) {
+				if (group.getGroupCode() == groupCode) {
+					boolean result = false;
+					int nextStudentIndexNumber = groupService
+							.getNextStudentIndexNumber(groupID);
+					result = groupService.addStudentToGroup(groupID, studentID,
+							nextStudentIndexNumber);
+				} else {
+					joinGroupResult = JoinGroupResult.WRONG_GROUP_CODE;
+				}
+			} else {
+				joinGroupResult = JoinGroupResult.GROUP_IS_NOT_VALID;
+			}
+		} else {
+			joinGroupResult = JoinGroupResult.GROUP_IS_NOT_OPEN;
+		}
+
+		return joinGroupResult;
+	}
 }
