@@ -17,15 +17,15 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class RegisterTeacherServlet extends HttpServlet {
+public class RegisterStaffServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 8776151424113551105L;
 	
-	StaffService teacherService;
+	StaffService staffService;
 
 	@Inject
-	public RegisterTeacherServlet(StaffService teacherService) {
-		this.teacherService = teacherService;
+	public RegisterStaffServlet(StaffService staffService) {
+		this.staffService = staffService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -40,9 +40,9 @@ public class RegisterTeacherServlet extends HttpServlet {
 		String userPassword = request.getParameter("userPassword");
 		String userMobile = request.getParameter("userMobile");
 		String studentCode = request.getParameter("schoolCode");
-		String teacherTitle = request.getParameter("teacherTitle");
+		String staffTitle = request.getParameter("staffTitle");
 		
-		RegistrationResult registrationResult = teacherService.registerStaff(userFirstName, userLastName, userEmail, userPassword, userMobile, studentCode, teacherTitle);
+		RegistrationResult registrationResult = staffService.registerStaff(userFirstName, userLastName, userEmail, userPassword, userMobile, studentCode, staffTitle);
 		
 		JSONObject responseObject = new JSONObject();
 		responseObject.put("result", registrationResult.toString());
