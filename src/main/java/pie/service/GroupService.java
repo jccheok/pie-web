@@ -157,11 +157,35 @@ public class GroupService {
 		return group;
 	}
 
-	public int getTotalHomeworkMinutesToday(int groupID) {
+	public int getTotalHomeworkMinutesToday(int groupID, int homeworkID) {
 
 		int totalMinutes = 0;
 
-		// Write codes to retrieve total minutes of homework for the day
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT DISTINCT`Homeowrk`.homeworkID FROM `Homework`,`HomeworkGroup`, `Group` WHERE `Group`.groupID = `HomeworkGroup`.groupID AND "
+					+ " `HomeworkGroup`.homeworkID = `Homework`.homeworkID AND groupID = ? AND `HomeworkGroup`.groupHomeworkPublishDate = CURDATE()";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, homeworkID);
+			pst.setInt(2, groupID);
+
+			resultSet = pst.executeQuery();
+
+			HomeworkService homework = new HomeworkService();
+			while (resultSet.next()) {
+				totalMinutes += homework.getHomework(resultSet.getInt(1))
+						.getHomeworkMinutesRequired();
+			}
+
+			conn.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
 
 		return totalMinutes;
 	}
