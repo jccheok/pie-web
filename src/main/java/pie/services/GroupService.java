@@ -15,6 +15,7 @@ import pie.StaffRole;
 import pie.Student;
 import pie.constants.GroupRegistrationResult;
 import pie.utilities.DatabaseConnector;
+import pie.utilities.Utilities;
 
 public class GroupService {
 
@@ -441,6 +442,16 @@ public class GroupService {
 		}
 
 		return nextStudentIndexNumber;
+	}
+	
+	public String generateGroupCode() {
+		
+		String newGroupCode = Utilities.generateString(5);
+		while (!isAvailableGroupCode(newGroupCode)) {
+			newGroupCode = Utilities.generateString(5);
+		}
+		
+		return newGroupCode;
 	}
 
 }

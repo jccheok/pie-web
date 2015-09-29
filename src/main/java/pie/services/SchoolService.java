@@ -12,6 +12,7 @@ import pie.School;
 import pie.Staff;
 import pie.constants.SchoolRegistrationResult;
 import pie.utilities.DatabaseConnector;
+import pie.utilities.Utilities;
 
 public class SchoolService {
 
@@ -229,5 +230,15 @@ public class SchoolService {
 		}
 
 		return schoolStaffAdministrators;
+	}
+	
+	public String generateSchoolCode() {
+		
+		String newSchoolCode = Utilities.generateString(5);
+		while (!isAvailableSchoolCode(newSchoolCode)) {
+			newSchoolCode = Utilities.generateString(5);
+		}
+		
+		return newSchoolCode;
 	}
 }

@@ -14,6 +14,7 @@ import pie.UserType;
 import pie.constants.JoinGroupResult;
 import pie.constants.UserRegistrationResult;
 import pie.utilities.DatabaseConnector;
+import pie.utilities.Utilities;
 
 public class StudentService {
 
@@ -241,5 +242,15 @@ public class StudentService {
 		}
 		
 		return joinGroupResult;
+	}
+	
+	public String generateStudentCode() {
+		
+		String newStudentCode = Utilities.generateString(5);
+		while (!isAvailableStudentCode(newStudentCode)) {
+			newStudentCode = Utilities.generateString(5);
+		}
+		
+		return newStudentCode;
 	}
 }

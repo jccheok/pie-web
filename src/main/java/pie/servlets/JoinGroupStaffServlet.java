@@ -22,7 +22,7 @@ import com.google.inject.Singleton;
 public class JoinGroupStaffServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 5666243950594572419L;
-	
+
 	StaffService staffService;
 	StaffRoleService staffRoleService;
 
@@ -32,8 +32,8 @@ public class JoinGroupStaffServlet extends HttpServlet {
 		this.staffRoleService = staffRoleService;
 	}
 
-	public void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		response.setContentType("application/json");
 		response.addHeader("Access-Control-Allow-Origin", "*");
 
