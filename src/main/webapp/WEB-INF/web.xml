@@ -11,6 +11,6 @@
   <url-pattern>/*</url-pattern>
  </filter-mapping>
  <listener>
-  <listener-class>pie.util.GuiceServletConfig</listener-class>
+  <listener-class>pie.utilities.GuiceServletConfig</listener-class>
  </listener>
 </web-app>
