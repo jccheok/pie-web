@@ -25,12 +25,12 @@ public class RegisterGroupServlet extends HttpServlet {
 	private static final long serialVersionUID = -3878265942477329631L;
 	
 	private GroupService groupService;
-	private StaffService teacherService;
+	private StaffService staffService;
 	
 	@Inject
-	public RegisterGroupServlet(GroupService groupService, StaffService teacherService) {
+	public RegisterGroupServlet(GroupService groupService, StaffService staffService) {
 		this.groupService = groupService;
-		this.teacherService = teacherService;
+		this.staffService = staffService;
 	}
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -44,9 +44,9 @@ public class RegisterGroupServlet extends HttpServlet {
 		int groupMaxDailyHomeworkMinutes = Integer.valueOf(request.getParameter("groupMaxDailyHomeworkMinutes"));
 		GroupType groupType = GroupType.getGroupType(Integer.valueOf(request.getParameter("groupTypeID")));
 		String groupCode = request.getParameter("groupCode");
-		int groupOwnerID = Integer.valueOf(request.getParameter("teacherID"));
+		int groupOwnerID = Integer.valueOf(request.getParameter("staffID"));
 		
-		Staff groupOwner = teacherService.getStaff(groupOwnerID);
+		Staff groupOwner = staffService.getStaff(groupOwnerID);
 		
 		RegistrationResult registrationResult = groupService.registerGroup(groupOwner, groupName, groupDescription, groupMaxDailyHomeworkMinutes, groupType, groupCode);
 
