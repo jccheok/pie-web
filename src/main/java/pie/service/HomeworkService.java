@@ -32,7 +32,7 @@ public class HomeworkService {
 				homework = new Homework();
 				homework.setHomeworkID(homeworkID);
 				homework.setHomeworkAuthor(new StaffService().getStaff(resultSet
-						.getInt("teacherID")));
+						.getInt("staffID")));
 				homework.setHomeworkTitle(resultSet.getString("homworkTitle"));
 				homework.setHomeworkDescription(resultSet
 						.getString("homeworkDescription"));
@@ -77,7 +77,7 @@ public class HomeworkService {
 		return userRecipient;
 	}
 
-	public int createHomework(String homeworkTitle, Staff teacher, String homeworkSubject,
+	public int createHomework(String homeworkTitle, Staff staff, String homeworkSubject,
 			String homeworkDescription, int homeworkMinutesRequired,
 			Date homeworkDueDate, boolean homeworkIsOpen) {
 		int homeworkID = -1;
@@ -87,7 +87,7 @@ public class HomeworkService {
 		return homeworkID;
 	}
 	
-	public int createHomeworkAsDraft (String homeworkTitle, Staff teacher, String homeworkSubject,
+	public int createHomeworkAsDraft (String homeworkTitle, Staff staff, String homeworkSubject,
 			String homeworkDescription, int homeworkMinutesRequired,
 			Date homeworkDueDate, boolean homeworkIsOpen){
 		int homeworkID = -1;
@@ -98,7 +98,7 @@ public class HomeworkService {
 		return homeworkID;
 	}
 	
-	public int createHomeworkAsTemplate(String homeworkTitle, Staff teacher, String homeworkSubject,
+	public int createHomeworkAsTemplate(String homeworkTitle, Staff staff, String homeworkSubject,
 			String homeworkDescription, int homeworkMinutesRequired,
 			Date homeworkDueDate, boolean homeworkIsOpen){
 		int homeworkID = -1;
@@ -126,18 +126,18 @@ public class HomeworkService {
 		return sendResult;
 	}
 
-	public Homework[] getHomeworksIsDraft(Staff teacher){
+	public Homework[] getHomeworksIsDraft(Staff staff){
 		Homework[] homework = {};
 		
-		//Write codes to retrieve Homework that are drafted by Teacher
+		//Write codes to retrieve Homework that are drafted by Staff
 		
 		return homework;
 	}
 	
-	public Homework[] getHomeworkIsTemplate(Staff teacher){
+	public Homework[] getHomeworkIsTemplate(Staff staff){
 		Homework[] homework = {};
 		
-		// Write codes to retrieve Homework Templates that are saved by Teacher
+		// Write codes to retrieve Homework Templates that are saved by Staff
 		
 		return homework;
 	}

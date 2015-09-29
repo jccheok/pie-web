@@ -34,7 +34,7 @@ public class EventService {
 				event = new Event();
 				event.setEventID(eventID);
 				event.setEventAuthor(new StaffService().getStaff(resultSet
-						.getInt("teacherID")));
+						.getInt("staffID")));
 				event.setEventTitle(resultSet.getString("eventTitle"));
 				event.setAddress(new AddressService().getAddress(resultSet
 						.getInt("addressID")));
@@ -83,7 +83,7 @@ public class EventService {
 		return userRecipient;
 	}
 
-	public int createEvent(String eventTitle, Staff teacher, Address address,
+	public int createEvent(String eventTitle, Staff staff, Address address,
 			String eventDescription, String eventAttire, Date eventStartDate,
 			Date eventEndDate, ResponseQuestion responseQuestion) {
 		int eventID = -1;
@@ -93,7 +93,7 @@ public class EventService {
 		return eventID;
 	}
 
-	public int createEventAsDraft(String eventTitle, Staff teacher,
+	public int createEventAsDraft(String eventTitle, Staff staff,
 			Address address, String eventDescription, String eventAttire,
 			Date eventStartDate, Date eventEndDate,
 			ResponseQuestion responseQuestion) {
@@ -105,7 +105,7 @@ public class EventService {
 		return eventID;
 	}
 
-	public int createEventAsTemplate(String eventTitle, Staff teacher,
+	public int createEventAsTemplate(String eventTitle, Staff staff,
 			Address address, String eventDescription, String eventAttire,
 			Date eventStartDate, Date eventEndDate,
 			ResponseQuestion responseQuestion) {
@@ -133,20 +133,20 @@ public class EventService {
 		return sendResult;
 	}
 
-	public Event[] getEventsIsDraft(Staff teacher) {
+	public Event[] getEventsIsDraft(Staff staff) {
 		Event[] events = {};
 
 		// Write codes to retrieve all the Events that are saved as Drafts by
-		// Teacher
+		// Staff
 
 		return events;
 	}
 
-	public Event[] getEventsIsTemplate(Staff teacher) {
+	public Event[] getEventsIsTemplate(Staff staff) {
 		Event[] events = {};
 
 		// Write codes to retrieve all Events that are saved as Template by
-		// Teacher
+		// Staff
 
 		return events;
 	}

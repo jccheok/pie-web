@@ -32,7 +32,7 @@ public class NoteService {
 				note = new Note();
 				note.setNoteID(noteID);
 				note.setNoteAuthor(new StaffService().getStaff(resultSet
-						.getInt("teacherID")));
+						.getInt("staffID")));
 				note.setNoteTitle(resultSet.getString("noteTitle"));
 				note.setNoteDescription(resultSet.getString("noteDescription"));
 				note.setNoteIsTemplate(resultSet.getInt("noteIsTemplate") == 1);
@@ -69,7 +69,7 @@ public class NoteService {
 		return userRecipient;
 	}
 
-	public int createNote(Staff teacher, String noteTitle,
+	public int createNote(Staff staff, String noteTitle,
 			String noteDescription) {
 		int noteID = -1;
 
@@ -78,7 +78,7 @@ public class NoteService {
 		return noteID;
 	}
 
-	public int createNoteAsDraft(Staff teacher, String noteTitle,
+	public int createNoteAsDraft(Staff staff, String noteTitle,
 			String noteDescription) {
 		int noteID = -1;
 		int noteIsDraft = 1;
@@ -88,7 +88,7 @@ public class NoteService {
 		return noteID;
 	}
 
-	public int createNoteAsTemplate(Staff teacher, String noteTitle,
+	public int createNoteAsTemplate(Staff staff, String noteTitle,
 			String noteDescription) {
 		int noteID = -1;
 		int noteIsTemplate = 1;
@@ -116,18 +116,18 @@ public class NoteService {
 		return sendResult;
 	}
 
-	public Note[] getNotesIsDraft(Staff teacher) {
+	public Note[] getNotesIsDraft(Staff staff) {
 		Note[] notes = {};
 
-		// Write codes to retrieve Notes that are drafted by Teacher
+		// Write codes to retrieve Notes that are drafted by Staff
 
 		return notes;
 	}
 
-	public Note[] getNotesIsTemplate(Staff teacher) {
+	public Note[] getNotesIsTemplate(Staff staff) {
 		Note[] notes = {};
 
-		// Write codes to retrieve Notes that are saved as Template by Teacher
+		// Write codes to retrieve Notes that are saved as Template by Staff
 
 		return notes;
 	}
