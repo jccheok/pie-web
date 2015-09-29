@@ -13,12 +13,4 @@
  <listener>
   <listener-class>pie.util.GuiceServletConfig</listener-class>
  </listener>
- <servlet>
-  <servlet-name>PingDatabase</servlet-name>
-  <servlet-class>pie.PingDatabase</servlet-class>
- </servlet>
- <servlet-mapping>
-  <servlet-name>PingDatabase</servlet-name>
-  <url-pattern>/DatabaseStatus</url-pattern>
- </servlet-mapping>
 </web-app>

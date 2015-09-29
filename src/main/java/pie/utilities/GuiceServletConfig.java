@@ -1,5 +1,6 @@
 package pie.utilities;
 
+import pie.servlets.GenerateCodeServlet;
 import pie.servlets.LoginServlet;
 
 import com.google.inject.Guice;
@@ -16,6 +17,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 			@Override
 			protected void configureServlets() {
 				serve("*/login.html").with(LoginServlet.class);
+				serve("*/gencode").with(GenerateCodeServlet.class);
 			}
 		});
 	}
