@@ -227,7 +227,7 @@ public class SchoolService {
 	public Staff[] getSchoolStaff(int schoolID) {
 		Staff[] staff = {};
 
-		// Write codes for retrieving all Teachers in School
+		// Write codes for retrieving all Staffs in School
 
 		return staff;
 	}

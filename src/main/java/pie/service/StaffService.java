@@ -42,7 +42,7 @@ public class StaffService {
 		SchoolService schoolService = new SchoolService();
 		UserService userService = new UserService();
 		
-		Staff teacher = null;
+		Staff staff = null;
 
 		try {
 
@@ -63,7 +63,7 @@ public class StaffService {
 				String staffTitle = resultSet.getString("staffTitle");
 				boolean staffIsSchoolAdmin = resultSet.getInt("staffIsSchoolAdmin") == 1;
 				
-				teacher = new Staff(user, staffSchool, staffTitle, staffIsSchoolAdmin);
+				staff = new Staff(user, staffSchool, staffTitle, staffIsSchoolAdmin);
 			}
 
 			conn.close();
@@ -72,7 +72,7 @@ public class StaffService {
 			System.out.println(e);
 		}
 
-		return teacher;
+		return staff;
 	}
 	
 	public boolean isMember(int staffID, int groupID) {
@@ -182,7 +182,7 @@ public class StaffService {
 					PreparedStatement pst = null;
 					ResultSet resultSet = null;
 
-					String sql = "INSERT INTO `User` (userTypeID, userFirstName, userLastName, userEmail, userPassword, userMobile) VALUES (?, ?, ?, ?, ?, ?, ?)";
+					String sql = "INSERT INTO `User` (userTypeID, userFirstName, userLastName, userEmail, userPassword, userMobile, userRegistrationDate) VALUES (?, ?, ?, ?, ?, ?, NOW())";
 					pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 					pst.setInt(1, UserType.STAFF.getUserTypeID());
 					pst.setString(2, userFirstName);

@@ -32,11 +32,11 @@ public class JoinGroupStaffServlet extends HttpServlet {
 		response.addHeader("Access-Control-Allow-Origin", "*");
 
 		int groupID = Integer.parseInt(request.getParameter("groupID"));
-		int teacherID = Integer.parseInt(request.getParameter("teacherID"));
-		String teacherRoleName = request.getParameter("teacherRoleName");
+		int staffID = Integer.parseInt(request.getParameter("staffID"));
+		String staffRoleName = request.getParameter("staffRoleName");
 
 		JoinGroupResult joinGroupResult = staffService.joinGroup(groupID,
-				teacherID, teacherRoleName);
+				staffID, staffRoleName);
 
 		JSONObject responseObject = new JSONObject();
 
