@@ -35,8 +35,12 @@ public class RegisterSchoolServlet extends HttpServlet {
 
 		String schoolName = request.getParameter("schoolName");
 		String schoolCode = request.getParameter("schoolCode");
+		String addressStreet = request.getParameter("addressStreet");
+		int countryID = Integer.parseInt(request.getParameter("countryID"));
+		String cityName = request.getParameter("cityName");
+		String addressPostalCode = request.getParameter("addressPostalCode");
 
-		SchoolRegistrationResult registrationResult = schoolService.registerSchool(schoolName, schoolCode);
+		SchoolRegistrationResult registrationResult = schoolService.registerSchool(schoolName, schoolCode, addressStreet, countryID, cityName, addressPostalCode);
 
 		JSONObject responseObject = new JSONObject();
 		responseObject.put("result", registrationResult.toString());
