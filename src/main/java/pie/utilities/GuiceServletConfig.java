@@ -1,5 +1,7 @@
 package pie.utilities;
 
+import pie.filters.AuthFilter;
+import pie.filters.ResponseFilter;
 import pie.servlets.GenerateCodeServlet;
 import pie.servlets.LoginServlet;
 
@@ -16,8 +18,14 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 			
 			@Override
 			protected void configureServlets() {
-				serve("*/login.html").with(LoginServlet.class);
-				serve("*/gencode").with(GenerateCodeServlet.class);
+				
+				// Filters
+				filter("/servlets/*").through(ResponseFilter.class);
+				filter("/servlets/secured/*").through(AuthFilter.class);
+				
+				// Servlets
+				serve("*/servlets/login").with(LoginServlet.class);
+				serve("*/servlets/secured/gencode").with(GenerateCodeServlet.class);
 			}
 		});
 	}
