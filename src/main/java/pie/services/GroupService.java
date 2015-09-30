@@ -454,7 +454,7 @@ public class GroupService {
 		return newGroupCode;
 	}
 	
-	public int getStudentIndexNumber(int groupID, int studentID){
+	public int getStudentGroupIndexNumber(int groupID, int studentID){
 		int studentIndexNumber = -1;
 		
 		try{
