@@ -157,7 +157,7 @@ public class UserService {
 						loginResult = LoginResult.NOT_VALID;
 					} else {
 
-						sql = "UPDATE `User` SET userLastLogin = NOW() WHERE userEmail = ?";
+						sql = "UPDATE `User` SET userLastLogin = CURRENT_TIMESTAMP() WHERE userEmail = ?";
 						pst = conn.prepareStatement(sql);
 						pst.setString(1, userEmail);
 						pst.executeUpdate();
