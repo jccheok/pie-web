@@ -162,6 +162,8 @@ public class UserService {
 						pst.setString(1, userEmail);
 						pst.executeUpdate();
 					}
+				} else {
+					loginResult = LoginResult.NOT_MATCHING;
 				}
 
 				conn.close();
