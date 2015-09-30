@@ -4,6 +4,7 @@ import pie.filters.AuthFilter;
 import pie.filters.ResponseFilter;
 import pie.servlets.GenerateCodeServlet;
 import pie.servlets.LoginServlet;
+import pie.servlets.RegisterParentServlet;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -25,6 +26,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				
 				// Servlets
 				serve("*/servlets/login").with(LoginServlet.class);
+				serve("*/servlets/registerParent").with(RegisterParentServlet.class);
 				serve("*/servlets/secured/gencode").with(GenerateCodeServlet.class);
 			}
 		});

@@ -64,7 +64,7 @@ public class ParentService {
 				PreparedStatement pst = null;
 				ResultSet resultSet = null;
 
-				String sql = "INSERT INTO `User` (userTypeID, userFirstName, userLastName, userEmail, userPassword, userMobile) VALUES (?, ?, ?, ?, ?, ?, ?)";
+				String sql = "INSERT INTO `User` (userTypeID, userFirstName, userLastName, userEmail, userPassword, userMobile) VALUES (?, ?, ?, ?, ?, ?)";
 				pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 				pst.setInt(1, UserType.PARENT.getUserTypeID());
 				pst.setString(2, userFirstName);
