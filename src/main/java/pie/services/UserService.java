@@ -140,7 +140,7 @@ public class UserService {
 				PreparedStatement pst = null;
 				ResultSet resultSet = null;
 
-				String sql = "SELECT userTypeID FROM `User` WHERE userEmail AND userPassword = ?";
+				String sql = "SELECT userTypeID FROM `User` WHERE userEmail = ? AND userPassword = ?";
 				pst = conn.prepareStatement(sql);
 				pst.setString(1, userEmail);
 				pst.setString(2, userPassword);
