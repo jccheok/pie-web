@@ -106,21 +106,24 @@ public class SchoolService {
 		return school;
 	}
 
-	public SchoolRegistrationResult registerSchool(String schoolName, String schoolCode) {
+	public SchoolRegistrationResult registerSchool(String schoolName, String schoolCode, String addressStreet, 
+			int countryID, String cityName, String addressPostalCode) {
 
 		SchoolRegistrationResult registrationResult = SchoolRegistrationResult.SUCCESS;
 
 		if (isAvailableSchoolCode(schoolCode)) {
 
 			try {
-
+				AddressService addressService = new AddressService();
+				
 				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
 
-				String sql = "INSERT INTO `School` (schoolname, schoolCode) VALUES (?, ?)";
+				String sql = "INSERT INTO `School` (schoolname, schoolCode, addressID, schoolDateCreated) VALUES (?, ?, ?, NOW())";
 				pst = conn.prepareStatement(sql);
 				pst.setString(1, schoolName);
 				pst.setString(2, schoolCode);
+				pst.setInt(3, addressService.registerAddress(addressPostalCode, addressStreet, addressService.getCity(addressService.registerCity(cityName, countryID))));
 				pst.executeUpdate();
 
 				conn.close();
