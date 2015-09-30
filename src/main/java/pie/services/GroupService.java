@@ -483,4 +483,31 @@ public class GroupService {
 		return studentIndexNumber;
 	}
 
+	public boolean updateGroup(int groupID, String groupName, String groupDescription,
+			int groupMaxDailyHomeworkMinutes){
+		boolean updateResult = false;
+		
+		try{
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			
+			String sql = "UPDATE `Group` SET groupName = ?, groupDescription = ?, groupMaxDailyHomeworkMinutes = ? groupLastUpdate = NOW() WHERE groupID = ? ";
+			pst = conn.prepareStatement(sql);
+			pst.setString(1, groupName);
+			pst.setString(1, groupDescription);
+			pst.setInt(3, groupMaxDailyHomeworkMinutes);
+			pst.setInt(4, groupID);
+			
+			pst.executeUpdate();
+			
+			updateResult = true;
+			
+			conn.close();
+			
+		}catch(Exception e){
+			System.out.println(e);
+		}
+		
+		return updateResult;
+	}
 }
