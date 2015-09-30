@@ -145,4 +145,33 @@ public class AddressService {
 
 		return addressID;
 	}
+	
+	public int registerCity(String cityName, int countryID){
+		int cityID = -1;
+		
+		try{
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "INSERT INTO `City` (countryID, cityName) VALUES (?, ?)";
+			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			pst.setInt(1, countryID);
+			pst.setString(2, cityName);
+			pst.executeUpdate();
+			
+			resultSet = pst.getGeneratedKeys();
+			
+			if(resultSet.next()){
+				
+				cityID = resultSet.getInt(1); 
+			}
+			conn.close();
+		}catch (Exception e) {
+			System.out.println(e);
+		}
+		
+		return cityID;
+	}
+	
 }
