@@ -48,7 +48,7 @@ public class UserService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT isVerified FROM `User` WHERE userEmail = ?";
+			String sql = "SELECT userIsVerified FROM `User` WHERE userEmail = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, userEmail);
 
@@ -107,7 +107,7 @@ public class UserService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT isValid FROM `User` WHERE userEmail = ?";
+			String sql = "SELECT userIsValid FROM `User` WHERE userEmail = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, userEmail);
 
