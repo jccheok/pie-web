@@ -11,7 +11,6 @@ import org.json.JSONObject;
 
 import com.google.inject.Inject;
 
-import pie.constants.JoinGroupResult;
 import pie.services.GroupService;
 
 public class UpdateGroupServlet {
