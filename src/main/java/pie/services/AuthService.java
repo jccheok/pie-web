@@ -16,7 +16,7 @@ public class AuthService {
 
 	private static final String secretKey = "pTaByTe28915";
 	//Enter the web address when we have it.
-	private static final String issuer = "link here";
+	private static final String issuer = System.getenv("OPENSHIFT_APP_NAME");
 	
 	public static String getSecretKey(){
 		return secretKey;

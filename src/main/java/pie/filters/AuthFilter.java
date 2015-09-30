@@ -26,7 +26,7 @@ public class AuthFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig arg0) throws ServletException {
-		jwtVerifier = new JWTVerifier(DatatypeConverter.parseBase64Binary(AuthService.getSecretKey()), "link here");
+		jwtVerifier = new JWTVerifier(DatatypeConverter.parseBase64Binary(AuthService.getSecretKey()), System.getenv("OPENSHIFT_APP_NAME"));
 	}
 
 	@Override
