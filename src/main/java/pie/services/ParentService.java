@@ -4,10 +4,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import pie.Parent;
+import pie.Student;
 import pie.User;
 import pie.UserType;
+import pie.constants.AddChildResult;
 import pie.constants.UserRegistrationResult;
 import pie.utilities.DatabaseConnector;
 
@@ -92,6 +95,90 @@ public class ParentService {
 		}
 
 		return registrationResult;
+	}
+	
+	public Student[] getChildren(int parentID){
+		Student[] children = {};
+		
+		try {
+
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+			Connection conn = DatabaseConnector.getConnection();
+
+			String sql = "SELECT studentID FROM `ParentStudent` WHERE parentID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, parentID);
+			resultSet = pst.executeQuery();
+			
+			ArrayList<Student> tempStudents = new ArrayList<Student>();
+
+			while(resultSet.next()) {
+				tempStudents.add(new StudentService().getStudent((resultSet.getInt("studentID"))));
+			}
+
+			conn.close();
+			
+			children = tempStudents.toArray(children);
+
+		} catch (Exception e) {
+
+			System.out.println(e);
+		}
+
+		
+		return children;
+	}
+	
+	
+	public boolean hasChild(int studentID, int parentID){
+		boolean hasChild = false;
+		Student[] children = getChildren(parentID);
+		
+		for(Student student : children){
+			if(studentID == student.getUserID()){
+				hasChild = true;
+				break;
+			}
+		}
+		return hasChild;
+	}
+	
+	
+	public AddChildResult addChild(int parentID, int relationshipID, String studentCode){
+		AddChildResult addChildResult = AddChildResult.SUCCESS;
+		StudentService student = new StudentService();
+		int studentID = student.getStudentID(studentCode);
+		
+		if(studentID != -1){
+			addChildResult = AddChildResult.WRONG_STUDENT_CODE;
+			if(!hasChild(studentID, parentID)){
+				try {
+
+					PreparedStatement pst = null;
+					Connection conn = DatabaseConnector.getConnection();
+
+					String sql = "INSERT INTO `ParentStudent` (parentID, studentID, relationshipID) VALUES (?, ?, ?)";
+					pst = conn.prepareStatement(sql);
+					pst.setInt(1, parentID);
+					pst.setInt(2, studentID);
+					pst.setInt(3, relationshipID);
+
+					pst.executeUpdate();
+					
+					conn.close();
+
+				} catch (Exception e) {
+
+					System.out.println(e);
+				}
+			}
+			else{
+				addChildResult = AddChildResult.CHILD_ALREADY_ADDED;
+			}
+		}
+		
+		return addChildResult;
 	}
 
 }
