@@ -510,4 +510,61 @@ public class GroupService {
 		
 		return updateResult;
 	}
+	
+	public int getMemberCount(int groupID){
+		int memberCount = 0;
+		
+		Student[] groupStudents = getStudentMembers(groupID);
+		Staff[] groupStaffs = getStaffMembers(groupID);
+		
+		for(Student student : groupStudents){
+			memberCount += 1;
+		}
+		for(Staff staff : groupStaffs){
+			memberCount += 1;
+		}
+		
+		return memberCount;
+	}
+	
+	public Staff[] getGroupAdministrators(int groupID){
+		Staff[] groupAdmins = {};
+		
+		Staff[] groupStaff = getStaffMembers(groupID);
+		StaffRoleService staffRoleService = new StaffRoleService();
+		
+		
+		ArrayList<Staff> tempGroupAdmins = new ArrayList<Staff>();
+		for(Staff staff : groupStaff){
+			try{
+				Connection conn = DatabaseConnector.getConnection();
+				PreparedStatement pst = null;
+				ResultSet resultSet = null;
+				
+				String sql = "SELECT staffRoleID FROM `StaffRole`, `StaffGroup` WHERE `StaffRole`.staffRoleID = `StaffGroup`.staffRoleID AND groupID = ? AND staffID = ?";
+				pst = conn.prepareStatement(sql);
+				pst.setInt(1, groupID);
+				pst.setInt(2, staff.getUserID());
+				
+				resultSet = pst.executeQuery();
+				
+				if(resultSet.next()){
+					int staffRoleID = resultSet.getInt(1);
+					StaffRole staffRole = staffRoleService.getStaffRole(staffRoleID);
+					
+					if(staffRole.staffRoleIsAdmin()){
+						tempGroupAdmins.add(staff);
+					}
+				}
+				
+				conn.close();
+
+			}catch(Exception e){
+				System.out.println(e);
+			}
+		}
+		
+		groupAdmins = tempGroupAdmins.toArray(groupAdmins);
+		return groupAdmins;
+	}
 }
