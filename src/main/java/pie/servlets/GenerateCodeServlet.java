@@ -2,6 +2,7 @@ package pie.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -13,6 +14,7 @@ import org.json.JSONObject;
 import pie.services.GroupService;
 import pie.services.SchoolService;
 import pie.services.StudentService;
+import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -35,10 +37,17 @@ public class GenerateCodeServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		response.setContentType("application/json");
-		response.addHeader("Access-Control-Allow-Origin", "*");
-
-		String passwordType = request.getParameter("passwordType");
+		String passwordType = null;
+		
+		try {
+			
+			Map<String, String> requestParameters = Utilities.getParameters(request, "passwordType");
+			passwordType = requestParameters.get("passwordType");
+			
+		} catch (Exception e) {
+			
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+		}
 		
 		String newPassword = null;
 		

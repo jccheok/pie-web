@@ -3,6 +3,7 @@ package pie.servlets;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,6 +17,7 @@ import pie.constants.LoginResult;
 import pie.constants.SupportedPlatform;
 import pie.services.AuthService;
 import pie.services.UserService;
+import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -31,15 +33,25 @@ public class LoginServlet extends HttpServlet {
 	public LoginServlet(UserService userService) {
 		this.userService = userService;
 	}
-	
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		response.setContentType("application/json");
-		response.addHeader("Access-Control-Allow-Origin", "*");
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String userEmail = request.getParameter("userEmail");
-		String userPassword = request.getParameter("userPassword");
-		int clientPlatformID = Integer.valueOf(request.getParameter("platformID"));
+		String userEmail = null;
+		String userPassword = null;
+		int clientPlatformID = 0;
+		
+		try {
+			
+			Map<String, String> requestParameters = Utilities.getParameters(request, "userEmail", "userPassword", "platformID");
+			userEmail = requestParameters.get("userEmail");
+			userPassword = requestParameters.get("userPassword");
+			clientPlatformID = Integer.parseInt(requestParameters.get("platformID"));
+			
+		} catch (Exception e) {
+			
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+		}
+			
 		SupportedPlatform clientPlatform = SupportedPlatform.getSupportedPlatform(clientPlatformID);
 
 		LoginResult loginResult = userService.loginUser(userEmail, userPassword, clientPlatform);
@@ -62,14 +74,16 @@ public class LoginServlet extends HttpServlet {
 			
 			HashMap<String,Object> claims = new HashMap<String,Object>();
 			claims.put("userID", Integer.toString(user.getUserID()));
-			claims.put("name", user.getUserFullName());
-			String token = AuthService.createToken("login",86400000,claims);
+			claims.put("userFullName", user.getUserFullName());
+			claims.put("userType", user.getUserType().toString());
+			String token = AuthService.createToken("login", 86400000, claims);
 			
 			responseObject.put("user", userJSON);
-			response.addHeader("X-auth", token);
+			response.addHeader("X-Auth-Token", token);
 		}
 		
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
+
 	}
 }
