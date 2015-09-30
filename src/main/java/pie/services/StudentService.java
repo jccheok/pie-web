@@ -253,4 +253,36 @@ public class StudentService {
 		
 		return newStudentCode;
 	}
+	
+	
+	public int getStudentID(String studentCode){
+		int studentID = -1;
+		
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT studentID FROM `Student` WHERE studentCode = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setString(1, studentCode);
+
+			resultSet = pst.executeQuery();
+
+			if (resultSet.next()) {
+				
+				studentID = resultSet.getInt("studentID");
+				
+			}
+
+			conn.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		
+		return studentID;
+	}
+
 }
