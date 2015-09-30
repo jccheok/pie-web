@@ -19,7 +19,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class JoinGroupStaffServlet extends HttpServlet {
+public class StaffJoinGroupServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 5666243950594572419L;
 
@@ -27,7 +27,7 @@ public class JoinGroupStaffServlet extends HttpServlet {
 	StaffRoleService staffRoleService;
 
 	@Inject
-	public JoinGroupStaffServlet(StaffService staffService, StaffRoleService staffRoleService) {
+	public StaffJoinGroupServlet(StaffService staffService, StaffRoleService staffRoleService) {
 		this.staffService = staffService;
 		this.staffRoleService = staffRoleService;
 	}
