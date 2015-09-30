@@ -2,7 +2,6 @@ package pie.filters;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -12,21 +11,19 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.bind.DatatypeConverter;
 
 import pie.services.AuthService;
 
-import com.auth0.jwt.JWTVerifier;
 import com.google.inject.Singleton;
 
 @Singleton
 public class AuthFilter implements Filter {
-
-	private JWTVerifier jwtVerifier;
-
+	
+	private AuthService authService;
+	
 	@Override
 	public void init(FilterConfig arg0) throws ServletException {
-		jwtVerifier = new JWTVerifier(DatatypeConverter.parseBase64Binary(AuthService.getSecretKey()), System.getenv("OPENSHIFT_APP_NAME"));
+		authService = new AuthService();
 	}
 
 	@Override
@@ -43,7 +40,7 @@ public class AuthFilter implements Filter {
 			String token = getToken((HttpServletRequest) servletRequest);
 			
 			try {
-	            Map<String, Object> decoded = jwtVerifier.verify(token);
+	            Map<String, Object> decoded = authService.parseJWT(token);
 	            
 	            filterChain.doFilter(servletRequest, servletResponse);
 	        } catch (Exception e) {
@@ -56,25 +53,13 @@ public class AuthFilter implements Filter {
 	}
 
 	private String getToken(HttpServletRequest servletRequest) throws ServletException {
-		String token = null;
 		
-		final String authorizationHeader = servletRequest.getHeader("authorization");
-		if (authorizationHeader == null) {
-			throw new ServletException("UNAUTHORIZED: NO AUTHENTICATION HEADER FOUND");
+		final String token = servletRequest.getHeader("X-Auth-Token");
+		
+		if (token == null || token.equals("")) {
+			throw new ServletException("UNAUTHORIZED: NO TOKEN HEADER FOUND IN HEADER");
 		}
 
-		String[] parts = authorizationHeader.split(" ");
-		if (parts.length != 2) {
-			throw new ServletException("UNAUTHORIZED: Format is Authorization: Bearer [token]");
-		}
-
-		String scheme = parts[0];
-		String credentials = parts[1];
-
-		Pattern pattern = Pattern.compile("^Bearer$", Pattern.CASE_INSENSITIVE);
-		if (pattern.matcher(scheme).matches()) {
-			token = credentials;
-		}
 		return token;
 	}
 }
