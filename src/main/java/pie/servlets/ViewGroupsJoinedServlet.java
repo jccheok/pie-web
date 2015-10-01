@@ -3,6 +3,7 @@ package pie.servlets;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +17,7 @@ import pie.Staff;
 import pie.services.GroupService;
 import pie.services.SchoolService;
 import pie.services.StaffService;
+import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -32,10 +34,17 @@ public class ViewGroupsJoinedServlet {
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		response.setContentType("application/json");
-		response.addHeader("Access-Control-Allow-Origin", "*");
+		int staffID = 0;
 		
-		int staffID = Integer.parseInt(request.getParameter("staffID"));
+		try {
+			
+			Map<String, String> requestParameters = Utilities.getParameters(request, "staffID");
+			staffID = Integer.parseInt(requestParameters.get("staffID"));
+			
+		} catch (Exception e) {
+			
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+		} 
 		
 		StaffService staffService = new StaffService();
 		int schoolID = staffService.getStaff(staffID).getSchool().getSchoolID();
