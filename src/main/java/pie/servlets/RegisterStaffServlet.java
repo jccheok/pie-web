@@ -19,14 +19,14 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class RegisterTeacherServlet extends HttpServlet {
+public class RegisterStaffServlet extends HttpServlet {
 
-	private static final long serialVersionUID = 8776151424113551105L;
-
+	private static final long serialVersionUID = 6380932722577144623L;
+	
 	StaffService teacherService;
 
 	@Inject
-	public RegisterTeacherServlet(StaffService teacherService) {
+	public RegisterStaffServlet(StaffService teacherService) {
 		this.teacherService = teacherService;
 	}
 
