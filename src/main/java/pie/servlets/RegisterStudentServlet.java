@@ -2,6 +2,7 @@ package pie.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,6 +13,7 @@ import org.json.JSONObject;
 
 import pie.constants.UserRegistrationResult;
 import pie.services.StudentService;
+import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -30,13 +32,24 @@ public class RegisterStudentServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		response.setContentType("application/json");
-		response.addHeader("Access-Control-Allow-Origin", "*");
+		String userEmail = null;
+		String userPassword = null;
+		String userMobile = null;
+		String studentCode = null;
 
-		String userEmail = request.getParameter("userEmail");
-		String userPassword = request.getParameter("userPassword");
-		String userMobile = request.getParameter("userMobile");
-		String studentCode = request.getParameter("studentCode");
+		try {
+
+			Map<String, String> requestParameters = Utilities.getParameters(request, "userEmail", "userPassword",
+					"userMobile", "studentCode");
+			userEmail = requestParameters.get("userEmail");
+			userPassword = requestParameters.get("userPassword");
+			userMobile = requestParameters.get("userMobile");
+			studentCode = requestParameters.get("studentCode");
+
+		} catch (Exception e) {
+
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+		}
 
 		UserRegistrationResult registrationResult = studentService.registerStudent(userEmail, userPassword, userMobile,
 				studentCode);
