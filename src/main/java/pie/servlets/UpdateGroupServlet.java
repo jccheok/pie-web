@@ -30,15 +30,17 @@ public class UpdateGroupServlet {
 		String groupName = null;
 		String groupDescription = null;
 		int groupMaxDailyHomeworkMinutes = 0;
-		
+		boolean groupIsOpen = false;
+
 		try {
 
 			Map<String, String> requestParameters = Utilities.getParameters(request, "groupID", "groupName",
-					"groupDescription", "groupMaxDailyHomeworkMinutes");
+					"groupDescription", "groupMaxDailyHomeworkMinutes", "groupIsOpen");
 			groupID = Integer.parseInt(requestParameters.get("groupID"));
 			groupName = requestParameters.get("groupName");
 			groupDescription = requestParameters.get("groupDescription");
 			groupMaxDailyHomeworkMinutes = Integer.parseInt(requestParameters.get("groupMaxDailyHomeworkMinutes"));
+			groupIsOpen = Integer.parseInt(requestParameters.get("groupIsOpen")) == 1;
 
 		} catch (Exception e) {
 
@@ -46,7 +48,7 @@ public class UpdateGroupServlet {
 		}
 
 		boolean updateResult = groupService.updateGroup(groupID, groupName, groupDescription,
-				groupMaxDailyHomeworkMinutes);
+				groupMaxDailyHomeworkMinutes, groupIsOpen);
 
 		JSONObject responseObject = new JSONObject();
 		if (updateResult) {

@@ -484,19 +484,20 @@ public class GroupService {
 	}
 
 	public boolean updateGroup(int groupID, String groupName, String groupDescription,
-			int groupMaxDailyHomeworkMinutes){
+			int groupMaxDailyHomeworkMinutes, boolean groupIsOpen){
 		boolean updateResult = false;
 		
 		try{
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 			
-			String sql = "UPDATE `Group` SET groupName = ?, groupDescription = ?, groupMaxDailyHomeworkMinutes = ? groupLastUpdate = NOW() WHERE groupID = ? ";
+			String sql = "UPDATE `Group` SET groupName = ?, groupDescription = ?, groupMaxDailyHomeworkMinutes = ?, groupLastUpdate = NOW(), groupIsOpen = ? WHERE groupID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, groupName);
 			pst.setString(1, groupDescription);
 			pst.setInt(3, groupMaxDailyHomeworkMinutes);
 			pst.setInt(4, groupID);
+			pst.setInt(5, groupIsOpen? 1:0);
 			
 			pst.executeUpdate();
 			
