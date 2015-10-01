@@ -75,7 +75,7 @@ public class LoginServlet extends HttpServlet {
 			HashMap<String,Object> claims = new HashMap<String,Object>();
 			claims.put("userID", Integer.toString(user.getUserID()));
 			claims.put("userFullName", user.getUserFullName());
-			claims.put("userType", user.getUserType().toString());
+			claims.put("userTypeID", user.getUserType().getUserTypeID());
 			String token = AuthService.createToken("login", 86400000, claims);
 			
 			responseObject.put("user", userJSON);
