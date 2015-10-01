@@ -2,6 +2,7 @@ package pie.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,6 +13,7 @@ import org.json.JSONObject;
 
 import pie.constants.JoinGroupResult;
 import pie.services.StudentService;
+import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -30,12 +32,22 @@ public class StudentJoinGroupServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		response.setContentType("application/json");
-		response.addHeader("Access-Control-Allow-Origin", "*");
+		int groupID = 0;
+		int studentID = 0;
+		String groupCode = null;
+		
+		try {
 
-		int groupID = Integer.parseInt(request.getParameter("groupID"));
-		int studentID = Integer.parseInt(request.getParameter("studentID"));
-		String groupCode = request.getParameter("groupCode");
+			Map<String, String> requestParameters = Utilities.getParameters(request, "groupID", "studentID",
+					"groupCode");
+			groupID = Integer.parseInt(requestParameters.get("groupID"));
+			studentID = Integer.parseInt(requestParameters.get("studentID"));
+			groupCode = requestParameters.get("groupCode");
+			
+		} catch (Exception e) {
+
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+		}
 
 		JoinGroupResult joinGroupResult = studentService.joinGroup(groupID, studentID, groupCode);
 
