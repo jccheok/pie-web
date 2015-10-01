@@ -2,6 +2,7 @@ package pie.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -14,6 +15,7 @@ import pie.StaffRole;
 import pie.constants.JoinGroupResult;
 import pie.services.StaffRoleService;
 import pie.services.StaffService;
+import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -33,15 +35,27 @@ public class StaffJoinGroupServlet extends HttpServlet {
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		response.setContentType("application/json");
-		response.addHeader("Access-Control-Allow-Origin", "*");
 
-		int groupID = Integer.parseInt(request.getParameter("groupID"));
-		int staffID = Integer.parseInt(request.getParameter("staffID"));
-		int staffRoleID = Integer.parseInt(request.getParameter("staffRoleID"));
+		int groupID = 0;
+		int staffID = 0;
+		int staffRoleID = 0;
+		String groupCode = null;
+
+		try {
+
+			Map<String, String> requestParameters = Utilities.getParameters(request, "groupID", "staffID",
+					"staffRoleID", "groupCode");
+			groupID = Integer.parseInt(requestParameters.get("groupID"));
+			staffID = Integer.parseInt(requestParameters.get("staffID"));
+			staffRoleID = Integer.parseInt(requestParameters.get("staffRoleID"));
+			groupCode = requestParameters.get("groupCode");
+
+		} catch (Exception e) {
+
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+		}
+
 		StaffRole staffRole = staffRoleService.getStaffRole(staffRoleID);
-		String groupCode = request.getParameter("groupCode");
 
 		JoinGroupResult joinGroupResult = staffService.joinGroup(groupID, staffID, groupCode, staffRole);
 
