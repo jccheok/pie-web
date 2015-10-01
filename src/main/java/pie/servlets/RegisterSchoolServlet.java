@@ -2,6 +2,7 @@ package pie.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,6 +13,7 @@ import org.json.JSONObject;
 
 import pie.constants.SchoolRegistrationResult;
 import pie.services.SchoolService;
+import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -30,15 +32,30 @@ public class RegisterSchoolServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		response.setContentType("application/json");
-		response.addHeader("Access-Control-Allow-Origin", "*");
+		String schoolName = null;
+		String schoolCode = null;
+		String addressStreet = null;
+		int countryID = 0;
+		String cityName = null;
+		String addressPostalCode = null; 
+		
+		try {
 
-		String schoolName = request.getParameter("schoolName");
-		String schoolCode = request.getParameter("schoolCode");
-		String addressStreet = request.getParameter("addressStreet");
-		int countryID = Integer.parseInt(request.getParameter("countryID"));
-		String cityName = request.getParameter("cityName");
-		String addressPostalCode = request.getParameter("addressPostalCode");
+			Map<String, String> requestParameters = Utilities.getParameters(request, "schoolName", "schoolCode",
+					"addressStreet", "countryID", "cityName", "addressPostalCode");
+			schoolName = requestParameters.get("schoolName");
+			schoolCode = requestParameters.get("schoolCode");
+			addressStreet = requestParameters.get("addressStreet");
+			countryID = Integer.parseInt(requestParameters.get("countryID"));
+			cityName = requestParameters.get("cityName");
+			addressPostalCode = requestParameters.get("addressPostalCode");
+
+		} catch (Exception e) {
+
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+		}
+
+		
 
 		SchoolRegistrationResult registrationResult = schoolService.registerSchool(schoolName, schoolCode, addressStreet, countryID, cityName, addressPostalCode);
 
