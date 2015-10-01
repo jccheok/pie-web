@@ -43,11 +43,11 @@ public class ViewGroupDetailsServlet {
 
 		JSONObject responseObject = new JSONObject();
 
-		responseObject.put("groupID", Integer.toString(group.getGroupID()));
+		responseObject.put("groupID", group.getGroupID());
 		responseObject.put("groupName", group.getGroupName());
 		responseObject.put("schoolName", group.getSchool().getSchoolName());
 		responseObject.put("groupDescription", group.getGroupDescription());
-		responseObject.put("groupMaxDailyHomeworkMinutes", Integer.toString(group.getGroupMaxDailyHomeworkMinutes()));
+		responseObject.put("groupMaxDailyHomeworkMinutes", group.getGroupMaxDailyHomeworkMinutes());
 
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
