@@ -54,7 +54,11 @@ public class StudentJoinGroupServlet extends HttpServlet {
 		JSONObject responseObject = new JSONObject();
 		responseObject.put("result", joinGroupResult.toString());
 		responseObject.put("message", joinGroupResult.getDefaultMessage());
-
+		
+		if (joinGroupResult == JoinGroupResult.SUCCESS) {
+			// send email to group administrators
+		}
+		
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
 	}
