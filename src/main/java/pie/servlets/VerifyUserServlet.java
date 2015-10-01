@@ -2,6 +2,7 @@ package pie.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,6 +13,7 @@ import org.json.JSONObject;
 
 import pie.User;
 import pie.services.UserService;
+import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -29,11 +31,19 @@ public class VerifyUserServlet extends HttpServlet {
 	}
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		response.setContentType("application/json");
-		response.addHeader("Access-Control-Allow-Origin", "*");
 		
-		int userID = Integer.valueOf(request.getParameter("userID"));
+		int userID = 0;
+
+		try {
+
+			Map<String, String> requestParameters = Utilities.getParameters(request, "userID");
+			userID = Integer.parseInt(requestParameters.get("userID"));
+			
+		} catch (Exception e) {
+
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+		}
+		
 		User user = userService.getUser(userID);
 		
 		boolean verifyResult = userService.verifyUser(user);
