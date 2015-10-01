@@ -84,6 +84,7 @@ public class LoginServlet extends HttpServlet {
 		
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
-
+		
+		response.addHeader("Access-Control-Expose-Headers", "X-Auth-Token");
 	}
 }
