@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import pie.Group;
 import pie.School;
@@ -54,7 +56,41 @@ public class StaffService {
 
 		return teacher;
 	}
+	
+	public Group[] getJoinedGroups(int staffID) {
+		
+		GroupService groupService = new GroupService();
+		Group[] joinedGroups = {};
+		
+		try {
 
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT groupID FROM `StaffGroup`,`Group` WHERE `StaffGroup`.groupID = `Group`.groupID AND groupIsValid = ? AND staffGroupIsValid = ? AND staffID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, 1);
+			pst.setInt(2, 1);
+			pst.setInt(3, staffID);
+
+			resultSet = pst.executeQuery();
+
+			List<Group> tempJoinedGroups = new ArrayList<Group>();
+			while (resultSet.next()) {
+				tempJoinedGroups.add(groupService.getGroup(resultSet.getInt(1)));
+			}
+			joinedGroups = tempJoinedGroups.toArray(joinedGroups);
+
+			conn.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		
+		return joinedGroups;
+	}
+	
 	public boolean isMember(int staffID, int groupID) {
 		
 		boolean isMember = false;
