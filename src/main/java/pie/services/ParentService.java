@@ -146,35 +146,35 @@ public class ParentService {
 	
 	
 	public AddChildResult addChild(int parentID, int relationshipID, String studentCode){
-		AddChildResult addChildResult = AddChildResult.SUCCESS;
+		
 		StudentService student = new StudentService();
+		AddChildResult addChildResult = AddChildResult.SUCCESS;
+		
 		int studentID = student.getStudentID(studentCode);
 		
-		if(studentID != -1){
-			addChildResult = AddChildResult.WRONG_STUDENT_CODE;
-			if(!hasChild(studentID, parentID)){
-				try {
+		if (studentID == -1) {
+			addChildResult = AddChildResult.INVALID_STUDENT_CODE;
+		} else if (hasChild(studentID, parentID)) {
+			addChildResult = AddChildResult.INVALID_STUDENT_CODE;
+		} else {
+			try {
 
-					PreparedStatement pst = null;
-					Connection conn = DatabaseConnector.getConnection();
+				PreparedStatement pst = null;
+				Connection conn = DatabaseConnector.getConnection();
 
-					String sql = "INSERT INTO `ParentStudent` (parentID, studentID, relationshipID) VALUES (?, ?, ?)";
-					pst = conn.prepareStatement(sql);
-					pst.setInt(1, parentID);
-					pst.setInt(2, studentID);
-					pst.setInt(3, relationshipID);
+				String sql = "INSERT INTO `ParentStudent` (parentID, studentID, relationshipID) VALUES (?, ?, ?)";
+				pst = conn.prepareStatement(sql);
+				pst.setInt(1, parentID);
+				pst.setInt(2, studentID);
+				pst.setInt(3, relationshipID);
 
-					pst.executeUpdate();
-					
-					conn.close();
+				pst.executeUpdate();
+				
+				conn.close();
 
-				} catch (Exception e) {
+			} catch (Exception e) {
 
-					System.out.println(e);
-				}
-			}
-			else{
-				addChildResult = AddChildResult.CHILD_ALREADY_ADDED;
+				System.out.println(e);
 			}
 		}
 		

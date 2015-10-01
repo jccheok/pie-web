@@ -2,9 +2,9 @@ package pie.constants;
 
 public enum AddChildResult {
 	
-	SUCCESS("Added Child successfully!"), 
-	WRONG_STUDENT_CODE("The student code you've entered is wrong!"),
-	CHILD_ALREADY_ADDED("The child you are attempting to add is already added");
+	SUCCESS("Added child successfully!"), 
+	INVALID_STUDENT_CODE("The student code you've entered is unrecognized!"),
+	CHILD_ALREADY_ADDED("You've already added that child!");
 
 	private String defaultMessage;
 
