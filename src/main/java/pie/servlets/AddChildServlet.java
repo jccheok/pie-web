@@ -5,21 +5,24 @@ import java.io.PrintWriter;
 import java.util.Map;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import pie.constants.AddChildResult;
 import pie.services.ParentService;
 import pie.utilities.Utilities;
 
-@Singleton
-public class AddChildServlet {
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
+@Singleton
+public class AddChildServlet extends HttpServlet{
+
+	private static final long serialVersionUID = 811697721299744514L;
+	
 	ParentService parentService;
 
 	@Inject

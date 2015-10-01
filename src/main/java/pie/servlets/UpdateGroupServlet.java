@@ -5,18 +5,21 @@ import java.io.PrintWriter;
 import java.util.Map;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
-import com.google.inject.Inject;
-
 import pie.services.GroupService;
 import pie.utilities.Utilities;
 
-public class UpdateGroupServlet {
+import com.google.inject.Inject;
 
+public class UpdateGroupServlet extends HttpServlet{
+
+	private static final long serialVersionUID = 6026995148320527089L;
+	
 	GroupService groupService;
 
 	@Inject

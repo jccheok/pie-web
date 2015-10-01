@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.Map;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,8 +17,10 @@ import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
 
-public class ViewGroupDetailsServlet {
+public class ViewGroupDetailsServlet extends HttpServlet {
 
+	private static final long serialVersionUID = -288687819678490074L;
+	
 	GroupService groupService;
 
 	@Inject
