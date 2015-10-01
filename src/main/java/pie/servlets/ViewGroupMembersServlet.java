@@ -3,6 +3,7 @@ package pie.servlets;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +17,7 @@ import pie.StaffRole;
 import pie.Student;
 import pie.services.GroupService;
 import pie.services.StaffService;
+import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
 
@@ -29,11 +31,18 @@ public class ViewGroupMembersServlet {
 	}
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	
+		int groupID = 0;
 		
-		response.setContentType("application/json");
-		response.addHeader("Access-Control-Allow-Origin", "*");
-
-		int groupID = Integer.parseInt(request.getParameter("groupID"));
+		try {
+			
+			Map<String, String> requestParameters = Utilities.getParameters(request, "groupID");
+			groupID = Integer.parseInt(requestParameters.get("groupID"));
+			
+		} catch (Exception e) {
+			
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+		} 
 		
 		Student[] studentMembers = groupService.getStudentMembers(groupID);
 		Staff[] staffMembers = groupService.getStaffMembers(groupID);
