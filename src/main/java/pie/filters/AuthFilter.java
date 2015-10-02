@@ -46,7 +46,14 @@ public class AuthFilter implements Filter {
 				UserType userType = UserType.getUserType((Integer) decoded.get("userTypeID"));
 				String URI = ((HttpServletRequest) servletRequest).getRequestURL().toString();
 
-				filterChain.doFilter(servletRequest, servletResponse);
+				String accessRole = URI.split("/")[2];
+
+				if (!userType.toString().equals(accessRole.toUpperCase())) {
+					((HttpServletResponse) servletResponse).sendError(HttpServletResponse.SC_UNAUTHORIZED,
+							"UNAUTHORIZED: YOU ARE NOT AUTHORIZE TO ACCESS THIS RESOURCE");
+				} else {
+					filterChain.doFilter(servletRequest, servletResponse);
+				}
 			} catch (Exception e) {
 				throw new ServletException("UNAUTHORIZED: UNRECOGNIZED TOKEN", e);
 			}

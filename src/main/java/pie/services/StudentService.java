@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import pie.Group;
 import pie.School;
 import pie.Student;
@@ -21,7 +24,7 @@ import pie.utilities.Utilities;
 public class StudentService {
 
 	public boolean isAvailableStudentCode(String studentCode) {
-		
+
 		boolean isAvailable = false;
 
 		try {
@@ -45,7 +48,7 @@ public class StudentService {
 	}
 
 	public boolean isRegisteredStudent(String studentCode) {
-		
+
 		boolean isRegistered = false;
 
 		try {
@@ -74,7 +77,7 @@ public class StudentService {
 	}
 
 	public boolean isMember(Student student, Group group) {
-		
+
 		boolean isMember = false;
 
 		try {
@@ -292,7 +295,7 @@ public class StudentService {
 
 		if (userService.isRegisteredUser(userEmail)) {
 			registrationResult = UserRegistrationResult.EMAIL_TAKEN;
-		} else if (isAvailableStudentCode(studentCode)){
+		} else if (isAvailableStudentCode(studentCode)) {
 			registrationResult = UserRegistrationResult.INVALID_STUDENT_CODE;
 		} else if (isRegisteredStudent(studentCode)) {
 			registrationResult = UserRegistrationResult.STUDENT_REGISTERED;
@@ -326,7 +329,7 @@ public class StudentService {
 		JoinGroupResult joinGroupResult = JoinGroupResult.SUCCESS;
 
 		Group group = groupService.getGroup(groupID);
-		
+
 		if (group == null || !group.groupIsValid()) {
 			joinGroupResult = JoinGroupResult.INVALID_GROUP;
 		} else if (!group.groupIsOpen()) {
@@ -339,24 +342,23 @@ public class StudentService {
 			int nextStudentIndexNumber = groupService.getNextStudentIndexNumber(groupID);
 			groupService.addStudentToGroup(groupID, studentID, nextStudentIndexNumber);
 		}
-		
+
 		return joinGroupResult;
 	}
-	
+
 	public String generateStudentCode() {
-		
+
 		String newStudentCode = Utilities.generateString(5);
 		while (!isAvailableStudentCode(newStudentCode)) {
 			newStudentCode = Utilities.generateString(5);
 		}
-		
+
 		return newStudentCode;
 	}
-	
-	
-	public int getStudentID(String studentCode){
+
+	public int getStudentID(String studentCode) {
 		int studentID = -1;
-		
+
 		try {
 
 			Connection conn = DatabaseConnector.getConnection();
@@ -370,9 +372,9 @@ public class StudentService {
 			resultSet = pst.executeQuery();
 
 			if (resultSet.next()) {
-				
+
 				studentID = resultSet.getInt("studentID");
-				
+
 			}
 
 			conn.close();
@@ -380,8 +382,48 @@ public class StudentService {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		
+
 		return studentID;
 	}
 
+	public boolean enlistStudentToGroups(JSONObject studentObject, int schoolID, int groupID){
+		boolean result = false;
+
+		String userFirstName = null;
+		String userLastName = null;
+		String studentCode = null;
+		int studentGroupIndexNumber = 0;
+		
+		try{
+			
+			JSONArray studentList = (JSONArray) studentObject.get("students");
+			ArrayList<JSONArray> tempArrayStudentDetails = new ArrayList<JSONArray>();
+			
+			for(int i = 0; i < studentList.length(); i ++){
+				JSONArray student = (JSONArray) studentList.get(i);
+				tempArrayStudentDetails.add(student);
+			}
+			
+			for(int x = 0; x < tempArrayStudentDetails.size(); x ++){
+				userFirstName = tempArrayStudentDetails.get(x).getJSONObject(0).getString("studentFirstName");
+				userLastName = tempArrayStudentDetails.get(x).getJSONObject(0).getString("studentLastName");
+				studentCode = tempArrayStudentDetails.get(x).getJSONObject(0).getString("studentCode");
+				studentGroupIndexNumber = Integer.parseInt(tempArrayStudentDetails.get(x).getJSONObject(0).getString("studentGroupIndexNumber"));
+				
+				boolean enlistResult = enlistStudent(userFirstName, userLastName, studentCode, schoolID, groupID, studentGroupIndexNumber);
+				
+				if(enlistResult){
+					continue;
+				}else{
+					return result;
+				}
+			}
+			result = true;
+			
+		}catch (Exception e){
+			System.out.println(e);
+		}
+		
+		return result;
+	}
 }

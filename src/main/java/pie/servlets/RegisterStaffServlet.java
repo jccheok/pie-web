@@ -23,11 +23,11 @@ public class RegisterStaffServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 6380932722577144623L;
 	
-	StaffService teacherService;
+	StaffService staffService;
 
 	@Inject
-	public RegisterStaffServlet(StaffService teacherService) {
-		this.teacherService = teacherService;
+	public RegisterStaffServlet(StaffService staffService) {
+		this.staffService = staffService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -56,7 +56,7 @@ public class RegisterStaffServlet extends HttpServlet {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 		}
 
-		UserRegistrationResult registrationResult = teacherService.registerStaff(userFirstName, userLastName,
+		UserRegistrationResult registrationResult = staffService.registerStaff(userFirstName, userLastName,
 				userEmail, userPassword, userMobile, schoolCode, teacherTitle);
 
 		JSONObject responseObject = new JSONObject();

@@ -15,7 +15,9 @@ import pie.services.GroupService;
 import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
+@Singleton
 public class UpdateGroupServlet extends HttpServlet{
 
 	private static final long serialVersionUID = 6026995148320527089L;
