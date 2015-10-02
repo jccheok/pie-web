@@ -12,7 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
 
 import pie.constants.UserRegistrationResult;
+import pie.services.EmailService;
 import pie.services.ParentService;
+import pie.services.UserService;
 import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
@@ -24,10 +26,14 @@ public class RegisterParentServlet extends HttpServlet {
 	private static final long serialVersionUID = 6025770482395154507L;
 
 	ParentService parentService;
+	UserService userService;
+	EmailService emailService;
 
 	@Inject
-	public RegisterParentServlet(ParentService parentService) {
+	public RegisterParentServlet(ParentService parentService, UserService userService, EmailService emailService) {
 		this.parentService = parentService;
+		this.userService = userService;
+		this.emailService = emailService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -59,7 +65,10 @@ public class RegisterParentServlet extends HttpServlet {
 		responseObject.put("message", registrationResult.getDefaultMessage());
 
 		if (registrationResult == UserRegistrationResult.SUCCESS) {
-			// send email
+			
+			int userID = userService.getUserID(userEmail); 
+			emailService.sendVerificationEmail(userID);
+			
 		}
 
 		PrintWriter out = response.getWriter();
