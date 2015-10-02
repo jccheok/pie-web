@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import pie.Group;
 import pie.School;
@@ -144,6 +146,41 @@ public class StudentService {
 
 		return enlistResult;
 	}
+	
+	public Group[] getJoinedGroups(int studentID) {
+		
+		GroupService groupService = new GroupService();
+		Group[] joinedGroups = {};
+		
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT groupID FROM `StudentGroup`,`Group` WHERE `StudentGroup`.groupID = `Group`.groupID AND groupIsValid = ? AND studentGroupIsValid = ? AND studentID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, 1);
+			pst.setInt(2, 1);
+			pst.setInt(3, studentID);
+
+			resultSet = pst.executeQuery();
+
+			List<Group> tempJoinedGroups = new ArrayList<Group>();
+			while (resultSet.next()) {
+				tempJoinedGroups.add(groupService.getGroup(resultSet.getInt(1)));
+			}
+			joinedGroups = tempJoinedGroups.toArray(joinedGroups);
+
+			conn.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		
+		return joinedGroups;
+	}
+	
 	public int getStudentGroupIndexNumber(int groupID, int studentID){
 		int studentIndexNumber = -1;
 		
@@ -175,6 +212,37 @@ public class StudentService {
 		return studentIndexNumber;
 	}
 	
+	public Date getStudentGroupJoinDate(int groupID, int studentID){
+		
+		Date studentGroupJoinDate = null;
+		
+		try{
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+			
+			String sql = "SELECT studentGroupJoinDate FROM `StudentGroup` WHERE groupID = ? AND studentID = ? AND studentGroupIsValid = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, groupID);
+			pst.setInt(2, studentID);
+			pst.setInt(3, 1);
+			
+			resultSet = pst.executeQuery();
+			
+			if(resultSet.next()){
+				
+				studentGroupJoinDate = new Date(resultSet.getTimestamp(1).getTime());
+				
+			}
+			
+			conn.close();
+
+		}catch(Exception e){
+			System.out.println(e);
+		}
+		
+		return studentGroupJoinDate;
+	}
 
 	public Student getStudent(int studentID) {
 
