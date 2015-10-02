@@ -50,9 +50,8 @@ public class ViewParentChildrenServlet extends HttpServlet {
 
 		JSONObject responseObject = new JSONObject();
 		
-		Student[] parentChildren = parentService.getChildren(parentID);
 		JSONArray childrenList = new JSONArray();
-		for (Student student : parentChildren) {
+		for (Student student : parentService.getChildren(parentID)) {
 			
 			int studentID = student.getUserID();
 			
@@ -63,8 +62,7 @@ public class ViewParentChildrenServlet extends HttpServlet {
 			studentDetails.put("studentSchoolName", student.getSchool().getSchoolName());
 			
 			JSONArray studentGroupsList = new JSONArray();
-			Group[] studentGroups = studentService.getJoinedGroups(studentID);
-			for (Group joinedGroup : studentGroups) {
+			for (Group joinedGroup : studentService.getJoinedGroups(studentID)) {
 				
 				int joinedGroupID = joinedGroup.getGroupID();
 				
