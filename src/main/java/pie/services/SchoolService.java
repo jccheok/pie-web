@@ -244,4 +244,38 @@ public class SchoolService {
 		
 		return newSchoolCode;
 	}
+	
+	public Group[] getSchoolOpenValidGroups(int schoolID) {
+
+		GroupService groupService = new GroupService();
+		Group[] schoolGroups = {};
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT groupID FROM `Group` WHERE schoolID = ? AND groupIsValid = ? AND groupIsOpen = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, schoolID);
+			pst.setInt(2, 1);
+			pst.setInt(3, 1);
+
+			resultSet = pst.executeQuery();
+
+			List<Group> tempSchoolGroups = new ArrayList<Group>();
+			while (resultSet.next()) {
+				tempSchoolGroups.add(groupService.getGroup(resultSet.getInt(1)));
+			}
+			schoolGroups = tempSchoolGroups.toArray(schoolGroups);
+
+			conn.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+		return schoolGroups;
+	}
 }
