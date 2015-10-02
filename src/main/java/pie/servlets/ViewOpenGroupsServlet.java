@@ -2,7 +2,6 @@ package pie.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -24,13 +23,16 @@ import com.google.inject.Singleton;
 
 @Singleton
 public class ViewOpenGroupsServlet {
+	
 	GroupService groupService;
 	SchoolService schoolService;
+	StaffService staffService;
 
 	@Inject
-	public ViewOpenGroupsServlet(GroupService groupService, SchoolService schoolService) {
+	public ViewOpenGroupsServlet(GroupService groupService, SchoolService schoolService, StaffService staffService) {
 		this.groupService = groupService;
 		this.schoolService = schoolService;
+		this.staffService = staffService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -48,34 +50,35 @@ public class ViewOpenGroupsServlet {
 		}
 		
 		schoolService = new SchoolService();
-		Group[] groups = schoolService.getSchoolOpenValidGroups(schoolID);
 		
 		JSONObject responseObject = new JSONObject();
-		JSONArray groupList = new JSONArray();
-
 		
-		for (Group group : groups) {
-			HashMap<String, String> currGroup = new HashMap<String, String>();
-			currGroup.put("groupName", group.getGroupName());
-			currGroup.put("groupDescription", group.getGroupDescription());
-			currGroup.put("groupMemberCount", Integer.toString(groupService.getMemberCount(group.getGroupID())));
+		JSONArray groupList = new JSONArray();
+		for (Group openGroup : schoolService.getSchoolOpenValidGroups(schoolID)) {
+			
+			int groupID = openGroup.getGroupID();
+			
+			JSONObject groupDetails = new JSONObject();
+			groupDetails.put("groupID", groupID);
+			groupDetails.put("groupName", openGroup.getGroupName());
+			groupDetails.put("groupDescription", openGroup.getGroupDescription());
+			groupDetails.put("groupMemberCount", Integer.toString(groupService.getMemberCount(openGroup.getGroupID())));
+			groupDetails.put("groupIsPasswordProtected", openGroup.getGroupCode() == null);
 		
 			JSONArray adminList = new JSONArray();
+			for (Staff adminStaff : groupService.getGroupAdministrators(groupID)) {
 			
-			Staff[] adminStaff = groupService.getGroupAdministrators(group.getGroupID());
-			
-			for (Staff staff : adminStaff) {
-			
-				HashMap<String, String> staffAdmin = new HashMap<String, String>();
-				staffAdmin.put("adminName", staff.getUserFullName());
-				adminList.put(staffAdmin);
-				
+				JSONObject adminDetails = new JSONObject();
+				adminDetails.put("staffFullName", adminStaff.getUserFullName());
+				adminDetails.put("staffGroupRole", staffService.getStaffRole(adminStaff.getUserID(), openGroup.getGroupID()).getStaffRoleName());
+				adminList.put(adminDetails);
 			}
 			
-			currGroup.put("groupAdministrators", adminList.toString());
-			groupList.put(currGroup);
+			groupDetails.put("groupAdministrators", adminList);
+			groupList.put(groupDetails);
 		}
 		responseObject.put("groupList", groupList);
+		
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
 	}
