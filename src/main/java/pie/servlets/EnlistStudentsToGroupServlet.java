@@ -2,7 +2,6 @@ package pie.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -12,46 +11,56 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import pie.services.GroupService;
 import pie.services.StudentService;
 import pie.utilities.Utilities;
 
 public class EnlistStudentsToGroupServlet {
 	
 	StudentService studentService;
+	GroupService groupService;
 	
-	public EnlistStudentsToGroupServlet(StudentService studentService){
+	public EnlistStudentsToGroupServlet(StudentService studentService, GroupService groupService){
 		this.studentService = studentService;
+		this.groupService = groupService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		JSONObject studentObject = null;
-		int schoolID = 0;
+		
+		String rawStudentList = null;
 		int groupID = 0;
 		
 		try {
 		
-			Map<String, String> requestParameters = Utilities.getParameters(request, "studentList", "schoolID", "groupID");
-			studentObject = new JSONObject().getJSONObject(requestParameters.get("studentList"));
-			schoolID = Integer.parseInt(requestParameters.get("schoolID"));
+			Map<String, String> requestParameters = Utilities.getParameters(request, "studentList", "groupID");
+			rawStudentList = requestParameters.get("studentsData");
 			groupID = Integer.parseInt(requestParameters.get("groupID"));
 			
 		} catch (Exception e) {
 			
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
-			
 		}
 		
-		boolean enlistStudentResult = studentService.enlistStudentToGroups(studentObject, schoolID, groupID);
+		JSONObject requestObject = new JSONObject(rawStudentList);
+		JSONArray studentList = requestObject.getJSONArray("studentList");
+		
+		int schoolID = groupService.getGroup(groupID).getSchool().getSchoolID();
+		
+		for (int index = 0; index < studentList.length(); index++) {
+			
+			JSONObject student = studentList.getJSONObject(index);
+			
+			String studentFirstName = student.getString("studentFirstName");
+			String studentLastName = student.getString("studentLastName");
+			String studentCode = studentService.generateStudentCode();
+			int studentGroupIndexNumber = Integer.parseInt(student.getString("studentGroupIndexNumber"));
+			
+			studentService.enlistStudent(studentFirstName, studentLastName, studentCode, schoolID, groupID, studentGroupIndexNumber);
+		}
 		
 		JSONObject responseObject = new JSONObject();
-
-		if(enlistStudentResult){
-			responseObject.put("result", "Success");
-			responseObject.put("message", "Enlist students to group");
-		}else{
-			responseObject.put("result", "Failed");
-			responseObject.put("message", "Failed to enlist students to group");
-		}
+		responseObject.put("result", "Success");
+		responseObject.put("message", "Successfully enlisted all students!");
 
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());

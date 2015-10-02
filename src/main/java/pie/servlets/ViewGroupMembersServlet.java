@@ -30,7 +30,7 @@ public class ViewGroupMembersServlet {
 		this.groupService = groupService;
 	}
 	
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	
 		int groupID = 0;
 		

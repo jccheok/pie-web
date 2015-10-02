@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -136,8 +137,7 @@ public class StudentService {
 					pst.setString(3, studentCode);
 					pst.executeUpdate();
 
-					enlistResult = groupService.addStudentToGroup(groupID,
-							newStudentID, studentGroupIndexNumber);
+					enlistResult = groupService.addStudentToGroup(groupID, newStudentID, studentGroupIndexNumber);
 
 				}
 
@@ -147,6 +147,103 @@ public class StudentService {
 		}
 
 		return enlistResult;
+	}
+
+	public Group[] getJoinedGroups(int studentID) {
+
+		GroupService groupService = new GroupService();
+		Group[] joinedGroups = {};
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT groupID FROM `StudentGroup`,`Group` WHERE `StudentGroup`.groupID = `Group`.groupID AND groupIsValid = ? AND studentGroupIsValid = ? AND studentID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, 1);
+			pst.setInt(2, 1);
+			pst.setInt(3, studentID);
+
+			resultSet = pst.executeQuery();
+
+			List<Group> tempJoinedGroups = new ArrayList<Group>();
+			while (resultSet.next()) {
+				tempJoinedGroups.add(groupService.getGroup(resultSet.getInt(1)));
+			}
+			joinedGroups = tempJoinedGroups.toArray(joinedGroups);
+
+			conn.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+		return joinedGroups;
+	}
+
+	public int getStudentGroupIndexNumber(int groupID, int studentID) {
+		int studentIndexNumber = -1;
+
+		try {
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT studentGroupIndexNumber FROM `StudentGroup` WHERE groupID = ? AND studentID = ? AND studentGroupIsValid = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, groupID);
+			pst.setInt(2, studentID);
+			pst.setInt(3, 1);
+
+			resultSet = pst.executeQuery();
+
+			if (resultSet.next()) {
+
+				studentIndexNumber = resultSet.getInt(1);
+
+			}
+
+			conn.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+		return studentIndexNumber;
+	}
+
+	public Date getStudentGroupJoinDate(int groupID, int studentID) {
+
+		Date studentGroupJoinDate = null;
+
+		try {
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT studentGroupJoinDate FROM `StudentGroup` WHERE groupID = ? AND studentID = ? AND studentGroupIsValid = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, groupID);
+			pst.setInt(2, studentID);
+			pst.setInt(3, 1);
+
+			resultSet = pst.executeQuery();
+
+			if (resultSet.next()) {
+
+				studentGroupJoinDate = new Date(resultSet.getTimestamp(1).getTime());
+
+			}
+
+			conn.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+		return studentGroupJoinDate;
 	}
 
 	public Student getStudent(int studentID) {
@@ -286,46 +383,5 @@ public class StudentService {
 		}
 
 		return studentID;
-	}
-
-	public boolean enlistStudentToGroups(JSONObject studentObject, int schoolID, int groupID){
-		boolean result = false;
-
-		String userFirstName = null;
-		String userLastName = null;
-		String studentCode = null;
-		int studentGroupIndexNumber = 0;
-		
-		try{
-			
-			JSONArray studentList = (JSONArray) studentObject.get("students");
-			ArrayList<JSONArray> tempArrayStudentDetails = new ArrayList<JSONArray>();
-			
-			for(int i = 0; i < studentList.length(); i ++){
-				JSONArray student = (JSONArray) studentList.get(i);
-				tempArrayStudentDetails.add(student);
-			}
-			
-			for(int x = 0; x < tempArrayStudentDetails.size(); x ++){
-				userFirstName = tempArrayStudentDetails.get(x).getJSONObject(0).getString("studentFirstName");
-				userLastName = tempArrayStudentDetails.get(x).getJSONObject(0).getString("studentLastName");
-				studentCode = tempArrayStudentDetails.get(x).getJSONObject(0).getString("studentCode");
-				studentGroupIndexNumber = Integer.parseInt(tempArrayStudentDetails.get(x).getJSONObject(0).getString("studentGroupIndexNumber"));
-				
-				boolean enlistResult = enlistStudent(userFirstName, userLastName, studentCode, schoolID, groupID, studentGroupIndexNumber);
-				
-				if(enlistResult){
-					continue;
-				}else{
-					return result;
-				}
-			}
-			result = true;
-			
-		}catch (Exception e){
-			System.out.println(e);
-		}
-		
-		return result;
 	}
 }

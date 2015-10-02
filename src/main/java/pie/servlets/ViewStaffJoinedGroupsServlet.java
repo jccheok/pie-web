@@ -38,7 +38,7 @@ public class ViewStaffJoinedGroupsServlet extends HttpServlet {
 		this.schoolService = schoolService;
 	}
 	
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		int staffID = 0;
 		
@@ -57,13 +57,16 @@ public class ViewStaffJoinedGroupsServlet extends HttpServlet {
 		JSONArray joinedGroups = new JSONArray();
 		for(Group group : staffService.getJoinedGroups(staffID)){
 			
+			int groupID = group.getGroupID();
+			
 			JSONObject groupDetails = new JSONObject();
+			groupDetails.put("groupID", groupID);
 			groupDetails.put("groupName", group.getGroupName());
 			groupDetails.put("groupDescription", group.getGroupDescription());
 			groupDetails.put("groupMemberCount", groupService.getMemberCount(group.getGroupID()));
 			
 			JSONArray groupAdministrators = new JSONArray();
-			for(Staff adminStaff : groupService.getGroupAdministrators(group.getGroupID())){
+			for(Staff adminStaff : groupService.getGroupAdministrators(groupID)){
 				
 				JSONObject adminDetails = new JSONObject();
 				adminDetails.put("staffFullName", adminStaff.getUserFullName());

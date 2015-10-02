@@ -453,35 +453,6 @@ public class GroupService {
 		
 		return newGroupCode;
 	}
-	
-	public int getStudentGroupIndexNumber(int groupID, int studentID){
-		int studentIndexNumber = -1;
-		
-		try{
-			Connection conn = DatabaseConnector.getConnection();
-			PreparedStatement pst = null;
-			ResultSet resultSet = null;
-			
-			String sql = "SELECT studentGroupIndexNumber FROM `StudentGroup` WHERE groupID = ? AND studentID = ?";
-			pst = conn.prepareStatement(sql);
-			pst.setInt(1, groupID);
-			pst.setInt(2, studentID);
-			
-			resultSet = pst.executeQuery();
-			
-			if(resultSet.next()){
-				
-				studentIndexNumber = resultSet.getInt("studentGroupIndexNumber");
-				
-			}
-			
-			conn.close();
-
-		}catch(Exception e){
-			System.out.println(e);
-		}
-		return studentIndexNumber;
-	}
 
 	public boolean updateGroup(int groupID, String groupName, String groupDescription,
 			int groupMaxDailyHomeworkMinutes, boolean groupIsOpen){
