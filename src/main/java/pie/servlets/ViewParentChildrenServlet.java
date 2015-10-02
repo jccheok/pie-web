@@ -34,7 +34,7 @@ public class ViewParentChildrenServlet extends HttpServlet {
 		this.parentService = parentService;
 	}
 	
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		int parentID = 0;
 

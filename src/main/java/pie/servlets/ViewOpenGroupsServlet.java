@@ -35,7 +35,7 @@ public class ViewOpenGroupsServlet {
 		this.staffService = staffService;
 	}
 
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int schoolID = 0;
 		
 		try {
