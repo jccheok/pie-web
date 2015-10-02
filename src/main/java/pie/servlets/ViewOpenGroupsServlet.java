@@ -25,23 +25,21 @@ import com.google.inject.Singleton;
 @Singleton
 public class ViewOpenGroupsServlet {
 	GroupService groupService;
-	StaffService staffService;
 	SchoolService schoolService;
 
 	@Inject
-	public ViewOpenGroupsServlet(GroupService groupService, SchoolService schoolService, StaffService staffService) {
+	public ViewOpenGroupsServlet(GroupService groupService, SchoolService schoolService) {
 		this.groupService = groupService;
-		this.staffService = staffService;
 		this.schoolService = schoolService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int staffID = 0;
+		int schoolID = 0;
 		
 		try {
 		
-			Map<String, String> requestParameters = Utilities.getParameters(request, "staffID");
-			staffID = Integer.parseInt(requestParameters.get("staffID"));
+			Map<String, String> requestParameters = Utilities.getParameters(request, "schoolID");
+			schoolID = Integer.parseInt(requestParameters.get("schoolID"));
 			
 		} catch (Exception e) {
 			
@@ -49,8 +47,6 @@ public class ViewOpenGroupsServlet {
 			
 		}
 		
-		staffService = new StaffService();
-		int schoolID = staffService.getStaff(staffID).getSchool().getSchoolID();
 		schoolService = new SchoolService();
 		Group[] groups = schoolService.getSchoolOpenValidGroups(schoolID);
 		
