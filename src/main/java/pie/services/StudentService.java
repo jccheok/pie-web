@@ -144,6 +144,37 @@ public class StudentService {
 
 		return enlistResult;
 	}
+	public int getStudentGroupIndexNumber(int groupID, int studentID){
+		int studentIndexNumber = -1;
+		
+		try{
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+			
+			String sql = "SELECT studentGroupIndexNumber FROM `StudentGroup` WHERE groupID = ? AND studentID = ? AND studentGroupIsValid = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, groupID);
+			pst.setInt(2, studentID);
+			pst.setInt(3, 1);
+			
+			resultSet = pst.executeQuery();
+			
+			if(resultSet.next()){
+				
+				studentIndexNumber = resultSet.getInt(1);
+				
+			}
+			
+			conn.close();
+
+		}catch(Exception e){
+			System.out.println(e);
+		}
+		
+		return studentIndexNumber;
+	}
+	
 
 	public Student getStudent(int studentID) {
 
