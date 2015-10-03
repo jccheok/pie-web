@@ -12,15 +12,29 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import pie.StaffRole;
 import pie.UserType;
 import pie.services.AuthService;
+import pie.services.StaffService;
+import pie.utilities.Utilities;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
 public class AuthFilter implements Filter {
 
-	private AuthService authService;
+	AuthService authService;
+	StaffService staffService;
+
+	private String UNAUTHORIZED_MESSAGE = "UNAUTHORIZED: YOU ARE NOT AUTHORIZED TO ACCESS THIS RESOURCE";
+
+	@Inject
+	public AuthFilter(AuthService authService, StaffService staffService) {
+		this.authService = authService;
+		this.staffService = staffService;
+		
+	}
 
 	@Override
 	public void init(FilterConfig arg0) throws ServletException {
@@ -33,33 +47,71 @@ public class AuthFilter implements Filter {
 	}
 
 	@Override
-	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
 			throws IOException, ServletException {
+
+		HttpServletRequest servletRequest = (HttpServletRequest) request;
+		HttpServletResponse servletResponse = (HttpServletResponse) response;
 
 		try {
 
-			String token = getToken((HttpServletRequest) servletRequest);
+			String token = getToken(servletRequest);
 
 			try {
 				Map<String, Object> decoded = authService.parseJWT(token);
-
+				
+				int userID = (Integer) decoded.get("userID");
 				UserType userType = UserType.getUserType((Integer) decoded.get("userTypeID"));
-				String URI = ((HttpServletRequest) servletRequest).getRequestURL().toString();
+				String requestURI = (servletRequest).getRequestURL().toString();
 
-				String accessRole = URI.split("/")[2];
+				String accessType = requestURI.split("/")[2].toUpperCase();
 
-				if (!userType.toString().equals(accessRole.toUpperCase())) {
-					((HttpServletResponse) servletResponse).sendError(HttpServletResponse.SC_UNAUTHORIZED,
-							"UNAUTHORIZED: YOU ARE NOT AUTHORIZE TO ACCESS THIS RESOURCE");
-				} else {
+				if (userType == UserType.ADMIN || userType.toString().equals(accessType)) {
+					
+					if (userType == UserType.STAFF && requestURI.split("/")[3].equals("group")) {
+						
+						String memberType = requestURI.split("/")[4];
+						int groupID = 0;
+								
+						try {
+							Map<String, String> requestParameters = Utilities.getParameters(servletRequest, "groupID");
+							groupID = Integer.parseInt(requestParameters.get("groupID"));
+						} catch (Exception e) {
+							
+							servletResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+							return;
+						}
+						
+						if (staffService.isMember(userID, groupID)) {
+							StaffRole staffRole = staffService.getStaffRole(userID, groupID);
+							
+							if (memberType.equals("owner") && !staffRole.staffRoleIsOwner()) {
+								servletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, UNAUTHORIZED_MESSAGE);
+								return;
+							} else if (memberType.equals("admin") && (!staffRole.staffRoleIsAdmin() || !staffRole.staffRoleIsOwner())) {
+								servletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, UNAUTHORIZED_MESSAGE);
+								return;
+							}
+						} else {
+							servletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, UNAUTHORIZED_MESSAGE);
+							return;
+						}
+					}
+					
 					filterChain.doFilter(servletRequest, servletResponse);
+
+				} else {
+					
+					servletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, UNAUTHORIZED_MESSAGE);
+					return;
 				}
 			} catch (Exception e) {
 				throw new ServletException("UNAUTHORIZED: UNRECOGNIZED TOKEN", e);
 			}
 
 		} catch (Exception e) {
-			((HttpServletResponse) servletResponse).sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
+			servletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
+			return;
 		}
 	}
 
@@ -68,7 +120,7 @@ public class AuthFilter implements Filter {
 		final String token = servletRequest.getHeader("X-Auth-Token");
 
 		if (token == null || token.equals("")) {
-			throw new ServletException("UNAUTHORIZED: NO TOKEN HEADER FOUND IN HEADER");
+			throw new ServletException("UNAUTHORIZED: NO TOKEN FOUND IN HEADER");
 		}
 
 		return token;
