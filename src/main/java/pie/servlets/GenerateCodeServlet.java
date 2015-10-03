@@ -47,6 +47,7 @@ public class GenerateCodeServlet extends HttpServlet {
 		} catch (Exception e) {
 			
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+			return;
 		}
 		
 		String newPassword = null;

@@ -51,6 +51,7 @@ public class UpdateGroupServlet extends HttpServlet{
 		} catch (Exception e) {
 
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+			return;
 		}
 
 		boolean updateResult = groupService.updateGroup(groupID, groupName, groupDescription,

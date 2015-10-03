@@ -52,6 +52,7 @@ public class LoginServlet extends HttpServlet {
 		} catch (Exception e) {
 			
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+			return;
 		}
 			
 		SupportedPlatform clientPlatform = SupportedPlatform.getSupportedPlatform(clientPlatformID);

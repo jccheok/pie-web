@@ -42,6 +42,7 @@ public class ViewGroupMembersServlet {
 		} catch (Exception e) {
 			
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+			return;
 		} 
 		
 		Student[] studentMembers = groupService.getStudentMembers(groupID);

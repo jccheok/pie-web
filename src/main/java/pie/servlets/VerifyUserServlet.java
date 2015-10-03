@@ -42,6 +42,7 @@ public class VerifyUserServlet extends HttpServlet {
 		} catch (Exception e) {
 
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+			return;
 		}
 		
 		User user = userService.getUser(userID);

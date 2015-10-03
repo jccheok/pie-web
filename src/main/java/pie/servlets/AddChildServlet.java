@@ -47,6 +47,7 @@ public class AddChildServlet extends HttpServlet{
 		} catch (Exception e) {
 
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+			return;
 		}
 
 		AddChildResult addChildResult = parentService.addChild(parentID, relationshipID, studentCode);

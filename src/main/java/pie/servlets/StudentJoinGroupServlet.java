@@ -47,6 +47,7 @@ public class StudentJoinGroupServlet extends HttpServlet {
 		} catch (Exception e) {
 
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+			return;
 		}
 
 		JoinGroupResult joinGroupResult = studentService.joinGroup(groupID, studentID, groupCode);

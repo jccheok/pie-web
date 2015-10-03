@@ -58,6 +58,7 @@ public class RegisterGroupServlet extends HttpServlet {
 		} catch (Exception e) {
 
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+			return;
 		}
 		
 		GroupType groupType = GroupType.getGroupType(groupTypeID);

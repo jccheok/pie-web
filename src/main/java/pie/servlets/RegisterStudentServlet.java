@@ -49,6 +49,7 @@ public class RegisterStudentServlet extends HttpServlet {
 		} catch (Exception e) {
 
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+			return;
 		}
 
 		UserRegistrationResult registrationResult = studentService.registerStudent(userEmail, userPassword, userMobile,

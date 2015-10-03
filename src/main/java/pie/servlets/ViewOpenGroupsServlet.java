@@ -46,7 +46,7 @@ public class ViewOpenGroupsServlet {
 		} catch (Exception e) {
 			
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
-			
+			return;
 		}
 		
 		schoolService = new SchoolService();

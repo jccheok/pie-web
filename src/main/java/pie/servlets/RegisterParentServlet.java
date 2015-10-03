@@ -56,6 +56,7 @@ public class RegisterParentServlet extends HttpServlet {
 		} catch (Exception e) {
 			
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+			return;
 		}
 
 		UserRegistrationResult registrationResult = parentService.registerParent(userFirstName, userLastName, userEmail, userPassword, userMobile);

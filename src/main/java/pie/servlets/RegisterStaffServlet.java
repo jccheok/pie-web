@@ -53,7 +53,9 @@ public class RegisterStaffServlet extends HttpServlet {
 			teacherTitle = requestParameters.get("teacherTitle");
 
 		} catch (Exception e) {
+			
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+			return;
 		}
 
 		UserRegistrationResult registrationResult = staffService.registerStaff(userFirstName, userLastName,
