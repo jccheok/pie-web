@@ -15,11 +15,11 @@ public class AuthService {
 	private static final Key secretKey = MacProvider.generateKey();
 	private static final String issuer = System.getenv("OPENSHIFT_APP_NAME");
 
-	public static Key getSecretKey() {
+	public Key getSecretKey() {
 		return secretKey;
 	}
 
-	public static String createToken(String subject, long ttlMillis, HashMap<String, Object> claims) {
+	public String createToken(String subject, long ttlMillis, HashMap<String, Object> claims) {
 
 		SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS512;
 
@@ -41,7 +41,7 @@ public class AuthService {
 		return (builder.compact());
 	}
 
-	public static Claims parseJWT(String jwt) {
+	public Claims parseJWT(String jwt) {
 		Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwt).getBody();
 
 		return claims;

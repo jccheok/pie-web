@@ -28,10 +28,12 @@ public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 483038783219697909L;
 	
 	UserService userService;
+	AuthService authService;
 	
 	@Inject
-	public LoginServlet(UserService userService) {
+	public LoginServlet(UserService userService, AuthService authService) {
 		this.userService = userService;
+		this.authService = authService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -74,9 +76,8 @@ public class LoginServlet extends HttpServlet {
 			
 			HashMap<String,Object> claims = new HashMap<String,Object>();
 			claims.put("userID", Integer.toString(user.getUserID()));
-			claims.put("userFullName", user.getUserFullName());
 			claims.put("userTypeID", user.getUserType().getUserTypeID());
-			String token = AuthService.createToken("login", 86400000, claims);
+			String token = authService.createToken("login", 86400000, claims);
 			
 			responseObject.put("user", userJSON);
 			response.addHeader("X-Auth-Token", token);
