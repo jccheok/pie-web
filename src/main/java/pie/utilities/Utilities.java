@@ -1,5 +1,7 @@
 package pie.utilities;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +10,8 @@ import java.util.Random;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.io.IOUtils;
 
 public class Utilities {
 	
@@ -43,5 +47,9 @@ public class Utilities {
 		}
 		
 		return requestParameters;
+	}
+	
+	public static String convertStreamToString(InputStream inputStream) throws IOException {
+		return IOUtils.toString(inputStream, "UTF-8");
 	}
 }
