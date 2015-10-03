@@ -2,6 +2,8 @@ package pie.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -11,8 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
+import pie.Staff;
 import pie.StaffRole;
 import pie.constants.JoinGroupResult;
+import pie.services.EmailService;
+import pie.services.GroupService;
 import pie.services.StaffRoleService;
 import pie.services.StaffService;
 import pie.utilities.Utilities;
@@ -26,12 +31,16 @@ public class StaffJoinGroupServlet extends HttpServlet {
 	private static final long serialVersionUID = 5666243950594572419L;
 
 	StaffService staffService;
+	GroupService groupService;
 	StaffRoleService staffRoleService;
+	EmailService emailService;
 
 	@Inject
-	public StaffJoinGroupServlet(StaffService staffService, StaffRoleService staffRoleService) {
+	public StaffJoinGroupServlet(StaffService staffService, GroupService groupService, StaffRoleService staffRoleService, EmailService emailService) {
 		this.staffService = staffService;
+		this.groupService = groupService;
 		this.staffRoleService = staffRoleService;
+		this.emailService = emailService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -65,7 +74,23 @@ public class StaffJoinGroupServlet extends HttpServlet {
 		responseObject.put("message", joinGroupResult.getDefaultMessage());
 		
 		if (joinGroupResult == JoinGroupResult.SUCCESS) {
-			// send email to group administrators
+			
+			String staffFullname = staffService.getStaff(staffID).getUserFullName();
+			String groupName = groupService.getGroup(groupID).getGroupName();
+			String emailSubject = staffFullname + " has joined " + groupName;
+			
+			String emailContent = emailSubject;
+			
+			String[] groupAdministratorsEmail = {};
+			
+			Staff[] groupAdministrators = groupService.getGroupAdministrators(groupID);
+			List<String> tempGroupAdministratorsEmail = new ArrayList<String>(); 
+			for (Staff groupAdmin : groupAdministrators) {
+				tempGroupAdministratorsEmail.add(groupAdmin.getUserEmail());
+			}
+			groupAdministrators = tempGroupAdministratorsEmail.toArray(groupAdministrators);
+			
+			emailService.sendEmail(emailSubject, emailContent, groupAdministratorsEmail);
 		}
 		
 		PrintWriter out = response.getWriter();

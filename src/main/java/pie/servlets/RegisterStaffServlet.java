@@ -1,6 +1,7 @@
 package pie.servlets;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Map;
 
@@ -12,7 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
 
 import pie.constants.UserRegistrationResult;
+import pie.services.EmailService;
 import pie.services.StaffService;
+import pie.services.UserService;
 import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
@@ -24,10 +27,14 @@ public class RegisterStaffServlet extends HttpServlet {
 	private static final long serialVersionUID = 6380932722577144623L;
 	
 	StaffService staffService;
+	UserService userService;
+	EmailService emailService;
 
 	@Inject
-	public RegisterStaffServlet(StaffService staffService) {
+	public RegisterStaffServlet(StaffService staffService, EmailService emailService, UserService userService) {
 		this.staffService = staffService;
+		this.userService = userService;
+		this.emailService = emailService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -67,7 +74,16 @@ public class RegisterStaffServlet extends HttpServlet {
 
 		if (registrationResult == UserRegistrationResult.SUCCESS) {
 
-			// send email
+			String verificationLink = "http://piedev-rpmaps.rhcloud.com/servlets/verify?userID=" + userService.getUserID(userEmail);
+			InputStream emailTemplateStream = this.getServletContext().getResourceAsStream("/resources/verificationTemplate.html");
+			
+			String emailSubject = "Confirm your Staff account on Parters in Education";
+			String emailTemplate = Utilities.convertStreamToString(emailTemplateStream);
+			
+			String emailContent = emailTemplate.replaceAll("$FIRST_NAME", userFirstName);
+			emailContent = emailTemplate.replaceAll("$VERIFICATION_LINK", verificationLink);
+			
+			emailService.sendEmail(emailSubject, emailContent, new String[] {userEmail});
 		}
 
 		PrintWriter out = response.getWriter();

@@ -1,6 +1,7 @@
 package pie.servlets;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Map;
 
@@ -67,9 +68,16 @@ public class RegisterParentServlet extends HttpServlet {
 
 		if (registrationResult == UserRegistrationResult.SUCCESS) {
 			
-			int userID = userService.getUserID(userEmail); 
-			emailService.sendVerificationEmail(userID);
+			String verificationLink = "http://piedev-rpmaps.rhcloud.com/servlets/verify?userID=" + userService.getUserID(userEmail);
+			InputStream emailTemplateStream = this.getServletContext().getResourceAsStream("/resources/verificationTemplate.html");
 			
+			String emailSubject = "Confirm your Parent account on Parters in Education";
+			String emailTemplate = Utilities.convertStreamToString(emailTemplateStream);
+			
+			String emailContent = emailTemplate.replaceAll("$FIRST_NAME", userFirstName);
+			emailContent = emailTemplate.replaceAll("$VERIFICATION_LINK", verificationLink);
+			
+			emailService.sendEmail(emailSubject, emailContent, new String[] {userEmail});
 		}
 
 		PrintWriter out = response.getWriter();

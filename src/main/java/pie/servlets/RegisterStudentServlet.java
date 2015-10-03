@@ -1,6 +1,7 @@
 package pie.servlets;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Map;
 
@@ -12,7 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
 
 import pie.constants.UserRegistrationResult;
+import pie.services.EmailService;
 import pie.services.StudentService;
+import pie.services.UserService;
 import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
@@ -24,10 +27,14 @@ public class RegisterStudentServlet extends HttpServlet {
 	private static final long serialVersionUID = -7966834264489316794L;
 
 	StudentService studentService;
+	UserService userService;
+	EmailService emailService;
 
 	@Inject
-	public RegisterStudentServlet(StudentService studentService) {
+	public RegisterStudentServlet(StudentService studentService, UserService userService, EmailService emailService) {
 		this.studentService = studentService;
+		this.userService = userService;
+		this.emailService = emailService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -61,7 +68,18 @@ public class RegisterStudentServlet extends HttpServlet {
 
 		if (registrationResult == UserRegistrationResult.SUCCESS) {
 
-			// send email
+			int userID = userService.getUserID(userEmail);
+			
+			String verificationLink = "http://piedev-rpmaps.rhcloud.com/servlets/verify?userID=" + userID;
+			InputStream emailTemplateStream = this.getServletContext().getResourceAsStream("/resources/verificationTemplate.html");
+			
+			String emailSubject = "Confirm your Student account on Parters in Education";
+			String emailTemplate = Utilities.convertStreamToString(emailTemplateStream);
+			
+			String emailContent = emailTemplate.replaceAll("$FIRST_NAME", userService.getUser(userID).getUserFirstName());
+			emailContent = emailTemplate.replaceAll("$VERIFICATION_LINK", verificationLink);
+			
+			emailService.sendEmail(emailSubject, emailContent, new String[] {userEmail});
 		}
 
 		PrintWriter out = response.getWriter();
