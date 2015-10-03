@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
+import pie.constants.GenericResult;
 import pie.services.GroupService;
 import pie.utilities.Utilities;
 
@@ -57,11 +58,11 @@ public class UpdateGroupServlet extends HttpServlet{
 
 		JSONObject responseObject = new JSONObject();
 		if (updateResult) {
-			responseObject.put("result", "Success");
-			responseObject.put("message", "Group updated successfully");
+			responseObject.put("result", GenericResult.SUCCESS.toString());
+			responseObject.put("message", "Group updated successfully.");
 		} else {
-			responseObject.put("result", "Failed");
-			responseObject.put("message", "Try again later");
+			responseObject.put("result", GenericResult.FAILED.toString());
+			responseObject.put("message", "Please try again later.");
 		}
 
 		PrintWriter out = response.getWriter();

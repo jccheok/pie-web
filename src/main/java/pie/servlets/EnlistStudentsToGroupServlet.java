@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import pie.constants.GenericResult;
 import pie.services.GroupService;
 import pie.services.StudentService;
 import pie.utilities.Utilities;
@@ -59,7 +60,7 @@ public class EnlistStudentsToGroupServlet {
 		}
 		
 		JSONObject responseObject = new JSONObject();
-		responseObject.put("result", "Success");
+		responseObject.put("result", GenericResult.SUCCESS.toString());
 		responseObject.put("message", "Successfully enlisted all students!");
 
 		PrintWriter out = response.getWriter();
