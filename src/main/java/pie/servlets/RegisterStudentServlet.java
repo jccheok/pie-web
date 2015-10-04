@@ -80,7 +80,7 @@ public class RegisterStudentServlet extends HttpServlet {
 			String emailTemplate = Utilities.convertStreamToString(emailTemplateStream);
 
 			String emailContent = emailTemplate.replaceAll("\\$FIRST_NAME", userService.getUser(userID).getUserFirstName());
-			emailContent = emailTemplate.replaceAll("\\$VERIFICATION_LINK", verificationLink);
+			emailContent = emailContent.replaceAll("\\$VERIFICATION_LINK", verificationLink);
 
 			emailService.sendEmail(emailSubject, emailContent, new String[] { userEmail });
 		}

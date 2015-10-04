@@ -84,7 +84,7 @@ public class RegisterStaffServlet extends HttpServlet {
 			String emailTemplate = Utilities.convertStreamToString(emailTemplateStream);
 			
 			String emailContent = emailTemplate.replaceAll("\\$FIRST_NAME", userFirstName);
-			emailContent = emailTemplate.replaceAll("\\$VERIFICATION_LINK", verificationLink);
+			emailContent = emailContent.replaceAll("\\$VERIFICATION_LINK", verificationLink);
 			
 			emailService.sendEmail(emailSubject, emailContent, new String[] {userEmail});
 		}
