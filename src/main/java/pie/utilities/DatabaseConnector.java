@@ -23,7 +23,9 @@ public class DatabaseConnector {
 	private static String MYSQL_DATABASE_NAME = "pie";
 	*/
 	
-	private static String url = String.format("jdbc:mysql://%s:%s/%s", MYSQL_DATABASE_HOST, MYSQL_DATABASE_PORT, MYSQL_DATABASE_NAME);
+	private static String MYSQL_PARAMETERS = "zeroDateTimeBehavior=convertToNull";
+	
+	private static String url = String.format("jdbc:mysql://%s:%s/%s?%s", MYSQL_DATABASE_HOST, MYSQL_DATABASE_PORT, MYSQL_DATABASE_NAME, MYSQL_PARAMETERS);
 
 	public static Connection getConnection() {
 
