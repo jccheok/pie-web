@@ -27,12 +27,12 @@ public class RegisterGroupServlet extends HttpServlet {
 	private static final long serialVersionUID = -3878265942477329631L;
 
 	private GroupService groupService;
-	private StaffService teacherService;
+	private StaffService staffService;
 
 	@Inject
-	public RegisterGroupServlet(GroupService groupService, StaffService teacherService) {
+	public RegisterGroupServlet(GroupService groupService, StaffService staffService) {
 		this.groupService = groupService;
-		this.teacherService = teacherService;
+		this.staffService = staffService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -63,7 +63,7 @@ public class RegisterGroupServlet extends HttpServlet {
 		
 		GroupType groupType = GroupType.getGroupType(groupTypeID);
 
-		Staff groupOwner = teacherService.getStaff(groupOwnerID);
+		Staff groupOwner = staffService.getStaff(groupOwnerID);
 
 		GroupRegistrationResult registrationResult = groupService.registerGroup(groupOwner, groupName,
 				groupDescription, groupMaxDailyHomeworkMinutes, groupType, groupCode);

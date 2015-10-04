@@ -24,7 +24,7 @@ public class StaffService {
 		SchoolService schoolService = new SchoolService();
 		UserService userService = new UserService();
 
-		Staff teacher = null;
+		Staff staff = null;
 
 		try {
 
@@ -45,7 +45,7 @@ public class StaffService {
 				String staffTitle = resultSet.getString("staffTitle");
 				boolean staffIsSchoolAdmin = resultSet.getInt("staffIsSchoolAdmin") == 1;
 
-				teacher = new Staff(user, staffSchool, staffTitle, staffIsSchoolAdmin);
+				staff = new Staff(user, staffSchool, staffTitle, staffIsSchoolAdmin);
 			}
 
 			conn.close();
@@ -54,7 +54,7 @@ public class StaffService {
 			System.out.println(e);
 		}
 
-		return teacher;
+		return staff;
 	}
 	
 	public Group[] getJoinedGroups(int staffID) {
