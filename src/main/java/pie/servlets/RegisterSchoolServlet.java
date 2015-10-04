@@ -44,7 +44,7 @@ public class RegisterSchoolServlet extends HttpServlet {
 		try {
 
 			Map<String, String> requestParameters = Utilities.getParameters(request, "schoolName", "schoolCode",
-					"addressStreet", "countryID", "cityName", "addressPostalCode");
+					"addressStreet", "cityID", "addressPostalCode");
 			schoolName = requestParameters.get("schoolName");
 			schoolCode = requestParameters.get("schoolCode");
 			addressStreet = requestParameters.get("addressStreet");
