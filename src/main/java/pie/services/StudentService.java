@@ -38,7 +38,7 @@ public class StudentService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return isAvailable;
@@ -67,7 +67,7 @@ public class StudentService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return isRegistered;
@@ -93,7 +93,7 @@ public class StudentService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return isMember;
@@ -139,7 +139,7 @@ public class StudentService {
 				}
 
 			} catch (Exception e) {
-				System.out.println(e);
+				e.printStackTrace();
 			}
 		}
 
@@ -174,7 +174,7 @@ public class StudentService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return joinedGroups;
@@ -205,7 +205,7 @@ public class StudentService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return studentIndexNumber;
@@ -237,7 +237,7 @@ public class StudentService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return studentGroupJoinDate;
@@ -277,7 +277,7 @@ public class StudentService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return student;
@@ -312,7 +312,7 @@ public class StudentService {
 				conn.close();
 
 			} catch (Exception e) {
-				System.out.println(e);
+				e.printStackTrace();
 			}
 		}
 
@@ -376,7 +376,7 @@ public class StudentService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return studentID;

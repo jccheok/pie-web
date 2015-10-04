@@ -34,7 +34,7 @@ public class SchoolService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return isAvailable;
@@ -64,7 +64,7 @@ public class SchoolService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return schoolID;
@@ -100,7 +100,7 @@ public class SchoolService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return school;
@@ -127,7 +127,7 @@ public class SchoolService {
 				conn.close();
 
 			} catch (Exception e) {
-				System.out.println(e);
+				e.printStackTrace();
 			}
 
 		} else {
@@ -161,7 +161,7 @@ public class SchoolService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return schools;
@@ -194,7 +194,7 @@ public class SchoolService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return schoolGroups;
@@ -227,7 +227,7 @@ public class SchoolService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return schoolStaffAdministrators;
@@ -271,7 +271,7 @@ public class SchoolService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return schoolGroups;

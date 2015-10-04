@@ -36,7 +36,7 @@ public class EmailService {
 			
 		} catch (Exception e) {
 			
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		
 		return sendResult;

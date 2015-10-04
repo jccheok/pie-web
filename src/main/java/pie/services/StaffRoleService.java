@@ -35,7 +35,7 @@ public class StaffRoleService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return staffRoleID;
@@ -70,7 +70,7 @@ public class StaffRoleService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return staffRole;
@@ -100,7 +100,7 @@ public class StaffRoleService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return staffRolesList;
@@ -131,7 +131,7 @@ public class StaffRoleService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return adminStaffRole;
@@ -162,7 +162,7 @@ public class StaffRoleService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		
 		return ownerStaffRole;
@@ -193,7 +193,7 @@ public class StaffRoleService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		
 		return defaultStaffRole;
@@ -223,7 +223,7 @@ public class StaffRoleService {
 				conn.close();
 
 			} catch (Exception e) {
-				System.out.println(e);
+				e.printStackTrace();
 			}
 		}
 		

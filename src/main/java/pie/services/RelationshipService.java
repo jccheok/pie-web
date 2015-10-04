@@ -36,7 +36,7 @@ public class RelationshipService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return relationshipID;
@@ -68,7 +68,7 @@ public class RelationshipService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return relationship;
@@ -98,7 +98,7 @@ public class RelationshipService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return relationshipList;
@@ -124,7 +124,7 @@ public class RelationshipService {
 				conn.close();
 
 			} catch (Exception e) {
-				System.out.println(e);
+				e.printStackTrace();
 			}
 
 		}

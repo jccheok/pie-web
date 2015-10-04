@@ -32,7 +32,7 @@ public class UserService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return isRegistered;
@@ -62,7 +62,7 @@ public class UserService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return isVerified;
@@ -89,7 +89,7 @@ public class UserService {
 				conn.close();
 
 			} catch (Exception e) {
-				System.out.println(e);
+				e.printStackTrace();
 			}
 		}
 
@@ -119,7 +119,7 @@ public class UserService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return isValid;
@@ -168,7 +168,7 @@ public class UserService {
 				conn.close();
 
 			} catch (Exception e) {
-				System.out.println(e);
+				e.printStackTrace();
 			}
 		}
 
@@ -199,7 +199,7 @@ public class UserService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return userID;
@@ -245,7 +245,7 @@ public class UserService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return user;

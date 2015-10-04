@@ -42,7 +42,7 @@ public class ParentService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return parent;
@@ -90,7 +90,7 @@ public class ParentService {
 				conn.close();
 
 			} catch (Exception e) {
-				System.out.println(e);
+				e.printStackTrace();
 			}
 		}
 
@@ -123,7 +123,7 @@ public class ParentService {
 
 		} catch (Exception e) {
 
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		
@@ -174,7 +174,7 @@ public class ParentService {
 
 			} catch (Exception e) {
 
-				System.out.println(e);
+				e.printStackTrace();
 			}
 		}
 		

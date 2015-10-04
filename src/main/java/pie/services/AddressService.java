@@ -42,7 +42,7 @@ public class AddressService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return address;
@@ -75,7 +75,7 @@ public class AddressService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return city;
@@ -109,7 +109,7 @@ public class AddressService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return country;
@@ -142,7 +142,7 @@ public class AddressService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return addressID;
@@ -170,7 +170,7 @@ public class AddressService {
 			}
 			conn.close();
 		}catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		
 		return cityID;
@@ -209,7 +209,7 @@ public class AddressService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return cityList;

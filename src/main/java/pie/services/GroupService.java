@@ -37,7 +37,7 @@ public class GroupService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return isRegistered;
@@ -61,7 +61,7 @@ public class GroupService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return isAvailable;
@@ -91,7 +91,7 @@ public class GroupService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return groupID;
@@ -130,7 +130,7 @@ public class GroupService {
 			}
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return group;
@@ -163,7 +163,7 @@ public class GroupService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return groupOwner;
@@ -211,7 +211,7 @@ public class GroupService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return hasMember;
@@ -237,7 +237,7 @@ public class GroupService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return hasMember;
@@ -266,7 +266,7 @@ public class GroupService {
 				conn.close();
 
 			} catch (Exception e) {
-				System.out.println(e);
+				e.printStackTrace();
 			}
 		}
 
@@ -296,7 +296,7 @@ public class GroupService {
 				conn.close();
 
 			} catch (Exception e) {
-				System.out.println(e);
+				e.printStackTrace();
 			}
 		}
 
@@ -329,7 +329,7 @@ public class GroupService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return staffMembers;
@@ -360,7 +360,7 @@ public class GroupService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return studentMembers;
@@ -404,7 +404,7 @@ public class GroupService {
 
 				} catch (Exception e) {
 
-					System.out.println(e);
+					e.printStackTrace();
 				}
 			} else {
 				registrationResult = GroupRegistrationResult.GROUP_CODE_TAKEN;
@@ -438,7 +438,7 @@ public class GroupService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return nextStudentIndexNumber;
@@ -477,7 +477,7 @@ public class GroupService {
 			conn.close();
 			
 		}catch(Exception e){
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		
 		return updateResult;
@@ -532,7 +532,7 @@ public class GroupService {
 				conn.close();
 
 			}catch(Exception e){
-				System.out.println(e);
+				e.printStackTrace();
 			}
 		}
 		

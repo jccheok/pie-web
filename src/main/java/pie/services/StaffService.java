@@ -51,7 +51,7 @@ public class StaffService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return staff;
@@ -85,7 +85,7 @@ public class StaffService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		
 		return joinedGroups;
@@ -111,7 +111,7 @@ public class StaffService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return isMember;
@@ -142,7 +142,7 @@ public class StaffService {
 					conn.close();
 
 				} catch (Exception e) {
-					System.out.println(e);
+					e.printStackTrace();
 				}
 			}
 		}
@@ -175,7 +175,7 @@ public class StaffService {
 			conn.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return staffRole;
@@ -229,7 +229,7 @@ public class StaffService {
 				conn.close();
 
 			} catch (Exception e) {
-				System.out.println(e);
+				e.printStackTrace();
 			}
 		}
 

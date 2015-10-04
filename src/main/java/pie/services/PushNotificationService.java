@@ -54,10 +54,8 @@ public class PushNotificationService {
 			}
 			inputReader.close();
 			
-			System.out.println(response.toString());
-			
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		
 		return sendResult;
