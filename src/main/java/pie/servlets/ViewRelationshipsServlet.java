@@ -33,15 +33,15 @@ public class ViewRelationshipsServlet extends HttpServlet {
 
 		JSONObject responseObject = new JSONObject();
 		
-		JSONArray relationships = new JSONArray();
+		JSONArray relationshipList = new JSONArray();
 		for (Relationship relationship : relationshipService.getAllRelationships()) {
 			
 			JSONObject relationshipDetails = new JSONObject();
 			relationshipDetails.put("relationshipID", relationship.getRelationshipID());
 			relationshipDetails.put("relationshipName", relationship.getRelationshipName());
-			relationships.put(relationshipDetails);
+			relationshipList.put(relationshipDetails);
 		}
-		responseObject.put("relationships", relationships);
+		responseObject.put("relationshipList", relationshipList);
 
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
