@@ -36,13 +36,13 @@ public class EnlistStudentsToGroupServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String rawStudentList = null;
+		String rawStudentsData = null;
 		int groupID = 0;
 		
 		try {
 		
-			Map<String, String> requestParameters = Utilities.getParameters(request, "studentList", "groupID");
-			rawStudentList = requestParameters.get("studentsData");
+			Map<String, String> requestParameters = Utilities.getParameters(request, "studentsData", "groupID");
+			rawStudentsData = requestParameters.get("studentsData");
 			groupID = Integer.parseInt(requestParameters.get("groupID"));
 			
 		} catch (Exception e) {
@@ -51,7 +51,7 @@ public class EnlistStudentsToGroupServlet extends HttpServlet {
 			return;
 		}
 		
-		JSONObject requestObject = new JSONObject(rawStudentList);
+		JSONObject requestObject = new JSONObject(rawStudentsData);
 		JSONArray studentList = requestObject.getJSONArray("studentList");
 		
 		int schoolID = groupService.getGroup(groupID).getSchool().getSchoolID();
