@@ -63,7 +63,7 @@ public class AuthFilter implements Filter {
 				UserType userType = UserType.getUserType(((Integer) decoded.get("userTypeID")).intValue());
 				String requestURI = (servletRequest).getRequestURL().toString();
 
-				System.out.println(requestURI.split("/"));
+				System.out.println(requestURI.split("/")[3]);
 				String accessType = requestURI.split("/")[3].toUpperCase();
 				
 				if (userType == UserType.ADMIN || userType.toString().equals(accessType)) {
