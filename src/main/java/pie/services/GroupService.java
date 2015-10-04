@@ -259,7 +259,7 @@ public class GroupService {
 				pst.setInt(1, groupID);
 				pst.setInt(2, studentID);
 				pst.setInt(3, studentGroupIndexNumber);
-				pst.executeQuery();
+				pst.executeUpdate();
 
 				addResult = true;
 
@@ -289,7 +289,7 @@ public class GroupService {
 				pst.setInt(1, groupID);
 				pst.setInt(2, staffID);
 				pst.setInt(3, staffRole.getStaffRoleID());
-				pst.executeQuery();
+				pst.executeUpdate();
 
 				addResult = true;
 
