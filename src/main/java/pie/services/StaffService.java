@@ -191,7 +191,7 @@ public class StaffService {
 
 		if (userService.isRegisteredUser(userEmail)) {
 			registrationResult = UserRegistrationResult.EMAIL_TAKEN;
-		} else if (!schoolService.isAvailableSchoolCode(schoolCode)){
+		} else if (schoolService.isAvailableSchoolCode(schoolCode)){
 			registrationResult = UserRegistrationResult.INVALID_SCHOOL_CODE;
 		} else {
 			
