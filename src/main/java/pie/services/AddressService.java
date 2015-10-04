@@ -176,4 +176,43 @@ public class AddressService {
 		return cityID;
 	}
 	
+	public String getFullCityName(int cityID) {
+		String fullCityName = null;
+		
+		City city = getCity(cityID);
+		fullCityName = city.getCityName() + " - " + city.getCityCountry().getCountryName();
+		
+		return fullCityName;
+	}
+
+	public City[] getAllCities() {
+		
+		City[] cityList = {};
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT cityID FROM `City`";
+			pst = conn.prepareStatement(sql);
+
+			resultSet = pst.executeQuery();
+
+			List<City> tempCityList = new ArrayList<City>();
+			while (resultSet.next()) {
+				tempCityList.add(getCity(resultSet.getInt(1)));
+			}
+			cityList = tempCityList.toArray(cityList);
+
+			conn.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+		return cityList;
+	}
+	
 }

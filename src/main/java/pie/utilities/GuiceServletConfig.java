@@ -16,6 +16,7 @@ import pie.servlets.StaffJoinGroupServlet;
 import pie.servlets.StudentJoinGroupServlet;
 import pie.servlets.UpdateGroupServlet;
 import pie.servlets.VerifyUserServlet;
+import pie.servlets.ViewCitiesServlet;
 import pie.servlets.ViewGroupDetailsServlet;
 import pie.servlets.ViewParentChildrenServlet;
 import pie.servlets.ViewRelationshipsServlet;
@@ -45,6 +46,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/registerstudent").with(RegisterStudentServlet.class);
 				serve("*/servlets/registerstaff").with(RegisterStaffServlet.class);
 				serve("*/servlets/verify").with(VerifyUserServlet.class);
+				serve("*/servlets/cities").with(ViewCitiesServlet.class);
 				
 				serve("*/servlets/secured/student/joingroup").with(StudentJoinGroupServlet.class);
 				
