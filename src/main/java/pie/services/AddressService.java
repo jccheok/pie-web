@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import pie.Address;
 import pie.City;
@@ -113,7 +115,7 @@ public class AddressService {
 		return country;
 	}
 
-	public int registerAddress(String addressPostalCode, String addressStreet, City addressCity) {
+	public int registerAddress(String addressPostalCode, String addressStreet, int cityID) {
 		
 		int addressID = -1;
 
@@ -125,7 +127,7 @@ public class AddressService {
 
 			String sql = "INSERT INTO `Address` (cityID, addressStreet, addressPostalCode) VALUES (?, ?, ?)";
 			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-			pst.setInt(1, addressCity.getCityID());
+			pst.setInt(1, cityID);
 			pst.setString(2, addressStreet);
 			pst.setString(3, addressPostalCode);
 			pst.executeUpdate();

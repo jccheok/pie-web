@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
 
 import pie.constants.SchoolRegistrationResult;
+import pie.services.AddressService;
 import pie.services.SchoolService;
 import pie.utilities.Utilities;
 
@@ -23,11 +24,13 @@ public class RegisterSchoolServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -3878265942477329631L;
 
-	private SchoolService schoolService;
+	SchoolService schoolService;
+	AddressService addressService;
 
 	@Inject
-	public RegisterSchoolServlet(SchoolService schoolService) {
+	public RegisterSchoolServlet(SchoolService schoolService, AddressService addressService) {
 		this.schoolService = schoolService;
+		this.addressService = addressService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -35,8 +38,7 @@ public class RegisterSchoolServlet extends HttpServlet {
 		String schoolName = null;
 		String schoolCode = null;
 		String addressStreet = null;
-		int countryID = 0;
-		String cityName = null;
+		int cityID = 0;
 		String addressPostalCode = null; 
 		
 		try {
@@ -46,8 +48,7 @@ public class RegisterSchoolServlet extends HttpServlet {
 			schoolName = requestParameters.get("schoolName");
 			schoolCode = requestParameters.get("schoolCode");
 			addressStreet = requestParameters.get("addressStreet");
-			countryID = Integer.parseInt(requestParameters.get("countryID"));
-			cityName = requestParameters.get("cityName");
+			cityID = Integer.parseInt(requestParameters.get("cityID"));
 			addressPostalCode = requestParameters.get("addressPostalCode");
 
 		} catch (Exception e) {
@@ -55,10 +56,10 @@ public class RegisterSchoolServlet extends HttpServlet {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 			return;
 		}
-
 		
+		int addressID = addressService.registerAddress(addressPostalCode, addressStreet, cityID);
 
-		SchoolRegistrationResult registrationResult = schoolService.registerSchool(schoolName, schoolCode, addressStreet, countryID, cityName, addressPostalCode);
+		SchoolRegistrationResult registrationResult = schoolService.registerSchool(schoolName, schoolCode, addressID);
 
 		JSONObject responseObject = new JSONObject();
 		responseObject.put("result", registrationResult.toString());

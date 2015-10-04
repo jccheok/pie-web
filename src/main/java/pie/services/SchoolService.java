@@ -106,15 +106,13 @@ public class SchoolService {
 		return school;
 	}
 
-	public SchoolRegistrationResult registerSchool(String schoolName, String schoolCode, String addressStreet, 
-			int countryID, String cityName, String addressPostalCode) {
+	public SchoolRegistrationResult registerSchool(String schoolName, String schoolCode, int addressID) {
 
 		SchoolRegistrationResult registrationResult = SchoolRegistrationResult.SUCCESS;
 
 		if (isAvailableSchoolCode(schoolCode)) {
 
 			try {
-				AddressService addressService = new AddressService();
 				
 				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
@@ -123,7 +121,7 @@ public class SchoolService {
 				pst = conn.prepareStatement(sql);
 				pst.setString(1, schoolName);
 				pst.setString(2, schoolCode);
-				pst.setInt(3, addressService.registerAddress(addressPostalCode, addressStreet, addressService.getCity(addressService.registerCity(cityName, countryID))));
+				pst.setInt(3, addressID);
 				pst.executeUpdate();
 
 				conn.close();
