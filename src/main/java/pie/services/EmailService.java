@@ -55,7 +55,7 @@ public class EmailService {
 	private Message prepareEmailMessage(String emailSubject, String emailContent, String[] emailRecipients, Session session) throws AddressException, MessagingException {
 		
 		Message emailMessage = new MimeMessage(session);
-		emailMessage.setFrom(new InternetAddress("PIE - Partners In Education"));
+		emailMessage.setFrom(new InternetAddress("PIE - Partners In Education <noreply@pie.com.sg>"));
 		for (String email : emailRecipients) {
 			emailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
 		}
