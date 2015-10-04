@@ -14,11 +14,9 @@ import com.sun.mail.smtp.SMTPTransport;
 
 public class EmailService {
 
-	public final static String EMAIL_SERVER = "mailgun@sandboxbb961a7a116140dd8e38a5e3a0b3a1b4.mailgun.org";
-	public final static String EMAIL_ID = "postmaster@sandboxbb961a7a116140dd8e38a5e3a0b3a1b4.mailgun.org";
-	public final static String EMAIL_PASS = "dff0e4770af27c2447dd1f4b4c3c2d23";
-	public final static String EMAIL_NAME = "PIE - Partners In Education <mailgun@sandboxbb961a7a116140dd8e38a5e3a0b3a1b4.mailgun.org>";
-	public final static String RAIL_SERVER = "smtp.mailgun.org";
+	public final static String MAILGUN_USERNAME = "postmaster@sandbox9a83076ecf2f445192f5d74f7f3311e3.mailgun.org";
+	public final static String MAILGUN_PASS = "acd6f3762e3032b01de541a963f2ffc9";
+	public final static String MAILGUN_SERVER = "smtp.mailgun.org";
 
 	public boolean sendEmail(String emailSubject, String emailContent, String[] userEmails) {
 		
@@ -30,7 +28,7 @@ public class EmailService {
 			
 			Message emailMessage = prepareEmailMessage(emailSubject, emailContent, userEmails, session);
 			SMTPTransport smtp = (SMTPTransport) session.getTransport("smtps");
-			smtp.connect(RAIL_SERVER, EMAIL_ID, EMAIL_PASS);
+			smtp.connect(MAILGUN_SERVER, MAILGUN_USERNAME, MAILGUN_PASS);
 			smtp.sendMessage(emailMessage, emailMessage.getAllRecipients());
 			smtp.close();
 
@@ -48,18 +46,16 @@ public class EmailService {
 		
 		Properties properties = null;
 		properties = System.getProperties();
-		properties.put("mail.smtps.host", RAIL_SERVER);
+		properties.put("mail.smtps.host", MAILGUN_SERVER);
 		properties.put("mail.smtps.auth", "true");
-		properties.setProperty("mail.user", EMAIL_SERVER);
-		properties.setProperty("mail.password", EMAIL_PASS);
 		
-		return Session.getDefaultInstance(properties);
+		return Session.getInstance(properties, null);
 	}
 	
 	private Message prepareEmailMessage(String emailSubject, String emailContent, String[] emailRecipients, Session session) throws AddressException, MessagingException {
 		
 		Message emailMessage = new MimeMessage(session);
-		emailMessage.setFrom(new InternetAddress(EMAIL_NAME));
+		emailMessage.setFrom(new InternetAddress("PIE - Partners In Education"));
 		for (String email : emailRecipients) {
 			emailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
 		}
