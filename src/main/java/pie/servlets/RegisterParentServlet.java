@@ -74,8 +74,8 @@ public class RegisterParentServlet extends HttpServlet {
 			String emailSubject = "Confirm your Parent account on Parters in Education";
 			String emailTemplate = Utilities.convertStreamToString(emailTemplateStream);
 			
-			String emailContent = emailTemplate.replaceAll("$FIRST_NAME", userFirstName);
-			emailContent = emailTemplate.replaceAll("$VERIFICATION_LINK", verificationLink);
+			String emailContent = emailTemplate.replaceAll("\\$FIRST_NAME", userFirstName);
+			emailContent = emailContent.replaceAll("\\$VERIFICATION_LINK", verificationLink);
 			
 			emailService.sendEmail(emailSubject, emailContent, new String[] {userEmail});
 		}
