@@ -63,13 +63,13 @@ public class AuthFilter implements Filter {
 				UserType userType = UserType.getUserType(((Integer) decoded.get("userTypeID")).intValue());
 				String requestURI = (servletRequest).getRequestURL().toString();
 
-				String accessType = requestURI.split("/")[2].toUpperCase();
-
+				String accessType = requestURI.split("/")[3].toUpperCase();
+				
 				if (userType == UserType.ADMIN || userType.toString().equals(accessType)) {
 
-					if (userType == UserType.STAFF && requestURI.split("/")[3].equals("group")) {
+					if (userType == UserType.STAFF && requestURI.split("/")[4].equals("group")) {
 
-						String memberType = requestURI.split("/")[4];
+						String memberType = requestURI.split("/")[5];
 						int groupID = 0;
 
 						try {
