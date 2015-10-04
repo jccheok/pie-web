@@ -64,6 +64,7 @@ public class StaffRoleService {
 				staffRole.setStaffRoleName(resultSet.getString("staffRoleName"));
 				staffRole.setStaffRoleIsAdmin(resultSet.getInt("staffRoleIsAdmin") == 1);
 				staffRole.setStaffRoleIsOwner(resultSet.getInt("staffRoleIsOwner") == 1);
+				staffRole.setStaffRoleIsDefault(resultSet.getInt("staffRoleIsDefault") == 1);
 			}
 
 			conn.close();
