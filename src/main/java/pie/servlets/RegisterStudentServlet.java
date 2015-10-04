@@ -66,24 +66,24 @@ public class RegisterStudentServlet extends HttpServlet {
 		responseObject.put("result", registrationResult.toString());
 		responseObject.put("message", registrationResult.getDefaultMessage());
 
+		PrintWriter out = response.getWriter();
+		out.write(responseObject.toString());
+
 		if (registrationResult == UserRegistrationResult.SUCCESS) {
 
 			int userID = userService.getUserID(userEmail);
-			
+
 			String verificationLink = "http://piedev-rpmaps.rhcloud.com/servlets/verify?userID=" + userID;
 			InputStream emailTemplateStream = this.getServletContext().getResourceAsStream("/resources/verificationTemplate.html");
-			
-			String emailSubject = "Confirm your Student account on Parters in Education";
-			String emailTemplate = Utilities.convertStreamToString(emailTemplateStream);
-			
-			String emailContent = emailTemplate.replaceAll("$FIRST_NAME", userService.getUser(userID).getUserFirstName());
-			emailContent = emailTemplate.replaceAll("$VERIFICATION_LINK", verificationLink);
-			
-			emailService.sendEmail(emailSubject, emailContent, new String[] {userEmail});
-		}
 
-		PrintWriter out = response.getWriter();
-		out.write(responseObject.toString());
+			String emailSubject = "Confirm your Student account on Partners in Education";
+			String emailTemplate = Utilities.convertStreamToString(emailTemplateStream);
+
+			String emailContent = emailTemplate.replaceAll("\\$FIRST_NAME", userService.getUser(userID).getUserFirstName());
+			emailContent = emailTemplate.replaceAll("\\$VERIFICATION_LINK", verificationLink);
+
+			emailService.sendEmail(emailSubject, emailContent, new String[] { userEmail });
+		}
 
 	}
 }

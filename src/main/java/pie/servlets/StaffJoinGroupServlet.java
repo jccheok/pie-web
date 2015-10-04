@@ -73,6 +73,9 @@ public class StaffJoinGroupServlet extends HttpServlet {
 		responseObject.put("result", joinGroupResult.toString());
 		responseObject.put("message", joinGroupResult.getDefaultMessage());
 		
+		PrintWriter out = response.getWriter();
+		out.write(responseObject.toString());
+		
 		if (joinGroupResult == JoinGroupResult.SUCCESS) {
 			
 			String staffFullname = staffService.getStaff(staffID).getUserFullName();
@@ -93,8 +96,6 @@ public class StaffJoinGroupServlet extends HttpServlet {
 			emailService.sendEmail(emailSubject, emailContent, groupAdministratorsEmail);
 		}
 		
-		PrintWriter out = response.getWriter();
-		out.write(responseObject.toString());
 	}
 
 }

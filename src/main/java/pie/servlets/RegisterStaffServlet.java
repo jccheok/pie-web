@@ -71,23 +71,23 @@ public class RegisterStaffServlet extends HttpServlet {
 		JSONObject responseObject = new JSONObject();
 		responseObject.put("result", registrationResult.toString());
 		responseObject.put("message", registrationResult.getDefaultMessage());
-
+		
+		PrintWriter out = response.getWriter();
+		out.write(responseObject.toString());
+		
 		if (registrationResult == UserRegistrationResult.SUCCESS) {
 
 			String verificationLink = "http://piedev-rpmaps.rhcloud.com/servlets/verify?userID=" + userService.getUserID(userEmail);
 			InputStream emailTemplateStream = this.getServletContext().getResourceAsStream("/resources/verificationTemplate.html");
 			
-			String emailSubject = "Confirm your Staff account on Parters in Education";
+			String emailSubject = "Confirm your Staff account on Partners in Education";
 			String emailTemplate = Utilities.convertStreamToString(emailTemplateStream);
 			
-			String emailContent = emailTemplate.replaceAll("$FIRST_NAME", userFirstName);
-			emailContent = emailTemplate.replaceAll("$VERIFICATION_LINK", verificationLink);
+			String emailContent = emailTemplate.replaceAll("\\$FIRST_NAME", userFirstName);
+			emailContent = emailTemplate.replaceAll("\\$VERIFICATION_LINK", verificationLink);
 			
 			emailService.sendEmail(emailSubject, emailContent, new String[] {userEmail});
 		}
-
-		PrintWriter out = response.getWriter();
-		out.write(responseObject.toString());
 
 	}
 }
