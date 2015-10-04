@@ -68,12 +68,11 @@ public class UserService {
 		return isVerified;
 	}
 
-	public boolean verifyUser(User user) {
+	public boolean verifyUser(String userEmail) {
 
 		boolean verifyResult = true;
 
-		String userEmail = user.getUserEmail();
-		if (isValidUser(userEmail)) {
+		if (!isValidUser(userEmail)) {
 			verifyResult = false;
 		} else {
 			try {

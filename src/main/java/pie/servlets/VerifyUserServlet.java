@@ -47,7 +47,7 @@ public class VerifyUserServlet extends HttpServlet {
 		
 		User user = userService.getUser(userID);
 		
-		boolean verifyResult = userService.verifyUser(user);
+		boolean verifyResult = userService.verifyUser(user.getUserEmail());
 		
 		JSONObject responseObject = new JSONObject();
 		
