@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.Map;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,11 +17,18 @@ import pie.services.GroupService;
 import pie.services.StudentService;
 import pie.utilities.Utilities;
 
-public class EnlistStudentsToGroupServlet {
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
+@Singleton
+public class EnlistStudentsToGroupServlet extends HttpServlet {
+	
+	private static final long serialVersionUID = -1810174238170625377L;
 	
 	StudentService studentService;
 	GroupService groupService;
 	
+	@Inject
 	public EnlistStudentsToGroupServlet(StudentService studentService, GroupService groupService){
 		this.studentService = studentService;
 		this.groupService = groupService;
