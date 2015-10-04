@@ -110,7 +110,7 @@ public class AuthFilter implements Filter {
 			}
 
 		} catch (Exception e) {
-			servletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
+			servletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
 			return;
 		}
 	}
