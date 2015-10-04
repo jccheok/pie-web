@@ -10,13 +10,16 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 
+import com.google.inject.Singleton;
+
+@Singleton
 public class AuthService {
 
-	private static final Key secretKey = MacProvider.generateKey();
-	private static final String issuer = System.getenv("OPENSHIFT_APP_NAME");
+	private static final Key SECRET_KEY = MacProvider.generateKey();
+	private static final String ISSUER = System.getenv("OPENSHIFT_APP_NAME");
 
 	public Key getSecretKey() {
-		return secretKey;
+		return SECRET_KEY;
 	}
 
 	public String createToken(String subject, long ttlMillis, HashMap<String, Object> claims) {
@@ -26,7 +29,7 @@ public class AuthService {
 		long nowMillis = System.currentTimeMillis();
 		Date now = new Date(nowMillis);
 
-		JwtBuilder builder = Jwts.builder().setIssuedAt(now).setSubject(subject).setIssuer(issuer) .signWith(signatureAlgorithm, secretKey);
+		JwtBuilder builder = Jwts.builder().setIssuedAt(now).setSubject(subject).setIssuer(ISSUER) .signWith(signatureAlgorithm, SECRET_KEY);
 
 		if (ttlMillis >= 0) {
 			long expMillis = nowMillis + ttlMillis;
@@ -42,7 +45,7 @@ public class AuthService {
 	}
 
 	public Claims parseJWT(String jwt) {
-		Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwt).getBody();
+		Claims claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(jwt).getBody();
 
 		return claims;
 	}
