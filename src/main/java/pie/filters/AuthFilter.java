@@ -24,21 +24,20 @@ import com.google.inject.Singleton;
 @Singleton
 public class AuthFilter implements Filter {
 
-	AuthService authService;
 	StaffService staffService;
+	AuthService authService;
 
 	private String UNAUTHORIZED_MESSAGE = "UNAUTHORIZED: YOU ARE NOT AUTHORIZED TO ACCESS THIS RESOURCE";
 
 	@Inject
-	public AuthFilter(AuthService authService, StaffService staffService) {
-		this.authService = authService;
+	public AuthFilter(StaffService staffService, AuthService authService) {
 		this.staffService = staffService;
-		
+		this.authService = authService;
 	}
 
 	@Override
 	public void init(FilterConfig arg0) throws ServletException {
-		authService = new AuthService();
+
 	}
 
 	@Override
@@ -59,32 +58,32 @@ public class AuthFilter implements Filter {
 
 			try {
 				Map<String, Object> decoded = authService.parseJWT(token);
-				
-				int userID = (Integer) decoded.get("userID");
-				UserType userType = UserType.getUserType((Integer) decoded.get("userTypeID"));
+
+				int userID = ((Integer) decoded.get("userID")).intValue();
+				UserType userType = UserType.getUserType(((Integer) decoded.get("userTypeID")).intValue());
 				String requestURI = (servletRequest).getRequestURL().toString();
 
 				String accessType = requestURI.split("/")[2].toUpperCase();
 
 				if (userType == UserType.ADMIN || userType.toString().equals(accessType)) {
-					
+
 					if (userType == UserType.STAFF && requestURI.split("/")[3].equals("group")) {
-						
+
 						String memberType = requestURI.split("/")[4];
 						int groupID = 0;
-								
+
 						try {
 							Map<String, String> requestParameters = Utilities.getParameters(servletRequest, "groupID");
 							groupID = Integer.parseInt(requestParameters.get("groupID"));
 						} catch (Exception e) {
-							
+
 							servletResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 							return;
 						}
-						
+
 						if (staffService.isMember(userID, groupID)) {
 							StaffRole staffRole = staffService.getStaffRole(userID, groupID);
-							
+
 							if (memberType.equals("owner") && !staffRole.staffRoleIsOwner()) {
 								servletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, UNAUTHORIZED_MESSAGE);
 								return;
@@ -97,11 +96,11 @@ public class AuthFilter implements Filter {
 							return;
 						}
 					}
-					
+
 					filterChain.doFilter(servletRequest, servletResponse);
 
 				} else {
-					
+
 					servletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, UNAUTHORIZED_MESSAGE);
 					return;
 				}
