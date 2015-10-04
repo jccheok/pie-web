@@ -18,7 +18,7 @@ public class SchoolService {
 
 	public boolean isAvailableSchoolCode(String schoolCode) {
 
-		boolean isRegistered = false;
+		boolean isAvailable = false;
 
 		try {
 
@@ -29,7 +29,7 @@ public class SchoolService {
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, schoolCode);
 
-			isRegistered = pst.executeQuery().next();
+			isAvailable = !pst.executeQuery().next();
 
 			conn.close();
 
@@ -37,7 +37,7 @@ public class SchoolService {
 			System.out.println(e);
 		}
 
-		return isRegistered;
+		return isAvailable;
 	}
 
 	public int getSchoolID(String schoolCode) {
