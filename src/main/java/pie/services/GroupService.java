@@ -654,30 +654,48 @@ public class GroupService {
 
 		return deactivateGroupResult;
 	}
-				
-				try{
-					Connection conn = DatabaseConnector.getConnection();
-					PreparedStatement pst = null;
-					
-					String sql = "UPDATE `Group` SET groupIsValid = ?, groupDateDeleted = NOW(), groupIsOpen = ? WHERE groupID = ?";
-					pst = conn.prepareStatement(sql);
-					pst.setInt(1, 0);
-					pst.setInt(2, 0);
-					pst.setInt(3, groupID);
-					
-					pst.executeUpdate();
-					
-					deactivateResult = true;
-					
-					conn.close();
 
-				}catch(Exception e){
-					e.printStackTrace();
+	public TransferGroupOwnershipResult transferGroupOwnership(int staffID, String newUserEmail, int groupID,
+			String userPassword) {
+
+		TransferGroupOwnershipResult transferGroupOwnershipResult = TransferGroupOwnershipResult.SUCCESS;
+
+		StaffService staffService = new StaffService();
+		UserService userService = new UserService();
+		StaffRoleService staffRoleService = new StaffRoleService();
+
+		Group group = getGroup(groupID);
+
+		if (group.groupIsValid()) {
+			
+			if (userService.isRegisteredUser(newUserEmail)) {
+				
+				if(hasStaffMember(groupID, userService.getUserID(newUserEmail))){
+				
+					Staff groupOwner = staffService.getStaff(staffID);
+					
+					if (groupOwner.getUserPassword() == userPassword) {
+					
+						StaffRole staffRole = staffService.getStaffRole(staffID, groupID);
+						
+						staffRoleService.setStaffRoleAdmin(staffRole.getStaffRoleID());
+						
+						Staff newOwner = staffService.getStaff(userService.getUserID(newUserEmail));
+						staffRoleService.setStaffRoleOwner(staffRole.getStaffRoleID());
+						
+					}else{
+						transferGroupOwnershipResult = TransferGroupOwnershipResult.WRONG_PASSWORD;
+					}
+				}else{
+					transferGroupOwnershipResult = TransferGroupOwnershipResult.USER_NOT_IN_GROUP;
 				}
+			}else{
+				transferGroupOwnershipResult = TransferGroupOwnershipResult.USER_NOT_IN_GROUP;
 			}
+		}else{
+			transferGroupOwnershipResult = TransferGroupOwnershipResult.GROUP_IS_NOT_VALID;
 		}
-		
-		return deactivateResult;
+
+		return transferGroupOwnershipResult;
 	}
-	
 }
