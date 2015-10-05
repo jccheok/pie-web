@@ -63,7 +63,7 @@ public class EnlistStudentsToGroupServlet extends HttpServlet {
 			String studentFirstName = student.getString("studentFirstName");
 			String studentLastName = student.getString("studentLastName");
 			String studentCode = studentService.generateStudentCode();
-			int studentGroupIndexNumber = Integer.parseInt(student.getString("studentGroupIndexNumber"));
+			int studentGroupIndexNumber = student.getInt("studentGroupIndexNumber");
 			
 			studentService.enlistStudent(studentFirstName, studentLastName, studentCode, schoolID, groupID, studentGroupIndexNumber);
 		}
