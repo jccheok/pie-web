@@ -568,4 +568,29 @@ public class GroupService {
 		
 		return removeResult;
 	}
+	
+	public boolean removeStudentFromGroup(int groupID, int studentID){
+		boolean removeResult = true;
+		try{
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			
+			String sql = "UPDATE `StudentGroup` SET studentGroupIsValid = ? WHERE groupID = ? AND studentID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, 0);
+			pst.setInt(2, groupID);
+			pst.setInt(3, studentID);
+			
+			pst.executeUpdate();
+			
+			removeResult = true;
+			
+			conn.close();
+
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return removeResult;
+	}
 }
