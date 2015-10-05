@@ -427,7 +427,7 @@ public class GroupService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT LAST(studentGroupIndexNumber) FROM `StudentGroup` WHERE groupID = ?";
+			String sql = "SELECT COALESCE( (SELECT SUM(studentGroupIndexNumber) FROM `StudentGroup` WHERE groupID = ? ORDER BY studentGroupIndexNumber DESC LIMIT 1), 0) + 1";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, groupID);
 
@@ -435,7 +435,7 @@ public class GroupService {
 
 			if (resultSet.next()) {
 
-				nextStudentIndexNumber = resultSet.getInt(1) + 1;
+				nextStudentIndexNumber = resultSet.getInt(1);
 			}
 
 			conn.close();
