@@ -229,4 +229,31 @@ public class StaffRoleService {
 		
 		return registrationResult;
 	}
+	
+	public boolean setStaffRoleOwner(int staffRoleID){
+		boolean setOwnerResult = false;
+		
+		try{
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+
+			String sql = "UPDATE `StaffRole` SET staffRoleIsOwner = ?, staffRoleIsAdmin = ?, staffRoleIsDefault = ? WHERE staffRoleID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, 1);
+			pst.setInt(2, 1);
+			pst.setInt(3, 0);
+			pst.setInt(4, staffRoleID);
+			
+			pst.executeUpdate();
+
+			setOwnerResult = true;
+			
+			conn.close();
+			
+		}catch(Exception e){
+			System.out.println(e);
+		}
+		
+		return setOwnerResult;
+	}
 }
