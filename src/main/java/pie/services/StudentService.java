@@ -55,7 +55,7 @@ public class StudentService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT isVerified FROM `Student`,`User` WHERE `Student`.studentID = `User`.userID AND studentCode = ?";
+			String sql = "SELECT userIsVerified FROM `Student`,`User` WHERE `Student`.studentID = `User`.userID AND studentCode = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, studentCode);
 
@@ -265,14 +265,11 @@ public class StudentService {
 			if (resultSet.next()) {
 
 				User user = userService.getUser(studentID);
-				School studentSchool = schoolService.getSchool(resultSet
-						.getInt("schoolID"));
+				School studentSchool = schoolService.getSchool(resultSet.getInt("schoolID"));
 				String studentCode = resultSet.getString("studentCode");
-				Date studentEnlistmentDate = new Date(resultSet.getTimestamp(
-						"studentEnlistmentDate").getTime());
+				Date studentEnlistmentDate = new Date(resultSet.getTimestamp("studentEnlistmentDate").getTime());
 
-				student = new Student(user, studentSchool, studentCode,
-						studentEnlistmentDate);
+				student = new Student(user, studentSchool, studentCode, studentEnlistmentDate);
 			}
 
 			conn.close();
