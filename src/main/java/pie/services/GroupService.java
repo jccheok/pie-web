@@ -149,10 +149,11 @@ public class GroupService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT staffID FROM `Group`,`StaffGroup` WHERE `Group`.groupID = `StaffGroup`.groupID AND staffRoleID = ? AND `Group`.groupID = ?";
+			String sql = "SELECT staffID FROM `Group`,`StaffGroup` WHERE `Group`.groupID = `StaffGroup`.groupID AND staffRoleID = ? AND `Group`.groupID = ? AND staffGroupIsValid = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, staffRoleService.getOwnerStaffRole().getStaffRoleID());
 			pst.setInt(2, groupID);
+			pst.setInt(3, 1);
 
 			resultSet = pst.executeQuery();
 
@@ -314,9 +315,10 @@ public class GroupService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT staffID FROM `StaffGroup` WHERE groupID = ?";
+			String sql = "SELECT staffID FROM `StaffGroup` WHERE groupID = ? AND staffGroupIsValid = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, groupID);
+			pst.setInt(2, 1);
 
 			resultSet = pst.executeQuery();
 
@@ -513,10 +515,11 @@ public class GroupService {
 				PreparedStatement pst = null;
 				ResultSet resultSet = null;
 				
-				String sql = "SELECT `StaffRole`.staffRoleID FROM `StaffRole`, `StaffGroup` WHERE `StaffRole`.staffRoleID = `StaffGroup`.staffRoleID AND groupID = ? AND staffID = ?";
+				String sql = "SELECT `StaffRole`.staffRoleID FROM `StaffRole`, `StaffGroup` WHERE `StaffRole`.staffRoleID = `StaffGroup`.staffRoleID AND groupID = ? AND staffID = ? AND staffGroupIsValid = ?";
 				pst = conn.prepareStatement(sql);
 				pst.setInt(1, groupID);
 				pst.setInt(2, staff.getUserID());
+				pst.setInt(3, 1);
 				
 				resultSet = pst.executeQuery();
 				

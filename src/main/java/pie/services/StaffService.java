@@ -161,10 +161,11 @@ public class StaffService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT staffRoleID FROM `StaffGroup` WHERE staffID = ? AND groupID = ?";
+			String sql = "SELECT staffRoleID FROM `StaffGroup` WHERE staffID = ? AND groupID = ? AND staffGroupIsValid = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, staffID);
 			pst.setInt(2, groupID);
+			pst.setInt(3, 1);
 			
 			resultSet = pst.executeQuery();
 
