@@ -14,9 +14,9 @@ import com.sun.mail.smtp.SMTPTransport;
 
 public class EmailService {
 
-	public final static String MAILGUN_USERNAME = "postmaster@sandbox9a83076ecf2f445192f5d74f7f3311e3.mailgun.org";
-	public final static String MAILGUN_PASS = "acd6f3762e3032b01de541a963f2ffc9";
-	public final static String MAILGUN_SERVER = "smtp.mailgun.org";
+	public final static String MAILGUN_USERNAME = System.getenv("MAILGUN_USERNAME");
+	public final static String MAILGUN_PASS = System.getenv("MAILGUN_PASS");
+	public final static String MAILGUN_SERVER = System.getenv("MAILGUN_SERVER");
 
 	public boolean sendEmail(String emailSubject, String emailContent, String[] userEmails) {
 		
