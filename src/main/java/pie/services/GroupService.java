@@ -123,12 +123,13 @@ public class GroupService {
 				int groupMaxDailyHomeworkMinutes = resultSet.getInt("groupMaxDailyHomeworkMinutes");
 				GroupType groupType = GroupType.getGroupType(resultSet.getInt("groupTypeID"));
 				String groupCode = resultSet.getString("groupCode");
+				boolean groupIsValid = resultSet.getInt("groupIsValid") == 1;
 				boolean groupIsOpen = resultSet.getInt("groupIsOpen") == 1;
 				Date groupLastUpdate = new Date(resultSet.getTimestamp("groupLastUpdate").getTime());
 				Date groupDateCreated = new Date(resultSet.getTimestamp("groupDateCreated").getTime());
 
 				group = new Group(groupID, groupSchool, groupName, groupDescription, groupMaxDailyHomeworkMinutes,
-						groupType, groupCode, groupIsOpen, groupLastUpdate, groupDateCreated);
+						groupType, groupCode, groupIsValid, groupIsOpen, groupLastUpdate, groupDateCreated);
 			}
 
 		} catch (Exception e) {
@@ -428,7 +429,7 @@ public class GroupService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT LAST(studentGroupIndexNumber) FROM `StudentGroup` WHERE groupID = ?";
+			String sql = "SELECT COALESCE( (SELECT SUM(studentGroupIndexNumber) FROM `StudentGroup` WHERE groupID = ? ORDER BY studentGroupIndexNumber DESC LIMIT 1), 0) + 1";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, groupID);
 
@@ -436,7 +437,7 @@ public class GroupService {
 
 			if (resultSet.next()) {
 
-				nextStudentIndexNumber = resultSet.getInt(1) + 1;
+				nextStudentIndexNumber = resultSet.getInt(1);
 			}
 
 			conn.close();

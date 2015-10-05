@@ -24,7 +24,7 @@ public class Group {
 	public Group(int groupID, School school, String groupName,
 			String groupDescription, int groupMaxDailyHomeworkMinutes,
 			GroupType groupType, String groupCode, boolean groupIsOpen,
-			Date groupLastUpdate, Date groupDateCreated) {
+			boolean groupIsValid, Date groupLastUpdate, Date groupDateCreated) {
 		this.groupID = groupID;
 		this.school = school;
 		this.groupName = groupName;
@@ -33,6 +33,7 @@ public class Group {
 		this.groupType = groupType;
 		this.groupCode = groupCode;
 		this.groupIsOpen = groupIsOpen;
+		this.groupIsValid = groupIsValid;
 		this.groupLastUpdate = groupLastUpdate;
 		this.groupDateCreated = groupDateCreated;
 	}
