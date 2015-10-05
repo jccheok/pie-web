@@ -513,7 +513,7 @@ public class GroupService {
 				PreparedStatement pst = null;
 				ResultSet resultSet = null;
 				
-				String sql = "SELECT staffRoleID FROM `StaffRole`, `StaffGroup` WHERE `StaffRole`.staffRoleID = `StaffGroup`.staffRoleID AND groupID = ? AND staffID = ?";
+				String sql = "SELECT `StaffRole`.staffRoleID FROM `StaffRole`, `StaffGroup` WHERE `StaffRole`.staffRoleID = `StaffGroup`.staffRoleID AND groupID = ? AND staffID = ?";
 				pst = conn.prepareStatement(sql);
 				pst.setInt(1, groupID);
 				pst.setInt(2, staff.getUserID());
