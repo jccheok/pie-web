@@ -594,32 +594,66 @@ public class GroupService {
 		
 		return removeResult;
 	}
-	
-	
-	public boolean deactivateGroup(int groupID, int staffID, String userPassword){
-		boolean deactivateResult = false;
+
+	public DeactivateGroupResult deactivateGroup(int groupID, int staffID, String userPassword) {
+		DeactivateGroupResult deactivateGroupResult = DeactivateGroupResult.SUCCESS;
 		StaffService staffService = new StaffService();
 		Group group = getGroup(groupID);
-		
-		if(group.groupIsValid()){
-			Staff groupOwner = staffService.getStaff(staffID);
+
+		if (group.groupIsValid()) {
+			Staff staffUser = staffService.getStaff(staffID);
+			Staff groupOwner = getGroupOwner(groupID);
 			
-			if(groupOwner.getUserPassword() == userPassword){
+			if(staffID == groupOwner.getUserID()){
 				
-				Student[] students = getStudentMembers(groupID);
-				Staff[] staffs = getStaffMembers(groupID);
-				
-				for(Student student : students ){
-					if(!removeStudentFromGroup(groupID, student.getUserID())){
-						return deactivateResult;
+				if (staffUser.getUserPassword() == userPassword) {
+
+					Student[] students = getStudentMembers(groupID);
+					Staff[] staffs = getStaffMembers(groupID);
+	
+					for (Student student : students) {
+						if (!removeStudentFromGroup(groupID, student.getUserID())) {
+							deactivateGroupResult = DeactivateGroupResult.GENERAL_FAILURE;
+							return deactivateGroupResult;
+						}
 					}
-				}
-				
-				for(Staff staff : staffs){
-					if(!removeStaffFromGroup(groupID, staff.getUserID())){
-						return deactivateResult;
+	
+					for (Staff staff : staffs) {
+						if (!removeStaffFromGroup(groupID, staff.getUserID())) {
+							deactivateGroupResult = DeactivateGroupResult.GENERAL_FAILURE;
+							return deactivateGroupResult;
+						}
 					}
+	
+					try {
+						Connection conn = DatabaseConnector.getConnection();
+						PreparedStatement pst = null;
+	
+						String sql = "UPDATE `Group` SET groupIsValid = ?, groupDateDeleted = NOW(), groupIsOpen = ? WHERE groupID = ?";
+						pst = conn.prepareStatement(sql);
+						pst.setInt(1, 0);
+						pst.setInt(2, 0);
+						pst.setInt(3, groupID);
+	
+						pst.executeUpdate();
+						
+						conn.close();
+	
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}else{
+					deactivateGroupResult = DeactivateGroupResult.WRONG_PASSWORD;
 				}
+			}else{
+				deactivateGroupResult = DeactivateGroupResult.INVALID_USER;
+			}
+		}else{
+			deactivateGroupResult = DeactivateGroupResult.GROUP_IS_NOT_VALID;
+		}
+
+		return deactivateGroupResult;
+	}
 				
 				try{
 					Connection conn = DatabaseConnector.getConnection();
