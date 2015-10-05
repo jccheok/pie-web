@@ -121,12 +121,13 @@ public class GroupService {
 				int groupMaxDailyHomeworkMinutes = resultSet.getInt("groupMaxDailyHomeworkMinutes");
 				GroupType groupType = GroupType.getGroupType(resultSet.getInt("groupTypeID"));
 				String groupCode = resultSet.getString("groupCode");
+				boolean groupIsValid = resultSet.getInt("groupIsValid") == 1;
 				boolean groupIsOpen = resultSet.getInt("groupIsOpen") == 1;
 				Date groupLastUpdate = new Date(resultSet.getTimestamp("groupLastUpdate").getTime());
 				Date groupDateCreated = new Date(resultSet.getTimestamp("groupDateCreated").getTime());
 
 				group = new Group(groupID, groupSchool, groupName, groupDescription, groupMaxDailyHomeworkMinutes,
-						groupType, groupCode, groupIsOpen, groupLastUpdate, groupDateCreated);
+						groupType, groupCode, groupIsValid, groupIsOpen, groupLastUpdate, groupDateCreated);
 			}
 
 		} catch (Exception e) {
