@@ -157,7 +157,7 @@ public class StudentService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT groupID FROM `StudentGroup`,`Group` WHERE `StudentGroup`.groupID = `Group`.groupID AND groupIsValid = ? AND studentGroupIsValid = ? AND studentID = ?";
+			String sql = "SELECT `StudentGroup`.groupID FROM `StudentGroup`,`Group` WHERE `StudentGroup`.groupID = `Group`.groupID AND groupIsValid = ? AND studentGroupIsValid = ? AND studentID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, 1);
 			pst.setInt(2, 1);
@@ -381,4 +381,6 @@ public class StudentService {
 
 		return studentID;
 	}
+	
+	
 }
