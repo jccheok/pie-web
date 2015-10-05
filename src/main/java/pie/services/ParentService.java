@@ -98,6 +98,8 @@ public class ParentService {
 	}
 	
 	public Student[] getChildren(int parentID){
+		
+		StudentService studentService = new StudentService();
 		Student[] children = {};
 		
 		try {
@@ -114,7 +116,7 @@ public class ParentService {
 			ArrayList<Student> tempStudents = new ArrayList<Student>();
 
 			while(resultSet.next()) {
-				tempStudents.add(new StudentService().getStudent((resultSet.getInt("studentID"))));
+				tempStudents.add(studentService.getStudent(resultSet.getInt(1)));
 			}
 
 			conn.close();
