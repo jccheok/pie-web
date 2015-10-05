@@ -571,6 +571,7 @@ public class GroupService {
 	
 	public boolean removeStudentFromGroup(int groupID, int studentID){
 		boolean removeResult = true;
+		
 		try{
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
@@ -593,4 +594,56 @@ public class GroupService {
 		
 		return removeResult;
 	}
+	
+	
+	public boolean deactivateGroup(int groupID, int staffID, String userPassword){
+		boolean deactivateResult = false;
+		StaffService staffService = new StaffService();
+		Group group = getGroup(groupID);
+		
+		if(group.groupIsValid()){
+			Staff groupOwner = staffService.getStaff(staffID);
+			
+			if(groupOwner.getUserPassword() == userPassword){
+				
+				Student[] students = getStudentMembers(groupID);
+				Staff[] staffs = getStaffMembers(groupID);
+				
+				for(Student student : students ){
+					if(!removeStudentFromGroup(groupID, student.getUserID())){
+						return deactivateResult;
+					}
+				}
+				
+				for(Staff staff : staffs){
+					if(!removeStaffFromGroup(groupID, staff.getUserID())){
+						return deactivateResult;
+					}
+				}
+				
+				try{
+					Connection conn = DatabaseConnector.getConnection();
+					PreparedStatement pst = null;
+					
+					String sql = "UPDATE `Group` SET groupIsValid = ?, groupDateDeleted = NOW(), groupIsOpen = ? WHERE groupID = ?";
+					pst = conn.prepareStatement(sql);
+					pst.setInt(1, 0);
+					pst.setInt(2, 0);
+					pst.setInt(3, groupID);
+					
+					pst.executeUpdate();
+					
+					deactivateResult = true;
+					
+					conn.close();
+
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return deactivateResult;
+	}
+	
 }
