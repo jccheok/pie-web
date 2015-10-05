@@ -14,6 +14,7 @@ import pie.Student;
 import pie.User;
 import pie.UserType;
 import pie.constants.JoinGroupResult;
+import pie.constants.LeaveGroupResult;
 import pie.constants.UserRegistrationResult;
 import pie.utilities.DatabaseConnector;
 import pie.utilities.Utilities;
@@ -380,6 +381,24 @@ public class StudentService {
 		}
 
 		return studentID;
+	}
+	
+	public LeaveGroupResult leaveGroup(int studentID, int groupID){
+		GroupService groupService = new GroupService();
+		LeaveGroupResult leaveGroupResult = LeaveGroupResult.SUCCESS;
+		
+		Group group = groupService.getGroup(groupID);
+		if(group == null || !group.groupIsValid()){
+			leaveGroupResult = LeaveGroupResult.INVALID_GROUP;
+		}else if(isMember(getStudent(studentID), groupService.getGroup(groupID)) == false){
+			leaveGroupResult = LeaveGroupResult.ALREADY_LEFT;
+		}else{
+			groupService.removeStudentFromGroup(groupID, studentID);
+		}
+		
+		
+		return leaveGroupResult;
+		
 	}
 	
 	
