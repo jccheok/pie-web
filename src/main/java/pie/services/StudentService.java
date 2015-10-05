@@ -54,7 +54,7 @@ public class StudentService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT isVerified FROM `Student`,`User` WHERE `Student`.studentID = `User`.userID AND studentCode = ?";
+			String sql = "SELECT userIsVerified FROM `Student`,`User` WHERE `Student`.studentID = `User`.userID AND studentCode = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, studentCode);
 
