@@ -121,7 +121,7 @@ public class GroupService {
 				int groupMaxDailyHomeworkMinutes = resultSet.getInt("groupMaxDailyHomeworkMinutes");
 				GroupType groupType = GroupType.getGroupType(resultSet.getInt("groupTypeID"));
 				String groupCode = resultSet.getString("groupCode");
-				boolean groupIsOpen = resultSet.getInt("groupCodeIsOpen") == 1;
+				boolean groupIsOpen = resultSet.getInt("groupIsOpen") == 1;
 				Date groupLastUpdate = new Date(resultSet.getTimestamp("groupLastUpdate").getTime());
 				Date groupDateCreated = new Date(resultSet.getTimestamp("groupDateCreated").getTime());
 
