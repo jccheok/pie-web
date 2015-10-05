@@ -542,4 +542,30 @@ public class GroupService {
 		groupAdmins = tempGroupAdmins.toArray(groupAdmins);
 		return groupAdmins;
 	}
+	
+	public boolean removeStaffFromGroup(int groupID, int staffID){
+		boolean removeResult = false;
+		
+		try{
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			
+			String sql = "UPDATE `StaffGroup` SET staffGroupIsValid = ? WHERE groupID = ? AND staffID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, 0);
+			pst.setInt(2, groupID);
+			pst.setInt(3, staffID);
+			
+			pst.executeUpdate();
+			
+			removeResult = true;
+			
+			conn.close();
+
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return removeResult;
+	}
 }
