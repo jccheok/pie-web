@@ -64,7 +64,7 @@ public class ViewOpenGroupsServlet {
 			groupDetails.put("groupID", groupID);
 			groupDetails.put("groupName", openGroup.getGroupName());
 			groupDetails.put("groupDescription", openGroup.getGroupDescription());
-			groupDetails.put("groupMemberCount", Integer.toString(groupService.getMemberCount(openGroup.getGroupID())));
+			groupDetails.put("groupMemberCount", groupService.getMemberCount(openGroup.getGroupID()));
 			groupDetails.put("groupIsPasswordProtected", openGroup.getGroupCode() == null);
 			groupDetails.put("isGroupMember", groupService.hasGroupMember(groupID, schoolMemberID));
 		
