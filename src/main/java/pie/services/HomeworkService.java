@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import pie.Homework;
+import pie.Staff;
 import pie.Student;
 import pie.utilities.DatabaseConnector;
 
@@ -56,10 +57,10 @@ public class HomeworkService {
 		return homework;
 	}
 
-	public boolean createHomework(int staffID, int groupID, String homeworkTitle, String homeworkSubject,
+	public int createHomework(int staffID, int groupID, String homeworkTitle, String homeworkSubject,
 			String homeworkDescription, int homeworkMinutesRequired, Date homeworkDueDate) {
 
-		boolean createResult = false;
+		int homeworkID = -1;
 
 		try {
 			Connection conn = DatabaseConnector.getConnection();
@@ -67,7 +68,7 @@ public class HomeworkService {
 			ResultSet resultSet = null;
 
 			String sql = "INSERT INTO  `Homework` (staffID ,homeworkTitle ,homeworkSubject ,homeworkDescription ,homeworkMinutesRequired "
-					+ ",`homeworkDueDate`)VALUES" + "(?,?,?,?,?,?)";
+					+ ",`homeworkDueDate`) VALUES (?,?,?,?,?,?)";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, staffID);
 			pst.setString(2, homeworkTitle);
@@ -80,21 +81,21 @@ public class HomeworkService {
 			resultSet = pst.getGeneratedKeys();
 
 			if (resultSet.next()) {
-				int homeworkID = resultSet.getInt(1);
-				sql = "INSERT GroupHomework(staffID,groupID,homeworkID) VALUES(?,?,?)";
+				homeworkID = resultSet.getInt(1);
+				sql = "INSERT `GroupHomework` (staffID,groupID,homeworkID) VALUES(?,?,?)";
 				pst = conn.prepareStatement(sql);
 				pst.setInt(1, staffID);
 				pst.setInt(2, groupID);
 				pst.setInt(3, homeworkID);
 
 				pst.executeUpdate();
-				createResult = true;
 			}
 			conn.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
+		return homeworkID;
 	}
 
 	public Homework[] getAllDraftHomework(int staffID) {
@@ -106,7 +107,7 @@ public class HomeworkService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT homeworkID FROM Homework WHERE staffID = ? AND homeworkIsDraft = ?";
+			String sql = "SELECT homeworkID FROM `Homework` WHERE staffID = ? AND homeworkIsDraft = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, staffID);
 			pst.setInt(2, 1);
@@ -137,7 +138,7 @@ public class HomeworkService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT homeworkID FROM Homework WHERE staffID = ? AND homeworkIsDraft = ?";
+			String sql = "SELECT homeworkID FROM `Homework` WHERE staffID = ? AND homeworkIsDraft = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, staffID);
 			pst.setInt(2, 0);
@@ -164,13 +165,12 @@ public class HomeworkService {
 			String homeworkDescription, int homeworkMinutesRequired, Date homeworkDueDate) {
 
 		boolean isUpdated = false;
-
+		//determine if it is draft
 		try {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
-			ResultSet resultSet = null;
 
-			String sql = "UPDATE Homework SET homeworkTitle = ?, homeworkSubject = ?, homeworkDescription = ?, int homeworkMinutesRequired, Date homeworkDueDate WHERE homeworkID = ?";
+			String sql = "UPDATE `Homework` SET homeworkTitle = ?, homeworkSubject = ?, homeworkDescription = ?, int homeworkMinutesRequired, Date homeworkDueDate WHERE homeworkID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, homeworkTitle);
 			pst.setString(2, homeworkSubject);
@@ -181,9 +181,9 @@ public class HomeworkService {
 
 			if (pst.executeUpdate() != 0) {
 				isUpdated = true;
-			} else {
-				isUpdated = false;
 			}
+			
+			conn.close();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -194,34 +194,33 @@ public class HomeworkService {
 
 	public boolean sendHomework(int groupID, int homeworkID) {
 
-		boolean sendSuccess = false;
+		boolean sendResult = false;
 
-		GroupService gs = new GroupService();
-		Student[] groupStudents = gs.getStudentMembers(groupID);
+		GroupService groupService = new GroupService();
+		Student[] groupStudents = groupService.getStudentMembers(groupID);
 
 		for (Student student : groupStudents) {
 			try {
 				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
-				ResultSet resultSet = null;
 
-				String sql = "INSERT `UserHomework`(homeworkID,userID)VALUES(?,?)";
+				String sql = "INSERT `UserHomework` (homeworkID,userID) VALUES (?,?)";
 				pst = conn.prepareStatement(sql);
 				pst.setInt(1, homeworkID);
 				pst.setInt(2, student.getUserID());
 
 				if (pst.executeUpdate() != 0) {
-					sendSuccess = true;
-				} else {
-					sendSuccess = false;
-				}
-
+					sendResult = true;
+				} 
+				
+				conn.close();
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 
-		return sendSuccess;
+		return sendResult;
 	}
 
 	public boolean publishHomework(int groupID, int homeworkID) {
