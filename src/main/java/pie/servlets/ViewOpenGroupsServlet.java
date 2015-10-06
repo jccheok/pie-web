@@ -37,11 +37,13 @@ public class ViewOpenGroupsServlet {
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int schoolID = 0;
+		int schoolMemberID = 0;
 		
 		try {
 		
-			Map<String, String> requestParameters = Utilities.getParameters(request, "schoolID");
+			Map<String, String> requestParameters = Utilities.getParameters(request, "schoolID", "schoolMemberID");
 			schoolID = Integer.parseInt(requestParameters.get("schoolID"));
+			schoolMemberID = Integer.parseInt(requestParameters.get("schoolMemberID"));
 			
 		} catch (Exception e) {
 			
@@ -64,6 +66,7 @@ public class ViewOpenGroupsServlet {
 			groupDetails.put("groupDescription", openGroup.getGroupDescription());
 			groupDetails.put("groupMemberCount", Integer.toString(groupService.getMemberCount(openGroup.getGroupID())));
 			groupDetails.put("groupIsPasswordProtected", openGroup.getGroupCode() == null);
+			groupDetails.put("isGroupMember", groupService.hasGroupMember(groupID, schoolMemberID));
 		
 			JSONArray adminList = new JSONArray();
 			for (Staff adminStaff : groupService.getGroupAdministrators(groupID)) {
