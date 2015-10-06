@@ -57,12 +57,12 @@ public class StaffService {
 
 		return staff;
 	}
-	
+
 	public Group[] getJoinedGroups(int staffID) {
-		
+
 		GroupService groupService = new GroupService();
 		Group[] joinedGroups = {};
-		
+
 		try {
 
 			Connection conn = DatabaseConnector.getConnection();
@@ -88,12 +88,12 @@ public class StaffService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return joinedGroups;
 	}
-	
+
 	public boolean isMember(int staffID, int groupID) {
-		
+
 		boolean isMember = false;
 
 		try {
@@ -120,7 +120,7 @@ public class StaffService {
 	}
 
 	public boolean setStaffRole(int staffID, int groupID, StaffRole staffRole) {
-		
+
 		boolean setResult = false;
 
 		if (isMember(staffID, groupID)) {
@@ -167,7 +167,7 @@ public class StaffService {
 			pst.setInt(1, staffID);
 			pst.setInt(2, groupID);
 			pst.setInt(3, 1);
-			
+
 			resultSet = pst.executeQuery();
 
 			if (resultSet.next()) {
@@ -193,10 +193,10 @@ public class StaffService {
 
 		if (userService.isRegisteredUser(userEmail)) {
 			registrationResult = UserRegistrationResult.EMAIL_TAKEN;
-		} else if (schoolService.isAvailableSchoolCode(schoolCode)){
+		} else if (schoolService.isAvailableSchoolCode(schoolCode)) {
 			registrationResult = UserRegistrationResult.INVALID_SCHOOL_CODE;
 		} else {
-			
+
 			try {
 
 				Connection conn = DatabaseConnector.getConnection();
@@ -218,7 +218,7 @@ public class StaffService {
 				if (resultSet.next()) {
 
 					int newUserID = resultSet.getInt(1);
-					
+
 					sql = "INSERT INTO `Staff` (staffID, schoolID, staffTitle) VALUES (?, ?, ?)";
 					pst = conn.prepareStatement(sql);
 					pst.setInt(1, newUserID);
@@ -244,7 +244,7 @@ public class StaffService {
 		JoinGroupResult joinGroupResult = JoinGroupResult.SUCCESS;
 
 		Group group = groupService.getGroup(groupID);
-		
+
 		if (group == null || !group.groupIsValid()) {
 			joinGroupResult = JoinGroupResult.INVALID_GROUP;
 		} else if (!group.groupIsOpen()) {
@@ -259,20 +259,17 @@ public class StaffService {
 
 		return joinGroupResult;
 	}
-	
-	public LeaveGroupResult leaveGroup(int groupID, int staffID){
+
+	public LeaveGroupResult leaveGroup(int groupID, int staffID) {
 		GroupService groupService = new GroupService();
 		LeaveGroupResult leaveGroupResult = LeaveGroupResult.SUCCESS;
-		
-		Group group = groupService.getGroup(groupID);
-		if(group == null || !group.groupIsValid()){
-			leaveGroupResult = LeaveGroupResult.INVALID_GROUP;
-		}else if(isMember(staffID, groupID) == false){
-			leaveGroupResult = LeaveGroupResult.ALREADY_LEFT;
-		}else{
+
+		if (!isMember(staffID, groupID)) {
+			leaveGroupResult = LeaveGroupResult.NOT_MEMBER;
+		} else {
 			groupService.removeStaffFromGroup(groupID, staffID);
 		}
-		
+
 		return leaveGroupResult;
 	}
 

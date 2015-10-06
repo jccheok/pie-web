@@ -379,24 +379,19 @@ public class StudentService {
 
 		return studentID;
 	}
-	
-	public LeaveGroupResult leaveGroup(int studentID, int groupID){
+
+	public LeaveGroupResult leaveGroup(int studentID, int groupID) {
 		GroupService groupService = new GroupService();
 		LeaveGroupResult leaveGroupResult = LeaveGroupResult.SUCCESS;
-		
-		Group group = groupService.getGroup(groupID);
-		if(group == null || !group.groupIsValid()){
-			leaveGroupResult = LeaveGroupResult.INVALID_GROUP;
-		}else if(isMember(getStudent(studentID), groupService.getGroup(groupID)) == false){
-			leaveGroupResult = LeaveGroupResult.ALREADY_LEFT;
-		}else{
+
+		if (!isMember(studentID, groupID)) {
+			leaveGroupResult = LeaveGroupResult.NOT_MEMBER;
+		} else {
 			groupService.removeStudentFromGroup(groupID, studentID);
 		}
-		
-		
+
 		return leaveGroupResult;
-		
+
 	}
-	
-	
+
 }
