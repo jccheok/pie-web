@@ -14,6 +14,7 @@ import pie.StaffRole;
 import pie.User;
 import pie.UserType;
 import pie.constants.JoinGroupResult;
+import pie.constants.LeaveGroupResult;
 import pie.constants.UserRegistrationResult;
 import pie.utilities.DatabaseConnector;
 
@@ -161,10 +162,11 @@ public class StaffService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT staffRoleID FROM `StaffGroup` WHERE staffID = ? AND groupID = ?";
+			String sql = "SELECT staffRoleID FROM `StaffGroup` WHERE staffID = ? AND groupID = ? AND staffGroupIsValid = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, staffID);
 			pst.setInt(2, groupID);
+			pst.setInt(3, 1);
 			
 			resultSet = pst.executeQuery();
 
@@ -256,6 +258,22 @@ public class StaffService {
 		}
 
 		return joinGroupResult;
+	}
+	
+	public LeaveGroupResult leaveGroup(int groupID, int staffID){
+		GroupService groupService = new GroupService();
+		LeaveGroupResult leaveGroupResult = LeaveGroupResult.SUCCESS;
+		
+		Group group = groupService.getGroup(groupID);
+		if(group == null || !group.groupIsValid()){
+			leaveGroupResult = LeaveGroupResult.INVALID_GROUP;
+		}else if(isMember(staffID, groupID) == false){
+			leaveGroupResult = LeaveGroupResult.ALREADY_LEFT;
+		}else{
+			groupService.removeStaffFromGroup(groupID, staffID);
+		}
+		
+		return leaveGroupResult;
 	}
 
 }

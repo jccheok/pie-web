@@ -30,8 +30,9 @@ public class ViewParentChildrenServlet extends HttpServlet {
 	StudentService studentService;
 	
 	@Inject
-	public ViewParentChildrenServlet(ParentService parentService) {
+	public ViewParentChildrenServlet(ParentService parentService, StudentService studentService) {
 		this.parentService = parentService;
+		this.studentService = studentService;
 	}
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
