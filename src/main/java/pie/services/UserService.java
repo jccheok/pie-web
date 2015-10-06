@@ -124,6 +124,30 @@ public class UserService {
 
 		return isValid;
 	}
+	
+	public boolean credentialsMatch(String userEmail, String userPassword) {
+		boolean matches = false;
+		
+		try {
+			
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			
+			String sql = "SELECT * FROM `User` WHERE userEmail = ? AND userPassword = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setString(1, userEmail);
+			pst.setString(2, userPassword);
+			
+			matches = pst.executeQuery().next();
+			
+			conn.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return matches;
+	}
 
 	public LoginResult loginUser(String userEmail, String userPassword, SupportedPlatform platform) {
 
@@ -131,44 +155,35 @@ public class UserService {
 
 		if (!isRegisteredUser(userEmail)) {
 			loginResult = LoginResult.NOT_REGISTERED;
+		} else if (!credentialsMatch(userEmail, userPassword)) {
+			loginResult = LoginResult.NOT_MATCHING;
 		} else {
+			
+			User user = getUser(getUserID(userEmail));
 
-			try {
-
-				Connection conn = DatabaseConnector.getConnection();
-				PreparedStatement pst = null;
-				ResultSet resultSet = null;
-
-				String sql = "SELECT userTypeID FROM `User` WHERE userEmail = ? AND userPassword = ?";
-				pst = conn.prepareStatement(sql);
-				pst.setString(1, userEmail);
-				pst.setString(2, userPassword);
-				resultSet = pst.executeQuery();
-
-				if (resultSet.next()) {
-
-					UserType userType = UserType.getUserType(resultSet.getInt(1));
-					if (!platform.supportsUserType(userType)) {
-						loginResult = LoginResult.PLATFORM_UNSUPPORTED;
-					} else if (!isVerifiedUser(userEmail)) {
-						loginResult = LoginResult.NOT_VERIFIED;
-					} else if (!isValidUser(userEmail)) {
-						loginResult = LoginResult.NOT_VALID;
-					} else {
-
-						sql = "UPDATE `User` SET userLastLogin = CURRENT_TIMESTAMP() WHERE userEmail = ?";
-						pst = conn.prepareStatement(sql);
-						pst.setString(1, userEmail);
-						pst.executeUpdate();
-					}
-				} else {
-					loginResult = LoginResult.NOT_MATCHING;
+			if (!platform.supportsUserType(user.getUserType())) {
+				loginResult = LoginResult.PLATFORM_UNSUPPORTED;
+			} else if (!isVerifiedUser(userEmail)) {
+				loginResult = LoginResult.NOT_VERIFIED;
+			} else if (!isValidUser(userEmail)) {
+				loginResult = LoginResult.NOT_VALID;
+			} else {
+				
+				try {
+					
+					Connection conn = DatabaseConnector.getConnection();
+					PreparedStatement pst = null;
+					
+					String sql = "UPDATE `User` SET userLastLogin = CURRENT_TIMESTAMP() WHERE userEmail = ?";
+					pst = conn.prepareStatement(sql);
+					pst.setString(1, userEmail);
+					pst.executeUpdate();
+					
+					conn.close();
+					
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-
-				conn.close();
-
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
 		}
 
