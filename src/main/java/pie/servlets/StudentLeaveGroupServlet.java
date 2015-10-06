@@ -41,8 +41,7 @@ public class StudentLeaveGroupServlet {
 
 		try {
 	
-			Map<String, String> requestParameters = Utilities.getParameters(request, "groupID", "studentID",
-					"groupCode");
+			Map<String, String> requestParameters = Utilities.getParameters(request, "groupID", "studentID");
 			groupID = Integer.parseInt(requestParameters.get("groupID"));
 			studentID = Integer.parseInt(requestParameters.get("studentID"));
 			
