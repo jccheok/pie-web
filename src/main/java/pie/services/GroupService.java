@@ -173,7 +173,7 @@ public class GroupService {
 		return groupOwner;
 	}
 
-	public boolean setGroupOwner(int groupID, int teacherID) {
+	public boolean setGroupOwner(int groupID, int staffID) {
 
 		StaffService staffService = new StaffService();
 		StaffRoleService staffRoleService = new StaffRoleService();
@@ -182,14 +182,14 @@ public class GroupService {
 
 		if (getGroupOwner(groupID) != null) {
 			StaffRole defaultTeacherRole = staffRoleService.getDefaultStaffRole();
-			staffService.setStaffRole(teacherID, groupID, defaultTeacherRole);
+			staffService.setStaffRole(staffID, groupID, defaultTeacherRole);
 		}
 
 		StaffRole ownerTeacherRole = staffRoleService.getOwnerStaffRole();
-		if (hasStaffMember(groupID, teacherID)) {
-			setResult = staffService.setStaffRole(teacherID, groupID, ownerTeacherRole);
+		if (staffService.isMember(staffID, groupID)) {
+			setResult = staffService.setStaffRole(staffID, groupID, ownerTeacherRole);
 		} else {
-			setResult = addStaffToGroup(groupID, teacherID, ownerTeacherRole);
+			setResult = addStaffToGroup(groupID, staffID, ownerTeacherRole);
 		}
 
 		return setResult;
