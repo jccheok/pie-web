@@ -12,12 +12,14 @@ import pie.servlets.RegisterParentServlet;
 import pie.servlets.RegisterSchoolServlet;
 import pie.servlets.RegisterStaffServlet;
 import pie.servlets.RegisterStudentServlet;
+import pie.servlets.RemoveStudentFromGroupServlet;
 import pie.servlets.StaffJoinGroupServlet;
 import pie.servlets.StudentJoinGroupServlet;
 import pie.servlets.UpdateGroupServlet;
 import pie.servlets.VerifyUserServlet;
 import pie.servlets.ViewCitiesServlet;
 import pie.servlets.ViewGroupDetailsServlet;
+import pie.servlets.ViewOpenGroupsServlet;
 import pie.servlets.ViewParentChildrenServlet;
 import pie.servlets.ViewRelationshipsServlet;
 import pie.servlets.ViewStaffJoinedGroupsServlet;
@@ -49,12 +51,15 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/verify").with(VerifyUserServlet.class);
 				serve("*/servlets/cities").with(ViewCitiesServlet.class);
 				
+				serve("*/servlets/secured/opengroups").with(ViewOpenGroupsServlet.class);
+				
 				serve("*/servlets/secured/student/joingroup").with(StudentJoinGroupServlet.class);
 				serve("*/servlets/secured/student/joinedgroups").with(ViewStudentJoinedGroupsServlet.class);
 				
 				serve("*/servlets/secured/parent/children").with(ViewParentChildrenServlet.class);
 				serve("*/servlets/secured/parent/addchild").with(AddChildServlet.class);
 				serve("*/servlets/secured/parent/addchildtogroup").with(AddChildToGroupServlet.class);
+				serve("*/servlets/secured/parent/removechildfromgroup").with(RemoveStudentFromGroupServlet.class);
 				serve("*/servlets/secured/parent/relationships").with(ViewRelationshipsServlet.class);
 				
 				serve("*/servlets/secured/staff/gencode").with(GenerateCodeServlet.class);
