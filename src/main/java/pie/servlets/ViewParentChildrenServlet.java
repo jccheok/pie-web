@@ -73,7 +73,7 @@ public class ViewParentChildrenServlet extends HttpServlet {
 				groupDetails.put("groupName", joinedGroup.getGroupName());
 				groupDetails.put("groupTypeName", joinedGroup.getGroupType().toString());
 				groupDetails.put("studentGroupIndexNumber", studentService.getStudentGroupIndexNumber(joinedGroupID, studentID));
-				groupDetails.put("studentGroupJoinDate", studentService.getStudentGroupJoinDate(joinedGroupID, studentID).getTime());
+				groupDetails.put("studentGroupJoinDateUnix", (long) studentService.getStudentGroupJoinDate(joinedGroupID, studentID).getTime() / 1000);
 				studentGroupsList.put(groupDetails);
 			}
 			studentDetails.put("studentJoinedGroups", studentGroupsList);
