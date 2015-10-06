@@ -14,6 +14,21 @@ public class Note {
 	private Date noteDateCreated;
 	private Date noteDateDeleted;
 
+	public Note(int noteID, Staff noteAuthor, String noteTitle,
+			String noteDescription, boolean noteIsTemplate,
+			boolean noteIsDraft, boolean noteIsDeleted, Date noteDateCreated,
+			Date noteDateDeleted) {
+		this.noteID = noteID;
+		this.noteAuthor = noteAuthor;
+		this.noteTitle = noteTitle;
+		this.noteDescription = noteDescription;
+		this.noteIsTemplate = noteIsTemplate;
+		this.noteIsDraft = noteIsDraft;
+		this.noteIsDeleted = noteIsDeleted;
+		this.noteDateCreated = noteDateCreated;
+		this.noteDateDeleted = noteDateDeleted;
+	}
+
 	public int getNoteID() {
 		return noteID;
 	}
