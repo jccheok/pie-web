@@ -13,6 +13,8 @@ import pie.School;
 import pie.Staff;
 import pie.StaffRole;
 import pie.Student;
+import pie.User;
+import pie.UserType;
 import pie.constants.DeactivateGroupResult;
 import pie.constants.GroupRegistrationResult;
 import pie.constants.TransferGroupOwnershipResult;
@@ -194,23 +196,30 @@ public class GroupService {
 
 		return setResult;
 	}
-
-	public boolean hasStudentMember(int groupID, int studentID) {
-
+	
+	public boolean hasGroupMember(int groupID, int groupMemberID) {
+		
 		boolean hasMember = false;
-
+		
 		try {
 
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
+			ResultSet resultSet = null;
 
-			String sql = "SELECT * FROM `StudentGroup` WHERE studentID = ? AND groupID = ? AND studentGroupIsValid = ?";
+			String sql = "SELECT EXISTS (SELECT studentID from `StudentGroup` where studentID = ? AND groupID = ? AND studentGroupIsValid = ?) OR EXISTS (select staffID from `StaffGroup` where staffID = ? AND groupID = ? AND staffGroupIsValid = ?);";
 			pst = conn.prepareStatement(sql);
-			pst.setInt(1, studentID);
+			pst.setInt(1, groupMemberID);
 			pst.setInt(2, groupID);
 			pst.setInt(3, 1);
-
-			hasMember = pst.executeQuery().next();
+			pst.setInt(4, groupMemberID);
+			pst.setInt(5, groupID);
+			pst.setInt(6, 1);
+			resultSet = pst.executeQuery();
+					
+			if (resultSet.next()) {
+				hasMember = resultSet.getInt(1) == 1;
+			}
 
 			conn.close();
 
@@ -221,37 +230,13 @@ public class GroupService {
 		return hasMember;
 	}
 
-	public boolean hasStaffMember(int groupID, int staffID) {
-
-		boolean hasMember = false;
-
-		try {
-
-			Connection conn = DatabaseConnector.getConnection();
-			PreparedStatement pst = null;
-
-			String sql = "SELECT * FROM `StaffGroup` WHERE staffID = ? AND groupID = ? AND staffGroupIsValid = ?";
-			pst = conn.prepareStatement(sql);
-			pst.setInt(1, staffID);
-			pst.setInt(2, groupID);
-			pst.setInt(3, 1);
-
-			hasMember = pst.executeQuery().next();
-
-			conn.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return hasMember;
-	}
 
 	public boolean addStudentToGroup(int groupID, int studentID, int studentGroupIndexNumber) {
-
+		
+		StudentService studentService = new StudentService();
 		boolean addResult = false;
 
-		if (!hasStudentMember(groupID, studentID)) {
+		if (!studentService.isMember(studentID, groupID)) {
 
 			try {
 
@@ -278,10 +263,11 @@ public class GroupService {
 	}
 
 	public boolean addStaffToGroup(int groupID, int staffID, StaffRole staffRole) {
-
+		
+		StaffService staffService = new StaffService();
 		boolean addResult = false;
 
-		if (!hasStaffMember(groupID, staffID)) {
+		if (!staffService.isMember(staffID, groupID)) {
 
 			try {
 
