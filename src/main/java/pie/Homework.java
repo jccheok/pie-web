@@ -11,12 +11,33 @@ public class Homework {
 	private String homeworkDescription;
 	private int homeworkMinutesRequired;
 	private Date homeworkDueDate;
-	private boolean homeworkOpen;
+	private boolean homeworkIsOpen;
 	private Date homeworkDateCreated;
 	private boolean homeworkIsDraft;
 	private boolean homeworkIsTemplate;
 	private boolean homeworkIsDeleted;
 	private Date homeworkDateDeleted;
+
+	
+	
+	public Homework(int homeworkID, Staff homeworkAuthor, String homeworkTitle, String homeworkSubject,
+			String homeworkDescription, int homeworkMinutesRequired, Date homeworkDueDate, boolean homeworkOpen,
+			Date homeworkDateCreated, boolean homeworkIsDraft, boolean homeworkIsTemplate, boolean homeworkIsDeleted,
+			Date homeworkDateDeleted) {
+		setHomeworkID(homeworkID);
+		setHomeworkAuthor(homeworkAuthor);
+		setHomeworkTitle(homeworkTitle);
+		setHomeworkSubject(homeworkSubject);
+		setHomeworkDescription(homeworkDescription);
+		setHomeworkMinutesRequired(homeworkMinutesRequired);
+		setHomeworkDueDate(homeworkDueDate);
+		setHomeworkIsOpen(homeworkIsDeleted);
+		setHomeworkDateCreated(homeworkDateCreated);
+		setHomeworkIsDraft(homeworkIsDraft);
+		setHomeworkIsTemplate(homeworkIsTemplate);
+		setHomeworkIsDeleted(homeworkIsDeleted);
+		setHomeworkDateDeleted(homeworkDateDeleted);
+	}
 
 	public int getHomeworkID() {
 		return homeworkID;
@@ -67,11 +88,11 @@ public class Homework {
 	}
 	
 	public boolean isHomeworkOpen() {
-		return homeworkOpen;
+		return homeworkIsOpen;
 	}
 	
-	public void setHomeworkOpen(boolean homeworkOpen) {
-		this.homeworkOpen = homeworkOpen;
+	public void setHomeworkIsOpen(boolean homeworkIsOpen) {
+		this.homeworkIsOpen = homeworkIsOpen;
 	}
 	
 	public Date getHomeworkDateCreated() {
