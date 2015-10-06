@@ -70,7 +70,7 @@ public class AddChildToGroupServlet extends HttpServlet {
 		responseObject.put("result", joinGroupResult.toString());
 		responseObject.put("message", joinGroupResult.getDefaultMessage());
 		
-		if (joinGroupResult == JoinGroupResult.SUCCESS) {
+		if (joinGroupResult == JoinGroupResult.SUCCESS && studentService.getStudent(studentID).userIsVerified()) {
 			
 			String studentIonicUserID = pushNotificationService.getIonicUserID(studentID);
 			Parent parent = parentService.getParent(parentID);
