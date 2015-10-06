@@ -227,27 +227,28 @@ public class HomeworkService {
 	public boolean publishHomework(int groupID, int homeworkID) {
 
 		boolean publishResult = false;
+		
+		try {
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
 
-		if (openHomework(homeworkID)) {
-			try {
-				Connection conn = DatabaseConnector.getConnection();
-				PreparedStatement pst = null;
-				ResultSet resultSet = null;
+			String sql = "UPDATE `Homework` SET homeworkIsDraft = ? , homeworkIsOpen = ? WHERE homeworkID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, 0);
+			pst.setInt(2, 0);
+			pst.setInt(3, homeworkID);
+			
+			pst.executeUpdate();
 
-				String sql = "UPDATE `GroupHomework` SET groupHomeworkPublishDate = NOW() WHERE homeworkID = ?";
-				pst = conn.prepareStatement(sql);
-				pst.setInt(1, homeworkID);
-
-				if (pst.executeUpdate() != 0) {
-					if (sendHomework(groupID, homeworkID)) {
-						publishResult = true;
-					}
+			if (pst.executeUpdate() != 0) {
+				if (sendHomework(groupID, homeworkID)) {
+					publishResult = true;
 				}
-
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
+			conn.close();
 
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		return publishResult;
