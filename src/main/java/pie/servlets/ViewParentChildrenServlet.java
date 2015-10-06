@@ -62,6 +62,7 @@ public class ViewParentChildrenServlet extends HttpServlet {
 			studentDetails.put("studentFirstName", student.getUserFirstName());
 			studentDetails.put("studentLastName", student.getUserLastName());
 			studentDetails.put("studentSchoolName", student.getSchool().getSchoolName());
+			studentDetails.put("studentSchoolID", student.getSchool().getSchoolID());
 			
 			JSONArray studentGroupsList = new JSONArray();
 			for (Group joinedGroup : studentService.getJoinedGroups(studentID)) {
