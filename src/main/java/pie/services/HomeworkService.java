@@ -95,32 +95,6 @@ public class HomeworkService {
 			e.printStackTrace();
 		}
 
-		return createResult;
-	}
-
-	public boolean openHomework(int homeworkID) {
-
-		boolean success = false;
-
-		try {
-			Connection conn = DatabaseConnector.getConnection();
-			PreparedStatement pst = null;
-			ResultSet resultSet = null;
-
-			String sql = "UPDATE Homework SET `homeworkIsDraft` = ? , `homeworkIsOpen` = ? WHERE homeworkID = ?";
-			pst = conn.prepareStatement(sql);
-			pst.setInt(1, 0);
-			pst.setInt(2, 0);
-			pst.setInt(3, homeworkID);
-			pst.executeUpdate();
-			success = true;
-			conn.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return success;
 	}
 
 	public Homework[] getAllDraftHomework(int staffID) {
