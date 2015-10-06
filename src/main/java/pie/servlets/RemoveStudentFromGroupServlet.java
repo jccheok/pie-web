@@ -21,7 +21,9 @@ import pie.services.StudentService;
 import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
+@Singleton
 public class RemoveStudentFromGroupServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -7726043168449386409L;
