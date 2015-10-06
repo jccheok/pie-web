@@ -2,11 +2,9 @@ package pie.constants;
 
 public enum TransferGroupOwnershipResult {
 
-	SUCCESS("Successfully transferred ownership."), 
-	WRONG_PASSWORD("The password you have entered is wrong!"), 
-	USER_NOT_IN_GROUP("The staff you are attempting to add is not in the group!"),
-	GROUP_IS_NOT_VALID("The group you choose is not valid!"),
-	INVALID_USER("The email you entered is not valid!");
+	SUCCESS("Successfully transferred group ownership."), 
+	WRONG_PASSWORD("Wrong password!"),
+	INVALID_TRANSFEREE("The staff email you have entered is invalid!");
 
 	private String defaultMessage;
 

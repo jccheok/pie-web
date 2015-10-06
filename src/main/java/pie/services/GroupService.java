@@ -650,38 +650,26 @@ public class GroupService {
 
 		return deactivateGroupResult;
 	}
-
-	public TransferGroupOwnershipResult transferGroupOwnership(int staffID, String newUserEmail, int groupID,
-			String userPassword) {
-
-		TransferGroupOwnershipResult transferGroupOwnershipResult = TransferGroupOwnershipResult.SUCCESS;
-
-		StaffService staffService = new StaffService();
-		UserService userService = new UserService();
-		StaffRoleService staffRoleService = new StaffRoleService();
-
-		Group group = getGroup(groupID);
-		Staff groupOwner = staffService.getStaff(staffID);
+	
+	public TransferGroupOwnershipResult transferGroupOwnership(int ownerID, int groupID, String transfereeEmail, String ownerPassword) {
 		
-		if(!group.groupIsValid()){
-			transferGroupOwnershipResult = TransferGroupOwnershipResult.GROUP_IS_NOT_VALID;
-		}else if(!userService.isRegisteredUser(newUserEmail)){
-			transferGroupOwnershipResult = TransferGroupOwnershipResult.USER_NOT_IN_GROUP;
-		}else if(!hasStaffMember(groupID, userService.getUserID(newUserEmail))){
-			transferGroupOwnershipResult = TransferGroupOwnershipResult.USER_NOT_IN_GROUP;
-		}else if(groupOwner.getUserPassword() != userPassword){
-			transferGroupOwnershipResult = TransferGroupOwnershipResult.WRONG_PASSWORD;
-		}else{
+		UserService userService = new UserService();
+		TransferGroupOwnershipResult transferResult = TransferGroupOwnershipResult.SUCCESS;
+		
+		if (!userService.credentialsMatch(userService.getUser(ownerID).getUserEmail(), ownerPassword)) {
+			transferResult = TransferGroupOwnershipResult.WRONG_PASSWORD;
+		} else if (!userService.isRegisteredUser(transfereeEmail)) {
+			transferResult = TransferGroupOwnershipResult.INVALID_TRANSFEREE;
+		} else {
 			
-			StaffRole staffRole = staffService.getStaffRole(staffID, groupID);
-			staffRoleService.setStaffRoleAdmin(staffRole.getStaffRoleID());
-			
-			Staff newOwner = staffService.getStaff(userService.getUserID(newUserEmail));
-			staffRole = staffService.getStaffRole(newOwner.getUserID(), groupID);
-			staffRoleService.setStaffRoleOwner(staffRole.getStaffRoleID());
-			
+			User transfereeUser = userService.getUser(userService.getUserID(transfereeEmail));
+			if (transfereeUser == null || transfereeUser.getUserType() != UserType.STAFF) {
+				transferResult = TransferGroupOwnershipResult.INVALID_TRANSFEREE;
+			} else {
+				setGroupOwner(groupID, transfereeUser.getUserID());
+			}
 		}
-
-		return transferGroupOwnershipResult;
+		
+		return transferResult;
 	}
 }

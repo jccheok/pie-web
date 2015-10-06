@@ -28,18 +28,18 @@ public class TransferGroupOwnershipServlet {
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		int staffID = 0;
+		int ownerID = 0;
 		int groupID = 0;
-		String userPassword = null;
-		String newUserEmail = null;
+		String ownerPassword = null;
+		String transfereeEmail = null;
 		
 		try {
 		
-			Map<String, String> requestParameters = Utilities.getParameters(request, "staffID", "groupID", "userPassword", "newUserEmail");
+			Map<String, String> requestParameters = Utilities.getParameters(request, "ownerID", "groupID", "ownerPassword", "transfereeEmail");
 			groupID = Integer.parseInt(requestParameters.get("groupID"));
-			staffID = Integer.parseInt(requestParameters.get("staffID"));
-			userPassword = requestParameters.get("userPassword");
-			newUserEmail = requestParameters.get("newUserEmail");
+			ownerID = Integer.parseInt(requestParameters.get("ownerID"));
+			ownerPassword = requestParameters.get("ownerPassword");
+			transfereeEmail = requestParameters.get("transfereeEmail");
 			
 		} catch (Exception e) {
 			
@@ -47,11 +47,11 @@ public class TransferGroupOwnershipServlet {
 			return;
 		}
 		
-		TransferGroupOwnershipResult transferGroupOwnershipResult = groupService.transferGroupOwnership(staffID, newUserEmail, groupID, userPassword);
+		TransferGroupOwnershipResult transferGroupOwnershipResult = groupService.transferGroupOwnership(ownerID, groupID, transfereeEmail, ownerPassword);
 		
 		JSONObject responseObject = new JSONObject();
 		responseObject.put("result", transferGroupOwnershipResult.toString());
-		responseObject.put("message", "Successfully enlisted all students!");
+		responseObject.put("message", transferGroupOwnershipResult.getDefaultMessage());
 
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
