@@ -58,9 +58,9 @@ public class NoteService {
 		return note;
 	}
 
-	public Note createNote(int staffID, int responseQuestionID, String noteTitle, String noteDescription, int groupID) {
+	public int createNote(int staffID, int responseQuestionID, String noteTitle, String noteDescription, int groupID) {
 
-		Note newNote = null;
+		int noteID = -1;
 
 		try {
 
@@ -79,13 +79,12 @@ public class NoteService {
 			resultSet = pst.getGeneratedKeys();
 
 			if(resultSet.next()) {
-				int noteID = resultSet.getInt(1);
-				newNote = getNote(noteID);
+				noteID = resultSet.getInt(1);
 
 				sql = "INSERT INTO 'GroupNote' (staffID, noteID, groupID) VALUES (?, ?, ?)";
 				pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 				pst.setInt(1, staffID);
-				pst.setInt(2, newNote.getNoteID());
+				pst.setInt(2, noteID);
 				pst.setInt(3, groupID);
 				pst.executeUpdate();
 
@@ -99,7 +98,7 @@ public class NoteService {
 			e.printStackTrace();
 		}
 
-		return newNote;
+		return noteID;
 	}
 
 	public boolean hasReceived(int noteID, int userID) {
@@ -151,6 +150,8 @@ public class NoteService {
 				if(pst.executeUpdate() != 0) {
 					sendResult = true;
 				} 
+				
+				conn.close();
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -169,9 +170,10 @@ public class NoteService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "UPDATE `GroupNote` SET groupNotePublishDate = NOW() WHERE noteID = ?";
+			String sql = "UPDATE `Note` SET noteIsDraft = ? WHERE noteID = ?";
 			pst = conn.prepareStatement(sql);
-			pst.setInt(1, noteID);
+			pst.setInt(1, 0);
+			pst.setInt(2, noteID);
 
 			if(pst.executeUpdate() != 0) {
 				if(sendNote(noteID, groupID)) {
