@@ -602,56 +602,50 @@ public class GroupService {
 		StaffService staffService = new StaffService();
 		Group group = getGroup(groupID);
 
-		if (group.groupIsValid()) {
-			Staff staffUser = staffService.getStaff(staffID);
-			Staff groupOwner = getGroupOwner(groupID);
-			
-			if(staffID == groupOwner.getUserID()){
-				
-				if (staffUser.getUserPassword() == userPassword) {
-
-					Student[] students = getStudentMembers(groupID);
-					Staff[] staffs = getStaffMembers(groupID);
-	
-					for (Student student : students) {
-						if (!removeStudentFromGroup(groupID, student.getUserID())) {
-							deactivateGroupResult = DeactivateGroupResult.GENERAL_FAILURE;
-							return deactivateGroupResult;
-						}
-					}
-	
-					for (Staff staff : staffs) {
-						if (!removeStaffFromGroup(groupID, staff.getUserID())) {
-							deactivateGroupResult = DeactivateGroupResult.GENERAL_FAILURE;
-							return deactivateGroupResult;
-						}
-					}
-	
-					try {
-						Connection conn = DatabaseConnector.getConnection();
-						PreparedStatement pst = null;
-	
-						String sql = "UPDATE `Group` SET groupIsValid = ?, groupDateDeleted = NOW(), groupIsOpen = ? WHERE groupID = ?";
-						pst = conn.prepareStatement(sql);
-						pst.setInt(1, 0);
-						pst.setInt(2, 0);
-						pst.setInt(3, groupID);
-	
-						pst.executeUpdate();
-						
-						conn.close();
-	
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}else{
-					deactivateGroupResult = DeactivateGroupResult.WRONG_PASSWORD;
-				}
-			}else{
-				deactivateGroupResult = DeactivateGroupResult.INVALID_USER;
-			}
-		}else{
+		Staff staffUser = staffService.getStaff(staffID);
+		Staff groupOwner = getGroupOwner(groupID);
+		
+		if(!group.groupIsValid()){
 			deactivateGroupResult = DeactivateGroupResult.GROUP_IS_NOT_VALID;
+		}else if(staffID != groupOwner.getUserID()){
+			deactivateGroupResult = DeactivateGroupResult.INVALID_USER;
+		}else if(staffUser.getUserPassword() != userPassword){
+			deactivateGroupResult = DeactivateGroupResult.WRONG_PASSWORD;
+		}else{
+			Student[] students = getStudentMembers(groupID);
+			Staff[] staffs = getStaffMembers(groupID);
+
+			for (Student student : students) {
+				if (!removeStudentFromGroup(groupID, student.getUserID())) {
+					deactivateGroupResult = DeactivateGroupResult.GENERAL_FAILURE;
+					return deactivateGroupResult;
+				}
+			}
+
+			for (Staff staff : staffs) {
+				if (!removeStaffFromGroup(groupID, staff.getUserID())) {
+					deactivateGroupResult = DeactivateGroupResult.GENERAL_FAILURE;
+					return deactivateGroupResult;
+				}
+			}
+
+			try {
+				Connection conn = DatabaseConnector.getConnection();
+				PreparedStatement pst = null;
+
+				String sql = "UPDATE `Group` SET groupIsValid = ?, groupDateDeleted = NOW(), groupIsOpen = ? WHERE groupID = ?";
+				pst = conn.prepareStatement(sql);
+				pst.setInt(1, 0);
+				pst.setInt(2, 0);
+				pst.setInt(3, groupID);
+
+				pst.executeUpdate();
+				
+				conn.close();
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		return deactivateGroupResult;
@@ -667,35 +661,25 @@ public class GroupService {
 		StaffRoleService staffRoleService = new StaffRoleService();
 
 		Group group = getGroup(groupID);
-
-		if (group.groupIsValid()) {
-			
-			if (userService.isRegisteredUser(newUserEmail)) {
-				
-				if(hasStaffMember(groupID, userService.getUserID(newUserEmail))){
-				
-					Staff groupOwner = staffService.getStaff(staffID);
-					
-					if (groupOwner.getUserPassword() == userPassword) {
-					
-						StaffRole staffRole = staffService.getStaffRole(staffID, groupID);
-						
-						staffRoleService.setStaffRoleAdmin(staffRole.getStaffRoleID());
-						
-						Staff newOwner = staffService.getStaff(userService.getUserID(newUserEmail));
-						staffRoleService.setStaffRoleOwner(staffRole.getStaffRoleID());
-						
-					}else{
-						transferGroupOwnershipResult = TransferGroupOwnershipResult.WRONG_PASSWORD;
-					}
-				}else{
-					transferGroupOwnershipResult = TransferGroupOwnershipResult.USER_NOT_IN_GROUP;
-				}
-			}else{
-				transferGroupOwnershipResult = TransferGroupOwnershipResult.USER_NOT_IN_GROUP;
-			}
-		}else{
+		Staff groupOwner = staffService.getStaff(staffID);
+		
+		if(!group.groupIsValid()){
 			transferGroupOwnershipResult = TransferGroupOwnershipResult.GROUP_IS_NOT_VALID;
+		}else if(!userService.isRegisteredUser(newUserEmail)){
+			transferGroupOwnershipResult = TransferGroupOwnershipResult.USER_NOT_IN_GROUP;
+		}else if(!hasStaffMember(groupID, userService.getUserID(newUserEmail))){
+			transferGroupOwnershipResult = TransferGroupOwnershipResult.USER_NOT_IN_GROUP;
+		}else if(groupOwner.getUserPassword() != userPassword){
+			transferGroupOwnershipResult = TransferGroupOwnershipResult.WRONG_PASSWORD;
+		}else{
+			
+			StaffRole staffRole = staffService.getStaffRole(staffID, groupID);
+			staffRoleService.setStaffRoleAdmin(staffRole.getStaffRoleID());
+			
+			Staff newOwner = staffService.getStaff(userService.getUserID(newUserEmail));
+			staffRole = staffService.getStaffRole(newOwner.getUserID(), groupID);
+			staffRoleService.setStaffRoleOwner(staffRole.getStaffRoleID());
+			
 		}
 
 		return transferGroupOwnershipResult;
