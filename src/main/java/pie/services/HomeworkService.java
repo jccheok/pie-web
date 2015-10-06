@@ -30,19 +30,21 @@ public class HomeworkService {
 
 			if (resultSet.next()) {
 
-				homework = new Homework();
-				homework.setHomeworkID(homeworkID);
-				homework.setHomeworkAuthor(new StaffService().getStaff(resultSet.getInt("teacherID")));
-				homework.setHomeworkTitle(resultSet.getString("homworkTitle"));
-				homework.setHomeworkDescription(resultSet.getString("homeworkDescription"));
-				homework.setHomeworkMinutesRequired(resultSet.getInt("homeworkMinutesRequired"));
-				homework.setHomeworkDueDate(new Date(resultSet.getTimestamp("homeworkDueDate").getTime()));
-				homework.setHomeworkOpen(resultSet.getInt("homeworkIsOpen") == 1);
-				homework.setHomeworkDateCreated(new Date(resultSet.getTimestamp("homeworkDateCreated").getTime()));
-				homework.setHomeworkIsDraft(resultSet.getInt("homeworkIsDraft") == 1);
-				homework.setHomeworkIsTemplate(resultSet.getInt("homeworkIsTemplate") == 1);
-				homework.setHomeworkIsDeleted(resultSet.getInt("homeworkIsDeleted") == 1);
-				homework.setHomeworkDateDeleted(new Date(resultSet.getTimestamp("homeworkDateDeleted").getTime()));
+				Staff homeworkAuthor = new StaffService().getStaff(resultSet.getInt("teacherID"));
+				String homeworkTitle = resultSet.getString("homworkTitle");
+				String homeworkSubject = resultSet.getString("homeworkSubject");
+				String homeworkDescription = resultSet.getString("homeworkDescription");
+				int homeworkMinutesRequired = resultSet.getInt("homeworkMinutesRequired");
+				Date homeworkDueDate = new Date(resultSet.getTimestamp("homeworkDueDate").getTime());
+				Date homeworkDateCreated = new Date(resultSet.getTimestamp("homeworkDateCreated").getTime());
+				boolean homeworkIsOpen = resultSet.getInt("homeworkIsOpen")==1?true:false;
+				boolean homeworkIsDraft = resultSet.getInt("homeworkIsDraft") == 1? true:false;
+				boolean homeworkIsTemplate = resultSet.getInt("homeworkIsTemplate") == 1? true:false;
+				boolean homeworkIsDeleted = resultSet.getInt("homeworkIsDeleted") == 1?true:false;
+				Date homeworkDateDeleted = new Date(resultSet.getTimestamp("homeworkDateDeleted").getTime());
+				
+				homework = new Homework(homeworkID, homeworkAuthor, homeworkTitle, homeworkSubject, homeworkDescription, homeworkMinutesRequired, homeworkDueDate, homeworkIsOpen, 
+						homeworkDateCreated, homeworkIsDraft, homeworkIsTemplate, homeworkIsDeleted, homeworkDateDeleted);
 			}
 
 			conn.close();
