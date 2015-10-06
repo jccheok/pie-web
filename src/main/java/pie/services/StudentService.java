@@ -74,7 +74,7 @@ public class StudentService {
 		return isRegistered;
 	}
 
-	public boolean isMember(Student student, Group group) {
+	public boolean isMember(int studentID, int groupID) {
 
 		boolean isMember = false;
 
@@ -85,8 +85,8 @@ public class StudentService {
 
 			String sql = "SELECT * FROM `StudentGroup` WHERE studentID = ? AND groupID = ? AND studentGroupIsValid = ?";
 			pst = conn.prepareStatement(sql);
-			pst.setInt(1, student.getUserID());
-			pst.setInt(2, group.getGroupID());
+			pst.setInt(1, studentID);
+			pst.setInt(2, groupID);
 			pst.setInt(3, 1);
 
 			isMember = pst.executeQuery().next();
