@@ -18,15 +18,15 @@ public class Note {
 			String noteDescription, boolean noteIsTemplate,
 			boolean noteIsDraft, boolean noteIsDeleted, Date noteDateCreated,
 			Date noteDateDeleted) {
-		this.noteID = noteID;
-		this.noteAuthor = noteAuthor;
-		this.noteTitle = noteTitle;
-		this.noteDescription = noteDescription;
-		this.noteIsTemplate = noteIsTemplate;
-		this.noteIsDraft = noteIsDraft;
-		this.noteIsDeleted = noteIsDeleted;
-		this.noteDateCreated = noteDateCreated;
-		this.noteDateDeleted = noteDateDeleted;
+		setNoteID(noteID);
+		setNoteAuthor(noteAuthor);
+		setNoteTitle(noteTitle);
+		setNoteDescription(noteDescription);
+		setNoteIsTemplate(noteIsTemplate);
+		setNoteIsDraft(noteIsDraft);
+		setNoteIsDeleted(noteIsDeleted);
+		setNoteDateCreated(noteDateCreated);
+		setNoteDateDeleted(noteDateDeleted);
 	}
 
 	public int getNoteID() {
