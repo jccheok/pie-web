@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.Map;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,8 +17,9 @@ import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
 
-public class TransferGroupOwnershipServlet {
-	private static final long serialVersionUID = -1810174238170625377L;
+public class TransferGroupOwnershipServlet extends HttpServlet {
+	
+	private static final long serialVersionUID = 8345217294139531580L;
 	
 	GroupService groupService;
 	

@@ -2,18 +2,15 @@ package pie.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
-import pie.Staff;
-import pie.constants.JoinGroupResult;
 import pie.constants.LeaveGroupResult;
 import pie.services.GroupService;
 import pie.services.StudentService;
@@ -21,10 +18,10 @@ import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
 
-public class StudentLeaveGroupServlet {
+public class StudentLeaveGroupServlet extends HttpServlet {
 	
-	private static final long serialVersionUID = 1354541147333762368L;
-
+	private static final long serialVersionUID = 1120142003759961147L;
+	
 	StudentService studentService;
 	GroupService groupService;
 	
