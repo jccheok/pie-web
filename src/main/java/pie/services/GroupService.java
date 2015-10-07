@@ -653,6 +653,7 @@ public class GroupService {
 				transferResult = TransferGroupOwnershipResult.INVALID_TRANSFEREE;
 			} else {
 				setGroupOwner(groupID, transfereeUser.getUserID());
+				removeStaffFromGroup(groupID, ownerID);
 			}
 		}
 		
