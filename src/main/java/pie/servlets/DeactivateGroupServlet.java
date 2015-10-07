@@ -53,7 +53,7 @@ public class DeactivateGroupServlet extends HttpServlet {
 		
 		JSONObject responseObject = new JSONObject();
 		responseObject.put("result", deactivateGroupResult.toString());
-		responseObject.put("message", "Successfully enlisted all students!");
+		responseObject.put("message", deactivateGroupResult.getDefaultMessage());
 
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
