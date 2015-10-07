@@ -15,6 +15,8 @@ import pie.servlets.RegisterSchoolServlet;
 import pie.servlets.RegisterStaffServlet;
 import pie.servlets.RegisterStudentServlet;
 import pie.servlets.RemoveStudentFromGroupServlet;
+import pie.servlets.ResetPasswordServlet;
+import pie.servlets.RetrieveSecurityQuestionServlet;
 import pie.servlets.StaffJoinGroupServlet;
 import pie.servlets.StudentJoinGroupServlet;
 import pie.servlets.TransferGroupOwnershipServlet;
@@ -53,6 +55,8 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/registerstaff").with(RegisterStaffServlet.class);
 				serve("*/servlets/verify").with(VerifyUserServlet.class);
 				serve("*/servlets/cities").with(ViewCitiesServlet.class);
+				serve("*/servlets/forgetpassword").with(RetrieveSecurityQuestionServlet.class);
+				serve("*/servlets/resetpassword").with(ResetPasswordServlet.class);
 				
 				serve("*/servlets/secured/opengroups").with(ViewOpenGroupsServlet.class);
 				

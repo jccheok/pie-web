@@ -139,7 +139,7 @@ public class UserService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 			
-			String sql = "SELECT * FROM `User` WHERE userEmail = ? AND userPassword = ?";
+			String sql = "SELECT * FROM `User` WHERE userEmail = ? AND userPassword = SHA1(?)";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, userEmail);
 			pst.setString(2, userPassword);
@@ -274,6 +274,28 @@ public class UserService {
 
 		return user;
 	}
+	public boolean setNewPassword(int userID, String userPassword){
+		boolean setPasswordResult = false;
+
+		try {
+			
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			
+			String sql = "UPDATE `User` SET userPassword = SHA1(?) userID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setString(1, userPassword);
+			pst.setInt(2, userID);
+			pst.executeUpdate();
+			
+			conn.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return setPasswordResult;
+	}
 	
 	public ResetPasswordResult resetPassword(int userID, String securityQuestionAnswer, HttpServlet httpServlet){
 		ResetPasswordResult resetPasswordResult = ResetPasswordResult.SUCCESS;
@@ -283,16 +305,20 @@ public class UserService {
 		
 		if(user.getUserSecurityAnswer().equals(securityQuestionAnswer)){
 			try{
+				String newPassword = Utilities.generateString(10);
 				String loginLink = "http://piedev-rpmaps.rhcloud.com/servlets/servlets/login";
-				InputStream emailTemplateStream = httpServlet.getServletContext().getResourceAsStream("/resources/verificationTemplate.html");
+				InputStream emailTemplateStream = httpServlet.getServletContext().getResourceAsStream("/resources/resetPasswordTemplate.html");
 				
 				String emailSubject = "Account Password Reset on Partners in Education";
 				String emailTemplate = Utilities.convertStreamToString(emailTemplateStream);
 
 				String emailContent = emailTemplate.replaceAll("\\$FIRST_NAME", getUser(userID).getUserFirstName());
-				emailContent = emailContent.replaceAll("\\$VERIFICATION_LINK", loginLink);
+				emailContent = emailContent.replaceAll("\\$PASSWORD", newPassword);
+				emailContent = emailContent.replaceAll("\\$LOGIN_LINK", loginLink);
 
 				emailService.sendEmail(emailSubject, emailContent, new String[] { getUser(userID).getUserEmail() });
+				
+				setNewPassword(userID, newPassword);
 				
 			}catch(Exception e){
 				System.out.println(e);
