@@ -41,8 +41,6 @@ public class SendHomeworkServlet extends HttpServlet {
 
 		this.dateFormat = new SimpleDateFormat("YY-mm-dd hh:mm:ss");
 
-		JSONObject responseObject = new JSONObject();
-
 		int staffID = 0;
 		int groupID = 0;
 		String homeworkTitle = null;
@@ -64,20 +62,22 @@ public class SendHomeworkServlet extends HttpServlet {
 			homeworkMinutesRequired = Integer.parseInt(requestParameters.get("homeworkMinutesRequired"));
 			homeworkDueDate = new Date(dateFormat.parse(requestParameters.get("homeworkDueDate")).getTime());
 
-			int homeworkID = homeworkService.createHomework(staffID, groupID, homeworkTitle, homeworkSubject,
-					homeworkDescription, homeworkMinutesRequired, homeworkDueDate);
-
-			if (homeworkID != -1) {
-				homeworkService.sendHomework(groupID, homeworkID);
-				responseObject.put("result", GenericResult.SUCCESS.toString());
-				responseObject.put("message", "Homework successfully created & sent");
-			} else {
-				responseObject.put("result", GenericResult.FAILED.toString());
-				responseObject.put("message", "Failed to create homework");
-			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+
+		int homeworkID = homeworkService.createHomework(staffID, groupID, homeworkTitle, homeworkSubject,
+				homeworkDescription, homeworkMinutesRequired, homeworkDueDate);
+
+		JSONObject responseObject = new JSONObject();
+
+		if (homeworkID != -1) {
+			homeworkService.sendHomework(groupID, homeworkID);
+			responseObject.put("result", GenericResult.SUCCESS.toString());
+			responseObject.put("message", "Homework successfully created & sent");
+		} else {
+			responseObject.put("result", GenericResult.FAILED.toString());
+			responseObject.put("message", "Failed to create homework");
 		}
 
 		PrintWriter out = response.getWriter();
