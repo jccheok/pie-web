@@ -16,7 +16,9 @@ import pie.services.GroupService;
 import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
+@Singleton
 public class TransferGroupOwnershipServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 8345217294139531580L;
