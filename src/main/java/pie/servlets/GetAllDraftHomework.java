@@ -29,7 +29,7 @@ public class GetAllDraftHomework extends HttpServlet {
 		this.groupService = groupService;
 	}
 
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		JSONObject responseObject = new JSONObject();
 
