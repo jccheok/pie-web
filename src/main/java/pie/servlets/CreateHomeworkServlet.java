@@ -2,9 +2,9 @@ package pie.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.sql.Date;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -14,19 +14,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
-import pie.Group;
-import pie.Homework;
-import pie.Staff;
 import pie.constants.GenericResult;
 import pie.services.GroupService;
 import pie.services.HomeworkService;
-import pie.services.PushNotificationService;
-import pie.services.StudentService;
 import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+@Singleton
 public class CreateHomeworkServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -1127036563465130540L;
