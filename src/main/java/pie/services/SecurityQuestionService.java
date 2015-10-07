@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pie.SecurityQuestion;
-import pie.StaffRole;
 import pie.utilities.DatabaseConnector;
 
 public class SecurityQuestionService {

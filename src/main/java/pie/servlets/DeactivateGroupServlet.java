@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.Map;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -15,8 +16,10 @@ import pie.services.GroupService;
 import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
-public class DeactivateGroupServlet {
+@Singleton
+public class DeactivateGroupServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -1810174238170625377L;
 	
@@ -50,7 +53,7 @@ public class DeactivateGroupServlet {
 		
 		JSONObject responseObject = new JSONObject();
 		responseObject.put("result", deactivateGroupResult.toString());
-		responseObject.put("message", "Successfully enlisted all students!");
+		responseObject.put("message", deactivateGroupResult.getDefaultMessage());
 
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
