@@ -4,7 +4,7 @@ import pie.filters.AuthFilter;
 import pie.filters.ResponseFilter;
 import pie.servlets.AddChildServlet;
 import pie.servlets.AddChildToGroupServlet;
-import pie.servlets.CreateHomeworkServlet;
+import pie.servlets.SendHomeworkServlet;
 import pie.servlets.DeactivateGroupServlet;
 import pie.servlets.EnlistStudentsToGroupServlet;
 import pie.servlets.GenerateCodeServlet;
@@ -17,6 +17,7 @@ import pie.servlets.RegisterStudentServlet;
 import pie.servlets.RemoveStudentFromGroupServlet;
 import pie.servlets.ResetPasswordServlet;
 import pie.servlets.RetrieveSecurityQuestionServlet;
+import pie.servlets.SendHomeworkServlet;
 import pie.servlets.StaffJoinGroupServlet;
 import pie.servlets.StudentJoinGroupServlet;
 import pie.servlets.TransferGroupOwnershipServlet;
@@ -81,8 +82,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/group/owner/transfergroupownership").with(TransferGroupOwnershipServlet.class);
 				serve("*/servlets/secured/staff/group/owner/deactivategroup").with(DeactivateGroupServlet.class);
 				
-				serve("*/servlets/secured/staff/group/createhomework").with(CreateHomeworkServlet.class);
-
+				serve("*/servlets/secured/staff/group/sendhomework").with(SendHomeworkServlet.class);
 				
 				serve("*/servlets/secured/admin/registerschool").with(RegisterSchoolServlet.class);
 				
