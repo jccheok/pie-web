@@ -4,6 +4,7 @@ import pie.filters.AuthFilter;
 import pie.filters.ResponseFilter;
 import pie.servlets.AddChildServlet;
 import pie.servlets.AddChildToGroupServlet;
+import pie.servlets.GetAllSecurityQuestionsServlet;
 import pie.servlets.SendHomeworkServlet;
 import pie.servlets.DeactivateGroupServlet;
 import pie.servlets.EnlistStudentsToGroupServlet;
@@ -17,7 +18,6 @@ import pie.servlets.RegisterStudentServlet;
 import pie.servlets.RemoveStudentFromGroupServlet;
 import pie.servlets.ResetPasswordServlet;
 import pie.servlets.RetrieveSecurityQuestionServlet;
-import pie.servlets.SendHomeworkServlet;
 import pie.servlets.StaffJoinGroupServlet;
 import pie.servlets.StudentJoinGroupServlet;
 import pie.servlets.TransferGroupOwnershipServlet;
@@ -58,6 +58,8 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/cities").with(ViewCitiesServlet.class);
 				serve("*/servlets/forgetpassword").with(RetrieveSecurityQuestionServlet.class);
 				serve("*/servlets/resetpassword").with(ResetPasswordServlet.class);
+				serve("*/servlets/getsecurityquestions").with(GetAllSecurityQuestionsServlet.class);
+
 				
 				serve("*/servlets/secured/opengroups").with(ViewOpenGroupsServlet.class);
 				
