@@ -139,7 +139,7 @@ public class UserService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 			
-			String sql = "SELECT * FROM `User` WHERE userEmail = ? AND userPassword = ?";
+			String sql = "SELECT * FROM `User` WHERE userEmail = ? AND userPassword = SHA1(?)";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, userEmail);
 			pst.setString(2, userPassword);
