@@ -10,7 +10,6 @@ import java.util.Date;
 import pie.Note;
 import pie.Staff;
 import pie.Student;
-
 import pie.utilities.DatabaseConnector;
 
 public class NoteService {
@@ -167,7 +166,7 @@ public class NoteService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "UPDATE `Note` SET noteIsDraft = ? WHERE noteID = ?";
+			String sql = "UPDATE `Note` SET noteDateCreated = NOW() noteIsDraft = ? WHERE noteID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, 0);
 			pst.setInt(2, noteID);
@@ -283,5 +282,39 @@ public class NoteService {
 	
 		return sentNotes;
 	}
+	
+	public Note[] getNotes(int userID) {
+		//Might be incomplete
+		Note[] notes = {};
+
+		try {
+
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+			Connection conn = DatabaseConnector.getConnection();
+
+			String sql = "SELECT `Note`.noteID FROM `UserNote`,`Note` WHERE userID=? AND `Note`.noteID = `UserNote`.noteID AND noteIsDeleted = 0";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, userID);
+			resultSet=pst.executeQuery();
+
+			ArrayList<Note> tempNotes = new ArrayList<Note>();
+
+			while(resultSet.next()) {
+				tempNotes.add(getNote(resultSet.getInt(1)));
+			}
+
+			notes = tempNotes.toArray(notes);
+
+
+			conn.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return notes;
+	}
+	
 
 }
