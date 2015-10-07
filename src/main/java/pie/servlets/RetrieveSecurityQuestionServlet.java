@@ -12,8 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
 
 import pie.User;
-import pie.constants.AddChildResult;
-import pie.services.ParentService;
 import pie.services.UserService;
 import pie.utilities.Utilities;
 
@@ -51,7 +49,7 @@ public class RetrieveSecurityQuestionServlet extends HttpServlet {
 		User user = userService.getUser(userService.getUserID(userEmail));
 		String securityQuestionDescription =  user.getUserSecurityQuestion().getSecurityQuestionDescription();
 		
-		if(user == null){
+		if(userService.getUserID(userEmail) == -1){
 			responseObject.put("result", "INVALID_EMAIL");
 			responseObject.put("message", "The email you entered is wrong");
 		}else if(securityQuestionDescription == null){
