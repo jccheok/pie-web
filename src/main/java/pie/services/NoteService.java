@@ -191,5 +191,94 @@ public class NoteService {
 		return publishResult;
 
 	}
+	
+	public void setAsDeleted (int noteID, boolean isDeleted) {
+
+		try {
+
+			PreparedStatement pst = null;
+			Connection conn = DatabaseConnector.getConnection();
+
+			String sql = "UPDATE `Note` SET noteIsDeleted = ? WHERE noteID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, isDeleted ? 1:0);
+			pst.setInt(2, noteID);
+			pst.executeUpdate();
+
+			conn.close();
+
+		} catch(Exception e) {
+
+			System.out.println(e);
+		}
+	}
+	
+	public Note[] getNoteDrafts(int staffID) {
+
+		Note[] noteDrafts = {};
+
+		try {
+
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+			Connection conn = DatabaseConnector.getConnection();
+
+			String sql = "SELECT noteID FROM `Note` WHERE staffID = ? AND noteIsDraft = 1 AND noteIsDeleted = 0";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, staffID);
+			resultSet = pst.executeQuery();
+
+			ArrayList<Note> tempNotes = new ArrayList<Note>();
+			
+			while(resultSet.next()){
+
+				tempNotes.add(getNote(resultSet.getInt(1)));
+			}
+
+			conn.close();
+
+			noteDrafts = tempNotes.toArray(noteDrafts);
+		}
+
+		catch(Exception e){
+			System.out.println(e);
+		}
+	
+		return noteDrafts;
+	}
+	
+	public Note[] getSentNotes(int staffID) {
+
+		Note[] sentNotes = {};
+
+		try {
+
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+			Connection conn = DatabaseConnector.getConnection();
+
+			String sql = "SELECT noteID FROM `Note` WHERE staffID = ? AND noteIsDraft = 0 AND noteIsDeleted = 0";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, staffID);
+			resultSet = pst.executeQuery();
+
+			ArrayList<Note> tempNotes = new ArrayList<Note>();
+			
+			while(resultSet.next()){
+
+				tempNotes.add(getNote(resultSet.getInt(1)));
+			}
+
+			conn.close();
+
+			sentNotes = tempNotes.toArray(sentNotes);
+		}
+
+		catch(Exception e){
+			System.out.println(e);
+		}
+	
+		return sentNotes;
+	}
 
 }
