@@ -40,7 +40,7 @@ public class SecurityQuestionService {
 		return securityQuestion;
 	}
 	
-	public int getSecurityQuestionID(String securityQuestionDescription){
+	public int getSecurityQuestionID (String securityQuestionDescription){
 		
 		int securityQuestionID = -1;
 		
@@ -65,6 +65,31 @@ public class SecurityQuestionService {
 		}
 		
 		return securityQuestionID;
+	}
+	
+	public String getSecurityQuestionDescription(int securityQuestionID){
+		String securityQuestionDescription = null;
+		
+		try{
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT securityQuestionDescription FROM `SecurityQuestion` WHERE securityQuestionID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, securityQuestionID);
+			
+			resultSet = pst.executeQuery();
+			if(resultSet.next()){
+				securityQuestionDescription = resultSet.getString("securityQuestionDescription");
+			}
+			
+			conn.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return securityQuestionDescription;
 	}
 	
 	public SecurityQuestion[] getAllSecurityQuestion(){
@@ -95,5 +120,6 @@ public class SecurityQuestionService {
 
 		return securityQuestions;
 	}
+	
 
 }
