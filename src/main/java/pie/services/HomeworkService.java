@@ -69,7 +69,7 @@ public class HomeworkService {
 			ResultSet resultSet = null;
 
 			String sql = "INSERT INTO `Homework` (staffID ,homeworkTitle ,homeworkSubject ,homeworkDescription ,homeworkMinutesRequired "
-					+ ",`homeworkDueDate`) VALUES (?,?,?,?,?,?)";
+					+ ",homeworkDueDate) VALUES (?,?,?,?,?,?)";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, staffID);
 			pst.setString(2, homeworkTitle);
@@ -83,7 +83,7 @@ public class HomeworkService {
 
 			if (resultSet.next()) {
 				homeworkID = resultSet.getInt(1);
-				sql = "INSERT INTO `GroupHomework` (staffID,groupID,homeworkID) VALUES(?,?,?)";
+				sql = "INSERT INTO `GroupHomework`(staffID,groupID,homeworkID) VALUES(?,?,?)";
 				pst = conn.prepareStatement(sql);
 				pst.setInt(1, staffID);
 				pst.setInt(2, groupID);
