@@ -282,7 +282,7 @@ public class UserService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 			
-			String sql = "UPDATE `User` SET userPassword = ? WHERE userID = ?";
+			String sql = "UPDATE `User` SET userPassword = SHA(?) WHERE userID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, userPassword);
 			pst.setInt(2, userID);
