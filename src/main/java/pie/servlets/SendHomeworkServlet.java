@@ -68,9 +68,9 @@ public class SendHomeworkServlet extends HttpServlet {
 					homeworkDescription, homeworkMinutesRequired, homeworkDueDate);
 
 			if (homeworkID != -1) {
-				homeworkService.sendHomework(homeworkID, groupID);
+				homeworkService.sendHomework(groupID, homeworkID);
 				responseObject.put("result", GenericResult.SUCCESS.toString());
-				responseObject.put("message", "Homework successfully created");
+				responseObject.put("message", "Homework successfully created & sent");
 			} else {
 				responseObject.put("result", GenericResult.FAILED.toString());
 				responseObject.put("message", "Failed to create homework");
