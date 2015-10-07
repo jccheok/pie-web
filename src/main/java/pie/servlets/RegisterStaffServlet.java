@@ -45,19 +45,19 @@ public class RegisterStaffServlet extends HttpServlet {
 		String userPassword = null;
 		String userMobile = null;
 		String schoolCode = null;
-		String teacherTitle = null;
+		String staffDesignation = null;
 
 		try {
 
 			Map<String, String> requestParameters = Utilities.getParameters(request, "userFirstName", "userLastName",
-					"userEmail", "userPassword", "userMobile", "schoolCode", "teacherTitle");
+					"userEmail", "userPassword", "userMobile", "schoolCode", "staffDesignation");
 			userFirstName = requestParameters.get("userFirstName");
 			userLastName = requestParameters.get("userLastName");
 			userEmail = requestParameters.get("userEmail");
 			userPassword = requestParameters.get("userPassword");
 			userMobile = requestParameters.get("userMobile");
 			schoolCode = requestParameters.get("schoolCode");
-			teacherTitle = requestParameters.get("teacherTitle");
+			staffDesignation = requestParameters.get("staffDesignation");
 
 		} catch (Exception e) {
 			
@@ -66,7 +66,7 @@ public class RegisterStaffServlet extends HttpServlet {
 		}
 
 		UserRegistrationResult registrationResult = staffService.registerStaff(userFirstName, userLastName,
-				userEmail, userPassword, userMobile, schoolCode, teacherTitle);
+				userEmail, userPassword, userMobile, schoolCode, staffDesignation);
 
 		JSONObject responseObject = new JSONObject();
 		responseObject.put("result", registrationResult.toString());

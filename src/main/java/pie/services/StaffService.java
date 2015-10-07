@@ -43,10 +43,10 @@ public class StaffService {
 
 				User user = userService.getUser(staffID);
 				School staffSchool = schoolService.getSchool(resultSet.getInt("schoolID"));
-				String staffTitle = resultSet.getString("staffTitle");
+				String staffDesignation = resultSet.getString("staffDesignation");
 				boolean staffIsSchoolAdmin = resultSet.getInt("staffIsSchoolAdmin") == 1;
 
-				staff = new Staff(user, staffSchool, staffTitle, staffIsSchoolAdmin);
+				staff = new Staff(user, staffSchool, staffDesignation, staffIsSchoolAdmin);
 			}
 
 			conn.close();
@@ -184,7 +184,7 @@ public class StaffService {
 	}
 
 	public UserRegistrationResult registerStaff(String userFirstName, String userLastName, String userEmail,
-			String userPassword, String userMobile, String schoolCode, String staffTitle) {
+			String userPassword, String userMobile, String schoolCode, String staffDesignation) {
 
 		UserService userService = new UserService();
 		SchoolService schoolService = new SchoolService();
@@ -219,11 +219,11 @@ public class StaffService {
 
 					int newUserID = resultSet.getInt(1);
 
-					sql = "INSERT INTO `Staff` (staffID, schoolID, staffTitle) VALUES (?, ?, ?)";
+					sql = "INSERT INTO `Staff` (staffID, schoolID, staffDesignation) VALUES (?, ?, ?)";
 					pst = conn.prepareStatement(sql);
 					pst.setInt(1, newUserID);
 					pst.setInt(2, schoolService.getSchoolID(schoolCode));
-					pst.setString(3, staffTitle);
+					pst.setString(3, staffDesignation);
 					pst.executeUpdate();
 
 				}
@@ -272,5 +272,4 @@ public class StaffService {
 
 		return leaveGroupResult;
 	}
-
 }
