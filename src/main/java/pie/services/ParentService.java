@@ -49,7 +49,7 @@ public class ParentService {
 	}
 
 	public UserRegistrationResult registerParent(String userFirstName, String userLastName, String userEmail,
-			String userPassword, String userMobile) {
+			String userPassword, String userMobile, int securityQuestionID, String securityQuesitonAnswer) {
 
 		UserService userService = new UserService();
 		UserRegistrationResult registrationResult = UserRegistrationResult.SUCCESS;
@@ -64,7 +64,7 @@ public class ParentService {
 				PreparedStatement pst = null;
 				ResultSet resultSet = null;
 
-				String sql = "INSERT INTO `User` (userTypeID, userFirstName, userLastName, userEmail, userPassword, userMobile) VALUES (?, ?, ?, ?, ?, ?)";
+				String sql = "INSERT INTO `User` (userTypeID, userFirstName, userLastName, userEmail, userPassword, userMobile, securityQuesitonID, securityQuestionAnswer) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 				pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 				pst.setInt(1, UserType.PARENT.getUserTypeID());
 				pst.setString(2, userFirstName);
@@ -72,6 +72,8 @@ public class ParentService {
 				pst.setString(4, userEmail);
 				pst.setString(5, userPassword);
 				pst.setString(6, userMobile);
+				pst.setInt(7, securityQuestionID);
+				pst.setString(8, securityQuesitonAnswer);
 				pst.executeUpdate();
 
 				resultSet = pst.getGeneratedKeys();

@@ -44,15 +44,19 @@ public class RegisterParentServlet extends HttpServlet {
 		String userEmail = null;
 		String userPassword = null;
 		String userMobile = null;
+		int securityQuestionID = 0;
+		String securityQuestionAnswer = null;
 		
 		try {
 			
-			Map<String, String> requestParameters = Utilities.getParameters(request, "userFirstName", "userLastName", "userEmail", "userPassword", "userMobile");
+			Map<String, String> requestParameters = Utilities.getParameters(request, "userFirstName", "userLastName", "userEmail", "userPassword", "userMobile", "securityQuestionID", "securityQuestionAnswer");
 			userFirstName = requestParameters.get("userFirstName");
 			userLastName = requestParameters.get("userLastName");
 			userEmail = requestParameters.get("userEmail");
 			userPassword = requestParameters.get("userPassword");
 			userMobile = requestParameters.get("userMobile");
+			securityQuestionID = Integer.parseInt(requestParameters.get("securityQuestionID"));
+			securityQuestionAnswer = requestParameters.get("securityQuestionAnswer");
 			
 		} catch (Exception e) {
 			
@@ -60,7 +64,7 @@ public class RegisterParentServlet extends HttpServlet {
 			return;
 		}
 
-		UserRegistrationResult registrationResult = parentService.registerParent(userFirstName, userLastName, userEmail, userPassword, userMobile);
+		UserRegistrationResult registrationResult = parentService.registerParent(userFirstName, userLastName, userEmail, userPassword, userMobile, securityQuestionID, securityQuestionAnswer);
 
 		JSONObject responseObject = new JSONObject();
 		responseObject.put("result", registrationResult.toString());
