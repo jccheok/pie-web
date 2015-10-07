@@ -66,6 +66,7 @@ public class ViewOpenGroupsServlet extends HttpServlet {
 			JSONObject groupDetails = new JSONObject();
 			groupDetails.put("groupID", groupID);
 			groupDetails.put("groupName", openGroup.getGroupName());
+			groupDetails.put("groupTypeName", openGroup.getGroupType().toString());
 			groupDetails.put("groupDescription", openGroup.getGroupDescription());
 			groupDetails.put("groupMemberCount", groupService.getMemberCount(openGroup.getGroupID()));
 			groupDetails.put("groupIsPasswordProtected", openGroup.getGroupCode() != null);
