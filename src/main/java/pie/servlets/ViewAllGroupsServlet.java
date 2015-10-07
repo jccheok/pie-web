@@ -23,7 +23,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class ViewStaffJoinedGroupsServlet extends HttpServlet {
+public class ViewAllGroupsServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = -7906984824987671886L;
 	
@@ -32,7 +32,7 @@ public class ViewStaffJoinedGroupsServlet extends HttpServlet {
 	SchoolService schoolService;
 
 	@Inject
-	public ViewStaffJoinedGroupsServlet(GroupService groupService, StaffService staffService, SchoolService schoolService) {
+	public ViewAllGroupsServlet(GroupService groupService, StaffService staffService, SchoolService schoolService) {
 		this.groupService = groupService;
 		this.staffService = staffService;
 		this.schoolService = schoolService;
@@ -41,11 +41,13 @@ public class ViewStaffJoinedGroupsServlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		int staffID = 0;
+		int schoolID = 0;
 		
 		try {
 			
-			Map<String, String> requestParameters = Utilities.getParameters(request, "staffID");
+			Map<String, String> requestParameters = Utilities.getParameters(request, "staffID", "schoolID");
 			staffID = Integer.parseInt(requestParameters.get("staffID"));
+			schoolID = Integer.parseInt(requestParameters.get("schoolID"));
 			
 		} catch (Exception e) {
 			
@@ -56,7 +58,8 @@ public class ViewStaffJoinedGroupsServlet extends HttpServlet {
 		JSONObject responseObject = new JSONObject();
 		
 		JSONArray joinedGroups = new JSONArray();
-		for(Group group : staffService.getJoinedGroups(staffID)){
+		JSONArray notJoinedGroups = new JSONArray();
+		for(Group group : schoolService.getSchoolValidGroups(schoolID)){
 			
 			int groupID = group.getGroupID();
 			
@@ -75,10 +78,17 @@ public class ViewStaffJoinedGroupsServlet extends HttpServlet {
 				groupAdministrators.put(adminDetails);
 			}
 			groupDetails.put("groupAdministrators", groupAdministrators);
-			joinedGroups.put(groupDetails);
+			
+			if(staffService.isMember(staffID, groupID)){
+				joinedGroups.put(groupDetails);
+			}else{
+				notJoinedGroups.put(groupDetails);
+			}
+			
 		}
 		
 		responseObject.put("joinedGroups", joinedGroups);
+		responseObject.put("notJoinedGroups", notJoinedGroups);
 		
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());

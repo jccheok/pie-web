@@ -22,7 +22,7 @@ import pie.servlets.ViewGroupDetailsServlet;
 import pie.servlets.ViewOpenGroupsServlet;
 import pie.servlets.ViewParentChildrenServlet;
 import pie.servlets.ViewRelationshipsServlet;
-import pie.servlets.ViewStaffJoinedGroupsServlet;
+import pie.servlets.ViewAllGroupsServlet;
 import pie.servlets.ViewStudentJoinedGroupsServlet;
 
 import com.google.inject.Guice;
@@ -66,7 +66,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/registergroup").with(RegisterGroupServlet.class);
 				serve("*/servlets/secured/staff/joingroup").with(StaffJoinGroupServlet.class);
 				serve("*/servlets/secured/staff/groupdetails").with(ViewGroupDetailsServlet.class);
-				serve("*/servlets/secured/staff/joinedgroups").with(ViewStaffJoinedGroupsServlet.class);
+				serve("*/servlets/secured/staff/joinedgroups").with(ViewAllGroupsServlet.class);
 				
 				serve("*/servlets/secured/staff/group/member/groupmembers").with(ViewGroupDetailsServlet.class);
 				serve("*/servlets/secured/staff/group/admin/updategroup").with(UpdateGroupServlet.class);
