@@ -11,13 +11,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
-import pie.User;
 import pie.constants.ResetPasswordResult;
 import pie.services.UserService;
 import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
+@Singleton
 public class ResetPasswordServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 8828191475435776429L;
