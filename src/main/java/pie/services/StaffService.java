@@ -184,7 +184,7 @@ public class StaffService {
 	}
 
 	public UserRegistrationResult registerStaff(String userFirstName, String userLastName, String userEmail,
-			String userPassword, String userMobile, String schoolCode, String staffDesignation) {
+			String userPassword, String userMobile, String schoolCode, String staffDesignation, int securityQuestionID, String securityQuestionAnswer) {
 
 		UserService userService = new UserService();
 		SchoolService schoolService = new SchoolService();
@@ -203,7 +203,7 @@ public class StaffService {
 				PreparedStatement pst = null;
 				ResultSet resultSet = null;
 
-				String sql = "INSERT INTO `User` (userTypeID, userFirstName, userLastName, userEmail, userPassword, userMobile) VALUES (?, ?, ?, ?, ?, ?)";
+				String sql = "INSERT INTO `User` (userTypeID, userFirstName, userLastName, userEmail, userPassword, userMobile, securityQuestionID, securityQuestionAnswer) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 				pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 				pst.setInt(1, UserType.STAFF.getUserTypeID());
 				pst.setString(2, userFirstName);
@@ -211,6 +211,8 @@ public class StaffService {
 				pst.setString(4, userEmail);
 				pst.setString(5, userPassword);
 				pst.setString(6, userMobile);
+				pst.setInt(7, securityQuestionID);
+				pst.setString(8, securityQuestionAnswer);
 				pst.executeUpdate();
 
 				resultSet = pst.getGeneratedKeys();
