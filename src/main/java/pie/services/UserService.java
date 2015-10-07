@@ -5,7 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Date;
 
+import com.google.inject.servlet.RequestParameters;
+
 import pie.Address;
+import pie.SecurityQuestion;
 import pie.User;
 import pie.UserType;
 import pie.constants.LoginResult;
@@ -223,6 +226,7 @@ public class UserService {
 	public User getUser(int userID) {
 
 		AddressService addressService = new AddressService();
+		SecurityQuestionService securityQuestionService = new SecurityQuestionService();
 		User user = null;
 
 		try {
@@ -251,9 +255,11 @@ public class UserService {
 				Date userLastLogin = new Date(resultSet.getTimestamp("userLastLogin").getTime());
 				Date userRegistrationDate = new Date(resultSet.getTimestamp("userRegistrationDate").getTime());
 				Date userLastUpdate = new Date(resultSet.getTimestamp("userLastUpdate").getTime());
+				SecurityQuestion userSecurityQuestion = securityQuestionService.getSecurityQuestion(resultSet.getInt("securityQuestionID"));
+				String userSecurityAnswer = resultSet.getString("securityQuestionAnswer");
 
 				user = new User(userID, userAddress, userFirstName, userLastName, userType, userEmail, userPassword,
-						userMobile, userIsValid, userIsVerified, userLastLogin, userRegistrationDate, userLastUpdate);
+						userMobile, userIsValid, userIsVerified, userLastLogin, userRegistrationDate, userLastUpdate, userSecurityQuestion, userSecurityAnswer);
 
 			}
 
@@ -265,4 +271,6 @@ public class UserService {
 
 		return user;
 	}
+	
+	
 }
