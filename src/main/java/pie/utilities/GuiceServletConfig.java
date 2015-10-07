@@ -15,14 +15,15 @@ import pie.servlets.RegisterStudentServlet;
 import pie.servlets.RemoveStudentFromGroupServlet;
 import pie.servlets.StaffJoinGroupServlet;
 import pie.servlets.StudentJoinGroupServlet;
+import pie.servlets.TransferGroupOwnershipServlet;
 import pie.servlets.UpdateGroupServlet;
 import pie.servlets.VerifyUserServlet;
+import pie.servlets.ViewAllGroupsServlet;
 import pie.servlets.ViewCitiesServlet;
 import pie.servlets.ViewGroupDetailsServlet;
 import pie.servlets.ViewOpenGroupsServlet;
 import pie.servlets.ViewParentChildrenServlet;
 import pie.servlets.ViewRelationshipsServlet;
-import pie.servlets.ViewAllGroupsServlet;
 import pie.servlets.ViewStudentJoinedGroupsServlet;
 
 import com.google.inject.Guice;
@@ -71,6 +72,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/group/member/groupmembers").with(ViewGroupDetailsServlet.class);
 				serve("*/servlets/secured/staff/group/admin/updategroup").with(UpdateGroupServlet.class);
 				serve("*/servlets/secured/staff/group/owner/enliststudents").with(EnlistStudentsToGroupServlet.class);
+				serve("*/servlets/secured/staff/group/owner/transfergroupownership").with(TransferGroupOwnershipServlet.class);
 				
 				serve("*/servlets/secured/admin/registerschool").with(RegisterSchoolServlet.class);
 				
