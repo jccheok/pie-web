@@ -57,8 +57,10 @@ public class ViewAllGroupsServlet extends HttpServlet {
 		
 		JSONObject responseObject = new JSONObject();
 		
-		JSONArray joinedGroups = new JSONArray();
-		JSONArray notJoinedGroups = new JSONArray();
+	//	JSONArray joinedGroups = new JSONArray();
+	//	JSONArray notJoinedGroups = new JSONArray();
+		
+		JSONArray groups = new JSONArray();
 		for(Group group : schoolService.getSchoolValidGroups(schoolID)){
 			
 			int groupID = group.getGroupID();
@@ -69,27 +71,26 @@ public class ViewAllGroupsServlet extends HttpServlet {
 			groupDetails.put("groupDescription", group.getGroupDescription());
 			groupDetails.put("groupMemberCount", groupService.getMemberCount(group.getGroupID()));
 			
-			JSONArray groupAdministrators = new JSONArray();
-			for(Staff adminStaff : groupService.getGroupAdministrators(groupID)){
-				
-				JSONObject adminDetails = new JSONObject();
-				adminDetails.put("staffFullName", adminStaff.getUserFullName());
-				adminDetails.put("staffGroupRole", staffService.getStaffRole(adminStaff.getUserID(), group.getGroupID()).getStaffRoleName());
-				groupAdministrators.put(adminDetails);
-			}
-			groupDetails.put("groupAdministrators", groupAdministrators);
+			groupDetails.put("groupOwner",groupService.getGroupOwner(groupID));
+//			JSONArray groupAdministrators = new JSONArray();
+//			for(Staff adminStaff : groupService.getGroup(groupID)){
+//				
+//				JSONObject adminDetails = new JSONObject();
+//				adminDetails.put("staffFullName", adminStaff.getUserFullName());
+//				adminDetails.put("staffGroupRole", staffService.getStaffRole(adminStaff.getUserID(), group.getGroupID()).getStaffRoleName());
+//				groupAdministrators.put(adminDetails);
+//			}
+//			groupDetails.put("groupAdministrators", groupAdministrators);
+//							
+			groupDetails.put("staffGroupStatus", staffService.isMember(staffID, groupID));
 			
-			if(staffService.isMember(staffID, groupID)){
-				joinedGroups.put(groupDetails);
-			}else{
-				notJoinedGroups.put(groupDetails);
-			}
-			
+			groups.put(groupDetails);
 		}
 		
-		responseObject.put("joinedGroups", joinedGroups);
-		responseObject.put("notJoinedGroups", notJoinedGroups);
+//		responseObject.put("joinedGroups", joinedGroups);
+//		responseObject.put("notJoinedGroups", notJoinedGroups);
 		
+		responseObject.put("groups", groups);
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
 	}
