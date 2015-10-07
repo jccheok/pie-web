@@ -3,11 +3,11 @@ package pie;
 public class SecurityQuestion {
 	
 	private int securityQuestionID;
-	private String securityQuesitonDescription;
+	private String securityQuestionDescription;
 	
 	public SecurityQuestion(int securityQuestionID, String securityQuestionDescription){
 		setSecurityQuestionID(securityQuestionID);
-		setSecurityQuesitonDescription(securityQuestionDescription);
+		setSecurityQuestionDescription(securityQuestionDescription);
 	}
 	
 	public int getSecurityQuestionID() {
@@ -16,11 +16,11 @@ public class SecurityQuestion {
 	public void setSecurityQuestionID(int securityQuestionID) {
 		this.securityQuestionID = securityQuestionID;
 	}
-	public String getSecurityQuesitonDescription() {
-		return securityQuesitonDescription;
+	public String getSecurityQuestionDescription() {
+		return securityQuestionDescription;
 	}
-	public void setSecurityQuesitonDescription(String securityQuesitonDescription) {
-		this.securityQuesitonDescription = securityQuesitonDescription;
+	public void setSecurityQuestionDescription(String securityQuestionDescription) {
+		this.securityQuestionDescription = securityQuestionDescription;
 	}
 
 }
