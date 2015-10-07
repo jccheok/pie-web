@@ -139,7 +139,7 @@ public class UserService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 			
-			String sql = "SELECT * FROM `User` WHERE userEmail = ? AND userPassword = SHA1(?)";
+			String sql = "SELECT * FROM `User` WHERE userEmail = ? AND userPassword = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, userEmail);
 			pst.setString(2, userPassword);
@@ -282,7 +282,7 @@ public class UserService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 			
-			String sql = "UPDATE `User` SET userPassword = SHA1(?) userID = ?";
+			String sql = "UPDATE `User` SET userPassword = ? userID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, userPassword);
 			pst.setInt(2, userID);
