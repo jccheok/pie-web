@@ -289,6 +289,7 @@ public class UserService {
 			pst.executeUpdate();
 			
 			conn.close();
+			setPasswordResult = true;
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -315,10 +316,12 @@ public class UserService {
 				String emailContent = emailTemplate.replaceAll("\\$FIRST_NAME", getUser(userID).getUserFirstName());
 				emailContent = emailContent.replaceAll("\\$PASSWORD", newPassword);
 				emailContent = emailContent.replaceAll("\\$LOGIN_LINK", loginLink);
-
-				emailService.sendEmail(emailSubject, emailContent, new String[] { getUser(userID).getUserEmail() });
 				
-				setNewPassword(userID, newPassword);
+				if(!setNewPassword(userID, newPassword)){
+					resetPasswordResult = ResetPasswordResult.INVALID_ANSWER;
+				}else{
+					emailService.sendEmail(emailSubject, emailContent, new String[] { getUser(userID).getUserEmail() });
+				}
 				
 			}catch(Exception e){
 				System.out.println(e);
