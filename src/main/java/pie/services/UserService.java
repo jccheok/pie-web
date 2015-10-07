@@ -1,19 +1,22 @@
 package pie.services;
 
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Date;
 
-import com.google.inject.servlet.RequestParameters;
+import javax.servlet.http.HttpServlet;
 
 import pie.Address;
 import pie.SecurityQuestion;
 import pie.User;
 import pie.UserType;
 import pie.constants.LoginResult;
+import pie.constants.ResetPasswordResult;
 import pie.constants.SupportedPlatform;
 import pie.utilities.DatabaseConnector;
+import pie.utilities.Utilities;
 
 public class UserService {
 
@@ -272,5 +275,32 @@ public class UserService {
 		return user;
 	}
 	
-	
+	public ResetPasswordResult resetPassword(int userID, String securityQuestionAnswer, HttpServlet httpServlet){
+		ResetPasswordResult resetPasswordResult = ResetPasswordResult.SUCCESS;
+		
+		User user = getUser(userID);
+		EmailService emailService = new EmailService();
+		
+		if(user.getUserSecurityAnswer().equals(securityQuestionAnswer)){
+			try{
+				String loginLink = "http://piedev-rpmaps.rhcloud.com/servlets/servlets/login";
+				InputStream emailTemplateStream = httpServlet.getServletContext().getResourceAsStream("/resources/verificationTemplate.html");
+				
+				String emailSubject = "Account Password Reset on Partners in Education";
+				String emailTemplate = Utilities.convertStreamToString(emailTemplateStream);
+
+				String emailContent = emailTemplate.replaceAll("\\$FIRST_NAME", getUser(userID).getUserFirstName());
+				emailContent = emailContent.replaceAll("\\$VERIFICATION_LINK", loginLink);
+
+				emailService.sendEmail(emailSubject, emailContent, new String[] { getUser(userID).getUserEmail() });
+				
+			}catch(Exception e){
+				System.out.println(e);
+			}
+		}else{
+			resetPasswordResult = ResetPasswordResult.INVALID_ANSWER;
+		}
+		
+		return resetPasswordResult;
+	}
 }
