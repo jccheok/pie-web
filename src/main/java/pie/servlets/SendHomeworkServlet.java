@@ -29,7 +29,6 @@ public class SendHomeworkServlet extends HttpServlet {
 
 	HomeworkService homeworkService;
 	GroupService groupService;
-	DateFormat dateFormat;
 
 	@Inject
 	public SendHomeworkServlet(HomeworkService homeworkService, GroupService groupService) {
@@ -39,7 +38,7 @@ public class SendHomeworkServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		this.dateFormat = new SimpleDateFormat("YY-mm-dd hh:mm:ss");
+		DateFormat dateFormat = new SimpleDateFormat("YY-mm-dd hh:mm:ss");
 
 		int staffID = 0;
 		int groupID = 0;
