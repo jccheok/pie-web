@@ -282,7 +282,7 @@ public class StudentService {
 	}
 
 	public UserRegistrationResult registerStudent(String userEmail, String userPassword, String userMobile,
-			String studentCode) {
+			String studentCode, int securityQuestionID, String securityQuestionAnswer) {
 
 		UserService userService = new UserService();
 		UserRegistrationResult registrationResult = UserRegistrationResult.SUCCESS;
@@ -299,12 +299,14 @@ public class StudentService {
 				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
 
-				String sql = "UPDATE `User`,`Student` SET userRegistrationDate = NOW(), userLastUpdate = NOW(), userEmail = ?, userPassword = ?, userMobile = ? WHERE `User`.userID = `Student`.studentID AND studentCode = ?";
+				String sql = "UPDATE `User`,`Student` SET userRegistrationDate = NOW(), userLastUpdate = NOW(), userEmail = ?, userPassword = ?, userMobile = ?, securityQuestionID = ?, securityQuestionAnswer = ? WHERE `User`.userID = `Student`.studentID AND studentCode = ?";
 				pst = conn.prepareStatement(sql);
 				pst.setString(1, userEmail);
 				pst.setString(2, userPassword);
 				pst.setString(3, userMobile);
-				pst.setString(4, studentCode);
+				pst.setInt(4, securityQuestionID);
+				pst.setString(5, securityQuestionAnswer);
+				pst.setString(6, studentCode);
 				pst.executeUpdate();
 
 				conn.close();

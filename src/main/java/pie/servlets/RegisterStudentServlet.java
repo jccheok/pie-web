@@ -43,15 +43,19 @@ public class RegisterStudentServlet extends HttpServlet {
 		String userPassword = null;
 		String userMobile = null;
 		String studentCode = null;
+		int securityQuestionID = 0;
+		String securityQuestionAnswer = null;
 
 		try {
 
 			Map<String, String> requestParameters = Utilities.getParameters(request, "userEmail", "userPassword",
-					"userMobile", "studentCode");
+					"userMobile", "studentCode", "securityQuestionID", "securityQuestionAnswer");
 			userEmail = requestParameters.get("userEmail");
 			userPassword = requestParameters.get("userPassword");
 			userMobile = requestParameters.get("userMobile");
 			studentCode = requestParameters.get("studentCode");
+			securityQuestionID = Integer.parseInt(requestParameters.get("securityQuestionID"));
+			securityQuestionAnswer = requestParameters.get("securityQuestionAnswer");
 
 		} catch (Exception e) {
 
@@ -60,7 +64,7 @@ public class RegisterStudentServlet extends HttpServlet {
 		}
 
 		UserRegistrationResult registrationResult = studentService.registerStudent(userEmail, userPassword, userMobile,
-				studentCode);
+				studentCode, securityQuestionID, securityQuestionAnswer);
 
 		JSONObject responseObject = new JSONObject();
 		responseObject.put("result", registrationResult.toString());

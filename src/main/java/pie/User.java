@@ -17,6 +17,8 @@ public class User {
 	private Date userLastLogin;
 	private Date userRegistrationDate;
 	private Date userLastUpdate;
+	private SecurityQuestion userSecurityQuestion;
+	private String userSecurityAnswer;
 
 	public User() {}
 	
@@ -24,7 +26,7 @@ public class User {
 			String userLastName, UserType userType, String userEmail,
 			String userPassword, String userMobile, boolean userIsValid,
 			boolean userIsVerified, Date userLastLogin,
-			Date userRegistrationDate, Date userLastUpdate) {
+			Date userRegistrationDate, Date userLastUpdate, SecurityQuestion userSecurityQuestion, String userSecurityAnswer) {
 		
 		setUserID(userID);
 		setUserAddress(userAddress);
@@ -39,6 +41,8 @@ public class User {
 		setUserLastLogin(userLastLogin);
 		setUserRegistrationDate(userRegistrationDate);
 		setUserLastUpdate(userLastUpdate);
+		setUserSecurityQuestion(userSecurityQuestion);
+		setUserSecurityAnswer(userSecurityAnswer);
 	}
 	
 public User(User user) {
@@ -56,6 +60,8 @@ public User(User user) {
 		setUserLastLogin(user.getUserLastLogin());
 		setUserRegistrationDate(user.getUserRegistrationDate());
 		setUserLastUpdate(user.getUserLastUpdate());
+		setUserSecurityQuestion(user.getUserSecurityQuestion());
+		setUserSecurityAnswer(user.getUserSecurityAnswer());
 	}
 
 	public int getUserID() {
@@ -168,5 +174,21 @@ public User(User user) {
 
 	public User toUser() {
 		return (User) this;
+	}
+
+	public SecurityQuestion getUserSecurityQuestion() {
+		return userSecurityQuestion;
+	}
+
+	public void setUserSecurityQuestion(SecurityQuestion userSecurityQuestion) {
+		this.userSecurityQuestion = userSecurityQuestion;
+	}
+
+	public String getUserSecurityAnswer() {
+		return userSecurityAnswer;
+	}
+
+	public void setUserSecurityAnswer(String userSecurityAnswer) {
+		this.userSecurityAnswer = userSecurityAnswer;
 	}
 }
