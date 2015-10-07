@@ -284,13 +284,14 @@ public class UserService {
 		if(user.getUserSecurityAnswer().equals(securityQuestionAnswer)){
 			try{
 				String loginLink = "http://piedev-rpmaps.rhcloud.com/servlets/servlets/login";
-				InputStream emailTemplateStream = httpServlet.getServletContext().getResourceAsStream("/resources/verificationTemplate.html");
+				InputStream emailTemplateStream = httpServlet.getServletContext().getResourceAsStream("/resources/resetPasswordTemplate.html");
 				
 				String emailSubject = "Account Password Reset on Partners in Education";
 				String emailTemplate = Utilities.convertStreamToString(emailTemplateStream);
 
 				String emailContent = emailTemplate.replaceAll("\\$FIRST_NAME", getUser(userID).getUserFirstName());
-				emailContent = emailContent.replaceAll("\\$VERIFICATION_LINK", loginLink);
+				emailContent = emailContent.replaceAll("\\$PASSWORD", Utilities.generateString(10));
+				emailContent = emailContent.replaceAll("\\$LOGIN_LINK", loginLink);
 
 				emailService.sendEmail(emailSubject, emailContent, new String[] { getUser(userID).getUserEmail() });
 				
