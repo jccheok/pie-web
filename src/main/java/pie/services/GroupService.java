@@ -595,7 +595,7 @@ public class GroupService {
 			deactivateGroupResult = DeactivateGroupResult.GROUP_IS_NOT_VALID;
 		}else if(staffID != groupOwner.getUserID()){
 			deactivateGroupResult = DeactivateGroupResult.INVALID_USER;
-		}else if(staffUser.getUserPassword() != userPassword){
+		}else if(!staffUser.getUserPassword().equals(userPassword)){
 			deactivateGroupResult = DeactivateGroupResult.WRONG_PASSWORD;
 		}else{
 			Student[] students = getStudentMembers(groupID);
