@@ -274,6 +274,28 @@ public class UserService {
 
 		return user;
 	}
+	public boolean setNewPassword(int userID, String userPassword){
+		boolean setPasswordResult = false;
+
+		try {
+			
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			
+			String sql = "UPDATE `User` SET userPassword = SHA1(?) userID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setString(1, userPassword);
+			pst.setInt(2, userID);
+			pst.executeUpdate();
+			
+			conn.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return setPasswordResult;
+	}
 	
 	public ResetPasswordResult resetPassword(int userID, String securityQuestionAnswer, HttpServlet httpServlet){
 		ResetPasswordResult resetPasswordResult = ResetPasswordResult.SUCCESS;
