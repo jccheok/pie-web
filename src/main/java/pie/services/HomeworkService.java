@@ -44,7 +44,8 @@ public class HomeworkService {
 				boolean homeworkIsDeleted = resultSet.getInt("homeworkIsDeleted") == 1 ? true : false;
 				Date homeworkDateDeleted = new Date(resultSet.getTimestamp("homeworkDateDeleted").getTime());
 
-				homework = new Homework(homeworkID, homeworkAuthor, homeworkTitle, homeworkSubject, homeworkDescription,
+				homework = new Homework(homeworkID, homeworkAuthor, homeworkTitle, homeworkSubject,
+						homeworkDescription,
 						homeworkMinutesRequired, homeworkDueDate, homeworkIsOpen, homeworkDateCreated, homeworkIsDraft,
 						homeworkIsTemplate, homeworkIsDeleted, homeworkDateDeleted);
 			}
@@ -92,6 +93,7 @@ public class HomeworkService {
 				pst.executeUpdate();
 			}
 			conn.close();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -115,12 +117,12 @@ public class HomeworkService {
 
 			resultSet = pst.executeQuery();
 
-			ArrayList<Homework> tempHomework = new ArrayList<Homework>();
+			ArrayList<Homework> tempDraftHomework = new ArrayList<Homework>();
 			while (resultSet.next()) {
-				tempHomework.add(getHomework(resultSet.getInt(1)));
+				tempDraftHomework.add(getHomework(resultSet.getInt(1)));
 			}
 
-			homework = tempHomework.toArray(homework);
+			homework = tempDraftHomework.toArray(homework);
 
 			conn.close();
 
@@ -146,12 +148,12 @@ public class HomeworkService {
 
 			resultSet = pst.executeQuery();
 
-			ArrayList<Homework> tempHomework = new ArrayList<Homework>();
+			ArrayList<Homework> tempSentHomework = new ArrayList<Homework>();
 			while (resultSet.next()) {
-				tempHomework.add(getHomework(resultSet.getInt(1)));
+				tempSentHomework.add(getHomework(resultSet.getInt(1)));
 			}
 
-			homework = tempHomework.toArray(homework);
+			homework = tempSentHomework.toArray(homework);
 
 			conn.close();
 
@@ -175,11 +177,10 @@ public class HomeworkService {
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, homeworkID);
 			resultSet = pst.executeQuery();
-			resultSet.next();
-			if (resultSet.getInt(1) == 1) {
-				isDraft = true;
-			}
 
+			if (resultSet.next()) {
+				isDraft = resultSet.getInt("homeworkIsDraft") == 1 ? true : false;
+			}
 			conn.close();
 
 		} catch (Exception e) {
@@ -197,15 +198,17 @@ public class HomeworkService {
 			try {
 				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
-				ResultSet resultSet = null;
 
-				String sql = "DELETE FROM `Homework` WHERE homeworkID = ?";
+				String sql = "DELETE FROM `Homework` WHERE homeworkID = ? AND homeworkIsDraft = ?";
 				pst = conn.prepareStatement(sql);
 				pst.setInt(1, homeworkID);
+				pst.setInt(2, 1);
 
-				if (pst.executeUpdate() != 0) {
-					deleteResult = true;
-				}
+				pst.executeUpdate();
+
+				deleteResult = true;
+
+				conn.close();
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -220,15 +223,22 @@ public class HomeworkService {
 		boolean deleteResult = false;
 
 		if (!isDraftHomework(homeworkID)) {
+
 			try {
 				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
-				ResultSet resultSet = null;
 
 				String sql = "UPDATE `Homework` SET homeworkIsDeleted = ? WHERE homeworkID = ?";
 				pst = conn.prepareStatement(sql);
 				pst.setInt(1, 1);
 				pst.setInt(2, homeworkID);
+
+				pst.executeUpdate();
+
+				deleteResult = true;
+
+				conn.close();
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -257,9 +267,9 @@ public class HomeworkService {
 				pst.setDate(5, homeworkDueDate);
 				pst.setInt(6, homeworkID);
 
-				if (pst.executeUpdate() != 0) {
-					isUpdated = true;
-				}
+				pst.executeUpdate();
+
+				isUpdated = true;
 
 				conn.close();
 
@@ -271,32 +281,27 @@ public class HomeworkService {
 		return isUpdated;
 	}
 
-	public boolean sendHomework(int groupID, int homeworkID) {
+	public boolean sendHomework(int studentID, int homeworkID) {
 
 		boolean sendResult = false;
 
-		GroupService groupService = new GroupService();
-		Student[] groupStudents = groupService.getStudentMembers(groupID);
+		try {
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
 
-		for (Student student : groupStudents) {
-			try {
-				Connection conn = DatabaseConnector.getConnection();
-				PreparedStatement pst = null;
+			String sql = "INSERT INTO `UserHomework` (homeworkID, userID) VALUES (?,?)";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, homeworkID);
+			pst.setInt(2, studentID);
 
-				String sql = "INSERT INTO `UserHomework` (homeworkID,userID) VALUES (?,?)";
-				pst = conn.prepareStatement(sql);
-				pst.setInt(1, homeworkID);
-				pst.setInt(2, student.getUserID());
+			pst.executeUpdate();
 
-				if (pst.executeUpdate() != 0) {
-					sendResult = true;
-				}
+			sendResult = true;
 
-				conn.close();
+			conn.close();
 
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		return sendResult;
@@ -305,6 +310,7 @@ public class HomeworkService {
 	public boolean publishHomework(int groupID, int homeworkID) {
 
 		boolean publishResult = false;
+		GroupService groupService = new GroupService();
 
 		try {
 			Connection conn = DatabaseConnector.getConnection();
@@ -313,16 +319,21 @@ public class HomeworkService {
 			String sql = "UPDATE `Homework` SET homeworkIsDraft = ? , homeworkIsOpen = ? WHERE homeworkID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, 0);
-			pst.setInt(2, 0);
+			pst.setInt(2, 1);
 			pst.setInt(3, homeworkID);
 
 			pst.executeUpdate();
 
-			if (pst.executeUpdate() != 0) {
-				if (sendHomework(groupID, homeworkID)) {
-					publishResult = true;
+			Student[] groupStudents = groupService.getStudentMembers(groupID);
+
+			for (Student student : groupStudents) {
+				if (!sendHomework(student.getUserID(), homeworkID)) {
+					break;
 				}
 			}
+
+			publishResult = true;
+
 			conn.close();
 
 		} catch (Exception e) {
