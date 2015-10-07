@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
-import pie.constants.GenericResult;
 import pie.services.GroupService;
 import pie.services.HomeworkService;
 import pie.utilities.Utilities;
