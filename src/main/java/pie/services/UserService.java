@@ -318,7 +318,7 @@ public class UserService {
 				emailContent = emailContent.replaceAll("\\$LOGIN_LINK", loginLink);
 				
 				if(!setNewPassword(userID, newPassword)){
-					resetPasswordResult = ResetPasswordResult.INVALID_ANSWER;
+					resetPasswordResult = ResetPasswordResult.RESET_FAILED;
 				}else{
 					emailService.sendEmail(emailSubject, emailContent, new String[] { getUser(userID).getUserEmail() });
 				}
