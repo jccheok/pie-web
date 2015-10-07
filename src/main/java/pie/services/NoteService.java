@@ -7,13 +7,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 
-import pie.Group;
-import pie.GroupType;
 import pie.Note;
-import pie.School;
 import pie.Staff;
 import pie.Student;
-import pie.User;
+
 import pie.utilities.DatabaseConnector;
 
 public class NoteService {
@@ -192,8 +189,10 @@ public class NoteService {
 
 	}
 	
-	public void setAsDeleted (int noteID, boolean isDeleted) {
+	public boolean deleteNote(int noteID) {
 
+		boolean isDeleted = false;
+		
 		try {
 
 			PreparedStatement pst = null;
@@ -201,9 +200,11 @@ public class NoteService {
 
 			String sql = "UPDATE `Note` SET noteIsDeleted = ? WHERE noteID = ?";
 			pst = conn.prepareStatement(sql);
-			pst.setInt(1, isDeleted ? 1:0);
+			pst.setInt(1, 1);
 			pst.setInt(2, noteID);
+			
 			pst.executeUpdate();
+			isDeleted = true;
 
 			conn.close();
 
@@ -211,6 +212,8 @@ public class NoteService {
 
 			System.out.println(e);
 		}
+		
+		return isDeleted;
 	}
 	
 	public Note[] getNoteDrafts(int staffID) {
