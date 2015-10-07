@@ -26,6 +26,7 @@ public class ResponseFilter implements Filter {
 		
 		servletResponse.setContentType("application/json");
 		((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Origin", "*");
+		((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Methods", "POST, GET");
 		
 		filterChain.doFilter(servletRequest, servletResponse);
 		
