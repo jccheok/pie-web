@@ -282,7 +282,7 @@ public class UserService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 			
-			String sql = "UPDATE `User` SET userPassword = ? userID = ?";
+			String sql = "UPDATE `User` SET userPassword = SHA(?) WHERE userID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, userPassword);
 			pst.setInt(2, userID);
@@ -318,7 +318,7 @@ public class UserService {
 				emailContent = emailContent.replaceAll("\\$LOGIN_LINK", loginLink);
 				
 				if(!setNewPassword(userID, newPassword)){
-					resetPasswordResult = ResetPasswordResult.INVALID_ANSWER;
+					resetPasswordResult = ResetPasswordResult.RESET_FAILED;
 				}else{
 					emailService.sendEmail(emailSubject, emailContent, new String[] { getUser(userID).getUserEmail() });
 				}
