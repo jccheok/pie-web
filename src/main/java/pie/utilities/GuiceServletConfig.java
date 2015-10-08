@@ -7,6 +7,7 @@ import pie.servlets.AddChildToGroupServlet;
 import pie.servlets.DeactivateGroupServlet;
 import pie.servlets.EnlistStudentsToGroupServlet;
 import pie.servlets.GenerateCodeServlet;
+import pie.servlets.GetAllDraftHomeworkServlet;
 import pie.servlets.GetAllSecurityQuestionsServlet;
 import pie.servlets.LoginServlet;
 import pie.servlets.RegisterGroupServlet;
@@ -35,6 +36,7 @@ import pie.servlets.ViewStudentJoinedGroupsServlet;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
+import com.google.inject.servlet.ServletModule;
 import com.google.inject.servlet.ServletModule;
 
 public class GuiceServletConfig extends GuiceServletContextListener {
@@ -85,7 +87,10 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/group/owner/deactivategroup").with(DeactivateGroupServlet.class);
 				
 				serve("*/servlets/secured/staff/group/sendhomework").with(SendHomeworkServlet.class);
+				serve("*/servlets/secured/staff/group/alldrafthomework").with(GetAllDraftHomeworkServlet.class);
+				
 				serve("*/servlets/secured/staff/group/sendnote").with(SendNoteServlet.class);
+
 				
 				serve("*/servlets/secured/admin/registerschool").with(RegisterSchoolServlet.class);
 				serve("*/servlets/secured/admin/allschools").with(ViewAllSchoolsServlet.class);
