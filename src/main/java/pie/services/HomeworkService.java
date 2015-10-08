@@ -121,7 +121,7 @@ public class HomeworkService {
 
 			ArrayList<Homework> tempDraftHomework = new ArrayList<Homework>();
 			while (resultSet.next()) {
-				tempDraftHomework.add(getHomework(resultSet.getInt(1)));
+				tempDraftHomework.add(getHomework(resultSet.getInt("homeworkID")));
 			}
 
 			homework = tempDraftHomework.toArray(homework);
