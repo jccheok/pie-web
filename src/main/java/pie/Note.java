@@ -13,11 +13,12 @@ public class Note {
 	private boolean noteIsDeleted;
 	private Date noteDateCreated;
 	private Date noteDateDeleted;
+	private ResponseQuestion noteQuestionID;
 
 	public Note(int noteID, Staff noteAuthor, String noteTitle,
 			String noteDescription, boolean noteIsTemplate,
 			boolean noteIsDraft, boolean noteIsDeleted, Date noteDateCreated,
-			Date noteDateDeleted) {
+			Date noteDateDeleted, ResponseQuestion noteQuestionID) {
 		setNoteID(noteID);
 		setNoteAuthor(noteAuthor);
 		setNoteTitle(noteTitle);
@@ -27,6 +28,7 @@ public class Note {
 		setNoteIsDeleted(noteIsDeleted);
 		setNoteDateCreated(noteDateCreated);
 		setNoteDateDeleted(noteDateDeleted);
+		setNoteQuestionID(noteQuestionID);
 	}
 
 	public int getNoteID() {
@@ -99,6 +101,14 @@ public class Note {
 
 	public void setNoteAuthor(Staff noteAuthor) {
 		this.noteAuthor = noteAuthor;
+	}
+	
+	public ResponseQuestion getNoteQuestionID() {
+		return noteQuestionID;
+	}
+	
+	public void setNoteQuestionID(ResponseQuestion noteQuestionID) {
+		this.noteQuestionID = noteQuestionID;
 	}
 
 }
