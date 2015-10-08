@@ -33,8 +33,8 @@ public class HomeworkService {
 
 			if (resultSet.next()) {
 
-				Staff homeworkAuthor = new StaffService().getStaff(resultSet.getInt("teacherID"));
-				String homeworkTitle = resultSet.getString("homworkTitle");
+				Staff homeworkAuthor = new StaffService().getStaff(resultSet.getInt("staffID"));
+				String homeworkTitle = resultSet.getString("homeworkTitle");
 				String homeworkSubject = resultSet.getString("homeworkSubject");
 				String homeworkDescription = resultSet.getString("homeworkDescription");
 				int homeworkMinutesRequired = resultSet.getInt("homeworkMinutesRequired");
@@ -386,7 +386,7 @@ public class HomeworkService {
 
 			if (resultSet.next()) {
 
-				homeworkAuthor = new StaffService().getStaff(resultSet.getInt("teacherID"));
+				homeworkAuthor = new StaffService().getStaff(resultSet.getInt("staffID"));
 				homeworkTitle = resultSet.getString("homeworkTitle");
 				homeworkSubject	 = resultSet.getString("homeworkSubject");
 				homeworkDescription	 = resultSet.getString("homeworkDescription");
