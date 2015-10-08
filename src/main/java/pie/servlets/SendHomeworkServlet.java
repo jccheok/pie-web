@@ -2,7 +2,7 @@ package pie.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Date;
+import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Map;
@@ -60,7 +60,7 @@ public class SendHomeworkServlet extends HttpServlet {
 			homeworkSubject = requestParameters.get("homeworkSubject");
 			homeworkDescription = requestParameters.get("homeworkDescription");
 			homeworkMinutesRequired = Integer.parseInt(requestParameters.get("homeworkMinutesRequired"));
-			homeworkDueDate = new Date(dateFormat.parse(requestParameters.get("homeworkDueDate")).getTime());
+			homeworkDueDate = new java.sql.Date(dateFormat.parse(requestParameters.get("homeworkDueDate")).getTime());
 
 		} catch (Exception e) {
 

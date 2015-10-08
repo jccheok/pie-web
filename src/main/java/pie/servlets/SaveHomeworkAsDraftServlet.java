@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import pie.constants.GenericResult;
 import pie.services.GroupService;
 import pie.services.HomeworkService;
 import pie.utilities.Utilities;
@@ -58,10 +59,11 @@ public class SaveHomeworkAsDraftServlet extends HttpServlet {
 			homeworkSubject = requestParameters.get("homeworkSubject");
 			homeworkDescription = requestParameters.get("homeworkDescription");
 			homeworkMinutesRequired = Integer.parseInt(requestParameters.get("homeworkMinutesRequired"));
-			homeworkDueDate = new Date(dateFormat.parse(requestParameters.get("homeworkDueDate")).getTime());
+			homeworkDueDate = new java.sql.Date(dateFormat.parse(requestParameters.get("homeworkDueDate")).getTime());
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+			return;
 		}
 
 		JSONObject responseObject = new JSONObject();
@@ -70,10 +72,10 @@ public class SaveHomeworkAsDraftServlet extends HttpServlet {
 				homeworkDescription, homeworkMinutesRequired, homeworkDueDate);
 
 		if (homeworkID != -1) {
-			responseObject.put("result", "SUCCESS");
+			responseObject.put("result", GenericResult.SUCCESS.toString());
 			responseObject.put("message", "Homework successfully created as draft");
 		} else {
-			responseObject.put("result", "SUCCESS");
+			responseObject.put("result", GenericResult.FAILED.toString());
 			responseObject.put("message", "Failed to create homework");
 		}
 
