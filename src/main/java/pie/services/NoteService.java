@@ -1,4 +1,4 @@
- package pie.services;
+package pie.services;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -42,7 +42,8 @@ public class NoteService {
 				boolean noteIsDeleted = resultSet.getInt("noteIsDeleted") == 1;
 				Date noteDateCreated = new Date(resultSet.getTimestamp("noteDateCreated").getTime());
 				Date noteDateDeleted = new Date(resultSet.getTimestamp("noteDateDeleted").getTime());
-				ResponseQuestion noteQuestionID = new ResponseQuestionService().getResponseQuestion(resultSet.getInt("noteQuestionID"));
+				ResponseQuestion noteQuestionID = new ResponseQuestionService().getResponseQuestion(resultSet
+						.getInt("noteQuestionID"));
 
 				note = new Note(noteID, noteAuthor, noteTitle, noteDescription, noteIsTemplate, noteIsDraft,
 						noteIsDeleted, noteDateCreated, noteDateDeleted, noteQuestionID);
@@ -77,7 +78,7 @@ public class NoteService {
 
 			resultSet = pst.getGeneratedKeys();
 
-			if(resultSet.next()) {
+			if (resultSet.next()) {
 				noteID = resultSet.getInt(1);
 
 				sql = "INSERT INTO `GroupNote` (staffID, noteID, groupID) VALUES (?, ?, ?)";
@@ -90,7 +91,7 @@ public class NoteService {
 
 			conn.close();
 
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -114,7 +115,7 @@ public class NoteService {
 
 			resultSet = pst.executeQuery();
 
-			if(resultSet.next()){
+			if (resultSet.next()) {
 				hasReceived = true;
 			}
 
@@ -131,9 +132,9 @@ public class NoteService {
 	public boolean sendNote(int noteID, int studentID) {
 
 		boolean sendResult = false;
-		
+
 		try {
-			
+
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
@@ -143,9 +144,9 @@ public class NoteService {
 			pst.setInt(2, studentID);
 
 			pst.executeUpdate();
-			
+
 			sendResult = true;
-			
+
 			conn.close();
 
 		} catch (Exception e) {
@@ -169,21 +170,21 @@ public class NoteService {
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, 0);
 			pst.setInt(2, noteID);
-			
+
 			pst.executeUpdate();
-			if(pst.executeUpdate() == 0){
+			if (pst.executeUpdate() == 0) {
 				publishResult = PublishNoteResult.FAILED_DRAFT;
-			}else{
+			} else {
 				sql = "UPDATE `GroupNote` SET groupNotePublishDate = NOW() WHERE groupID = ? AND noteID = ?";
 				pst = conn.prepareStatement(sql);
 				pst.setInt(1, groupID);
 				pst.setInt(2, noteID);
-				
-				if(pst.executeUpdate() == 0){
+
+				if (pst.executeUpdate() == 0) {
 					publishResult = PublishNoteResult.FAILED_TO_UPDATE_GROUP;
-				}else{
+				} else {
 					Student[] groupStudents = groupService.getStudentMembers(groupID);
-					
+
 					for (Student student : groupStudents) {
 						if (!sendNote(noteID, student.getUserID())) {
 							publishResult = PublishNoteResult.FAILED_TO_SEND_TO_MEMBERS;
@@ -201,34 +202,57 @@ public class NoteService {
 
 		return publishResult;
 	}
-	
+
 	public boolean deleteNote(int noteID) {
 
 		boolean isDeleted = false;
-		
-		try {
 
-			PreparedStatement pst = null;
-			Connection conn = DatabaseConnector.getConnection();
+		Note note = getNote(noteID);
 
-			String sql = "UPDATE `Note` SET noteIsDeleted = ? WHERE noteID = ?";
-			pst = conn.prepareStatement(sql);
-			pst.setInt(1, 1);
-			pst.setInt(2, noteID);
-			
-			pst.executeUpdate();
-			isDeleted = true;
+		if (!note.isNoteDraft()) {
+			try {
 
-			conn.close();
+				PreparedStatement pst = null;
+				Connection conn = DatabaseConnector.getConnection();
 
-		} catch(Exception e) {
+				String sql = "UPDATE `Note` SET noteIsDeleted = ? WHERE noteID = ?";
+				pst = conn.prepareStatement(sql);
+				pst.setInt(1, 1);
+				pst.setInt(2, noteID);
 
-			System.out.println(e);
+				pst.executeUpdate();
+				isDeleted = true;
+
+				conn.close();
+
+			} catch (Exception e) {
+
+				System.out.println(e);
+			}
+		} else {
+			try {
+				Connection conn = DatabaseConnector.getConnection();
+				PreparedStatement pst = null;
+
+				String sql = "DELETE FROM `Note`, `GroupNote` WHERE `Note`.noteID = `GroupNote`.noteID AND `Note`.noteID = ? AND `Note`.noteIsDraft = ?";
+				pst = conn.prepareStatement(sql);
+				pst.setInt(1, noteID);
+				pst.setInt(2, 1);
+
+				pst.executeUpdate();
+
+				isDeleted = true;
+
+				conn.close();
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
-		
+
 		return isDeleted;
 	}
-	
+
 	public Note[] getNoteDrafts(int staffID) {
 
 		Note[] noteDrafts = {};
@@ -245,8 +269,8 @@ public class NoteService {
 			resultSet = pst.executeQuery();
 
 			ArrayList<Note> tempNotes = new ArrayList<Note>();
-			
-			while(resultSet.next()){
+
+			while (resultSet.next()) {
 
 				tempNotes.add(getNote(resultSet.getInt(1)));
 			}
@@ -256,13 +280,13 @@ public class NoteService {
 			noteDrafts = tempNotes.toArray(noteDrafts);
 		}
 
-		catch(Exception e){
+		catch (Exception e) {
 			System.out.println(e);
 		}
-	
+
 		return noteDrafts;
 	}
-	
+
 	public Note[] getSentNotes(int staffID) {
 
 		Note[] sentNotes = {};
@@ -279,8 +303,8 @@ public class NoteService {
 			resultSet = pst.executeQuery();
 
 			ArrayList<Note> tempNotes = new ArrayList<Note>();
-			
-			while(resultSet.next()){
+
+			while (resultSet.next()) {
 
 				tempNotes.add(getNote(resultSet.getInt(1)));
 			}
@@ -290,15 +314,15 @@ public class NoteService {
 			sentNotes = tempNotes.toArray(sentNotes);
 		}
 
-		catch(Exception e){
+		catch (Exception e) {
 			System.out.println(e);
 		}
-	
+
 		return sentNotes;
 	}
-	
+
 	public Note[] getNotes(int userID) {
-		
+
 		Note[] notes = {};
 
 		try {
@@ -310,30 +334,29 @@ public class NoteService {
 			String sql = "SELECT `Note`.noteID FROM `UserNote`,`Note` WHERE userID=? AND `Note`.noteID = `UserNote`.noteID AND noteIsDeleted = 0";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, userID);
-			resultSet=pst.executeQuery();
+			resultSet = pst.executeQuery();
 
 			ArrayList<Note> tempNotes = new ArrayList<Note>();
 
-			while(resultSet.next()) {
+			while (resultSet.next()) {
 				tempNotes.add(getNote(resultSet.getInt(1)));
 			}
 
 			notes = tempNotes.toArray(notes);
 
-
 			conn.close();
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		return notes;
 	}
-	
+
 	public boolean updateNote(String newNoteTitle, String newNoteDescription, int newResponseQuestionID, int noteID) {
 
 		boolean isUpdated = false;
-		
+
 		try {
 
 			PreparedStatement pst = null;
@@ -345,19 +368,18 @@ public class NoteService {
 			pst.setString(2, newNoteDescription);
 			pst.setInt(3, newResponseQuestionID);
 			pst.setInt(4, noteID);
-			
+
 			pst.executeUpdate();
 			isUpdated = true;
-			
+
 			conn.close();
 
-		} catch(Exception e) {
-			
+		} catch (Exception e) {
+
 			System.out.println(e);
 		}
-		
+
 		return isUpdated;
 	}
-	
 
 }
