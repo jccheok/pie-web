@@ -9,16 +9,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import pie.Note;
 import pie.services.NoteService;
 import pie.utilities.Utilities;
 
+@Singleton
 public class GetNoteDraftsServlet extends HttpServlet{
 
 	private static final long serialVersionUID = -5614424479603279767L;
 	
 	NoteService noteService;
 	
+	@Inject
 	public GetNoteDraftsServlet(NoteService noteService) {
 		this.noteService = noteService;
 	}

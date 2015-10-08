@@ -15,7 +15,9 @@ import pie.services.NoteService;
 import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
+@Singleton
 public class SaveNoteAsDraftServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -4064235982988988385L;
