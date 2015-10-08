@@ -20,14 +20,14 @@ import pie.services.NoteService;
 import pie.utilities.Utilities;
 
 @Singleton
-public class GetNoteDraftsServlet extends HttpServlet{
+public class GetAllDraftNoteServlet extends HttpServlet{
 
 	private static final long serialVersionUID = -5614424479603279767L;
 	
 	NoteService noteService;
 	
 	@Inject
-	public GetNoteDraftsServlet(NoteService noteService) {
+	public GetAllDraftNoteServlet(NoteService noteService) {
 		this.noteService = noteService;
 	}
 	
@@ -60,13 +60,8 @@ public class GetNoteDraftsServlet extends HttpServlet{
 				noteObject.put("noteResponseQuestionID", note.getNoteQuestionID().getResponseQuestionID());
 				noteList.put(noteObject);
 			}
-			responseObject.put("draftNote", noteList);
-			
-		} else {
-			responseObject.put("result", "FAILED");
-			responseObject.put("message", "Draft note not found");
-		}
-		
+		} 
+		responseObject.put("draftNote", noteList);
 
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
