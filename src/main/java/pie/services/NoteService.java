@@ -10,6 +10,7 @@ import java.util.Date;
 import pie.Note;
 import pie.Staff;
 import pie.Student;
+import pie.constants.PublishNoteResult;
 import pie.utilities.DatabaseConnector;
 
 public class NoteService {
@@ -152,9 +153,10 @@ public class NoteService {
 		return sendResult;
 	}
 
-	public boolean publishNote(int noteID, int groupID) {
+	public PublishNoteResult publishNote(int noteID, int groupID) {
 
-		boolean publishResult = false;
+		PublishNoteResult publishResult = PublishNoteResult.SUCCESS;
+		GroupService groupService = new GroupService();
 
 		try {
 
@@ -167,17 +169,26 @@ public class NoteService {
 			pst.setInt(2, noteID);
 			
 			pst.executeUpdate();
-			
-			GroupService groupService = new GroupService();
-			Student[] groupStudents = groupService.getStudentMembers(groupID);
-
-			for(Student student: groupStudents) {
-				if(!sendNote(noteID, student.getUserID())) {
-					break;
+			if(pst.executeUpdate() == 0){
+				publishResult = PublishNoteResult.FAILED_DRAFT;
+			}else{
+				sql = "UPDATE `GroupNote` SET groupNotePublishDate = NOW() WHERE groupID = ? AND noteID = ?";
+				pst = conn.prepareStatement(sql);
+				pst.setInt(1, groupID);
+				pst.setInt(2, noteID);
+				
+				if(pst.executeUpdate() == 0){
+					publishResult = PublishNoteResult.FAILED_TO_UPDATE_GROUP;
+				}else{
+					Student[] groupStudents = groupService.getStudentMembers(groupID);
+					
+					for (Student student : groupStudents) {
+						if (!sendNote(noteID, student.getUserID())) {
+							publishResult = PublishNoteResult.FAILED_TO_SEND_TO_MEMBERS;
+						}
+					}
 				}
 			}
-			
-			publishResult = true;
 
 			conn.close();
 

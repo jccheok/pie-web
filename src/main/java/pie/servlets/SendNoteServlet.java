@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
+import pie.constants.PublishNoteResult;
 import pie.services.NoteService;
 import pie.utilities.Utilities;
 
@@ -37,7 +38,6 @@ public class SendNoteServlet extends HttpServlet {
 		int responseQuestionID = 0;
 		String noteTitle = null;
 		String noteDescription = null;
-		boolean isPublished = false;
 
 		try {
 
@@ -61,15 +61,11 @@ public class SendNoteServlet extends HttpServlet {
 		JSONObject responseObject = new JSONObject();
 		
 		if(noteID != -1) {
-			isPublished = noteService.publishNote(noteID, groupID);
 
-			if(isPublished) {
-				responseObject.put("result", "SUCCESS");
-				responseObject.put("message", "Note is successfully sent");
-			} else {
-				responseObject.put("result", "FAILED");
-				responseObject.put("message", "Note is not sent");
-			}
+			PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID);
+			responseObject.put("result", publishNoteResult.toString());
+			responseObject.put("message", publishNoteResult.getDefaultMessage());
+			
 		} else {
 			responseObject.put("result", "FAILED");
 			responseObject.put("message", "Note is not created");
