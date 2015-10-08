@@ -161,7 +161,7 @@ public class NoteService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "UPDATE `Note` SET noteDateCreated = NOW() noteIsDraft = ? WHERE noteID = ?";
+			String sql = "UPDATE `Note` SET noteDateCreated = NOW(), noteIsDraft = ? WHERE noteID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, 0);
 			pst.setInt(2, noteID);
