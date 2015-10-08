@@ -3,6 +3,7 @@ package pie.utilities;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,10 @@ public class Utilities {
 		}
 
 		return sb.toString();
+	}
+	
+	public static long toUnixSeconds(Date date) {
+		return (long) date.getTime() / 1000;
 	}
 	
 	public static Map<String, String> getParameters(HttpServletRequest servletRequest, String... parameters) throws ServletException {
