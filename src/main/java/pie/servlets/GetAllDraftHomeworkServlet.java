@@ -39,10 +39,16 @@ public class GetAllDraftHomeworkServlet extends HttpServlet {
 		JSONObject responseObject = new JSONObject();
 
 		int staffID = 0;
-
-		Map<String, String> requestParameters = Utilities.getParameters(request, "staffID");
-
-		staffID = Integer.parseInt(requestParameters.get("staffID"));
+		try {
+			
+			Map<String, String> requestParameters = Utilities.getParameters(request, "staffID");
+			staffID = Integer.parseInt(requestParameters.get("staffID"));
+			
+		} catch (Exception e) {
+			
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+			return;
+		}
 
 		Homework[] draftHomeworkList = homeworkService.getAllDraftHomework(staffID);
 
