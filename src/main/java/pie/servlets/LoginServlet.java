@@ -12,10 +12,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
+import pie.Staff;
+import pie.Student;
 import pie.User;
 import pie.constants.LoginResult;
 import pie.constants.SupportedPlatform;
 import pie.services.AuthService;
+import pie.services.StaffService;
+import pie.services.StudentService;
 import pie.services.UserService;
 import pie.utilities.Utilities;
 
@@ -26,14 +30,18 @@ import com.google.inject.Singleton;
 public class LoginServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 483038783219697909L;
-	
+
+	StaffService staffService;
+	StudentService studentService;
 	UserService userService;
 	AuthService authService;
-	
+
 	@Inject
-	public LoginServlet(UserService userService, AuthService authService) {
+	public LoginServlet(UserService userService, AuthService authService, StaffService staffService, StudentService studentService) {
 		this.userService = userService;
 		this.authService = authService;
+		this.staffService = staffService;
+		this.studentService = studentService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -74,6 +82,33 @@ public class LoginServlet extends HttpServlet {
 			userJSON.put("userType", user.getUserType().toString());
 			userJSON.put("userEmail", user.getUserEmail());
 			userJSON.put("userMobile", user.getUserMobile());
+			
+			switch(user.getUserType()) {
+				case STAFF: {
+					
+					Staff userStaff = staffService.getStaff(user.getUserID());
+					userJSON.put("schoolName", userStaff.getSchool().getSchoolName());
+					userJSON.put("staffTitle", userStaff.getStaffTitle());
+					userJSON.put("staffIsSchoolAdmin", userStaff.staffIsSchoolAdmin());
+					break;
+				}
+				case STUDENT: {
+					
+					Student userStudent = studentService.getStudent(user.getUserID());
+					userJSON.put("schoolName", userStudent.getSchool().getSchoolName());
+					userJSON.put("studentCode", userStudent.getStudentCode());
+					userJSON.put("studentEnlistmentDateUnix", Utilities.toUnixSeconds(userStudent.getStudentEnlistmentDate()));
+					break;
+				}
+				case ADMIN: {
+					
+					break;
+				}
+				case PARENT: {
+					
+					break;
+				}
+			}
 			
 			HashMap<String,Object> claims = new HashMap<String,Object>();
 			claims.put("userID", new Integer(user.getUserID()));
