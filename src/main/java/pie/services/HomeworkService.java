@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import pie.Homework;
@@ -71,7 +72,7 @@ public class HomeworkService {
 
 			String sql = "INSERT INTO `Homework` (staffID ,homeworkTitle ,homeworkSubject ,homeworkDescription ,homeworkMinutesRequired "
 					+ ",homeworkDueDate) VALUES (?,?,?,?,?,?)";
-			pst = conn.prepareStatement(sql);
+			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			pst.setInt(1, staffID);
 			pst.setString(2, homeworkTitle);
 			pst.setString(3, homeworkSubject);
