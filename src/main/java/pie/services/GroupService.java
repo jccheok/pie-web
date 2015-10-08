@@ -344,7 +344,7 @@ public class GroupService {
 
 			ArrayList<Student> tempStudentMembers = new ArrayList<Student>();
 			while (resultSet.next()) {
-				tempStudentMembers.add(studentService.getStudent(resultSet.getInt(1)));
+				tempStudentMembers.add(studentService.getStudent(resultSet.getInt("studentID")));
 			}
 			studentMembers = tempStudentMembers.toArray(studentMembers);
 

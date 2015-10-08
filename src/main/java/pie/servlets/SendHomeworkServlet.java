@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
 
 import pie.constants.GenericResult;
+import pie.constants.PublishHomeworkResult;
 import pie.services.GroupService;
 import pie.services.HomeworkService;
 import pie.utilities.Utilities;
@@ -71,9 +72,9 @@ public class SendHomeworkServlet extends HttpServlet {
 		JSONObject responseObject = new JSONObject();
 
 		if (homeworkID != -1) {
-			homeworkService.sendHomework(groupID, homeworkID);
-			responseObject.put("result", GenericResult.SUCCESS.toString());
-			responseObject.put("message", "Homework successfully created & sent");
+			PublishHomeworkResult publishHomeworkResult = homeworkService.publishHomework(groupID, homeworkID);
+			responseObject.put("result", publishHomeworkResult.toString());
+			responseObject.put("message", publishHomeworkResult.getDefaultMessage());
 		} else {
 			responseObject.put("result", GenericResult.FAILED.toString());
 			responseObject.put("message", "Failed to create homework");

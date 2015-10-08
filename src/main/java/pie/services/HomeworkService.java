@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import pie.Homework;
 import pie.Staff;
 import pie.Student;
+import pie.constants.PublishHomeworkResult;
 import pie.utilities.DatabaseConnector;
 
 public class HomeworkService {
@@ -308,11 +309,11 @@ public class HomeworkService {
 		return sendResult;
 	}
 
-	public boolean publishHomework(int groupID, int homeworkID) {
+	public PublishHomeworkResult publishHomework(int groupID, int homeworkID) {
 
-		boolean publishResult = false;
+		PublishHomeworkResult publishResult = PublishHomeworkResult.SUCCESS;
 		GroupService groupService = new GroupService();
-
+		
 		try {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
@@ -323,17 +324,26 @@ public class HomeworkService {
 			pst.setInt(2, 1);
 			pst.setInt(3, homeworkID);
 
-			pst.executeUpdate();
-
-			Student[] groupStudents = groupService.getStudentMembers(groupID);
-
-			for (Student student : groupStudents) {
-				if (!sendHomework(student.getUserID(), homeworkID)) {
-					break;
+			if(pst.executeUpdate() == 0){
+				publishResult = PublishHomeworkResult.FAILED_DRAFT;
+			}else{
+				sql = "UPDATE `GroupHomework` SET groupHomeworkPublishDate = NOW() WHERE groupID = ? AND homeworkID = ?";
+				pst = conn.prepareStatement(sql);
+				pst.setInt(1, groupID);
+				pst.setInt(2, homeworkID);
+				
+				if(pst.executeUpdate() == 0){
+					publishResult = PublishHomeworkResult.FAILED_TO_UPDATE_GROUP;
+				}else{
+					Student[] groupStudents = groupService.getStudentMembers(groupID);
+					
+					for (Student student : groupStudents) {
+						if (!sendHomework(student.getUserID(), homeworkID)) {
+							publishResult = PublishHomeworkResult.FAILED_TO_SEND_TO_MEMBERS;
+						}
+					}
 				}
 			}
-
-			publishResult = true;
 
 			conn.close();
 
