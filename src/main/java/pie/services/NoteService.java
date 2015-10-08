@@ -64,7 +64,7 @@ public class NoteService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "INSERT INTO 'Note' (staffID, responseQuestionID, noteTitle, noteDescription) VALUES (?, ?, ?, ?)";
+			String sql = "INSERT INTO `Note` (staffID, responseQuestionID, noteTitle, noteDescription) VALUES (?, ?, ?, ?)";
 			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			pst.setInt(1, staffID);
 			pst.setInt(2, responseQuestionID);
@@ -77,7 +77,7 @@ public class NoteService {
 			if(resultSet.next()) {
 				noteID = resultSet.getInt(1);
 
-				sql = "INSERT INTO 'GroupNote' (staffID, noteID, groupID) VALUES (?, ?, ?)";
+				sql = "INSERT INTO `GroupNote` (staffID, noteID, groupID) VALUES (?, ?, ?)";
 				pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 				pst.setInt(1, staffID);
 				pst.setInt(2, noteID);
@@ -134,7 +134,7 @@ public class NoteService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "INSERT 'UserNote' (noteID, userID) VALUES (?,?)";
+			String sql = "INSERT `UserNote` (noteID, userID) VALUES (?,?)";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, noteID);
 			pst.setInt(2, studentID);
@@ -285,7 +285,7 @@ public class NoteService {
 	}
 	
 	public Note[] getNotes(int userID) {
-		//Might be incomplete
+		
 		Note[] notes = {};
 
 		try {
