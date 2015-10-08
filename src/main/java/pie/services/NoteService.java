@@ -330,5 +330,34 @@ public class NoteService {
 		return notes;
 	}
 	
+	public boolean updateNote(String newNoteTitle, String newNoteDescription, int newResponseQuestionID, int noteID) {
+
+		boolean isUpdated = false;
+		
+		try {
+
+			PreparedStatement pst = null;
+			Connection conn = DatabaseConnector.getConnection();
+
+			String sql = "UPDATE `Note` SET noteTitle = ?, noteDescription = ?, responseQuestionID = ? WHERE noteID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setString(1, newNoteTitle);
+			pst.setString(2, newNoteDescription);
+			pst.setInt(3, newResponseQuestionID);
+			pst.setInt(4, noteID);
+			
+			pst.executeUpdate();
+			isUpdated = true;
+			
+			conn.close();
+
+		} catch(Exception e) {
+			
+			System.out.println(e);
+		}
+		
+		return isUpdated;
+	}
+	
 
 }
