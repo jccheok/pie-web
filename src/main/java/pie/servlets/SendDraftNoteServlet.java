@@ -61,13 +61,9 @@ public class SendDraftNoteServlet extends HttpServlet {
 		if(isUpdated) {
 			PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID);
 			
-			if(publishNoteResult == PublishNoteResult.SUCCESS) {
-				responseObject.put("result", publishNoteResult.toString());
-				responseObject.put("message", publishNoteResult.getDefaultMessage());
-			} else {
-				responseObject.put("result", publishNoteResult.toString());
-				responseObject.put("message", publishNoteResult.getDefaultMessage());
-			}
+			responseObject.put("result", publishNoteResult.toString());
+			responseObject.put("message", publishNoteResult.getDefaultMessage());
+			
 			
 		} else {
 			responseObject.put("result", "FAILED");
