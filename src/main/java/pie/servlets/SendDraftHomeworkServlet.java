@@ -51,7 +51,7 @@ public class SendDraftHomeworkServlet extends HttpServlet {
 		}
 
 		JSONObject responseObject = new JSONObject();
-
+		//update homework
 		PublishHomeworkResult publishHomeworkResult = homeworkService.publishHomework(groupID, homeworkID);
 		responseObject.put("result", publishHomeworkResult.toString());
 		responseObject.put("message", publishHomeworkResult.getDefaultMessage());

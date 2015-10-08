@@ -38,7 +38,7 @@ public class SaveHomeworkAsDraftServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		DateFormat dateFormat = new SimpleDateFormat("YY-mm-dd hh:mm:ss");
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 		int staffID = 0;
 		int groupID = 0;
@@ -59,7 +59,7 @@ public class SaveHomeworkAsDraftServlet extends HttpServlet {
 			homeworkSubject = requestParameters.get("homeworkSubject");
 			homeworkDescription = requestParameters.get("homeworkDescription");
 			homeworkMinutesRequired = Integer.parseInt(requestParameters.get("homeworkMinutesRequired"));
-			homeworkDueDate = new java.sql.Date(dateFormat.parse(requestParameters.get("homeworkDueDate")).getTime());
+			homeworkDueDate = dateFormat.parse(requestParameters.get("homeworkDueDate"));
 
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
