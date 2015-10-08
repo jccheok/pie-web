@@ -17,14 +17,19 @@ import pie.services.GroupService;
 import pie.services.HomeworkService;
 import pie.utilities.Utilities;
 
-public class GetAllDraftHomework extends HttpServlet {
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
+@Singleton
+public class GetAllDraftHomeworkServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -6427066420333527086L;
 
 	HomeworkService homeworkService;
 	GroupService groupService;
-
-	public GetAllDraftHomework(HomeworkService homeworkService, GroupService groupService) {
+	
+	@Inject
+	public GetAllDraftHomeworkServlet(HomeworkService homeworkService, GroupService groupService) {
 		this.homeworkService = homeworkService;
 		this.groupService = groupService;
 	}
