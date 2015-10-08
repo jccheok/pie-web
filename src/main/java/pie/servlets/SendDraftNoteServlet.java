@@ -1,6 +1,7 @@
 package pie.servlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -72,6 +73,9 @@ public class SendDraftNoteServlet extends HttpServlet {
 			responseObject.put("result", "FAILED");
 			responseObject.put("message", "Note is not updated!");
 		}
+		
+		PrintWriter out = response.getWriter();
+		out.write(responseObject.toString());
 
 	}
 
