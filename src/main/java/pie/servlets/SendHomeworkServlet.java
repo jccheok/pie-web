@@ -63,7 +63,9 @@ public class SendHomeworkServlet extends HttpServlet {
 			homeworkDueDate = new Date(dateFormat.parse(requestParameters.get("homeworkDueDate")).getTime());
 
 		} catch (Exception e) {
-			e.printStackTrace();
+
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+			return;
 		}
 
 		int homeworkID = homeworkService.createHomework(staffID, groupID, homeworkTitle, homeworkSubject,
