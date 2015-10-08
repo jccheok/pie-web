@@ -1,4 +1,4 @@
-package pie.services;
+package pie.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
+import pie.services.NoteService;
 import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
@@ -30,30 +31,24 @@ public class DeleteNoteServlet extends HttpServlet {
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		int isGettingDelete = 0;
 		int noteID = 0;
-		boolean isDeleted = false;
-		
+		boolean deleteResult = false;
 		try {
 			
-			Map<String, String> requestParameters = Utilities.getParameters(request, "noteID", "isGettingDelete");
+			Map<String, String> requestParameters = Utilities.getParameters(request, "noteID");
 
 			noteID = Integer.parseInt(requestParameters.get("noteID"));
-			isGettingDelete = Integer.parseInt(requestParameters.get("isGettingDelete"));
-			
-			if (isGettingDelete == 1) {
-				isDeleted = noteService.deleteNote(noteID);
-			} else {
-				isDeleted = false;
-			}
 			
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 			return;
 		}
 		
+		
+		deleteResult = noteService.deleteNote(noteID);
+		
 		JSONObject responseObject = new JSONObject();
-		if(isDeleted) {
+		if(deleteResult) {
 			responseObject.put("result", "SUCCESS");
 			responseObject.put("message", "Note deleted successfully");
 		} else {
