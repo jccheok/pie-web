@@ -27,7 +27,7 @@ public class GetAllDraftHomeworkServlet extends HttpServlet {
 
 	HomeworkService homeworkService;
 	GroupService groupService;
-	
+
 	@Inject
 	public GetAllDraftHomeworkServlet(HomeworkService homeworkService, GroupService groupService) {
 		this.homeworkService = homeworkService;
@@ -40,12 +40,12 @@ public class GetAllDraftHomeworkServlet extends HttpServlet {
 
 		int staffID = 0;
 		try {
-			
+
 			Map<String, String> requestParameters = Utilities.getParameters(request, "staffID");
 			staffID = Integer.parseInt(requestParameters.get("staffID"));
-			
+
 		} catch (Exception e) {
-			
+
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 			return;
 		}
@@ -53,13 +53,13 @@ public class GetAllDraftHomeworkServlet extends HttpServlet {
 		Homework[] draftHomeworkList = homeworkService.getAllDraftHomework(staffID);
 
 		JSONArray homeworkList = new JSONArray();
-		if(draftHomeworkList != null){
+		if (draftHomeworkList != null) {
 			for (Homework homework : draftHomeworkList) {
 				JSONObject homeworkObject = new JSONObject();
 				homeworkObject.put("homeworkID", homework.getHomeworkID());
 				homeworkObject.put("homeworkDateCreated", homework.getHomeworkDateCreated());
 				homeworkObject.put("homeworkDescription", homework.getHomeworkDescription());
-				homeworkObject.put("homeworkDueDateUnix", (long) homework.getHomeworkDueDate().getTime() / 1000);
+				homeworkObject.put("homeworkDueDateUnix", Utilities.toUnixSeconds(homework.getHomeworkDueDate()));
 				homeworkObject.put("homeworkTitle", homework.getHomeworkTitle());
 				homeworkObject.put("homeworkSubject", homework.getHomeworkSubject());
 				homeworkList.put(homeworkObject);
