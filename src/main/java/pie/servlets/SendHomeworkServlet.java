@@ -60,7 +60,7 @@ public class SendHomeworkServlet extends HttpServlet {
 			homeworkSubject = requestParameters.get("homeworkSubject");
 			homeworkDescription = requestParameters.get("homeworkDescription");
 			homeworkMinutesRequired = Integer.parseInt(requestParameters.get("homeworkMinutesRequired"));
-			homeworkDueDate = new Date(dateFormat.parse(requestParameters.get("homeworkDueDate")).getTime());
+			homeworkDueDate = new java.sql.Date(dateFormat.parse(requestParameters.get("homeworkDueDate")).getTime());
 
 		} catch (Exception e) {
 
