@@ -17,7 +17,6 @@ import org.json.JSONObject;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import pie.constants.GenericResult;
 import pie.services.GroupService;
 import pie.services.HomeworkService;
 import pie.utilities.Utilities;
@@ -29,7 +28,6 @@ public class SaveHomeworkAsDraftServlet extends HttpServlet {
 
 	HomeworkService homeworkService;
 	GroupService groupService;
-	DateFormat dateFormat;
 
 	@Inject
 	public SaveHomeworkAsDraftServlet(HomeworkService homeworkService, GroupService groupService) {
@@ -39,9 +37,7 @@ public class SaveHomeworkAsDraftServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		this.dateFormat = new SimpleDateFormat("YY-mm-dd hh:mm:ss");
-
-		JSONObject responseObject = new JSONObject();
+		DateFormat dateFormat = new SimpleDateFormat("YY-mm-dd hh:mm:ss");
 
 		int staffID = 0;
 		int groupID = 0;
@@ -64,19 +60,21 @@ public class SaveHomeworkAsDraftServlet extends HttpServlet {
 			homeworkMinutesRequired = Integer.parseInt(requestParameters.get("homeworkMinutesRequired"));
 			homeworkDueDate = new Date(dateFormat.parse(requestParameters.get("homeworkDueDate")).getTime());
 
-			int homeworkID = homeworkService.createHomework(staffID, groupID, homeworkTitle, homeworkSubject,
-					homeworkDescription, homeworkMinutesRequired, homeworkDueDate);
-
-			if (homeworkID != -1) {
-				responseObject.put("result", GenericResult.SUCCESS.toString());
-				responseObject.put("message", "Homework successfully created as draft");
-			} else {
-				responseObject.put("result", GenericResult.FAILED.toString());
-				responseObject.put("message", "Failed to create homework");
-			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+
+		JSONObject responseObject = new JSONObject();
+
+		int homeworkID = homeworkService.createHomework(staffID, groupID, homeworkTitle, homeworkSubject,
+				homeworkDescription, homeworkMinutesRequired, homeworkDueDate);
+
+		if (homeworkID != -1) {
+			responseObject.put("result", "SUCCESS");
+			responseObject.put("message", "Homework successfully created as draft");
+		} else {
+			responseObject.put("result", "SUCCESS");
+			responseObject.put("message", "Failed to create homework");
 		}
 
 		PrintWriter out = response.getWriter();

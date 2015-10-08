@@ -1,4 +1,4 @@
-package pie.services;
+ package pie.services;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -83,9 +83,6 @@ public class NoteService {
 				pst.setInt(2, noteID);
 				pst.setInt(3, groupID);
 				pst.executeUpdate();
-
-				resultSet = pst.getGeneratedKeys();
-
 			}
 
 			conn.close();
@@ -114,7 +111,9 @@ public class NoteService {
 
 			resultSet = pst.executeQuery();
 
-			hasReceived = resultSet.next();
+			if(resultSet.next()){
+				hasReceived = true;
+			}
 
 			conn.close();
 
@@ -126,32 +125,28 @@ public class NoteService {
 		return hasReceived;
 	}
 
-	public boolean sendNote(int groupID, int noteID) {
+	public boolean sendNote(int noteID, int studentID) {
 
 		boolean sendResult = false;
-		GroupService groupService = new GroupService();
-		Student[] groupStudents = groupService.getStudentMembers(groupID);
+		
+		try {
+			
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
 
-		for(Student student: groupStudents) {
-			try {
-				
-				Connection conn = DatabaseConnector.getConnection();
-				PreparedStatement pst = null;
+			String sql = "INSERT 'UserNote' (noteID, userID) VALUES (?,?)";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, noteID);
+			pst.setInt(2, studentID);
 
-				String sql = "INSERT 'UserNote' (noteID, userID) VALUES (?,?)";
-				pst = conn.prepareStatement(sql);
-				pst.setInt(1, noteID);
-				pst.setInt(2, student.getUserID());
+			pst.executeUpdate();
+			
+			sendResult = true;
+			
+			conn.close();
 
-				if(pst.executeUpdate() != 0) {
-					sendResult = true;
-				} 
-				
-				conn.close();
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		return sendResult;
@@ -170,12 +165,19 @@ public class NoteService {
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, 0);
 			pst.setInt(2, noteID);
+			
+			pst.executeUpdate();
+			
+			GroupService groupService = new GroupService();
+			Student[] groupStudents = groupService.getStudentMembers(groupID);
 
-			if(pst.executeUpdate() != 0) {
-				if(sendNote(noteID, groupID)) {
-					publishResult = true;
+			for(Student student: groupStudents) {
+				if(!sendNote(noteID, student.getUserID())) {
+					break;
 				}
 			}
+			
+			publishResult = true;
 
 			conn.close();
 
@@ -185,7 +187,6 @@ public class NoteService {
 		}
 
 		return publishResult;
-
 	}
 	
 	public boolean deleteNote(int noteID) {

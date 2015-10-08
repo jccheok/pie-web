@@ -480,12 +480,8 @@ public class GroupService {
 		Student[] groupStudents = getStudentMembers(groupID);
 		Staff[] groupStaffs = getStaffMembers(groupID);
 
-		for (Student student : groupStudents) {
-			memberCount += 1;
-		}
-		for (Staff staff : groupStaffs) {
-			memberCount += 1;
-		}
+		memberCount += groupStudents.length;
+		memberCount += groupStaffs.length;
 
 		return memberCount;
 	}
