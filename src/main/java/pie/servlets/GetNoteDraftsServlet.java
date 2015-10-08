@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -28,9 +31,8 @@ public class GetNoteDraftsServlet extends HttpServlet{
 		this.noteService = noteService;
 	}
 	
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		PrintWriter out = response.getWriter();
 		int staffID = 0;
 		Note[] noteDrafts = null;
 		
@@ -46,16 +48,28 @@ public class GetNoteDraftsServlet extends HttpServlet{
 		}
 		
 		noteDrafts = noteService.getNoteDrafts(staffID);
-		out.println("{\"notes\" : [");
-		for (int index = 0; index < noteDrafts.length; index++) {
-
-			Note note = noteDrafts[index];
-			out.println("{\"noteID\" : " + note.getNoteID() + ",");
-			out.println("\"noteTitle\" : \"" + note.getNoteTitle() + "\",");
-			out.println("\"noteDescription\" : \"" + note.getNoteDescription() + "\",");
-			out.println("\"noteAuthor\" : \"" + note.getNoteAuthor().getUserFullName() + "\",");
-			out.println("\"noteResponseQuestionID\" : " + note.getNoteQuestionID().getResponseQuestionID() + "}");
+		JSONObject responseObject = new JSONObject();
+		JSONArray noteList = new JSONArray();
+		if(noteDrafts != null) {
+			for (Note note : noteDrafts) {
+				JSONObject noteObject = new JSONObject();
+				noteObject.put("noteID", note.getNoteID());
+				noteObject.put("noteTitle", note.getNoteTitle());
+				noteObject.put("noteDescription", note.getNoteDescription());
+				noteObject.put("noteAuthor", note.getNoteAuthor().getUserFullName());
+				noteObject.put("noteResponseQuestionID", note.getNoteQuestionID().getResponseQuestionID());
+				noteList.put(noteObject);
+			}
+			responseObject.put("draftNote", noteList);
+			
+		} else {
+			responseObject.put("result", "FAILED");
+			responseObject.put("message", "Draft note not found");
 		}
-		out.println("]}");
+		
+
+		PrintWriter out = response.getWriter();
+		out.write(responseObject.toString());
+		
 	}
 }
