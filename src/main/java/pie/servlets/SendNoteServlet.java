@@ -14,12 +14,17 @@ import org.json.JSONObject;
 import pie.services.NoteService;
 import pie.utilities.Utilities;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
+@Singleton
 public class SendNoteServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -4985014150620092494L;
 
 	NoteService noteService;
-
+	
+	@Inject
 	public SendNoteServlet(NoteService noteService) {
 		this.noteService = noteService;
 	}
@@ -69,7 +74,7 @@ public class SendNoteServlet extends HttpServlet {
 			responseObject.put("result", "FAILED");
 			responseObject.put("message", "Note is not created");
 		}
-
+		
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
 	}
