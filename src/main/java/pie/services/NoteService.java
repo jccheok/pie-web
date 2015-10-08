@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import pie.Note;
+import pie.ResponseQuestion;
 import pie.Staff;
 import pie.Student;
 import pie.constants.PublishNoteResult;
@@ -41,9 +42,10 @@ public class NoteService {
 				boolean noteIsDeleted = resultSet.getInt("noteIsDeleted") == 1;
 				Date noteDateCreated = new Date(resultSet.getTimestamp("noteDateCreated").getTime());
 				Date noteDateDeleted = new Date(resultSet.getTimestamp("noteDateDeleted").getTime());
+				ResponseQuestion noteQuestionID = new ResponseQuestionService().getResponseQuestion(resultSet.getInt("noteQuestionID"));
 
 				note = new Note(noteID, noteAuthor, noteTitle, noteDescription, noteIsTemplate, noteIsDraft,
-						noteIsDeleted, noteDateCreated, noteDateDeleted);
+						noteIsDeleted, noteDateCreated, noteDateDeleted, noteQuestionID);
 			}
 
 			conn.close();
