@@ -1,7 +1,7 @@
 package pie.services;
 
 import java.sql.Connection;
-import java.sql.Date;
+import java.util.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -46,8 +46,7 @@ public class HomeworkService {
 				boolean homeworkIsDeleted = resultSet.getInt("homeworkIsDeleted") == 1 ? true : false;
 				Date homeworkDateDeleted = new Date(resultSet.getTimestamp("homeworkDateDeleted").getTime());
 
-				homework = new Homework(homeworkID, homeworkAuthor, homeworkTitle, homeworkSubject,
-						homeworkDescription,
+				homework = new Homework(homeworkID, homeworkAuthor, homeworkTitle, homeworkSubject, homeworkDescription,
 						homeworkMinutesRequired, homeworkDueDate, homeworkIsOpen, homeworkDateCreated, homeworkIsDraft,
 						homeworkIsTemplate, homeworkIsDeleted, homeworkDateDeleted);
 			}
@@ -79,7 +78,7 @@ public class HomeworkService {
 			pst.setString(3, homeworkSubject);
 			pst.setString(4, homeworkDescription);
 			pst.setInt(5, homeworkMinutesRequired);
-			pst.setDate(6, homeworkDueDate);
+			pst.setDate(6, new java.sql.Date(homeworkDueDate.getTime()));
 			pst.executeUpdate();
 
 			resultSet = pst.getGeneratedKeys();
@@ -95,7 +94,7 @@ public class HomeworkService {
 				pst.executeUpdate();
 			}
 			conn.close();
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -266,7 +265,7 @@ public class HomeworkService {
 				pst.setString(2, homeworkSubject);
 				pst.setString(3, homeworkDescription);
 				pst.setInt(4, homeworkMinutesRequired);
-				pst.setDate(5, homeworkDueDate);
+				pst.setDate(5, new java.sql.Date(homeworkDueDate.getTime()));
 				pst.setInt(6, homeworkID);
 
 				pst.executeUpdate();
@@ -313,7 +312,7 @@ public class HomeworkService {
 
 		PublishHomeworkResult publishResult = PublishHomeworkResult.SUCCESS;
 		GroupService groupService = new GroupService();
-		
+
 		try {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
@@ -324,19 +323,19 @@ public class HomeworkService {
 			pst.setInt(2, 1);
 			pst.setInt(3, homeworkID);
 
-			if(pst.executeUpdate() == 0){
+			if (pst.executeUpdate() == 0) {
 				publishResult = PublishHomeworkResult.FAILED_DRAFT;
-			}else{
+			} else {
 				sql = "UPDATE `GroupHomework` SET groupHomeworkPublishDate = NOW() WHERE groupID = ? AND homeworkID = ?";
 				pst = conn.prepareStatement(sql);
 				pst.setInt(1, groupID);
 				pst.setInt(2, homeworkID);
-				
-				if(pst.executeUpdate() == 0){
+
+				if (pst.executeUpdate() == 0) {
 					publishResult = PublishHomeworkResult.FAILED_TO_UPDATE_GROUP;
-				}else{
+				} else {
 					Student[] groupStudents = groupService.getStudentMembers(groupID);
-					
+
 					for (Student student : groupStudents) {
 						if (!sendHomework(student.getUserID(), homeworkID)) {
 							publishResult = PublishHomeworkResult.FAILED_TO_SEND_TO_MEMBERS;
@@ -353,12 +352,12 @@ public class HomeworkService {
 
 		return publishResult;
 	}
-	
+
 	public Homework getDraftHomework(int homeworkID) {
 
 		Homework homework = null;
-		
-		Staff homeworkAuthor  = null;
+
+		Staff homeworkAuthor = null;
 		String homeworkTitle = null;
 		String homeworkSubject = null;
 		String homeworkDescription = null;
@@ -370,7 +369,7 @@ public class HomeworkService {
 		boolean homeworkIsTemplate = false;
 		boolean homeworkIsDeleted = false;
 		Date homeworkDateDeleted = null;
-		
+
 		try {
 
 			Connection conn = DatabaseConnector.getConnection();
@@ -388,8 +387,8 @@ public class HomeworkService {
 
 				homeworkAuthor = new StaffService().getStaff(resultSet.getInt("staffID"));
 				homeworkTitle = resultSet.getString("homeworkTitle");
-				homeworkSubject	 = resultSet.getString("homeworkSubject");
-				homeworkDescription	 = resultSet.getString("homeworkDescription");
+				homeworkSubject = resultSet.getString("homeworkSubject");
+				homeworkDescription = resultSet.getString("homeworkDescription");
 				homeworkMinutesRequired = resultSet.getInt("homeworkMinutesRequired");
 				homeworkDueDate = new Date(resultSet.getTimestamp("homeworkDueDate").getTime());
 				homeworkDateCreated = new Date(resultSet.getTimestamp("homeworkDateCreated").getTime());
@@ -399,8 +398,7 @@ public class HomeworkService {
 				homeworkIsDeleted = resultSet.getInt("homeworkIsDeleted") == 1 ? true : false;
 				homeworkDateDeleted = new Date(resultSet.getTimestamp("homeworkDateDeleted").getTime());
 
-				homework = new Homework(homeworkID, homeworkAuthor, homeworkTitle, homeworkSubject,
-						homeworkDescription,
+				homework = new Homework(homeworkID, homeworkAuthor, homeworkTitle, homeworkSubject, homeworkDescription,
 						homeworkMinutesRequired, homeworkDueDate, homeworkIsOpen, homeworkDateCreated, homeworkIsDraft,
 						homeworkIsTemplate, homeworkIsDeleted, homeworkDateDeleted);
 			}
