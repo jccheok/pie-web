@@ -40,12 +40,12 @@ public class GetAllSentHomeworkServlet extends HttpServlet {
 		int staffID = 0;
 
 		try {
-			
+
 			Map<String, String> requestParameters = Utilities.getParameters(request, "staffID");
 			staffID = Integer.parseInt(requestParameters.get("staffID"));
-			
+
 		} catch (Exception e) {
-			
+
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 			return;
 		}
