@@ -47,18 +47,18 @@ public class GetAllDraftHomeworkServlet extends HttpServlet {
 		Homework[] draftHomeworkList = homeworkService.getAllDraftHomework(staffID);
 
 		JSONArray homeworkList = new JSONArray();
-
-		for (Homework homework : draftHomeworkList) {
-			JSONObject homeworkObject = new JSONObject();
-			homeworkObject.put("homeworkID", homework.getHomeworkID());
-			homeworkObject.put("homeworkDateCreated", homework.getHomeworkDateCreated());
-			homeworkObject.put("homeworkDescription", homework.getHomeworkDescription());
-			homeworkObject.put("homeworkDueDateUnix", (long) homework.getHomeworkDueDate().getTime() / 1000);
-			homeworkObject.put("homeworkTitle", homework.getHomeworkTitle());
-			homeworkObject.put("homeworkSubject", homework.getHomeworkSubject());
-			homeworkList.put(homeworkObject);
+		if(draftHomeworkList != null){
+			for (Homework homework : draftHomeworkList) {
+				JSONObject homeworkObject = new JSONObject();
+				homeworkObject.put("homeworkID", homework.getHomeworkID());
+				homeworkObject.put("homeworkDateCreated", homework.getHomeworkDateCreated());
+				homeworkObject.put("homeworkDescription", homework.getHomeworkDescription());
+				homeworkObject.put("homeworkDueDateUnix", (long) homework.getHomeworkDueDate().getTime() / 1000);
+				homeworkObject.put("homeworkTitle", homework.getHomeworkTitle());
+				homeworkObject.put("homeworkSubject", homework.getHomeworkSubject());
+				homeworkList.put(homeworkObject);
+			}
 		}
-
 		responseObject.put("draftHomework", homeworkList);
 
 		PrintWriter out = response.getWriter();
