@@ -59,7 +59,7 @@ public class SaveHomeworkAsDraftServlet extends HttpServlet {
 			homeworkSubject = requestParameters.get("homeworkSubject");
 			homeworkDescription = requestParameters.get("homeworkDescription");
 			homeworkMinutesRequired = Integer.parseInt(requestParameters.get("homeworkMinutesRequired"));
-			homeworkDueDate = new java.sql.Date(dateFormat.parse(requestParameters.get("homeworkDueDate")).getTime());
+			homeworkDueDate = dateFormat.parse(requestParameters.get("homeworkDueDate"));
 
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
