@@ -320,7 +320,7 @@ public class StudentService {
 	}
 
 	public JoinGroupResult joinGroup(int studentID, int groupID, String groupCode) {
-
+		
 		GroupService groupService = new GroupService();
 		JoinGroupResult joinGroupResult = JoinGroupResult.SUCCESS;
 
@@ -334,6 +334,8 @@ public class StudentService {
 			joinGroupResult = JoinGroupResult.MISSING_GROUP_CODE;
 		} else if (!group.getGroupCode().equals(groupCode)) {
 			joinGroupResult = JoinGroupResult.INVALID_GROUP_CODE;
+		} else if (groupService.hasGroupMember(groupID, studentID)) {
+			joinGroupResult = JoinGroupResult.ALREADY_MEMBER;
 		} else {
 			int nextStudentIndexNumber = groupService.getNextStudentIndexNumber(groupID);
 			groupService.addStudentToGroup(groupID, studentID, nextStudentIndexNumber);

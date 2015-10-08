@@ -255,6 +255,8 @@ public class StaffService {
 			joinGroupResult = JoinGroupResult.MISSING_GROUP_CODE;
 		} else if (!group.getGroupCode().equals(groupCode)) {
 			joinGroupResult = JoinGroupResult.INVALID_GROUP_CODE;
+		} else if (groupService.hasGroupMember(groupID, staffID)) {
+			joinGroupResult = JoinGroupResult.ALREADY_MEMBER;
 		} else {
 			groupService.addStaffToGroup(groupID, staffID, staffRole);
 		}
