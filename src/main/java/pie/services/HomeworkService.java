@@ -387,7 +387,7 @@ public class HomeworkService {
 			if (resultSet.next()) {
 
 				homeworkAuthor = new StaffService().getStaff(resultSet.getInt("teacherID"));
-				homeworkTitle = resultSet.getString("homworkTitle");
+				homeworkTitle = resultSet.getString("homeworkTitle");
 				homeworkSubject	 = resultSet.getString("homeworkSubject");
 				homeworkDescription	 = resultSet.getString("homeworkDescription");
 				homeworkMinutesRequired = resultSet.getInt("homeworkMinutesRequired");
