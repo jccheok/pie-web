@@ -51,10 +51,10 @@ public class GetNoteDraftsServlet extends HttpServlet{
 
 			Note note = noteDrafts[index];
 			out.println("{\"noteID\" : " + note.getNoteID() + ",");
-			out.println("\"noteSubject\" : \"" + note.getNoteTitle() + "\",");
-			out.println("\"noteContent\" : \"" + note.getNoteDescription() + "\",");
+			out.println("\"noteTitle\" : \"" + note.getNoteTitle() + "\",");
+			out.println("\"noteDescription\" : \"" + note.getNoteDescription() + "\",");
 			out.println("\"noteAuthor\" : \"" + note.getNoteAuthor().getUserFullName() + "\",");
-			out.println("\"noteResponseID\" : " + note.getNoteQuestionID().getResponseQuestionID() + "}");
+			out.println("\"noteResponseQuestionID\" : " + note.getNoteQuestionID().getResponseQuestionID() + "}");
 		}
 		out.println("]}");
 	}
