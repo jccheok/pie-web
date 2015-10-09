@@ -207,49 +207,21 @@ public class NoteService {
 	public DeleteNoteResult deleteNote(int noteID) {
 
 		DeleteNoteResult deleteNoteResult = DeleteNoteResult.SUCCESS;
-
-		Note note = getNote(noteID);
-		if(note == null){
-			deleteNoteResult = DeleteNoteResult.NOTE_DOES_NOT_EXIST;
-		}else if(!note.isNoteDraft()){
-			try {
-
-				PreparedStatement pst = null;
-				Connection conn = DatabaseConnector.getConnection();
-
-				String sql = "UPDATE `Note` SET noteIsDeleted = ? WHERE noteID = ?";
-				pst = conn.prepareStatement(sql);
-				pst.setInt(1, 1);
-				pst.setInt(2, noteID);
-
-				if(pst.executeUpdate() == 0){
-					deleteNoteResult = DeleteNoteResult.FAILED_TO_SET_TO_DELETE;
-				}
-
-				conn.close();
-
-			} catch (Exception e) {
-
-				System.out.println(e);
-			}
-		} else {
-			try {
-				Connection conn = DatabaseConnector.getConnection();
-				PreparedStatement pst = null;
-
-				String sql = "DELETE FROM `Note`, `GroupNote` WHERE `Note`.noteID = `GroupNote`.noteID AND `Note`.noteID = ? AND `Note`.noteIsDraft = ?";
-				pst = conn.prepareStatement(sql);
-				pst.setInt(1, noteID);
-				pst.setInt(2, 1);
-
-				if(pst.executeUpdate() == 0){
+		try{
+			Note note = getNote(noteID);
+			if(note == null){
+				deleteNoteResult = DeleteNoteResult.NOTE_DOES_NOT_EXIST;
+			}else if(note.isNoteDraft()){
+				if(!deleteDraftNote(noteID)){
 					deleteNoteResult = DeleteNoteResult.FAILED_REMOVE_NOTE;
 				}
-				conn.close();
-
-			} catch (Exception e) {
-				e.printStackTrace();
+			}else{
+				if(!deletePublishedNote(noteID)){
+					deleteNoteResult = DeleteNoteResult.FAILED_TO_SET_TO_DELETE;
+				}
 			}
+		}catch(Exception e){
+			e.printStackTrace();
 		}
 
 		return deleteNoteResult;
@@ -382,6 +354,56 @@ public class NoteService {
 		}
 
 		return isUpdated;
+	}
+	
+	public boolean deletePublishedNote(int noteID){
+		boolean deleteNoteResult = false;
+		
+		try {
+
+			PreparedStatement pst = null;
+			Connection conn = DatabaseConnector.getConnection();
+
+			String sql = "UPDATE `Note` SET noteIsDeleted = ? WHERE noteID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, 1);
+			pst.setInt(2, noteID);
+			
+			pst.executeUpdate();
+			deleteNoteResult = true;
+			
+			conn.close();
+
+		} catch (Exception e) {
+
+			System.out.println(e);
+		}
+		
+		return deleteNoteResult;
+	}
+	
+	public boolean deleteDraftNote(int noteID){
+		boolean deleteNoteResult = false;
+		
+		try {
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+
+			String sql = "DELETE FROM `Note`, `GroupNote` WHERE `Note`.noteID = `GroupNote`.noteID AND `Note`.noteID = ? AND `Note`.noteIsDraft = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, noteID);
+			pst.setInt(2, 1);
+
+			if(pst.executeUpdate() == 0){
+				deleteNoteResult = true;
+			}
+			conn.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return deleteNoteResult;
 	}
 
 }
