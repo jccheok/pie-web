@@ -62,7 +62,7 @@ public class HomeworkService {
 	}
 
 	public int createHomework(int staffID, int groupID, String homeworkTitle, String homeworkSubject,
-			String homeworkDescription, int homeworkMinutesRequired, Date homeworkDueDate) {
+			String homeworkDescription, int homeworkMinutesRequired, Date homeworkDueDate, boolean homeworkIsGraded) {
 
 		int homeworkID = -1;
 
@@ -80,6 +80,7 @@ public class HomeworkService {
 			pst.setString(4, homeworkDescription);
 			pst.setInt(5, homeworkMinutesRequired);
 			pst.setDate(6, new java.sql.Date(homeworkDueDate.getTime()));
+			pst.setInt(7, homeworkIsGraded ? 1 : 0);
 			pst.executeUpdate();
 
 			resultSet = pst.getGeneratedKeys();
@@ -415,7 +416,7 @@ public class HomeworkService {
 		return homework;
 	}
 
-	public Homework[] getAllHomework(int staffID) {
+	public Homework[] getAllHomework(int groupID) {
 
 		Homework[] listHomeworks = {};
 
@@ -424,9 +425,9 @@ public class HomeworkService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT homeworkID FROM `Homework` WHERE staffID = ?";
+			String sql = "SELECT homeworkID FROM `GroupHomework` WHERE groupID = ?";
 			pst = conn.prepareStatement(sql);
-			pst.setInt(1, staffID);
+			pst.setInt(1, groupID);
 			resultSet = pst.executeQuery();
 
 			ArrayList<Homework> tempHwList = new ArrayList<Homework>();
@@ -442,6 +443,29 @@ public class HomeworkService {
 		}
 
 		return listHomeworks;
+	}
+
+	public boolean isAuthor(int staffID, int homeworkID) {
+		boolean isAuthor = false;
+
+		try {
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT * FROM `Homework` WHERE staffID = ? AND homeworkID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, staffID);
+			pst.setInt(2, homeworkID);
+			resultSet = pst.executeQuery();
+
+			if (resultSet.next()) {
+				isAuthor = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return isAuthor;
 	}
 
 }
