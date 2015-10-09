@@ -19,14 +19,16 @@ public class User {
 	private Date userLastUpdate;
 	private SecurityQuestion userSecurityQuestion;
 	private String userSecurityAnswer;
-
+	private String userLastPassword1, userLastPassword2;
+	private Date userPasswordLastUpdate;
 	public User() {}
 	
 	public User(int userID, Address userAddress, String userFirstName,
 			String userLastName, UserType userType, String userEmail,
 			String userPassword, String userMobile, boolean userIsValid,
 			boolean userIsVerified, Date userLastLogin,
-			Date userRegistrationDate, Date userLastUpdate, SecurityQuestion userSecurityQuestion, String userSecurityAnswer) {
+			Date userRegistrationDate, Date userLastUpdate, SecurityQuestion userSecurityQuestion, 
+			String userSecurityAnswer, String userLastPassword1, String userLastPassword2, Date userPasswordLastUpdate) {
 		
 		setUserID(userID);
 		setUserAddress(userAddress);
@@ -43,9 +45,13 @@ public class User {
 		setUserLastUpdate(userLastUpdate);
 		setUserSecurityQuestion(userSecurityQuestion);
 		setUserSecurityAnswer(userSecurityAnswer);
+		setUserLastPassword1(userLastPassword1);
+		setUserLastPassword2(userLastPassword2);
+		setUserPasswordLastUpdate(userPasswordLastUpdate);
+		
 	}
 	
-public User(User user) {
+	public User(User user) {
 		
 		setUserID(user.getUserID());
 		setUserAddress(user.getUserAddress());
@@ -62,7 +68,11 @@ public User(User user) {
 		setUserLastUpdate(user.getUserLastUpdate());
 		setUserSecurityQuestion(user.getUserSecurityQuestion());
 		setUserSecurityAnswer(user.getUserSecurityAnswer());
-	}
+		setUserLastPassword1(user.getUserLastPassword1());
+		setUserLastPassword2(user.getUserLastPassword2());
+		setUserPasswordLastUpdate(user.getUserPasswordLastUpdate());
+		
+	}	
 
 	public int getUserID() {
 		return userID;
@@ -190,5 +200,29 @@ public User(User user) {
 
 	public void setUserSecurityAnswer(String userSecurityAnswer) {
 		this.userSecurityAnswer = userSecurityAnswer;
+	}
+
+	public String getUserLastPassword2() {
+		return userLastPassword2;
+	}
+
+	public void setUserLastPassword2(String userLastPassword2) {
+		this.userLastPassword2 = userLastPassword2;
+	}
+
+	public String getUserLastPassword1() {
+		return userLastPassword1;
+	}
+
+	public void setUserLastPassword1(String userLastPassword1) {
+		this.userLastPassword1 = userLastPassword1;
+	}
+
+	public Date getUserPasswordLastUpdate() {
+		return userPasswordLastUpdate;
+	}
+
+	public void setUserPasswordLastUpdate(Date userPasswordLastUpdate) {
+		this.userPasswordLastUpdate = userPasswordLastUpdate;
 	}
 }
