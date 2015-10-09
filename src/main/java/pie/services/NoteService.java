@@ -11,6 +11,7 @@ import pie.Note;
 import pie.ResponseQuestion;
 import pie.Staff;
 import pie.Student;
+import pie.constants.DeleteNoteResult;
 import pie.constants.PublishNoteResult;
 import pie.utilities.DatabaseConnector;
 
@@ -203,13 +204,14 @@ public class NoteService {
 		return publishResult;
 	}
 
-	public boolean deleteNote(int noteID) {
+	public DeleteNoteResult deleteNote(int noteID) {
 
-		boolean isDeleted = false;
+		DeleteNoteResult deleteNoteResult = DeleteNoteResult.SUCCESS;
 
 		Note note = getNote(noteID);
-
-		if (!note.isNoteDraft()) {
+		if(note == null){
+			deleteNoteResult = DeleteNoteResult.NOTE_DOES_NOT_EXIST;
+		}else if(!note.isNoteDraft()){
 			try {
 
 				PreparedStatement pst = null;
@@ -220,8 +222,9 @@ public class NoteService {
 				pst.setInt(1, 1);
 				pst.setInt(2, noteID);
 
-				pst.executeUpdate();
-				isDeleted = true;
+				if(pst.executeUpdate() == 0){
+					deleteNoteResult = DeleteNoteResult.FAILED_TO_SET_TO_DELETE;
+				}
 
 				conn.close();
 
@@ -239,10 +242,9 @@ public class NoteService {
 				pst.setInt(1, noteID);
 				pst.setInt(2, 1);
 
-				pst.executeUpdate();
-
-				isDeleted = true;
-
+				if(pst.executeUpdate() == 0){
+					deleteNoteResult = DeleteNoteResult.FAILED_REMOVE_NOTE;
+				}
 				conn.close();
 
 			} catch (Exception e) {
@@ -250,7 +252,7 @@ public class NoteService {
 			}
 		}
 
-		return isDeleted;
+		return deleteNoteResult;
 	}
 
 	public Note[] getNoteDrafts(int staffID) {

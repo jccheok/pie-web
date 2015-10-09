@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
+import pie.constants.DeleteNoteResult;
 import pie.services.NoteService;
 import pie.utilities.Utilities;
 
@@ -32,7 +33,7 @@ public class DeleteNoteServlet extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		int noteID = 0;
-		boolean deleteResult = false;
+		
 		try {
 			
 			Map<String, String> requestParameters = Utilities.getParameters(request, "noteID");
@@ -45,16 +46,11 @@ public class DeleteNoteServlet extends HttpServlet {
 		}
 		
 		
-		deleteResult = noteService.deleteNote(noteID);
+		DeleteNoteResult deleteNoteResult = noteService.deleteNote(noteID);
 		
 		JSONObject responseObject = new JSONObject();
-		if(deleteResult) {
-			responseObject.put("result", "SUCCESS");
-			responseObject.put("message", "Note deleted successfully");
-		} else {
-			responseObject.put("result", "FAILED");
-			responseObject.put("message","Note is not deleted");
-		}
+		responseObject.put("result", deleteNoteResult.toString());
+		responseObject.put("message", deleteNoteResult.getDefaultMessage());
 		
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
