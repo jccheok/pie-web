@@ -34,20 +34,22 @@ public class UpdatePasswordServlet extends HttpServlet {
 		
 		int userID = 0;
 		String newUserPassword = null;
+		String oldUserPassword = null;
 		
 		try {
 			
-			Map<String, String> requestParameters = Utilities.getParameters(request, "userID", "newUserPassword");
+			Map<String, String> requestParameters = Utilities.getParameters(request, "userID", "newUserPassword", "oldUserPassword");
 
 			userID = Integer.parseInt(requestParameters.get("userID"));
 			newUserPassword = requestParameters.get("newUserPassword");
+			oldUserPassword = requestParameters.get("oldUserPassword");
 			
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 			return;
 		}
 		
-		UpdatePasswordResult updatePasswordResult = userService.updatePassword(userID, newUserPassword);
+		UpdatePasswordResult updatePasswordResult = userService.updatePassword(userID, newUserPassword, oldUserPassword);
 		
 		JSONObject responseObject = new JSONObject();
 		

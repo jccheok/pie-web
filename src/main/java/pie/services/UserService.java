@@ -338,11 +338,13 @@ public class UserService {
 		return resetPasswordResult;
 	}
 	
-	public UpdatePasswordResult updatePassword(int userID, String newUserPassword){
+	public UpdatePasswordResult updatePassword(int userID, String newUserPassword, String oldUserPassword){
 		UpdatePasswordResult updatePasswordResult = UpdatePasswordResult.SUCCESS;
 		
 		User user = getUser(userID);
-		if(user.getUserLastPassword1().equals(newUserPassword)){
+		if(!user.getUserPassword().equals(oldUserPassword)){
+			updatePasswordResult = UpdatePasswordResult.OLD_PASSWORD_DOES_NOT_MATCH;
+		}else if(user.getUserLastPassword1().equals(newUserPassword)){
 			updatePasswordResult = UpdatePasswordResult.SAME_AS_OLD_PASSWORD;
 		}else if(user.getUserLastPassword2().equals(newUserPassword)){
 			updatePasswordResult = UpdatePasswordResult.SAME_AS_OLD_PASSWORD;
