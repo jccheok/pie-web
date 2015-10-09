@@ -15,7 +15,6 @@ import org.json.JSONObject;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import pie.Homework;
 import pie.constants.PublishHomeworkResult;
 import pie.services.GroupService;
 import pie.services.HomeworkService;
