@@ -383,21 +383,15 @@ public class NoteService {
 		try {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
-			String sql = "DELETE FROM `GroupNote` WHERE noteID = ?";
-
+		
+			String sql = "DELETE FROM `Note` WHERE noteID = ? AND noteIsDraft = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, noteID);
+			pst.setInt(2, 1);
 			
-			if(pst.executeUpdate() == 0){
-				sql = "DELETE FROM `Note` WHERE noteID = ? AND noteIsDraft = ?";
-				pst = conn.prepareStatement(sql);
-				pst.setInt(1, noteID);
-				pst.setInt(2, 1);
-				
-				pst.executeUpdate();
-				
-				deleteNoteResult = true;
-			}
+			pst.executeUpdate();
+			
+			deleteNoteResult = true;
 			
 			conn.close();
 
