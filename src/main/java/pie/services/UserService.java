@@ -15,6 +15,7 @@ import pie.UserType;
 import pie.constants.LoginResult;
 import pie.constants.ResetPasswordResult;
 import pie.constants.SupportedPlatform;
+import pie.constants.UpdatePasswordResult;
 import pie.utilities.DatabaseConnector;
 import pie.utilities.Utilities;
 
@@ -335,5 +336,39 @@ public class UserService {
 		}
 		
 		return resetPasswordResult;
+	}
+	
+	public UpdatePasswordResult updatePassword(int userID, String newUserPassword){
+		UpdatePasswordResult updatePasswordResult = UpdatePasswordResult.SUCCESS;
+		
+		User user = getUser(userID);
+		if(user.getUserLastPassword1().equals(newUserPassword)){
+			updatePasswordResult = UpdatePasswordResult.SAME_AS_OLD_PASSWORD;
+		}else if(user.getUserLastPassword2().equals(newUserPassword)){
+			updatePasswordResult = UpdatePasswordResult.SAME_AS_OLD_PASSWORD;
+		}else{
+			try{
+				Connection conn = DatabaseConnector.getConnection();
+				PreparedStatement pst = null;
+				
+				String sql = "UPDATE `User` SET userPassword = ?, userPasswordLastUpdate = NOW(), userLastPassword1 = ?, userLastPassword2 = ? WHERE userID = ?";
+				pst = conn.prepareStatement(sql);
+				pst.setString(1, newUserPassword);
+				pst.setString(2, user.getUserLastPassword2());
+				pst.setString(3, user.getUserPassword());
+				pst.setInt(4, userID);
+				
+				if(pst.executeUpdate() == 0){
+					updatePasswordResult = UpdatePasswordResult.PASSWORD_IS_NOT_UPDATED;
+				}
+				
+				conn.close();
+				
+			}catch(Exception e){
+				System.out.println(e);
+			}
+		}
+		
+		return updatePasswordResult;
 	}
 }
