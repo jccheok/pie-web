@@ -10,6 +10,7 @@ import pie.servlets.EnlistStudentsToGroupServlet;
 import pie.servlets.GenerateCodeServlet;
 import pie.servlets.GetAllDraftHomeworkServlet;
 import pie.servlets.GetAllDraftNoteServlet;
+import pie.servlets.GetAllHomeworkServlet;
 import pie.servlets.GetAllSecurityQuestionsServlet;
 import pie.servlets.GetAllSentHomeworkServlet;
 import pie.servlets.GetAllSentNotesServlet;
@@ -99,6 +100,8 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/group/alldrafthomework").with(GetAllDraftHomeworkServlet.class);
 				serve("*/servlets/secured/staff/group/viewhomeworkdetails").with(ViewHomeworkDetailsServlet.class);
 				serve("*/servlets/secured/staff/group/allsenthomework").with(GetAllSentHomeworkServlet.class);
+				serve("*/servlets/secured/staff/group/allhomework").with(GetAllHomeworkServlet.class);
+
 				
 				serve("*/servlets/secured/staff/group/sendnote").with(SendNoteServlet.class);
 				serve("*/servlets/secured/staff/group/savenoteasdraft").with(SaveNoteAsDraftServlet.class);
