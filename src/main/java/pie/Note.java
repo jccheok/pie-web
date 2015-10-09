@@ -55,7 +55,7 @@ public class Note {
 		this.noteDescription = noteDescription;
 	}
 
-	public boolean isNoteIsTemplate() {
+	public boolean isNoteTemplate() {
 		return noteIsTemplate;
 	}
 
@@ -63,7 +63,7 @@ public class Note {
 		this.noteIsTemplate = noteIsTemplate;
 	}
 
-	public boolean isNoteIsDraft() {
+	public boolean isNoteDraft() {
 		return noteIsDraft;
 	}
 
@@ -71,7 +71,7 @@ public class Note {
 		this.noteIsDraft = noteIsDraft;
 	}
 
-	public boolean isNoteIsDeleted() {
+	public boolean isNoteDeleted() {
 		return noteIsDeleted;
 	}
 

@@ -200,7 +200,7 @@ public class HomeworkService {
 				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
 
-				String sql = "DELETE FROM `Homework` WHERE homeworkID = ? AND homeworkIsDraft = ?";
+				String sql = "DELETE FROM `Homework`, `GroupHomework` WHERE `Homework`.homeworkID = `GroupHomework`.homeworkID AND `Homework`.homeworkID = ? AND homeworkIsDraft = ?";
 				pst = conn.prepareStatement(sql);
 				pst.setInt(1, homeworkID);
 				pst.setInt(2, 1);

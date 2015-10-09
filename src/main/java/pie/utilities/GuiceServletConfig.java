@@ -5,6 +5,7 @@ import pie.filters.ResponseFilter;
 import pie.servlets.AddChildServlet;
 import pie.servlets.AddChildToGroupServlet;
 import pie.servlets.DeactivateGroupServlet;
+import pie.servlets.DeleteNoteServlet;
 import pie.servlets.EnlistStudentsToGroupServlet;
 import pie.servlets.GenerateCodeServlet;
 import pie.servlets.GetAllDraftHomeworkServlet;
@@ -95,8 +96,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/group/savenoteasdraft").with(SaveNoteAsDraftServlet.class);
 				serve("*/servlets/secured/staff/group/alldraftnote").with(GetAllDraftNoteServlet.class);
 				serve("*/servlets/secured/staff/group/senddraftnote").with(SendDraftNoteServlet.class);
-
-				
+				serve("*/servlets/secured/staff/group/deletenote").with(DeleteNoteServlet.class);
 
 				serve("*/servlets/secured/admin/registerschool").with(RegisterSchoolServlet.class);
 				serve("*/servlets/secured/admin/allschools").with(ViewAllSchoolsServlet.class);

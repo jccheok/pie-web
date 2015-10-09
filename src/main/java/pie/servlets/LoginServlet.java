@@ -87,6 +87,7 @@ public class LoginServlet extends HttpServlet {
 				case STAFF: {
 					
 					Staff userStaff = staffService.getStaff(user.getUserID());
+					userJSON.put("schoolID", userStaff.getSchool().getSchoolID());
 					userJSON.put("schoolName", userStaff.getSchool().getSchoolName());
 					userJSON.put("staffTitle", userStaff.getStaffTitle());
 					userJSON.put("staffIsSchoolAdmin", userStaff.staffIsSchoolAdmin());
@@ -95,6 +96,7 @@ public class LoginServlet extends HttpServlet {
 				case STUDENT: {
 					
 					Student userStudent = studentService.getStudent(user.getUserID());
+					userJSON.put("schoolID", userStudent.getSchool().getSchoolID());
 					userJSON.put("schoolName", userStudent.getSchool().getSchoolName());
 					userJSON.put("studentCode", userStudent.getStudentCode());
 					userJSON.put("studentEnlistmentDateUnix", Utilities.toUnixSeconds(userStudent.getStudentEnlistmentDate()));
