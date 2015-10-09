@@ -78,16 +78,9 @@ public class NoteService {
 			pst.executeUpdate();
 
 			resultSet = pst.getGeneratedKeys();
-
+			
 			if (resultSet.next()) {
 				noteID = resultSet.getInt(1);
-
-				sql = "INSERT INTO `GroupNote` (staffID, noteID, groupID) VALUES (?, ?, ?)";
-				pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-				pst.setInt(1, staffID);
-				pst.setInt(2, noteID);
-				pst.setInt(3, groupID);
-				pst.executeUpdate();
 			}
 
 			conn.close();
