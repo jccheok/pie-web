@@ -72,7 +72,7 @@ public class HomeworkService {
 			ResultSet resultSet = null;
 
 			String sql = "INSERT INTO `Homework` (staffID ,homeworkTitle ,homeworkSubject ,homeworkDescription ,homeworkMinutesRequired "
-					+ ",homeworkDueDate) VALUES (?,?,?,?,?,?)";
+					+ ",homeworkDueDate,homeworkIsGraded) VALUES (?,?,?,?,?,?,?)";
 			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			pst.setInt(1, staffID);
 			pst.setString(2, homeworkTitle);
