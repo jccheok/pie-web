@@ -1,6 +1,7 @@
 package pie.servlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -66,6 +67,9 @@ public class GetAllSentHomeworkServlet extends HttpServlet {
 		}
 
 		responseObject.put("sentHomework", homeworkList);
+
+		PrintWriter out = response.getWriter();
+		out.write(responseObject.toString());
 
 	}
 
