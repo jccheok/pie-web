@@ -38,9 +38,9 @@
               password="${OPENSHIFT_MYSQL_DB_PASSWORD}"
               auth="Container"
               type="javax.sql.DataSource"
-              maxActive="20"
-              maxIdle="5"
-              maxWait="10000"
+              maxActive="1000"
+              maxIdle="100"
+              maxWait="5000"
               />
                
     <Resource name="jdbc/PostgreSQLDS"
