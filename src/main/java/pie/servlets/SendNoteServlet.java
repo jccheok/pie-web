@@ -62,7 +62,7 @@ public class SendNoteServlet extends HttpServlet {
 		
 		if(noteID != -1) {
 
-			PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID);
+			PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID, staffID);
 			responseObject.put("result", publishNoteResult.toString());
 			responseObject.put("message", publishNoteResult.getDefaultMessage());
 			
