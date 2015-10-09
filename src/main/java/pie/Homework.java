@@ -17,13 +17,12 @@ public class Homework {
 	private boolean homeworkIsTemplate;
 	private boolean homeworkIsDeleted;
 	private Date homeworkDateDeleted;
+	private boolean homeworkIsGraded;
 
-	
-	
 	public Homework(int homeworkID, Staff homeworkAuthor, String homeworkTitle, String homeworkSubject,
 			String homeworkDescription, int homeworkMinutesRequired, Date homeworkDueDate, boolean homeworkOpen,
 			Date homeworkDateCreated, boolean homeworkIsDraft, boolean homeworkIsTemplate, boolean homeworkIsDeleted,
-			Date homeworkDateDeleted) {
+			Date homeworkDateDeleted, boolean homeworkIsGraded) {
 		setHomeworkID(homeworkID);
 		setHomeworkAuthor(homeworkAuthor);
 		setHomeworkTitle(homeworkTitle);
@@ -37,100 +36,109 @@ public class Homework {
 		setHomeworkIsTemplate(homeworkIsTemplate);
 		setHomeworkIsDeleted(homeworkIsDeleted);
 		setHomeworkDateDeleted(homeworkDateDeleted);
+		setHomeworkIsGraded(homeworkIsGraded);
 	}
 
 	public int getHomeworkID() {
 		return homeworkID;
 	}
-	
+
 	public void setHomeworkID(int homeworkID) {
 		this.homeworkID = homeworkID;
 	}
-	
+
 	public String getHomeworkTitle() {
 		return homeworkTitle;
 	}
-	
+
 	public void setHomeworkTitle(String homeworkTitle) {
 		this.homeworkTitle = homeworkTitle;
 	}
-	
+
 	public String getHomeworkSubject() {
 		return homeworkSubject;
 	}
-	
+
 	public void setHomeworkSubject(String homeworkSubject) {
 		this.homeworkSubject = homeworkSubject;
 	}
-	
+
 	public String getHomeworkDescription() {
 		return homeworkDescription;
 	}
-	
+
 	public void setHomeworkDescription(String homeworkDescription) {
 		this.homeworkDescription = homeworkDescription;
 	}
-	
+
 	public int getHomeworkMinutesRequired() {
 		return homeworkMinutesRequired;
 	}
-	
+
 	public void setHomeworkMinutesRequired(int homeworkMinutesRequired) {
 		this.homeworkMinutesRequired = homeworkMinutesRequired;
 	}
-	
+
 	public Date getHomeworkDueDate() {
 		return homeworkDueDate;
 	}
-	
+
 	public void setHomeworkDueDate(Date homeworkDueDate) {
 		this.homeworkDueDate = homeworkDueDate;
 	}
-	
+
 	public boolean isHomeworkOpen() {
 		return homeworkIsOpen;
 	}
-	
+
 	public void setHomeworkIsOpen(boolean homeworkIsOpen) {
 		this.homeworkIsOpen = homeworkIsOpen;
 	}
-	
+
 	public Date getHomeworkDateCreated() {
 		return homeworkDateCreated;
 	}
-	
+
 	public void setHomeworkDateCreated(Date homeworkDateCreated) {
 		this.homeworkDateCreated = homeworkDateCreated;
 	}
-	
+
+	public boolean isHomeworkIsGraded() {
+		return homeworkIsGraded;
+	}
+
+	public void setHomeworkIsGraded(boolean homeworkIsGraded) {
+		this.homeworkIsGraded = homeworkIsGraded;
+	}
+
 	public boolean isHomeworkIsDraft() {
 		return homeworkIsDraft;
 	}
-	
+
 	public void setHomeworkIsDraft(boolean homeworkIsDraft) {
 		this.homeworkIsDraft = homeworkIsDraft;
 	}
-	
+
 	public boolean isHomeworkIsTemplate() {
 		return homeworkIsTemplate;
 	}
-	
+
 	public void setHomeworkIsTemplate(boolean homeworkIsTemplate) {
 		this.homeworkIsTemplate = homeworkIsTemplate;
 	}
-	
+
 	public boolean isHomeworkIsDeleted() {
 		return homeworkIsDeleted;
 	}
-	
+
 	public void setHomeworkIsDeleted(boolean homeworkIsDeleted) {
 		this.homeworkIsDeleted = homeworkIsDeleted;
 	}
-	
+
 	public Date getHomeworkDateDeleted() {
 		return homeworkDateDeleted;
 	}
-	
+
 	public void setHomeworkDateDeleted(Date homeworkDateDeleted) {
 		this.homeworkDateDeleted = homeworkDateDeleted;
 	}
@@ -142,5 +150,5 @@ public class Homework {
 	public void setHomeworkAuthor(Staff homeworkAuthor) {
 		this.homeworkAuthor = homeworkAuthor;
 	}
-	
+
 }

@@ -45,10 +45,11 @@ public class HomeworkService {
 				boolean homeworkIsTemplate = resultSet.getInt("homeworkIsTemplate") == 1 ? true : false;
 				boolean homeworkIsDeleted = resultSet.getInt("homeworkIsDeleted") == 1 ? true : false;
 				Date homeworkDateDeleted = new Date(resultSet.getTimestamp("homeworkDateDeleted").getTime());
+				boolean homeworkIsGraded = resultSet.getInt("homeworkIsGraded") == 1 ? true : false;
 
 				homework = new Homework(homeworkID, homeworkAuthor, homeworkTitle, homeworkSubject, homeworkDescription,
 						homeworkMinutesRequired, homeworkDueDate, homeworkIsOpen, homeworkDateCreated, homeworkIsDraft,
-						homeworkIsTemplate, homeworkIsDeleted, homeworkDateDeleted);
+						homeworkIsTemplate, homeworkIsDeleted, homeworkDateDeleted, homeworkIsGraded);
 			}
 
 			conn.close();
@@ -369,6 +370,7 @@ public class HomeworkService {
 		boolean homeworkIsTemplate = false;
 		boolean homeworkIsDeleted = false;
 		Date homeworkDateDeleted = null;
+		boolean homeworkIsGraded = false;
 
 		try {
 
@@ -397,10 +399,11 @@ public class HomeworkService {
 				homeworkIsTemplate = resultSet.getInt("homeworkIsTemplate") == 1 ? true : false;
 				homeworkIsDeleted = resultSet.getInt("homeworkIsDeleted") == 1 ? true : false;
 				homeworkDateDeleted = new Date(resultSet.getTimestamp("homeworkDateDeleted").getTime());
+				homeworkIsGraded = resultSet.getInt("homeworkIsGraded") == 1 ? true : false;
 
 				homework = new Homework(homeworkID, homeworkAuthor, homeworkTitle, homeworkSubject, homeworkDescription,
 						homeworkMinutesRequired, homeworkDueDate, homeworkIsOpen, homeworkDateCreated, homeworkIsDraft,
-						homeworkIsTemplate, homeworkIsDeleted, homeworkDateDeleted);
+						homeworkIsTemplate, homeworkIsDeleted, homeworkDateDeleted, homeworkIsGraded);
 			}
 
 			conn.close();
@@ -410,6 +413,35 @@ public class HomeworkService {
 		}
 
 		return homework;
+	}
+
+	public Homework[] getAllHomework(int staffID) {
+
+		Homework[] listHomeworks = {};
+
+		try {
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT homeworkID FROM `Homework` WHERE staffID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, staffID);
+			resultSet = pst.executeQuery();
+
+			ArrayList<Homework> tempHwList = new ArrayList<Homework>();
+
+			while (resultSet.next()) {
+				tempHwList.add(getHomework(resultSet.getInt(1)));
+			}
+
+			tempHwList.toArray(listHomeworks);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return listHomeworks;
 	}
 
 }
