@@ -47,11 +47,12 @@ public class SaveHomeworkAsDraftServlet extends HttpServlet {
 		String homeworkDescription = null;
 		int homeworkMinutesRequired = 0;
 		Date homeworkDueDate = null;
+		boolean homeworkIsGraded = false;
 
 		try {
 			Map<String, String> requestParameters = Utilities.getParameters(request, "staffID", "groupID",
 					"homeworkTitle", "homeworkSubject", "homeworkDescription", "homeworkMinutesRequired",
-					"homeworkDueDate");
+					"homeworkDueDate", "homeworkIsGraded");
 
 			staffID = Integer.parseInt(requestParameters.get("staffID"));
 			groupID = Integer.parseInt(requestParameters.get("groupID"));
@@ -60,6 +61,7 @@ public class SaveHomeworkAsDraftServlet extends HttpServlet {
 			homeworkDescription = requestParameters.get("homeworkDescription");
 			homeworkMinutesRequired = Integer.parseInt(requestParameters.get("homeworkMinutesRequired"));
 			homeworkDueDate = dateFormat.parse(requestParameters.get("homeworkDueDate"));
+			homeworkIsGraded = Integer.parseInt(requestParameters.get("homeworkIsGraded")) == 1 ? true : false;
 
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
@@ -69,7 +71,7 @@ public class SaveHomeworkAsDraftServlet extends HttpServlet {
 		JSONObject responseObject = new JSONObject();
 
 		int homeworkID = homeworkService.createHomework(staffID, groupID, homeworkTitle, homeworkSubject,
-				homeworkDescription, homeworkMinutesRequired, homeworkDueDate);
+				homeworkDescription, homeworkMinutesRequired, homeworkDueDate, homeworkIsGraded);
 
 		if (homeworkID != -1) {
 			responseObject.put("result", GenericResult.SUCCESS.toString());
