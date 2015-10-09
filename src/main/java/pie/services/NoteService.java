@@ -392,7 +392,6 @@ public class NoteService {
 
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, noteID);
-			pst.setInt(2, 1);
 			
 			if(pst.executeUpdate() == 0){
 				sql = "DELETE FROM `Note` WHERE noteID = ? AND noteIsDraft = ?";
