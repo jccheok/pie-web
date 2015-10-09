@@ -11,6 +11,7 @@ import pie.servlets.GenerateCodeServlet;
 import pie.servlets.GetAllDraftHomeworkServlet;
 import pie.servlets.GetAllDraftNoteServlet;
 import pie.servlets.GetAllSecurityQuestionsServlet;
+import pie.servlets.GetNoteDetailsServlet;
 import pie.servlets.LoginServlet;
 import pie.servlets.RegisterGroupServlet;
 import pie.servlets.RegisterParentServlet;
@@ -97,6 +98,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/group/alldraftnote").with(GetAllDraftNoteServlet.class);
 				serve("*/servlets/secured/staff/group/senddraftnote").with(SendDraftNoteServlet.class);
 				serve("*/servlets/secured/staff/group/deletenote").with(DeleteNoteServlet.class);
+				serve("*/servlets/secured/staff/group/notedetails").with(GetNoteDetailsServlet.class);
 
 				serve("*/servlets/secured/admin/registerschool").with(RegisterSchoolServlet.class);
 				serve("*/servlets/secured/admin/allschools").with(ViewAllSchoolsServlet.class);
