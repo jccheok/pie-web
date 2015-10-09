@@ -48,11 +48,12 @@ public class SendHomeworkServlet extends HttpServlet {
 		String homeworkDescription = null;
 		int homeworkMinutesRequired = 0;
 		Date homeworkDueDate = null;
+		boolean homeworkIsGraded = false;
 
 		try {
 			Map<String, String> requestParameters = Utilities.getParameters(request, "staffID", "groupID",
 					"homeworkTitle", "homeworkSubject", "homeworkDescription", "homeworkMinutesRequired",
-					"homeworkDueDate");
+					"homeworkDueDate","homeworkIsGraded");
 
 			staffID = Integer.parseInt(requestParameters.get("staffID"));
 			groupID = Integer.parseInt(requestParameters.get("groupID"));
@@ -61,6 +62,7 @@ public class SendHomeworkServlet extends HttpServlet {
 			homeworkDescription = requestParameters.get("homeworkDescription");
 			homeworkMinutesRequired = Integer.parseInt(requestParameters.get("homeworkMinutesRequired"));
 			homeworkDueDate = dateFormat.parse(requestParameters.get("homeworkDueDate"));
+			homeworkIsGraded = Integer.parseInt(requestParameters.get("homeworkIsGraded")) == 1 ? true:false;
 
 		} catch (Exception e) {
 
@@ -69,7 +71,7 @@ public class SendHomeworkServlet extends HttpServlet {
 		}
 
 		int homeworkID = homeworkService.createHomework(staffID, groupID, homeworkTitle, homeworkSubject,
-				homeworkDescription, homeworkMinutesRequired, homeworkDueDate);
+				homeworkDescription, homeworkMinutesRequired, homeworkDueDate, homeworkIsGraded);
 
 		JSONObject responseObject = new JSONObject();
 
