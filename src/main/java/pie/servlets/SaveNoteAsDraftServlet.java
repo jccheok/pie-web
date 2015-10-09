@@ -33,19 +33,15 @@ public class SaveNoteAsDraftServlet extends HttpServlet {
 
 		int noteID = 0;
 		int staffID = 0;
-		int groupID = 0;
 		int responseQuestionID = 0;
 		String noteTitle = null;
 		String noteDescription = null;
 
 		try {
 
-			Map<String, String> requestParameters = Utilities.getParameters(request, "staffID", "groupID",
-					"responseQuestionID",
-					"noteTitle", "noteDescription");
+			Map<String, String> requestParameters = Utilities.getParameters(request, "staffID", "responseQuestionID", "noteTitle", "noteDescription");
 
 			staffID = Integer.parseInt(requestParameters.get("staffID"));
-			groupID = Integer.parseInt(requestParameters.get("groupID"));
 			responseQuestionID = Integer.parseInt(requestParameters.get("responseQuestionID"));
 			noteTitle = requestParameters.get("noteTitle");
 			noteDescription = requestParameters.get("noteDescription");
@@ -56,7 +52,7 @@ public class SaveNoteAsDraftServlet extends HttpServlet {
 			return;
 		}
 
-		noteID = noteService.createNote(staffID, responseQuestionID, noteTitle, noteDescription, groupID);
+		noteID = noteService.createNote(staffID, responseQuestionID, noteTitle, noteDescription);
 		JSONObject responseObject = new JSONObject();
 
 		if (noteID != -1) {

@@ -22,8 +22,8 @@ import com.google.inject.Singleton;
 @Singleton
 public class GetNoteDetailsServlet extends HttpServlet {
 
-	private static final long serialVersionUID = -8863449783907762245L;
-
+	private static final long serialVersionUID = -1339342818451284421L;
+	
 	NoteService noteService;
 	
 	@Inject

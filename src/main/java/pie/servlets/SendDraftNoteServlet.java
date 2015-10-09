@@ -34,6 +34,7 @@ public class SendDraftNoteServlet extends HttpServlet {
 
 		int noteID = 0;
 		int groupID = 0;
+		int staffID = 0;
 		int responseQuestionID = 0;
 		String noteTitle = null;
 		String noteDescription = null;
@@ -41,11 +42,12 @@ public class SendDraftNoteServlet extends HttpServlet {
 
 		try {
 
-			Map<String, String> requestParameters = Utilities.getParameters(request, "noteID", "groupID", "responseQuestionID", 
+			Map<String, String> requestParameters = Utilities.getParameters(request, "noteID", "groupID", "staffID", "responseQuestionID", 
 					"noteTitle", "noteDescription");
 
 			noteID = Integer.parseInt(requestParameters.get("noteID"));
 			groupID = Integer.parseInt(requestParameters.get("groupID"));
+			staffID = Integer.parseInt(requestParameters.get("staffID"));
 			responseQuestionID = Integer.parseInt(requestParameters.get("responseQuestionID"));
 			noteTitle = requestParameters.get("noteTitle");
 			noteDescription = requestParameters.get("noteDescription");	
@@ -59,7 +61,7 @@ public class SendDraftNoteServlet extends HttpServlet {
 		JSONObject responseObject = new JSONObject();
 
 		if(isUpdated) {
-			PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID);
+			PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID, staffID);
 			
 			responseObject.put("result", publishNoteResult.toString());
 			responseObject.put("message", publishNoteResult.getDefaultMessage());

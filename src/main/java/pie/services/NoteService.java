@@ -59,7 +59,7 @@ public class NoteService {
 		return note;
 	}
 
-	public int createNote(int staffID, int responseQuestionID, String noteTitle, String noteDescription, int groupID) {
+	public int createNote(int staffID, int responseQuestionID, String noteTitle, String noteDescription) {
 
 		int noteID = -1;
 
@@ -78,16 +78,9 @@ public class NoteService {
 			pst.executeUpdate();
 
 			resultSet = pst.getGeneratedKeys();
-
+			
 			if (resultSet.next()) {
 				noteID = resultSet.getInt(1);
-
-				sql = "INSERT INTO `GroupNote` (staffID, noteID, groupID) VALUES (?, ?, ?)";
-				pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-				pst.setInt(1, staffID);
-				pst.setInt(2, noteID);
-				pst.setInt(3, groupID);
-				pst.executeUpdate();
 			}
 
 			conn.close();
@@ -157,7 +150,7 @@ public class NoteService {
 		return sendResult;
 	}
 
-	public PublishNoteResult publishNote(int noteID, int groupID) {
+	public PublishNoteResult publishNote(int noteID, int groupID, int staffID) {
 
 		PublishNoteResult publishResult = PublishNoteResult.SUCCESS;
 		GroupService groupService = new GroupService();
@@ -176,10 +169,12 @@ public class NoteService {
 			if (pst.executeUpdate() == 0) {
 				publishResult = PublishNoteResult.FAILED_DRAFT;
 			} else {
-				sql = "UPDATE `GroupNote` SET groupNotePublishDate = NOW() WHERE groupID = ? AND noteID = ?";
-				pst = conn.prepareStatement(sql);
-				pst.setInt(1, groupID);
+				sql = "INSERT INTO `GroupNote` (staffID, noteID, groupID) VALUES (?, ?, ?)";
+				pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+				pst.setInt(1, staffID);
 				pst.setInt(2, noteID);
+				pst.setInt(3, groupID);
+				pst.executeUpdate();
 
 				if (pst.executeUpdate() == 0) {
 					publishResult = PublishNoteResult.FAILED_TO_UPDATE_GROUP;
@@ -388,21 +383,15 @@ public class NoteService {
 		try {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
-			String sql = "DELETE FROM `GroupNote` WHERE noteID = ?";
-
+		
+			String sql = "DELETE FROM `Note` WHERE noteID = ? AND noteIsDraft = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, noteID);
+			pst.setInt(2, 1);
 			
-			if(pst.executeUpdate() == 0){
-				sql = "DELETE FROM `Note` WHERE noteID = ? AND noteIsDraft = ?";
-				pst = conn.prepareStatement(sql);
-				pst.setInt(1, noteID);
-				pst.setInt(2, 1);
-				
-				pst.executeUpdate();
-				
-				deleteNoteResult = true;
-			}
+			pst.executeUpdate();
+			
+			deleteNoteResult = true;
 			
 			conn.close();
 
