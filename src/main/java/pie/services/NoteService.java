@@ -35,7 +35,7 @@ public class NoteService {
 
 			if (resultSet.next()) {
 
-				Staff noteAuthor = new StaffService().getStaff(resultSet.getInt("teacherID"));
+				Staff noteAuthor = new StaffService().getStaff(resultSet.getInt("staffID"));
 				String noteTitle = resultSet.getString("noteTitle");
 				String noteDescription = resultSet.getString("noteDescription");
 				boolean noteIsTemplate = resultSet.getInt("noteIsTemplate") == 1;
