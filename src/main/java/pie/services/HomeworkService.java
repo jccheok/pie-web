@@ -412,4 +412,33 @@ public class HomeworkService {
 		return homework;
 	}
 
+	public Homework[] getAllHomework(int staffID) {
+
+		Homework[] listHomeworks = {};
+
+		try {
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT homeworkID FROM `Homework` WHERE staffID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, staffID);
+			resultSet = pst.executeQuery();
+
+			ArrayList<Homework> tempHwList = new ArrayList<Homework>();
+
+			while (resultSet.next()) {
+				tempHwList.add(getHomework(resultSet.getInt(1)));
+			}
+
+			tempHwList.toArray(listHomeworks);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return listHomeworks;
+	}
+
 }
