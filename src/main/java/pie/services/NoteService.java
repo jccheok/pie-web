@@ -44,7 +44,7 @@ public class NoteService {
 				Date noteDateCreated = new Date(resultSet.getTimestamp("noteDateCreated").getTime());
 				Date noteDateDeleted = new Date(resultSet.getTimestamp("noteDateDeleted").getTime());
 				ResponseQuestion noteQuestionID = new ResponseQuestionService().getResponseQuestion(resultSet
-						.getInt("noteQuestionID"));
+						.getInt("responseQuestionID"));
 
 				note = new Note(noteID, noteAuthor, noteTitle, noteDescription, noteIsTemplate, noteIsDraft,
 						noteIsDeleted, noteDateCreated, noteDateDeleted, noteQuestionID);
