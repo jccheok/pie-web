@@ -135,22 +135,25 @@ public class UserService {
 	public boolean credentialsMatch(String userEmail, String userPassword) {
 		boolean matches = false;
 		
-		try {
+		if (userPassword.length() != 64) {
 			
-			Connection conn = DatabaseConnector.getConnection();
-			PreparedStatement pst = null;
-			
-			String sql = "SELECT * FROM `User` WHERE userEmail = ? AND userPassword = ?";
-			pst = conn.prepareStatement(sql);
-			pst.setString(1, userEmail);
-			pst.setString(2, userPassword);
-			
-			matches = pst.executeQuery().next();
-			
-			conn.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
+			try {
+				
+				Connection conn = DatabaseConnector.getConnection();
+				PreparedStatement pst = null;
+				
+				String sql = "SELECT * FROM `User` WHERE userEmail = ? AND userPassword = ?";
+				pst = conn.prepareStatement(sql);
+				pst.setString(1, userEmail);
+				pst.setString(2, userPassword);
+				
+				matches = pst.executeQuery().next();
+				
+				conn.close();
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
 		return matches;
