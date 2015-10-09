@@ -45,10 +45,11 @@ public class HomeworkService {
 				boolean homeworkIsTemplate = resultSet.getInt("homeworkIsTemplate") == 1 ? true : false;
 				boolean homeworkIsDeleted = resultSet.getInt("homeworkIsDeleted") == 1 ? true : false;
 				Date homeworkDateDeleted = new Date(resultSet.getTimestamp("homeworkDateDeleted").getTime());
+				boolean homeworkIsGraded = resultSet.getInt("homeworkIsGraded") == 1 ? true : false;
 
 				homework = new Homework(homeworkID, homeworkAuthor, homeworkTitle, homeworkSubject, homeworkDescription,
 						homeworkMinutesRequired, homeworkDueDate, homeworkIsOpen, homeworkDateCreated, homeworkIsDraft,
-						homeworkIsTemplate, homeworkIsDeleted, homeworkDateDeleted);
+						homeworkIsTemplate, homeworkIsDeleted, homeworkDateDeleted, homeworkIsGraded);
 			}
 
 			conn.close();
@@ -369,6 +370,7 @@ public class HomeworkService {
 		boolean homeworkIsTemplate = false;
 		boolean homeworkIsDeleted = false;
 		Date homeworkDateDeleted = null;
+		boolean homeworkIsGraded = false;
 
 		try {
 
@@ -397,10 +399,11 @@ public class HomeworkService {
 				homeworkIsTemplate = resultSet.getInt("homeworkIsTemplate") == 1 ? true : false;
 				homeworkIsDeleted = resultSet.getInt("homeworkIsDeleted") == 1 ? true : false;
 				homeworkDateDeleted = new Date(resultSet.getTimestamp("homeworkDateDeleted").getTime());
+				homeworkIsGraded = resultSet.getInt("homeworkIsGraded") == 1 ? true : false;
 
 				homework = new Homework(homeworkID, homeworkAuthor, homeworkTitle, homeworkSubject, homeworkDescription,
 						homeworkMinutesRequired, homeworkDueDate, homeworkIsOpen, homeworkDateCreated, homeworkIsDraft,
-						homeworkIsTemplate, homeworkIsDeleted, homeworkDateDeleted);
+						homeworkIsTemplate, homeworkIsDeleted, homeworkDateDeleted, homeworkIsGraded);
 			}
 
 			conn.close();
