@@ -260,9 +260,13 @@ public class UserService {
 				Date userLastUpdate = new Date(resultSet.getTimestamp("userLastUpdate").getTime());
 				SecurityQuestion userSecurityQuestion = securityQuestionService.getSecurityQuestion(resultSet.getInt("securityQuestionID"));
 				String userSecurityAnswer = resultSet.getString("securityQuestionAnswer");
+				String userLastPassword1 = resultSet.getString("userLastPassword1");
+				String userLastPassword2 = resultSet.getString("userLastPassword2");
+				Date userPasswordLastUpdate = new Date(resultSet.getTimestamp("userPasswordLastUpdate").getTime());
 
 				user = new User(userID, userAddress, userFirstName, userLastName, userType, userEmail, userPassword,
-						userMobile, userIsValid, userIsVerified, userLastLogin, userRegistrationDate, userLastUpdate, userSecurityQuestion, userSecurityAnswer);
+						userMobile, userIsValid, userIsVerified, userLastLogin, userRegistrationDate, userLastUpdate, 
+						userSecurityQuestion, userSecurityAnswer, userLastPassword1, userLastPassword2, userPasswordLastUpdate);
 
 			}
 
