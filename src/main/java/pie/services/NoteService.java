@@ -59,7 +59,7 @@ public class NoteService {
 		return note;
 	}
 
-	public int createNote(int staffID, int responseQuestionID, String noteTitle, String noteDescription, int groupID) {
+	public int createNote(int staffID, int responseQuestionID, String noteTitle, String noteDescription) {
 
 		int noteID = -1;
 

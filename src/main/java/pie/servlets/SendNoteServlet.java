@@ -57,7 +57,7 @@ public class SendNoteServlet extends HttpServlet {
 			return;
 		}
 
-		noteID = noteService.createNote(staffID, responseQuestionID, noteTitle, noteDescription, groupID);
+		noteID = noteService.createNote(staffID, responseQuestionID, noteTitle, noteDescription);
 		JSONObject responseObject = new JSONObject();
 		
 		if(noteID != -1) {
