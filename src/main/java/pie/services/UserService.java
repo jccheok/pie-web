@@ -135,7 +135,7 @@ public class UserService {
 	public boolean credentialsMatch(String userEmail, String userPassword) {
 		boolean matches = false;
 		
-		if (userPassword.length() != 64) {
+		if (userPassword.length() == 64) {
 			
 			try {
 				
