@@ -50,7 +50,7 @@ public class UploadAttachmentServlet extends HttpServlet {
         }
  
         PrintWriter out = response.getWriter();
-        out.println("Debug Log: " + appPath + " | " + savePath + " | " + request.getParts().toString() );
+        out.println("Debug Log: " + savePath + " | " + request.getParts() );
         
     }
  
