@@ -52,11 +52,10 @@ public class UpdateUserAccountDetailsServlet extends HttpServlet{
 			userMobile = requestParameters.get("userMobile");
 			securityQuestionID = Integer.parseInt(requestParameters.get("securityQuestionID"));
 			securityQuestionAnswer = requestParameters.get("securityQuestionAnswer");
-			if(requestParameters.containsValue("addressPostalCode")){
-				addressStreet = requestParameters.get("addressStreet");
-				addressPostalCode = requestParameters.get("addressPostalCode");
-				cityID = Integer.parseInt(requestParameters.get("cityID"));
-			}
+			addressStreet = requestParameters.get("addressStreet");
+			addressPostalCode = requestParameters.get("addressPostalCode");
+			cityID = Integer.parseInt(requestParameters.get("cityID"));
+		
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 			return;
