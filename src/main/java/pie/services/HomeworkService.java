@@ -271,12 +271,9 @@ public class HomeworkService {
 				pst.setInt(6, homeworkIsGraded ? 1 : 0);
 				pst.setInt(7, homeworkID);
 
-				int rowsUpdated = pst.executeUpdate();
-
-				if (rowsUpdated != 0) {
-					isUpdated = true;
-				}
-
+				pst.executeUpdate();
+				isUpdated = true;
+				
 				conn.close();
 
 			} catch (Exception e) {
