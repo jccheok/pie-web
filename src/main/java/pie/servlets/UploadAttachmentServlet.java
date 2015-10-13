@@ -1,5 +1,6 @@
 package pie.servlets;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,11 +20,12 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-@MultipartConfig(location = "/var/lib/openshift/560246382d52714ebe00004d/app-root/data")
+@MultipartConfig(location = "/var/lib/openshift/560246382d52714ebe00004d/app-root/data",fileSizeThreshold=1024*1024*2, maxFileSize=1024*1024*10, maxRequestSize=1024*1024*50)
 public class UploadAttachmentServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 4834340741739873069L;
 	int BUFFER_LENGTH = 4096;
+	private static final String SAVE_DIR = "uploadFiles";
 
 	AttachmentService attachmentService;
 
@@ -35,43 +37,37 @@ public class UploadAttachmentServlet extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//ROUGH DRAFT
 		
-		PrintWriter out = response.getWriter();
-
-		Collection<Part> parts = request.getParts();
-
-		out.write("<h2> Total parts : " + parts.size() + "</h2>");
-
-		for (Part part : parts) {
-			printEachPart(part, out);
-			part.write(getFileName(part));
-		}
-	}
-
-	private void printEachPart(Part part, PrintWriter pw) {
-		StringBuffer sb = new StringBuffer();
-		sb.append("<p>");
-		sb.append("Name : " + part.getName());
-		sb.append("<br>");
-		sb.append("Content Type : " + part.getContentType());
-		sb.append("<br>");
-		sb.append("Size : " + part.getSize());
-		sb.append("<br>");
-		for (String header : part.getHeaderNames()) {
-			sb.append(header + " : " + part.getHeader(header));
-			sb.append("<br>");
-		}
-		sb.append("</p>");
-		pw.write(sb.toString());
-
-	}
-
-	private String getFileName(Part part) {
-		String partHeader = part.getHeader("content-disposition");
-		for (String cd : partHeader.split(";")) {
-			if (cd.trim().startsWith("filename")) {
-				return cd.substring(cd.indexOf('=') + 1).trim().replace("\"", "");
-			}
-		}
-		return null;
-	}
+        String appPath = System.getenv("OPENSHIFT_DATA_DIR");
+        // constructs path of the directory to save uploaded file
+        String savePath = appPath + File.separator + SAVE_DIR;
+         
+        // creates the save directory if it does not exists
+        File fileSaveDir = new File(savePath);
+        if (!fileSaveDir.exists()) {
+            fileSaveDir.mkdir();
+        }
+         
+        for (Part part : request.getParts()) {
+            String fileName = extractFileName(part);
+            part.write(savePath + File.separator + fileName);
+        }
+ 
+        PrintWriter out = response.getWriter();
+        out.println("SUCCESSFUL");
+        
+    }
+ 
+    /**
+     * Extracts file name from HTTP header content-disposition
+     */
+    private String extractFileName(Part part) {
+        String contentDisp = part.getHeader("content-disposition");
+        String[] items = contentDisp.split(";");
+        for (String s : items) {
+            if (s.trim().startsWith("filename")) {
+                return s.substring(s.indexOf("=") + 2, s.length()-1);
+            }
+        }
+        return "";
+    }
 }
