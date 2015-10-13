@@ -36,6 +36,7 @@ import pie.servlets.TransferGroupOwnershipServlet;
 import pie.servlets.UpdateGroupServlet;
 import pie.servlets.UpdatePasswordServlet;
 import pie.servlets.UpdateUserAccountDetailsServlet;
+import pie.servlets.UploadAttachmentServlet;
 import pie.servlets.VerifyUserServlet;
 import pie.servlets.ViewAllSchoolsServlet;
 import pie.servlets.ViewCitiesServlet;
@@ -120,7 +121,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/admin/allschools").with(ViewAllSchoolsServlet.class);
 
 				serve("*/servlets/secured/attachmentdownload").with(GetAttachmentServlet.class);
-
+				serve("*/servlets/secured/uploadattachment").with(UploadAttachmentServlet.class);
 				
 			}
 		});
