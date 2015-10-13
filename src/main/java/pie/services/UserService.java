@@ -393,7 +393,7 @@ public class UserService {
 			PreparedStatement pst = null;
 			String sql = null;
 
-			if (addressStreet == null) {
+			if (addressPostalCode == null) {
 				sql = "UPDATE `User` SET userMobile = ?,  userFirstName = ?, userLastName = ?, securityQuestionID = ?, securityQuestionAnswer = SHA2(? , 256) WHERE userID = ?";
 				pst = conn.prepareStatement(sql);
 				pst.setString(1, userMobile);
@@ -408,7 +408,7 @@ public class UserService {
 				}
 			} else {
 				AddressService addressService = new AddressService();
-				int addressID = addressService.registerAddress(addressPostalCode, addressStreet, cityID);
+				int addressID = addressService.getAddressID(addressPostalCode);
 
 				if (addressID != -1) {
 					sql = "UPDATE `User` SET userMobile = ?,  userFirstName = ?, userLastName = ?, securityQuestionID = ?, securityQuestionAnswer = SHA2(? , 256), addressID = ? WHERE userID = ?";
@@ -425,7 +425,21 @@ public class UserService {
 						updateAccountResult = UpdateAccountResult.ACCOUNT_UPDATE_FAILED;
 					}
 				} else {
-					updateAccountResult = UpdateAccountResult.ADDRESS_FAILED_TO_UPDATE;
+					addressID = addressService.registerAddress(addressPostalCode, addressStreet, cityID);
+					
+					sql = "UPDATE `User` SET userMobile = ?,  userFirstName = ?, userLastName = ?, securityQuestionID = ?, securityQuestionAnswer = SHA2(? , 256), addressID = ? WHERE userID = ?";
+					pst = conn.prepareStatement(sql);
+					pst.setString(1, userMobile);
+					pst.setString(2, userFirstName);
+					pst.setString(3, userLastName);
+					pst.setInt(4, securityQuestionID);
+					pst.setString(5, securityQuestionAnswer);
+					pst.setInt(6, addressID);
+					pst.setInt(7, userID);
+
+					if (pst.executeUpdate() == 0) {
+						updateAccountResult = UpdateAccountResult.ACCOUNT_UPDATE_FAILED;
+					}
 				}
 
 			}

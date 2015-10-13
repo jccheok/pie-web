@@ -31,7 +31,7 @@ public class GetAttachmentServlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//ROUGH DRAFT
 		
-		String filePath = System.getenv("OPENSHIFT_DATA_DIR") + "/test.jpg";
+		String filePath = System.getenv("OPENSHIFT_DATA_DIR") + "uploadFiles/test.jpg";
 		File downloadFile = new File(filePath);
 		FileInputStream inStream = new FileInputStream(downloadFile);
 
