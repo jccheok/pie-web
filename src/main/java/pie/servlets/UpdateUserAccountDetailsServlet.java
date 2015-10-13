@@ -44,7 +44,7 @@ public class UpdateUserAccountDetailsServlet extends HttpServlet{
 		
 		try {
 			
-			Map<String, String> requestParameters = Utilities.getParameters(request, "userID", "userFirstName", "userLastName", "userMobile", "securityQuestionID", "securityQuestionAnswer");
+			Map<String, String> requestParameters = Utilities.getParameters(request, "userID", "userFirstName", "userLastName", "userMobile", "securityQuestionID", "securityQuestionAnswer", "addressStreet", "addressPostalCode", "cityID");
 
 			userID = Integer.parseInt(requestParameters.get("userID"));
 			userFirstName = requestParameters.get("userFirstName");
@@ -52,11 +52,10 @@ public class UpdateUserAccountDetailsServlet extends HttpServlet{
 			userMobile = requestParameters.get("userMobile");
 			securityQuestionID = Integer.parseInt(requestParameters.get("securityQuestionID"));
 			securityQuestionAnswer = requestParameters.get("securityQuestionAnswer");
-			if(requestParameters.containsKey("addressStreet")){
-				addressStreet = requestParameters.get("addressStreet");
-				addressPostalCode = requestParameters.get("addressPostalCode");
-				cityID = Integer.parseInt(requestParameters.get("cityID"));
-			}
+			addressStreet = requestParameters.get("addressStreet");
+			addressPostalCode = requestParameters.get("addressPostalCode");
+			cityID = Integer.parseInt(requestParameters.get("cityID"));
+		
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 			return;
