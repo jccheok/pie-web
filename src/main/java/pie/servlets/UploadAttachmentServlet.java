@@ -33,6 +33,8 @@ public class UploadAttachmentServlet extends HttpServlet {
 		//ROUGH DRAFT
 
 
+		boolean isUploaded = false;
+		
 		PrintWriter out = response.getWriter();
 		for (Part part : request.getParts()) {
 			InputStream is = request.getPart(part.getName()).getInputStream();
@@ -47,8 +49,14 @@ public class UploadAttachmentServlet extends HttpServlet {
 			is.close();
 			os.close();
 			out.println(fileName + " was uploaded to " + System.getenv("OPENSHIFT_DATA_DIR"));
-
+			isUploaded = true;
 		}
 
+		if(isUploaded) {
+			out.println("Success");
+		} else {
+			out.println("Failed");
+		}
+		
 	}
 }
