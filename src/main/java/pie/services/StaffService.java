@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import pie.Group;
@@ -276,4 +277,34 @@ public class StaffService {
 
 		return leaveGroupResult;
 	}
+	
+	public Date getStaffGroupJoinedDate(int groupID, int userID) {
+
+		Date userGroupJoinDate = null;
+		try {
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT staffGroupJoinDate FROM `StaffGroup` WHERE groupID = ? AND staffID = ? AND studentGroupIsValid = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, groupID);
+			pst.setInt(2, userID);
+			pst.setInt(3, 1);
+			
+			resultSet = pst.executeQuery();
+
+			if (resultSet.next()) {
+				userGroupJoinDate = new Date(resultSet.getTimestamp(1).getTime());
+			}
+
+			conn.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return userGroupJoinDate;
+	}
+	
 }
