@@ -310,7 +310,7 @@ public class HomeworkService {
 		return sendResult;
 	}
 
-	public PublishHomeworkResult publishHomework(int groupID, int homeworkID) {
+	public PublishHomeworkResult publishHomework(int groupID, int homeworkID, int staffID) {
 
 		PublishHomeworkResult publishResult = PublishHomeworkResult.SUCCESS;
 		GroupService groupService = new GroupService();
@@ -328,10 +328,11 @@ public class HomeworkService {
 			if (pst.executeUpdate() == 0) {
 				publishResult = PublishHomeworkResult.FAILED_DRAFT;
 			} else {
-				sql = "UPDATE `GroupHomework` SET groupHomeworkPublishDate = NOW() WHERE groupID = ? AND homeworkID = ?";
+				sql = "INSERT INTO `GroupHomework` (groupHomeworkPublishDate, groupID, homeworkID, staffID) VALUES(NOW(), ?, ?, ?)";
 				pst = conn.prepareStatement(sql);
 				pst.setInt(1, groupID);
 				pst.setInt(2, homeworkID);
+				pst.setInt(3, staffID);
 
 				if (pst.executeUpdate() == 0) {
 					publishResult = PublishHomeworkResult.FAILED_TO_UPDATE_GROUP;
