@@ -31,6 +31,7 @@ public class UploadAttachmentServlet extends HttpServlet {
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//ROUGH DRAFT
+		
 		try {
 			
 		    PrintWriter out = response.getWriter();
@@ -53,7 +54,6 @@ public class UploadAttachmentServlet extends HttpServlet {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 			return;
 		}
-		
 		
 	}
 	
