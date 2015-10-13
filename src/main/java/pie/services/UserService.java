@@ -294,7 +294,7 @@ public class UserService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "UPDATE `User` SET userPassword = SHA1(?), userLastUpdate = NOW() WHERE userID = ?";
+			String sql = "UPDATE `User` SET userPassword = SHA256(? , 256), userLastUpdate = NOW() WHERE userID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, userPassword);
 			pst.setInt(2, userID);
@@ -411,7 +411,7 @@ public class UserService {
 				int addressID = addressService.registerAddress(addressPostalCode, addressStreet, cityID);
 
 				if (addressID != -1) {
-					sql = "UPDATE `User` SET userMobile = ?,  userFirstName = ?, userLastName = ?, securityQuestionID = ?, securityQuestionAnswer = ?, addressID = ? WHERE userID = ?";
+					sql = "UPDATE `User` SET userMobile = ?,  userFirstName = ?, userLastName = ?, securityQuestionID = ?, securityQuestionAnswer = SHA256(?), addressID = ? WHERE userID = ?";
 					pst = conn.prepareStatement(sql);
 					pst.setString(1, userMobile);
 					pst.setString(2, userFirstName);
