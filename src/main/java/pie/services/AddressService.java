@@ -136,7 +136,7 @@ public class AddressService {
 			
 			if (resultSet.next()) {
 				
-				addressID = resultSet.getInt(1);
+				addressID = resultSet.getInt("addressID");
 			}
 			
 			conn.close();
