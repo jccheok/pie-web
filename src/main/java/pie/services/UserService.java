@@ -393,7 +393,7 @@ public class UserService {
 			PreparedStatement pst = null;
 			String sql = null;
 
-			if (addressStreet == null) {
+			if (addressPostalCode == null) {
 				sql = "UPDATE `User` SET userMobile = ?,  userFirstName = ?, userLastName = ?, securityQuestionID = ?, securityQuestionAnswer = SHA2(? , 256) WHERE userID = ?";
 				pst = conn.prepareStatement(sql);
 				pst.setString(1, userMobile);
