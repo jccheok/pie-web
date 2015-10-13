@@ -14,6 +14,7 @@ import pie.servlets.GetAllHomeworkServlet;
 import pie.servlets.GetAllSecurityQuestionsServlet;
 import pie.servlets.GetAllSentHomeworkServlet;
 import pie.servlets.GetAllSentNotesServlet;
+import pie.servlets.GetAttachmentServlet;
 import pie.servlets.GetNoteDetailsServlet;
 import pie.servlets.LoginServlet;
 import pie.servlets.RegisterGroupServlet;
@@ -24,15 +25,19 @@ import pie.servlets.RegisterStudentServlet;
 import pie.servlets.RemoveStudentFromGroupServlet;
 import pie.servlets.ResetPasswordServlet;
 import pie.servlets.RetrieveSecurityQuestionServlet;
+import pie.servlets.SaveHomeworkAsDraftServlet;
 import pie.servlets.SaveNoteAsDraftServlet;
 import pie.servlets.SendDraftNoteServlet;
 import pie.servlets.SendHomeworkServlet;
 import pie.servlets.SendNoteServlet;
 import pie.servlets.StaffJoinGroupServlet;
 import pie.servlets.StudentJoinGroupServlet;
+import pie.servlets.StudentLeaveGroupServlet;
 import pie.servlets.TransferGroupOwnershipServlet;
 import pie.servlets.UpdateGroupServlet;
 import pie.servlets.UpdatePasswordServlet;
+import pie.servlets.UpdateUserAccountDetailsServlet;
+import pie.servlets.UploadAttachmentServlet;
 import pie.servlets.VerifyUserServlet;
 import pie.servlets.ViewAllSchoolsServlet;
 import pie.servlets.ViewCitiesServlet;
@@ -72,10 +77,12 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/resetpassword").with(ResetPasswordServlet.class);
 				serve("*/servlets/getsecurityquestions").with(GetAllSecurityQuestionsServlet.class);
 
-				
 				serve("*/servlets/secured/opengroups").with(ViewOpenGroupsServlet.class);
 				serve("*/servlets/secured/updatepassword").with(UpdatePasswordServlet.class);
+				serve("*/servlets/secured/updateaccountdetails").with(UpdateUserAccountDetailsServlet.class);
+
 				
+				serve("*/servlets/secured/student/leavegroup").with(StudentLeaveGroupServlet.class);
 				serve("*/servlets/secured/student/joingroup").with(StudentJoinGroupServlet.class);
 				serve("*/servlets/secured/student/joinedgroups").with(ViewStudentJoinedGroupsServlet.class);
 				
@@ -101,7 +108,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/group/viewhomeworkdetails").with(ViewHomeworkDetailsServlet.class);
 				serve("*/servlets/secured/staff/group/allsenthomework").with(GetAllSentHomeworkServlet.class);
 				serve("*/servlets/secured/staff/group/allhomework").with(GetAllHomeworkServlet.class);
-
+				serve("*/servlets/secured/staff/group/savehomeworkasdraft").with(SaveHomeworkAsDraftServlet.class);
 				
 				serve("*/servlets/secured/staff/group/sendnote").with(SendNoteServlet.class);
 				serve("*/servlets/secured/staff/group/savenoteasdraft").with(SaveNoteAsDraftServlet.class);
@@ -114,6 +121,8 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/admin/registerschool").with(RegisterSchoolServlet.class);
 				serve("*/servlets/secured/admin/allschools").with(ViewAllSchoolsServlet.class);
 
+				serve("*/servlets/secured/attachmentdownload").with(GetAttachmentServlet.class);
+				serve("*/servlets/secured/uploadattachment").with(UploadAttachmentServlet.class);
 				
 			}
 		});
