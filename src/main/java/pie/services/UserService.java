@@ -294,7 +294,7 @@ public class UserService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "UPDATE `User` SET userPassword = SHA256(? , 256), userLastUpdate = NOW() WHERE userID = ?";
+			String sql = "UPDATE `User` SET userPassword = SHA2(? , 256), userLastUpdate = NOW() WHERE userID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, userPassword);
 			pst.setInt(2, userID);
