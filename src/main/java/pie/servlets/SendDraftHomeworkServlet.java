@@ -50,10 +50,11 @@ public class SendDraftHomeworkServlet extends HttpServlet {
 		boolean homeworkIsGraded = false;
 
 		try {
-			Map<String, String> requestParameters = Utilities.getParameters(request, "staffID", "groupID",
+			Map<String, String> requestParameters = Utilities.getParameters(request, "groupID",
 					"homeworkTitle", "homeworkSubject", "homeworkDescription", "homeworkMinutesRequired",
-					"homeworkDueDate", "homeworkIsGraded");
-
+					"homeworkDueDate", "homeworkIsGraded", "homeworkID");
+			
+			homeworkID = Integer.parseInt(requestParameters.get("homeworkID"));
 			groupID = Integer.parseInt(requestParameters.get("groupID"));
 			homeworkTitle = requestParameters.get("homeworkTitle");
 			homeworkSubject = requestParameters.get("homeworkSubject");
