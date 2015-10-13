@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -20,8 +21,12 @@ import pie.services.StaffService;
 import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
-public class ViewGroupMembersServlet {
+@Singleton
+public class ViewGroupMembersServlet extends HttpServlet{
+
+	private static final long serialVersionUID = 2879025505322510247L;
 
 	GroupService groupService;
 	
