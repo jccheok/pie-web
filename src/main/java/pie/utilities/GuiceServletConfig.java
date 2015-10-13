@@ -30,6 +30,7 @@ import pie.servlets.SendHomeworkServlet;
 import pie.servlets.SendNoteServlet;
 import pie.servlets.StaffJoinGroupServlet;
 import pie.servlets.StudentJoinGroupServlet;
+import pie.servlets.StudentLeaveGroupServlet;
 import pie.servlets.TransferGroupOwnershipServlet;
 import pie.servlets.UpdateGroupServlet;
 import pie.servlets.UpdatePasswordServlet;
@@ -72,10 +73,10 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/resetpassword").with(ResetPasswordServlet.class);
 				serve("*/servlets/getsecurityquestions").with(GetAllSecurityQuestionsServlet.class);
 
-				
 				serve("*/servlets/secured/opengroups").with(ViewOpenGroupsServlet.class);
 				serve("*/servlets/secured/updatepassword").with(UpdatePasswordServlet.class);
 				
+				serve("*/servlets/secured/student/leavegroup").with(StudentLeaveGroupServlet.class);
 				serve("*/servlets/secured/student/joingroup").with(StudentJoinGroupServlet.class);
 				serve("*/servlets/secured/student/joinedgroups").with(ViewStudentJoinedGroupsServlet.class);
 				
