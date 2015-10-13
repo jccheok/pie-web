@@ -83,7 +83,7 @@ public class StudentJoinGroupServlet extends HttpServlet {
 			for (Staff groupAdmin : groupAdministrators) {
 				tempGroupAdministratorsEmail.add(groupAdmin.getUserEmail());
 			}
-			groupAdministrators = tempGroupAdministratorsEmail.toArray(groupAdministrators);
+			groupAdministratorsEmail = tempGroupAdministratorsEmail.toArray(groupAdministratorsEmail);
 			
 			emailService.sendEmail(emailSubject, emailContent, groupAdministratorsEmail);
 		}
