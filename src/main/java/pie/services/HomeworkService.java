@@ -251,7 +251,7 @@ public class HomeworkService {
 	}
 
 	public boolean updateDraftHomework(int homeworkID, String homeworkTitle, String homeworkSubject,
-			String homeworkDescription, int homeworkMinutesRequired, Date homeworkDueDate) {
+			String homeworkDescription, int homeworkMinutesRequired, Date homeworkDueDate, boolean homeworkIsGraded) {
 
 		boolean isUpdated = false;
 		if (isDraftHomework(homeworkID)) {
@@ -260,7 +260,7 @@ public class HomeworkService {
 				PreparedStatement pst = null;
 
 				String sql = "UPDATE `Homework` SET homeworkTitle = ?, homeworkSubject = ?, homeworkDescription = ?, "
-						+ "homeworkMinutesRequired = ?, homeworkDueDate = ? WHERE homeworkID = ?";
+						+ "homeworkMinutesRequired = ?, homeworkDueDate = ?, homeworkIsGraded = ? WHERE homeworkID = ?";
 
 				pst = conn.prepareStatement(sql);
 				pst.setString(1, homeworkTitle);
@@ -268,11 +268,14 @@ public class HomeworkService {
 				pst.setString(3, homeworkDescription);
 				pst.setInt(4, homeworkMinutesRequired);
 				pst.setDate(5, new java.sql.Date(homeworkDueDate.getTime()));
-				pst.setInt(6, homeworkID);
+				pst.setInt(6, homeworkIsGraded ? 1 : 0);
+				pst.setInt(7, homeworkID);
 
-				pst.executeUpdate();
+				int rowsUpdated = pst.executeUpdate();
 
-				isUpdated = true;
+				if (rowsUpdated != 0) {
+					isUpdated = true;
+				}
 
 				conn.close();
 
