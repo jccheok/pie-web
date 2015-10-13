@@ -5,13 +5,13 @@ import java.io.PrintWriter;
 import java.util.Map;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
 import pie.constants.UpdateAccountResult;
-import pie.constants.UpdatePasswordResult;
 import pie.services.UserService;
 import pie.utilities.Utilities;
 
@@ -19,7 +19,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class UpdateUserAccountDetailsServlet {
+public class UpdateUserAccountDetailsServlet extends HttpServlet{
+
+	private static final long serialVersionUID = 1001623595677723664L;
 
 	UserService userService;
 	
