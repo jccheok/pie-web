@@ -59,7 +59,7 @@ public class StudentJoinGroupServlet extends HttpServlet {
 			return;
 		}
 
-		JoinGroupResult joinGroupResult = studentService.joinGroup(groupID, studentID, groupCode);
+		JoinGroupResult joinGroupResult = studentService.joinGroup(studentID, groupID, groupCode);
 
 		JSONObject responseObject = new JSONObject();
 		responseObject.put("result", joinGroupResult.toString());
