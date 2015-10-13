@@ -23,7 +23,6 @@ import pie.utilities.Utilities;
 @Singleton
 public class GetAllSentHomeworkServlet extends HttpServlet {
 
-
 	private static final long serialVersionUID = 3561732142697312970L;
 
 	HomeworkService homeworkService;
@@ -61,7 +60,7 @@ public class GetAllSentHomeworkServlet extends HttpServlet {
 			homeworkObject.put("homeworkID", homework.getHomeworkID());
 			homeworkObject.put("homeworkDateCreated", homework.getHomeworkDateCreated());
 			homeworkObject.put("homeworkDescription", homework.getHomeworkDescription());
-			homeworkObject.put("homeworkDueDateUnix", (long) homework.getHomeworkDueDate().getTime() / 1000);
+			homeworkObject.put("homeworkDueDateUnix", Utilities.toUnixSeconds(homework.getHomeworkDueDate()));
 			homeworkObject.put("homeworkTitle", homework.getHomeworkTitle());
 			homeworkObject.put("homeworkSubject", homework.getHomeworkSubject());
 			homeworkList.put(homeworkObject);
