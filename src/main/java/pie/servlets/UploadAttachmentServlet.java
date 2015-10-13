@@ -4,6 +4,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.Collection;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -33,41 +34,44 @@ public class UploadAttachmentServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//ROUGH DRAFT
-
-
-		boolean isUploaded = false;
-		int log = 0;
 		
 		PrintWriter out = response.getWriter();
-		for (Part part : request.getParts()) {
-			log = 1;
-			InputStream is = request.getPart(part.getName()).getInputStream();
-			log = 2;
-			String fileName = attachmentService.getFileName(part);
-			log = 3;
-			FileOutputStream os = new FileOutputStream(System.getenv("OPENSHIFT_DATA_DIR") + fileName);
-			log = 4;
-			byte[] bytes = new byte[BUFFER_LENGTH];
-			log = 5;
-			int read = 0;
-			log = 6;
-			while ((read = is.read(bytes, 0, BUFFER_LENGTH)) != -1) {
-				os.write(bytes, 0, read);
-			}
-			log = 7;
-			os.flush();
-			is.close();
-			os.close();
-			log = 8;
-			out.println(fileName + " was uploaded to " + System.getenv("OPENSHIFT_DATA_DIR"));
-			isUploaded = true;
-		}
 
-		if(isUploaded) {
-			out.println("Success");
-		} else {
-			out.println("Failed" + log);
+		Collection<Part> parts = request.getParts();
+
+		out.write("<h2> Total parts : " + parts.size() + "</h2>");
+
+		for (Part part : parts) {
+			printEachPart(part, out);
+			part.write(getFileName(part));
 		}
-		
+	}
+
+	private void printEachPart(Part part, PrintWriter pw) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("<p>");
+		sb.append("Name : " + part.getName());
+		sb.append("<br>");
+		sb.append("Content Type : " + part.getContentType());
+		sb.append("<br>");
+		sb.append("Size : " + part.getSize());
+		sb.append("<br>");
+		for (String header : part.getHeaderNames()) {
+			sb.append(header + " : " + part.getHeader(header));
+			sb.append("<br>");
+		}
+		sb.append("</p>");
+		pw.write(sb.toString());
+
+	}
+
+	private String getFileName(Part part) {
+		String partHeader = part.getHeader("content-disposition");
+		for (String cd : partHeader.split(";")) {
+			if (cd.trim().startsWith("filename")) {
+				return cd.substring(cd.indexOf('=') + 1).trim().replace("\"", "");
+			}
+		}
+		return null;
 	}
 }
