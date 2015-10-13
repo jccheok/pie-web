@@ -108,7 +108,7 @@ public class SecurityQuestionService {
 
 			List<SecurityQuestion> tempSecurityQuestionList = new ArrayList<SecurityQuestion>();
 			while (resultSet.next()) {
-				tempSecurityQuestionList.add(getSecurityQuestion(resultSet.getInt(1)));
+				tempSecurityQuestionList.add(getSecurityQuestion(resultSet.getInt("securityQuestionID")));
 			}
 			securityQuestions = tempSecurityQuestionList.toArray(securityQuestions);
 
