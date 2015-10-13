@@ -15,6 +15,7 @@ import pie.UserType;
 import pie.constants.LoginResult;
 import pie.constants.ResetPasswordResult;
 import pie.constants.SupportedPlatform;
+import pie.constants.UpdateAccountResult;
 import pie.constants.UpdatePasswordResult;
 import pie.utilities.DatabaseConnector;
 import pie.utilities.Utilities;
@@ -375,5 +376,61 @@ public class UserService {
 		}
 		
 		return updatePasswordResult;
+	}
+	
+	public UpdateAccountResult updateUserAccountDetails(int userID, String userFirstName, String userLastName, String userMobile, int securityQuestionID, 
+			String securityQuestionAnswer, String addressStreet, String addressPostalCode, int cityID){
+		
+		UpdateAccountResult updateAccountResult = UpdateAccountResult.SUCCESS;
+		
+		try{
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			String sql = null;
+			
+			if(addressStreet == null){
+				sql = "UPDATE `User` SET userMobile = ?,  userFirstName = ?, userLastName = ?, securityQuestionID = ?, securityQuestionAnswer = ? WHERE userID = ?";
+				pst = conn.prepareStatement(sql);
+				pst.setString(1, userMobile);
+				pst.setString(2, userFirstName);
+				pst.setString(3, userLastName);
+				pst.setInt(4, securityQuestionID);
+				pst.setString(5, securityQuestionAnswer);
+				pst.setInt(6, userID);
+				
+				if(pst.executeUpdate() == 0){
+					updateAccountResult = UpdateAccountResult.ACCOUNT_UPDATE_FAILED;
+				}
+			}else{
+				AddressService addressService = new AddressService();
+				int addressID = addressService.registerAddress(addressPostalCode, addressStreet, cityID);
+				
+				if(addressID != -1){
+					sql = "UPDATE `User` SET userMobile = ?,  userFirstName = ?, userLastName = ?, securityQuestionID = ?, securityQuestionAnswer = ?, addressID = ? WHERE userID = ?";
+					pst = conn.prepareStatement(sql);
+					pst.setString(1, userMobile);
+					pst.setString(2, userFirstName);
+					pst.setString(3, userLastName);
+					pst.setInt(4, securityQuestionID);
+					pst.setString(5, securityQuestionAnswer);
+					pst.setInt(6, addressID);
+					pst.setInt(7, userID);
+					
+					if(pst.executeUpdate() == 0){
+						updateAccountResult = UpdateAccountResult.ACCOUNT_UPDATE_FAILED;
+					}
+				}else{
+					updateAccountResult = UpdateAccountResult.ADDRESS_FAILED_TO_UPDATE;
+				}
+				
+			}
+			
+			conn.close();
+			
+		}catch(Exception e){
+			System.out.println(e);
+		}
+		
+		return updateAccountResult;
 	}
 }
