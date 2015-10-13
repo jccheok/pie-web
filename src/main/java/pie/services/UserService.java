@@ -356,7 +356,7 @@ public class UserService {
 				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
 				
-				String sql = "UPDATE `User` SET userPassword = ?, userPasswordLastUpdate = NOW(), userLastPassword1 = ?, userLastPassword2 = ? WHERE userID = ?";
+				String sql = "UPDATE `User` SET userPassword = ?, userPasswordLastUpdate = NOW(), userLastPassword1 = ?, userLastPassword2 = ?, userLastUpdate = NOW() WHERE userID = ?";
 				pst = conn.prepareStatement(sql);
 				pst.setString(1, newUserPassword);
 				pst.setString(2, user.getUserLastPassword2());
