@@ -43,6 +43,7 @@ import pie.servlets.VerifyUserServlet;
 import pie.servlets.ViewAllSchoolsServlet;
 import pie.servlets.ViewCitiesServlet;
 import pie.servlets.ViewGroupDetailsServlet;
+import pie.servlets.ViewGroupMembersServlet;
 import pie.servlets.ViewHomeworkDetailsServlet;
 import pie.servlets.ViewOpenGroupsServlet;
 import pie.servlets.ViewParentChildrenServlet;
@@ -98,7 +99,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/joingroup").with(StaffJoinGroupServlet.class);
 				serve("*/servlets/secured/staff/groupdetails").with(ViewGroupDetailsServlet.class);
 				
-				serve("*/servlets/secured/staff/group/member/groupmembers").with(ViewGroupDetailsServlet.class);
+				serve("*/servlets/secured/staff/group/member/groupmembers").with(ViewGroupMembersServlet.class);
 				serve("*/servlets/secured/staff/group/admin/updategroup").with(UpdateGroupServlet.class);
 				serve("*/servlets/secured/staff/group/owner/enliststudents").with(EnlistStudentsToGroupServlet.class);
 				serve("*/servlets/secured/staff/group/owner/transfergroupownership").with(TransferGroupOwnershipServlet.class);
