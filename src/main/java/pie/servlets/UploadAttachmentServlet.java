@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +18,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
+@MultipartConfig(location = "/var/lib/openshift/560246382d52714ebe00004d/app-root/data")
 public class UploadAttachmentServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 4834340741739873069L;
