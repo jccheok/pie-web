@@ -76,7 +76,7 @@ public class SendHomeworkServlet extends HttpServlet {
 		JSONObject responseObject = new JSONObject();
 
 		if (homeworkID != -1) {
-			PublishHomeworkResult publishHomeworkResult = homeworkService.publishHomework(groupID, homeworkID);
+			PublishHomeworkResult publishHomeworkResult = homeworkService.publishHomework(groupID, homeworkID, staffID);
 			responseObject.put("result", publishHomeworkResult.toString());
 			responseObject.put("message", publishHomeworkResult.getDefaultMessage());
 		} else {

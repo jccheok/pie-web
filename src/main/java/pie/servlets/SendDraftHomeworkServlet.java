@@ -48,9 +48,10 @@ public class SendDraftHomeworkServlet extends HttpServlet {
 		int homeworkMinutesRequired = 0;
 		Date homeworkDueDate = null;
 		boolean homeworkIsGraded = false;
+		int staffID = 0;
 
 		try {
-			Map<String, String> requestParameters = Utilities.getParameters(request, "groupID",
+			Map<String, String> requestParameters = Utilities.getParameters(request, "staffID", "groupID",
 					"homeworkTitle", "homeworkSubject", "homeworkDescription", "homeworkMinutesRequired",
 					"homeworkDueDate", "homeworkIsGraded", "homeworkID");
 			
@@ -62,6 +63,8 @@ public class SendDraftHomeworkServlet extends HttpServlet {
 			homeworkMinutesRequired = Integer.parseInt(requestParameters.get("homeworkMinutesRequired"));
 			homeworkDueDate = dateFormat.parse(requestParameters.get("homeworkDueDate"));
 			homeworkIsGraded = Integer.parseInt(requestParameters.get("homeworkIsGraded")) == 1 ? true : false;
+			staffID = Integer.parseInt(requestParameters.get("staffID"));
+			
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 			return;
@@ -70,7 +73,7 @@ public class SendDraftHomeworkServlet extends HttpServlet {
 		JSONObject responseObject = new JSONObject();
 		if (homeworkService.updateDraftHomework(homeworkID, homeworkTitle, homeworkSubject, homeworkDescription,
 				homeworkMinutesRequired, homeworkDueDate, homeworkIsGraded)) {
-			PublishHomeworkResult publishHomeworkResult = homeworkService.publishHomework(groupID, homeworkID);
+			PublishHomeworkResult publishHomeworkResult = homeworkService.publishHomework(groupID, homeworkID, staffID);
 			responseObject.put("result", publishHomeworkResult.toString());
 			responseObject.put("message", publishHomeworkResult.getDefaultMessage());
 		} else {
