@@ -136,7 +136,7 @@ public class AddressService {
 			
 			if (resultSet.next()) {
 				
-				addressID = resultSet.getInt("addressID");
+				addressID = resultSet.getInt(1);
 			}
 			
 			conn.close();
@@ -213,6 +213,32 @@ public class AddressService {
 		}
 
 		return cityList;
+	}
+	
+	public int getAddressID(String addressPostalCode){
+		int addressID = -1;
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT addressID FROM `Address` WHERE addressPostalCode = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setString(1, addressPostalCode);
+			resultSet = pst.executeQuery();
+
+			if(resultSet.next()){
+				addressID = resultSet.getInt("addressID");
+			}
+
+			conn.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return addressID;
 	}
 	
 }
