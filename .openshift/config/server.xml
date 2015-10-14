@@ -71,15 +71,14 @@
                port="${OPENSHIFT_JBOSSEWS_HTTP_PORT}"
                protocol="HTTP/1.1"
                connectionTimeout="20000"
-               redirectPort="8443"/>
+               redirectPort="8443" disableUploadTimeout="false"/>
 
     <!-- A "Connector" using the shared thread pool-->
     <!--
     <Connector executor="tomcatThreadPool"
                port="8080" protocol="HTTP/1.1"
                connectionTimeout="20000"
-               redirectPort="8443" 
-			   disableUploadTimeout="false"/>
+               redirectPort="8443" />
     -->
     <!-- Define a SSL HTTP/1.1 Connector on port 8443
          This connector uses the JSSE configuration, when using APR, the
