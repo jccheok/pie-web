@@ -41,6 +41,7 @@ import pie.servlets.UpdatePasswordServlet;
 import pie.servlets.UpdateUserAccountDetailsServlet;
 import pie.servlets.UploadAttachmentServlet;
 import pie.servlets.VerifyUserServlet;
+import pie.servlets.ViewAllGroupMembersServlet;
 import pie.servlets.ViewAllSchoolsServlet;
 import pie.servlets.ViewCitiesServlet;
 import pie.servlets.ViewGroupDetailsServlet;
@@ -105,6 +106,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/group/owner/enliststudents").with(EnlistStudentsToGroupServlet.class);
 				serve("*/servlets/secured/staff/group/owner/transfergroupownership").with(TransferGroupOwnershipServlet.class);
 				serve("*/servlets/secured/staff/group/owner/deactivategroup").with(DeactivateGroupServlet.class);
+				serve("*/servlets/secured/staff/group/member/allgroupmembers").with(ViewAllGroupMembersServlet.class);
 				
 				serve("*/servlets/secured/staff/group/sendhomework").with(SendHomeworkServlet.class);
 				serve("*/servlets/secured/staff/group/alldrafthomework").with(GetAllDraftHomeworkServlet.class);
