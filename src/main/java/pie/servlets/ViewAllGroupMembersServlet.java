@@ -57,6 +57,7 @@ public class ViewAllGroupMembersServlet extends HttpServlet{
 		
 		Group[] groups = staffService.getJoinedGroups(staffID);
 		JSONObject responseObject = new JSONObject();
+		JSONArray groupList = new JSONArray();
 		try{
 			
 			for(Group group : groups){
@@ -75,9 +76,7 @@ public class ViewAllGroupMembersServlet extends HttpServlet{
 				}
 				
 				JSONArray staffList = new JSONArray();
-				
-				StaffService staffService = new StaffService();
-				
+								
 				for(Staff staff : staffMembers){
 					HashMap<String, String> staffs = new HashMap<String, String>();
 					staffs.put("staffFullName", staff.getUserFullName());
@@ -87,8 +86,10 @@ public class ViewAllGroupMembersServlet extends HttpServlet{
 				
 				groupMembers.put("studentMembers", studentList);
 				groupMembers.put("staffMembers", staffList);
-				responseObject.put("groupMembers", groupMembers);
+				groupList.put(groupMembers);
 			}
+			
+			responseObject.put("groupList", groupList);
 			
 		}catch(Exception e){
 			e.printStackTrace();
