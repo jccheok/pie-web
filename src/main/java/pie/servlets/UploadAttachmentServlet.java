@@ -36,6 +36,9 @@ public class UploadAttachmentServlet extends HttpServlet {
 		JSONObject responseObject = new JSONObject();
 		PrintWriter out = response.getWriter();
 		
+		try {
+		
+		
         String uploadPath = System.getenv("OPENSHIFT_DATA_DIR");
         String uploadDir = uploadPath + File.separator + "uploadFiles";
          
@@ -61,6 +64,11 @@ public class UploadAttachmentServlet extends HttpServlet {
         	responseObject.put("message", "No file is uploaded");
         	responseObject.put("debug", debugLog);
         }
+	} catch (Exception e) {
+		response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+		return;
+
+	}
   
         out.println(responseObject);
         
