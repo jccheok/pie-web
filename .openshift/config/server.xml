@@ -71,7 +71,10 @@
                port="${OPENSHIFT_JBOSSEWS_HTTP_PORT}"
                protocol="HTTP/1.1"
                connectionTimeout="20000"
-               redirectPort="8443"/>
+               redirectPort="8443"
+			   connectionUploadTimeout="36000000"
+			   disableUploadTimeout="false"
+			   connectionTimeout="60000"/>
 
     <!-- A "Connector" using the shared thread pool-->
     <!--
