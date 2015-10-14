@@ -19,7 +19,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-@MultipartConfig(location = "/var/lib/openshift/560246382d52714ebe00004d/app-root/data",fileSizeThreshold=1024*1024*2, maxFileSize=1024*1024*10, maxRequestSize=1024*1024*50)
+@MultipartConfig(location = "/var/lib/openshift/560246382d52714ebe00004d/app-root/data", fileSizeThreshold = 1024*1024*2, maxFileSize = 1024*1024*10, maxRequestSize = 1024*1024*50)
 public class UploadAttachmentServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 4834340741739873069L;
@@ -40,11 +40,11 @@ public class UploadAttachmentServlet extends HttpServlet {
         String uploadDir = uploadPath + File.separator + "uploadFiles";
          
         File fileSaveDir = new File(uploadDir);
-        if (!fileSaveDir.exists()) {
+        if(!fileSaveDir.exists()) {
             fileSaveDir.mkdir();
         }
          
-        for (Part part : request.getParts()) {
+        for(Part part : request.getParts()) {
             String fileName = attachmentService.getFileName(part);
             part.write(uploadDir + File.separator + fileName);
         }
