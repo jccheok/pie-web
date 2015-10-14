@@ -57,37 +57,44 @@ public class ViewAllGroupMembersServlet extends HttpServlet{
 		
 		Group[] groups = staffService.getJoinedGroups(staffID);
 		JSONObject responseObject = new JSONObject();
-		for(Group group : groups){
-			JSONObject groupMembers = new JSONObject();
+		JSONArray groupList = new JSONArray();
+		try{
 			
-			Student[] studentMembers = groupService.getStudentMembers(group.getGroupID());
-			Staff[] staffMembers = groupService.getStaffMembers(group.getGroupID());
-			
-			JSONArray studentList = new JSONArray();
+			for(Group group : groups){
+				JSONObject groupMembers = new JSONObject();
+				
+				Student[] studentMembers = groupService.getStudentMembers(group.getGroupID());
+				Staff[] staffMembers = groupService.getStaffMembers(group.getGroupID());
+				
+				JSONArray studentList = new JSONArray();
 
-			for(Student student : studentMembers){
-				HashMap<String, String> students = new HashMap<String, String>();
-				students.put("studentFullName", student.getUserFullName());
-				students.put("studentEmail", student.getUserEmail());
-				studentList.put(students);
+				for(Student student : studentMembers){
+					HashMap<String, String> students = new HashMap<String, String>();
+					students.put("studentFullName", student.getUserFullName());
+					students.put("studentEmail", student.getUserEmail());
+					studentList.put(students);
+				}
+				
+				JSONArray staffList = new JSONArray();
+								
+				for(Staff staff : staffMembers){
+					HashMap<String, String> staffs = new HashMap<String, String>();
+					staffs.put("staffFullName", staff.getUserFullName());
+					staffs.put("staffEmail", staff.getUserEmail());
+					staffList.put(staffs);
+				}
+				
+				groupMembers.put("studentMembers", studentList);
+				groupMembers.put("staffMembers", staffList);
+				groupList.put(groupMembers);
 			}
 			
-			JSONArray staffList = new JSONArray();
+			responseObject.put("groupList", groupList);
 			
-			StaffService staffService = new StaffService();
-			
-			for(Staff staff : staffMembers){
-				StaffRole staffRole = staffService.getStaffRole(staff.getUserID(), group.getGroupID());
-				HashMap<String, String> staffs = new HashMap<String, String>();
-				staffs.put("staffFullName", staff.getUserFullName());
-				staffs.put("staffEmail", staff.getUserEmail());
-				staffList.put(staffs);
-			}
-			
-			groupMembers.put("studentMembers", studentList);
-			groupMembers.put("staffMembers", staffList);
-			responseObject.put("groupMembers", groupMembers);
+		}catch(Exception e){
+			e.printStackTrace();
 		}
+		
 		
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
