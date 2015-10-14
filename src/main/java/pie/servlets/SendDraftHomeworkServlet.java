@@ -1,7 +1,6 @@
 package pie.servlets;
 
 import java.io.IOException;
-
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -19,6 +18,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import pie.constants.PublishHomeworkResult;
+import pie.constants.UpdateHomeworkDraftResult;
 import pie.services.GroupService;
 import pie.services.HomeworkService;
 import pie.utilities.Utilities;
@@ -71,14 +71,15 @@ public class SendDraftHomeworkServlet extends HttpServlet {
 		}
 
 		JSONObject responseObject = new JSONObject();
-		if (homeworkService.updateDraftHomework(homeworkID, homeworkTitle, homeworkSubject, homeworkDescription,
-				homeworkMinutesRequired, homeworkDueDate, homeworkIsGraded)) {
+		
+		UpdateHomeworkDraftResult updateHomeworkDraftResult = homeworkService.updateDraftHomework(homeworkID, homeworkTitle, homeworkSubject, homeworkDescription, homeworkMinutesRequired, homeworkDueDate, homeworkIsGraded);
+		if (updateHomeworkDraftResult == UpdateHomeworkDraftResult.SUCCESS) {
 			PublishHomeworkResult publishHomeworkResult = homeworkService.publishHomework(groupID, homeworkID, staffID);
 			responseObject.put("result", publishHomeworkResult.toString());
 			responseObject.put("message", publishHomeworkResult.getDefaultMessage());
 		} else {
-			responseObject.put("result", "Failure");
-			responseObject.put("message", "Fail to update homework");
+			responseObject.put("result", updateHomeworkDraftResult.toString());
+			responseObject.put("message", updateHomeworkDraftResult.getDefaultMessage());
 		}
 
 		PrintWriter out = response.getWriter();
