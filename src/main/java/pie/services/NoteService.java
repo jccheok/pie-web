@@ -186,6 +186,14 @@ public class NoteService {
 							publishResult = PublishNoteResult.FAILED_TO_SEND_TO_MEMBERS;
 						}
 					}
+					
+					Staff[] groupStaffs = groupService.getStaffMembers(groupID);
+					
+					for (Staff staff : groupStaffs) {
+						if (!sendNote(noteID, staff.getUserID())) {
+							publishResult = PublishNoteResult.FAILED_TO_SEND_TO_MEMBERS;
+						}
+					}
 				}
 			}
 
