@@ -68,21 +68,12 @@ public class UpdateHomeworkDraftServlet extends HttpServlet {
 		}
 
 		JSONObject responseObject = new JSONObject();
-
-		try {
-			if (homeworkService.updateDraftHomework(homeworkID, homeworkTitle, homeworkSubject, homeworkDescription,
-					homeworkMinutesRequired, homeworkDueDate, homeworkIsGraded)) {
-				responseObject.put("result", UpdateHomeworkDraftResult.SUCCESS.toString());
-				responseObject.put("message", UpdateHomeworkDraftResult.SUCCESS.getDefaultMessage());
-			} else {
-				responseObject.put("result", UpdateHomeworkDraftResult.FAIL_TO_UPDATE_HOMEWORK.toString());
-				responseObject.put("message", UpdateHomeworkDraftResult.FAIL_TO_UPDATE_HOMEWORK.getDefaultMessage());
-			}
-		} catch (NullPointerException e) {
-			responseObject.put("result", UpdateHomeworkDraftResult.EMPTY_FIELD.toString());
-			responseObject.put("message", UpdateHomeworkDraftResult.EMPTY_FIELD.getDefaultMessage());
-		}
-
+		
+		UpdateHomeworkDraftResult updateHomeworkDraftResult = homeworkService.updateDraftHomework(homeworkID, homeworkTitle, homeworkSubject, homeworkDescription, homeworkMinutesRequired, homeworkDueDate, homeworkIsGraded);
+		
+		responseObject.put("result", updateHomeworkDraftResult.toString());
+		responseObject.put("message",updateHomeworkDraftResult.getDefaultMessage());
+		
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
 	}
