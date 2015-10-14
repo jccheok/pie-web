@@ -11,6 +11,7 @@ import pie.Homework;
 import pie.Staff;
 import pie.Student;
 import pie.constants.PublishHomeworkResult;
+import pie.constants.UpdateHomeworkDraftResult;
 import pie.utilities.DatabaseConnector;
 
 public class HomeworkService {
@@ -250,10 +251,11 @@ public class HomeworkService {
 		return deleteResult;
 	}
 
-	public boolean updateDraftHomework(int homeworkID, String homeworkTitle, String homeworkSubject,
+	public UpdateHomeworkDraftResult updateDraftHomework(int homeworkID, String homeworkTitle, String homeworkSubject,
 			String homeworkDescription, int homeworkMinutesRequired, Date homeworkDueDate, boolean homeworkIsGraded) {
 
-		boolean isUpdated = false;
+		UpdateHomeworkDraftResult updateHomeworkDraftResult = UpdateHomeworkDraftResult.SUCCESS;
+		
 		if (isDraftHomework(homeworkID)) {
 			try {
 				Connection conn = DatabaseConnector.getConnection();
@@ -271,17 +273,20 @@ public class HomeworkService {
 				pst.setInt(6, homeworkIsGraded ? 1 : 0);
 				pst.setInt(7, homeworkID);
 
-				pst.executeUpdate();
-				isUpdated = true;
+				if(pst.executeUpdate() == 0){
+					updateHomeworkDraftResult = UpdateHomeworkDraftResult.FAIL_TO_UPDATE_HOMEWORK;
+				}
 				
 				conn.close();
 
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}else{
+			updateHomeworkDraftResult = UpdateHomeworkDraftResult.HOMEWORK_IS_NOT_DRAFT;
 		}
 
-		return isUpdated;
+		return updateHomeworkDraftResult;
 	}
 
 	public boolean sendHomework(int studentID, int homeworkID) {
