@@ -150,7 +150,7 @@ public class NoteService {
 		return sendResult;
 	}
 
-	public PublishNoteResult publishNote(int noteID, int groupID, int authorID) {
+	public PublishNoteResult publishNote(int noteID, int groupID, int publisherID) {
 
 		PublishNoteResult publishResult = PublishNoteResult.SUCCESS;
 		GroupService groupService = new GroupService();
@@ -169,9 +169,9 @@ public class NoteService {
 			if (pst.executeUpdate() == 0) {
 				publishResult = PublishNoteResult.FAILED_DRAFT;
 			} else {
-				sql = "INSERT INTO `GroupNote` (authorID, noteID, groupID) VALUES (?, ?, ?)";
+				sql = "INSERT INTO `GroupNote` (publisherID, noteID, groupID) VALUES (?, ?, ?)";
 				pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-				pst.setInt(1, authorID);
+				pst.setInt(1, publisherID);
 				pst.setInt(2, noteID);
 				pst.setInt(3, groupID);
 				pst.executeUpdate();
