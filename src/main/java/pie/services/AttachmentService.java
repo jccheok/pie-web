@@ -6,66 +6,30 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 import javax.servlet.http.Part;
-
-import pie.Attachment;
-import pie.AttachmentType;
 import pie.utilities.DatabaseConnector;
 
 public class AttachmentService {
 
-	public Attachment getAttachment(int attachmentID) {
+	public int createNoteAttachment(String attachmentURL) {
 
-		Attachment attachment = null;
-
+		int noteAttachmentID = -1;
+		int tempNoteID = 1;
+		
 		try {
 
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT * FROM `Attachment` WHERE attachmentID = ?";
-			pst = conn.prepareStatement(sql);
-			pst.setInt(1, attachmentID);
-
-			resultSet = pst.executeQuery();
-
-			if(resultSet.next()) {
-
-				String attachmentURL = resultSet.getString("attachmentURL");
-				AttachmentType attachmentTypeID = AttachmentType.getAttachmentType(resultSet.getInt("attachmentTypeID"));
-
-				attachment = new Attachment(attachmentID, attachmentURL, attachmentTypeID);
-			}
-
-			conn.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return attachment;
-
-	}
-
-	public int createAttachment(String attachmentURL, int attachmentTypeID) {
-
-		int attachmentID = -1;
-
-		try {
-
-			Connection conn = DatabaseConnector.getConnection();
-			PreparedStatement pst = null;
-			ResultSet resultSet = null;
-
-			String sql = "INSERT INTO `Attachment` (attachmentURL, attachmentTypeID) VALUES (?, ?)";
+			String sql = "INSERT INTO `NoteAttachment` (attachmentURL, noteID) VALUES (?, ?)";
 			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			pst.setString(1, attachmentURL);
-			pst.setInt(2, attachmentTypeID);
+			pst.setInt(2, tempNoteID);
 			pst.executeUpdate();
 
 			resultSet = pst.getGeneratedKeys();
 			if (resultSet.next()) {
-				attachmentID = resultSet.getInt(1);
+				noteAttachmentID = resultSet.getInt(1);
 			}
 
 
@@ -73,8 +37,39 @@ public class AttachmentService {
 			e.printStackTrace();
 		}
 
-		return attachmentID;
+		return noteAttachmentID;
 	}
+	
+	public int createHomeworkAttachment(String attachmentURL) {
+
+		int homeworkAttachmentID = -1;
+		int tempHomeworkID = 1;
+		
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "INSERT INTO `NoteAttachment` (attachmentURL, homeworkID) VALUES (?, ?)";
+			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			pst.setString(1, attachmentURL);
+			pst.setInt(2, tempHomeworkID);
+			pst.executeUpdate();
+
+			resultSet = pst.getGeneratedKeys();
+			if (resultSet.next()) {
+				homeworkAttachmentID = resultSet.getInt(1);
+			}
+
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return homeworkAttachmentID;
+	}
+	
 
 	public String getFileName(Part part) {
         String contentDisp = part.getHeader("content-disposition");
