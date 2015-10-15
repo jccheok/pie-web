@@ -32,7 +32,7 @@ public class GroupService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "SELECT * FROM `Group` WHERE groupName = ?";
+			String sql = "SELECT * FROM `Group` WHERE name = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, groupName);
 
@@ -56,7 +56,7 @@ public class GroupService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "SELECT * FROM `Group` WHERE groupCode = ?";
+			String sql = "SELECT * FROM `Group` WHERE code = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, groupCode);
 
@@ -81,7 +81,7 @@ public class GroupService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT groupID FROM `Group` WHERE groupCode = ?";
+			String sql = "SELECT groupID FROM `Group` WHERE code = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, groupCode);
 
@@ -120,15 +120,15 @@ public class GroupService {
 			if (resultSet.next()) {
 
 				School groupSchool = new SchoolService().getSchool(resultSet.getInt("schoolID"));
-				String groupName = resultSet.getString("groupName");
-				String groupDescription = resultSet.getString("groupDescription");
-				int groupMaxDailyHomeworkMinutes = resultSet.getInt("groupMaxDailyHomeworkMinutes");
+				String groupName = resultSet.getString("name");
+				String groupDescription = resultSet.getString("description");
+				int groupMaxDailyHomeworkMinutes = resultSet.getInt("maxDailyHomeworkMin");
 				GroupType groupType = GroupType.getGroupType(resultSet.getInt("groupTypeID"));
-				String groupCode = resultSet.getString("groupCode");
-				boolean groupIsValid = resultSet.getInt("groupIsValid") == 1;
-				boolean groupIsOpen = resultSet.getInt("groupIsOpen") == 1;
-				Date groupLastUpdate = new Date(resultSet.getTimestamp("groupLastUpdate").getTime());
-				Date groupDateCreated = new Date(resultSet.getTimestamp("groupDateCreated").getTime());
+				String groupCode = resultSet.getString("code");
+				boolean groupIsValid = resultSet.getInt("isValid") == 1;
+				boolean groupIsOpen = resultSet.getInt("isOpen") == 1;
+				Date groupLastUpdate = new Date(resultSet.getTimestamp("lastUpdate").getTime());
+				Date groupDateCreated = new Date(resultSet.getTimestamp("dateCreated").getTime());
 
 				group = new Group(groupID, groupSchool, groupName, groupDescription, groupMaxDailyHomeworkMinutes,
 						groupType, groupCode, groupIsValid, groupIsOpen, groupLastUpdate, groupDateCreated);
@@ -154,7 +154,7 @@ public class GroupService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT staffID FROM `Group`,`StaffGroup` WHERE `Group`.groupID = `StaffGroup`.groupID AND staffRoleID = ? AND `Group`.groupID = ? AND staffGroupIsValid = ?";
+			String sql = "SELECT staffID FROM `Group`,`StaffGroup` WHERE `Group`.groupID = `StaffGroup`.groupID AND staffRoleID = ? AND `Group`.groupID = ? AND `StaffGroup`.isValid = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, staffRoleService.getOwnerStaffRole().getStaffRoleID());
 			pst.setInt(2, groupID);
@@ -207,7 +207,7 @@ public class GroupService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT EXISTS (SELECT studentID from `StudentGroup` where studentID = ? AND groupID = ? AND studentGroupIsValid = ?) OR EXISTS (select staffID from `StaffGroup` where staffID = ? AND groupID = ? AND staffGroupIsValid = ?);";
+			String sql = "SELECT EXISTS (SELECT studentID from `StudentGroup` where studentID = ? AND groupID = ? AND isValid = ?) OR EXISTS (select staffID from `StaffGroup` where staffID = ? AND groupID = ? AND isValid = ?);";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, groupMemberID);
 			pst.setInt(2, groupID);
@@ -243,7 +243,7 @@ public class GroupService {
 				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
 
-				String sql = "INSERT INTO `StudentGroup` (groupID, studentID, studentGroupIndexNumber) VALUES (?, ?, ?)";
+				String sql = "INSERT INTO `StudentGroup` (groupID, studentID, indexNumber) VALUES (?, ?, ?)";
 				pst = conn.prepareStatement(sql);
 				pst.setInt(1, groupID);
 				pst.setInt(2, studentID);
@@ -304,7 +304,7 @@ public class GroupService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT staffID FROM `StaffGroup` WHERE groupID = ? AND staffGroupIsValid = ?";
+			String sql = "SELECT staffID FROM `StaffGroup` WHERE groupID = ? AND isValid = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, groupID);
 			pst.setInt(2, 1);
@@ -373,7 +373,7 @@ public class GroupService {
 					PreparedStatement pst = null;
 					ResultSet resultSet = null;
 
-					String sql = "INSERT INTO `Group` (schoolID, groupName, groupDescription, groupMaxDailyHomeworkMinutes, groupTypeID, groupCode) VALUES (?, ?, ?, ?, ?, ?)";
+					String sql = "INSERT INTO `Group` (schoolID, name, description, maxDailyHomeworkMin, groupTypeID, code) VALUES (?, ?, ?, ?, ?, ?)";
 					pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 					pst.setInt(1, groupOwner.getSchool().getSchoolID());
 					pst.setString(2, groupName);
@@ -415,7 +415,7 @@ public class GroupService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT COALESCE( (SELECT SUM(studentGroupIndexNumber) FROM `StudentGroup` WHERE groupID = ? ORDER BY studentGroupIndexNumber DESC LIMIT 1), 0) + 1";
+			String sql = "SELECT COALESCE( (SELECT SUM(indexNumber) FROM `StudentGroup` WHERE groupID = ? ORDER BY indexNumber DESC LIMIT 1), 0) + 1";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, groupID);
 
@@ -453,7 +453,7 @@ public class GroupService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "UPDATE `Group` SET groupName = ?, groupDescription = ?, groupMaxDailyHomeworkMinutes = ?, groupLastUpdate = NOW(), groupIsOpen = ? WHERE groupID = ?";
+			String sql = "UPDATE `Group` SET name = ?, description = ?, maxDailyHomeworkMin = ?, lastUpdate = NOW(), isOpen = ? WHERE groupID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, groupName);
 			pst.setString(1, groupDescription);
@@ -499,7 +499,7 @@ public class GroupService {
 				PreparedStatement pst = null;
 				ResultSet resultSet = null;
 
-				String sql = "SELECT `StaffRole`.staffRoleID FROM `StaffRole`, `StaffGroup` WHERE `StaffRole`.staffRoleID = `StaffGroup`.staffRoleID AND groupID = ? AND staffID = ? AND staffGroupIsValid = ?";
+				String sql = "SELECT `StaffRole`.staffRoleID FROM `StaffRole`, `StaffGroup` WHERE `StaffRole`.staffRoleID = `StaffGroup`.staffRoleID AND `StaffGroup`.groupID = ? AND `StaffGroup`.staffID = ? AND `StaffGroup`.isValid = ?";
 				pst = conn.prepareStatement(sql);
 				pst.setInt(1, groupID);
 				pst.setInt(2, staff.getUserID());
@@ -534,7 +534,7 @@ public class GroupService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "UPDATE `StaffGroup` SET staffGroupIsValid = ? WHERE groupID = ? AND staffID = ?";
+			String sql = "UPDATE `StaffGroup` SET isValid = ? WHERE groupID = ? AND staffID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, 0);
 			pst.setInt(2, groupID);
@@ -560,7 +560,7 @@ public class GroupService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "UPDATE `StudentGroup` SET studentGroupIsValid = ? WHERE groupID = ? AND studentID = ?";
+			String sql = "UPDATE `StudentGroup` SET isValid = ? WHERE groupID = ? AND studentID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, 0);
 			pst.setInt(2, groupID);
@@ -615,7 +615,7 @@ public class GroupService {
 				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
 
-				String sql = "UPDATE `Group` SET groupIsValid = ?, groupDateDeleted = NOW(), groupIsOpen = ? WHERE groupID = ?";
+				String sql = "UPDATE `Group` SET isValid = ?, dateDeleted = NOW(), isOpen = ? WHERE groupID = ?";
 				pst = conn.prepareStatement(sql);
 				pst.setInt(1, 0);
 				pst.setInt(2, 0);
