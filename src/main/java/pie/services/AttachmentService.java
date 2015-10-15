@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 import javax.servlet.http.Part;
+
+import pie.NoteAttachment;
 import pie.utilities.DatabaseConnector;
 
 public class AttachmentService {
@@ -51,7 +53,7 @@ public class AttachmentService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "INSERT INTO `NoteAttachment` (attachmentURL, homeworkID) VALUES (?, ?)";
+			String sql = "INSERT INTO `HomeworkAttachment` (attachmentURL, homeworkID) VALUES (?, ?)";
 			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			pst.setString(1, attachmentURL);
 			pst.setInt(2, tempHomeworkID);
@@ -68,6 +70,38 @@ public class AttachmentService {
 		}
 
 		return homeworkAttachmentID;
+	}
+	
+	public NoteAttachment getNoteAttachment(int noteAttachmentID) {
+		
+		NoteAttachment noteAttachment = null;
+		String attachmentURL = null;
+		int noteID = 0;	
+		
+		try {
+			
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+			
+			String sql = "SELECT * FROM `NoteAttachment` WHERE noteAttachmentID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, noteAttachmentID);
+			resultSet = pst.executeQuery();
+			
+			if(resultSet.next()) {
+				attachmentURL = resultSet.getString("attachmentURL");
+				noteID = resultSet.getInt("noteID");
+				
+				noteAttachment = new NoteAttachment(noteAttachmentID, attachmentURL, noteID);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return noteAttachment;
+		
 	}
 	
 
