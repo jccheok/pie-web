@@ -231,36 +231,6 @@ public class GroupService {
 	}
 
 
-	public boolean addStudentToGroup(int groupID, int studentID, int studentGroupIndexNumber) {
-		
-		StudentService studentService = new StudentService();
-		boolean addResult = false;
-
-		if (!studentService.isMember(studentID, groupID)) {
-
-			try {
-
-				Connection conn = DatabaseConnector.getConnection();
-				PreparedStatement pst = null;
-
-				String sql = "INSERT INTO `StudentGroup` (groupID, studentID, indexNumber) VALUES (?, ?, ?)";
-				pst = conn.prepareStatement(sql);
-				pst.setInt(1, groupID);
-				pst.setInt(2, studentID);
-				pst.setInt(3, studentGroupIndexNumber);
-				pst.executeUpdate();
-
-				addResult = true;
-
-				conn.close();
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-		return addResult;
-	}
 
 	public boolean addStaffToGroup(int groupID, int staffID, StaffRole staffRole) {
 		
@@ -324,37 +294,6 @@ public class GroupService {
 		}
 
 		return staffMembers;
-	}
-
-	public Student[] getStudentMembers(int groupID) {
-
-		StudentService studentService = new StudentService();
-		Student[] studentMembers = {};
-
-		try {
-
-			Connection conn = DatabaseConnector.getConnection();
-			PreparedStatement pst = null;
-			ResultSet resultSet = null;
-
-			String sql = "SELECT studentID FROM `StudentGroup` WHERE groupID = ?";
-			pst = conn.prepareStatement(sql);
-			pst.setInt(1, groupID);
-			resultSet = pst.executeQuery();
-
-			ArrayList<Student> tempStudentMembers = new ArrayList<Student>();
-			while (resultSet.next()) {
-				tempStudentMembers.add(studentService.getStudent(resultSet.getInt("studentID")));
-			}
-			studentMembers = tempStudentMembers.toArray(studentMembers);
-
-			conn.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return studentMembers;
 	}
 
 	public GroupRegistrationResult registerGroup(Staff groupOwner, String groupName, String groupDescription,
@@ -476,8 +415,8 @@ public class GroupService {
 
 	public int getMemberCount(int groupID) {
 		int memberCount = 0;
-
-		Student[] groupStudents = getStudentMembers(groupID);
+		StudentGroupService studentGroupService = new StudentGroupService();
+		Student[] groupStudents = studentGroupService.getStudentMembers(groupID);
 		Staff[] groupStaffs = getStaffMembers(groupID);
 
 		memberCount += groupStudents.length;
@@ -582,8 +521,9 @@ public class GroupService {
 	public DeactivateGroupResult deactivateGroup(int groupID, int staffID, String userPassword) {
 		DeactivateGroupResult deactivateGroupResult = DeactivateGroupResult.SUCCESS;
 		StaffService staffService = new StaffService();
+		StudentGroupService studentGroupService = new StudentGroupService();
 		Group group = getGroup(groupID);
-
+		
 		Staff staffUser = staffService.getStaff(staffID);
 		Staff groupOwner = getGroupOwner(groupID);
 		
@@ -594,7 +534,7 @@ public class GroupService {
 		}else if(!staffUser.getUserPassword().equals(userPassword)){
 			deactivateGroupResult = DeactivateGroupResult.WRONG_PASSWORD;
 		}else{
-			Student[] students = getStudentMembers(groupID);
+			Student[] students = studentGroupService.getStudentMembers(groupID);
 			Staff[] staffs = getStaffMembers(groupID);
 
 			for (Student student : students) {
