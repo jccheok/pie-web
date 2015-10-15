@@ -63,7 +63,7 @@ public class HomeworkService {
 	}
 
 	public int createHomework(int staffID, int groupID, String homeworkTitle, String homeworkSubject,
-			String homeworkDescription, int homeworkMinutesRequired, Date homeworkDueDate, boolean homeworkIsGraded) {
+			String homeworkDescription, int homeworkMinutesReqStudent, Date homeworkDueDate, boolean homeworkIsGraded) {
 
 		int homeworkID = -1;
 
@@ -72,14 +72,14 @@ public class HomeworkService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "INSERT INTO `Homework` (staffID ,homeworkTitle ,homeworkSubject ,homeworkDescription ,homeworkMinutesRequired "
+			String sql = "INSERT INTO `Homework` (staffID ,homeworkTitle ,homeworkSubject ,homeworkDescription ,homeworkMinutesReqStudent "
 					+ ",homeworkDueDate,homeworkIsGraded) VALUES (?,?,?,?,?,?,?)";
 			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			pst.setInt(1, staffID);
 			pst.setString(2, homeworkTitle);
 			pst.setString(3, homeworkSubject);
 			pst.setString(4, homeworkDescription);
-			pst.setInt(5, homeworkMinutesRequired);
+			pst.setInt(5, homeworkMinutesReqStudent);
 			pst.setDate(6, new java.sql.Date(homeworkDueDate.getTime()));
 			pst.setInt(7, homeworkIsGraded ? 1 : 0);
 			pst.executeUpdate();
@@ -145,7 +145,7 @@ public class HomeworkService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT homeworkID FROM `Homework` WHERE staffID = ? AND homeworkIsDraft = ?";
+			String sql = "SELECT homeworkID FROM `Homework` WHERE publisherID = ? AND IsDraft = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, staffID);
 			pst.setInt(2, 0);
@@ -168,37 +168,12 @@ public class HomeworkService {
 		return homework;
 	}
 
-	public boolean isDraftHomework(int homeworkID) {
-
-		boolean isDraft = false;
-
-		try {
-			Connection conn = DatabaseConnector.getConnection();
-			PreparedStatement pst = null;
-			ResultSet resultSet = null;
-
-			String sql = "SELECT homeworkIsDraft FROM `Homework` WHERE homeworkID = ?";
-			pst = conn.prepareStatement(sql);
-			pst.setInt(1, homeworkID);
-			resultSet = pst.executeQuery();
-
-			if (resultSet.next()) {
-				isDraft = resultSet.getInt("homeworkIsDraft") == 1 ? true : false;
-			}
-			conn.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return isDraft;
-	}
 
 	public boolean deleteDraftHomework(int homeworkID) {
 
 		boolean deleteResult = false;
 
-		if (isDraftHomework(homeworkID)) {
+		if (getHomework(homeworkID).isHomeworkIsDraft()) {
 			try {
 				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
@@ -255,7 +230,7 @@ public class HomeworkService {
 			String homeworkDescription, int homeworkMinutesRequired, Date homeworkDueDate, boolean homeworkIsGraded) {
 
 		UpdateHomeworkDraftResult updateHomeworkDraftResult = UpdateHomeworkDraftResult.SUCCESS;
-		
+
 		if (isDraftHomework(homeworkID)) {
 			try {
 				Connection conn = DatabaseConnector.getConnection();
@@ -273,16 +248,16 @@ public class HomeworkService {
 				pst.setInt(6, homeworkIsGraded ? 1 : 0);
 				pst.setInt(7, homeworkID);
 
-				if(pst.executeUpdate() == 0){
+				if (pst.executeUpdate() == 0) {
 					updateHomeworkDraftResult = UpdateHomeworkDraftResult.FAIL_TO_UPDATE_HOMEWORK;
 				}
-				
+
 				conn.close();
 
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}else{
+		} else {
 			updateHomeworkDraftResult = UpdateHomeworkDraftResult.HOMEWORK_IS_NOT_DRAFT;
 		}
 
@@ -431,7 +406,7 @@ public class HomeworkService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT homeworkID FROM `GroupHomework` WHERE groupID = ?";
+			String sql = "SELECT `Homework`.homeworkID FROM `GroupHomework` WHERE groupID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, groupID);
 			resultSet = pst.executeQuery();
