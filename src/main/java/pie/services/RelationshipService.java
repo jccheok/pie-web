@@ -22,7 +22,7 @@ public class RelationshipService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT relationshipID FROM `Relationship` WHERE relationshipName = ?";
+			String sql = "SELECT relationshipID FROM `Relationship` WHERE title = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, relationshipName);
 
@@ -62,7 +62,7 @@ public class RelationshipService {
 				
 				relationship = new Relationship();
 				relationship.setRelationshipID(relationshipID);
-				relationship.setRelationshipName(resultSet.getString("relationshipName"));
+				relationship.setRelationshipName(resultSet.getString("title"));
 			}
 
 			conn.close();
@@ -116,7 +116,7 @@ public class RelationshipService {
 				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
 
-				String sql = "INSERT INTO `Relationship` (relationshipName) VALUES (?)";
+				String sql = "INSERT INTO `Relationship` (title) VALUES (?)";
 				pst = conn.prepareStatement(sql);
 				pst.setString(1, relationshipName);
 				pst.executeUpdate();
