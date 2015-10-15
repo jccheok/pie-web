@@ -31,7 +31,7 @@ public class UserService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "SELECT * FROM `User` WHERE userEmail = ?";
+			String sql = "SELECT * FROM `User` WHERE email = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, userEmail);
 
@@ -56,7 +56,7 @@ public class UserService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT userIsVerified FROM `User` WHERE userEmail = ?";
+			String sql = "SELECT isVerified FROM `User` WHERE email = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, userEmail);
 
@@ -88,7 +88,7 @@ public class UserService {
 				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
 
-				String sql = "UPDATE `User` SET userIsVerified = ? WHERE userEmail = ?";
+				String sql = "UPDATE `User` SET isVerified = ? WHERE email = ?";
 				pst = conn.prepareStatement(sql);
 				pst.setInt(1, 1);
 				pst.setString(2, userEmail);
@@ -114,7 +114,7 @@ public class UserService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT userIsValid FROM `User` WHERE userEmail = ?";
+			String sql = "SELECT isValid FROM `User` WHERE email = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, userEmail);
 
@@ -143,7 +143,7 @@ public class UserService {
 				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
 
-				String sql = "SELECT * FROM `User` WHERE userEmail = ? AND userPassword = ?";
+				String sql = "SELECT * FROM `User` WHERE email = ? AND password = ?";
 				pst = conn.prepareStatement(sql);
 				pst.setString(1, userEmail);
 				pst.setString(2, userPassword);
@@ -185,7 +185,7 @@ public class UserService {
 					Connection conn = DatabaseConnector.getConnection();
 					PreparedStatement pst = null;
 
-					String sql = "UPDATE `User` SET userLastLogin = CURRENT_TIMESTAMP() WHERE userEmail = ?";
+					String sql = "UPDATE `User` SET lastLogin = CURRENT_TIMESTAMP() WHERE email = ?";
 					pst = conn.prepareStatement(sql);
 					pst.setString(1, userEmail);
 					pst.executeUpdate();
@@ -211,7 +211,7 @@ public class UserService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT userID FROM `User` WHERE userEmail = ?";
+			String sql = "SELECT userID FROM `User` WHERE email = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, userEmail);
 
@@ -253,22 +253,22 @@ public class UserService {
 
 				UserType userType = UserType.getUserType(resultSet.getInt("userTypeID"));
 				Address userAddress = addressService.getAddress(resultSet.getInt("addressID"));
-				String userFirstName = resultSet.getString("userFirstName");
-				String userLastName = resultSet.getString("userLastName");
-				String userEmail = resultSet.getString("userEmail");
-				String userPassword = resultSet.getString("userPassword");
-				String userMobile = resultSet.getString("userMobile");
-				boolean userIsVerified = resultSet.getInt("userIsVerified") == 1;
-				boolean userIsValid = resultSet.getInt("userIsValid") == 1;
-				Date userLastLogin = new Date(resultSet.getTimestamp("userLastLogin").getTime());
-				Date userRegistrationDate = new Date(resultSet.getTimestamp("userRegistrationDate").getTime());
-				Date userLastUpdate = new Date(resultSet.getTimestamp("userLastUpdate").getTime());
+				String userFirstName = resultSet.getString("firstName");
+				String userLastName = resultSet.getString("lastName");
+				String userEmail = resultSet.getString("email");
+				String userPassword = resultSet.getString("password");
+				String userMobile = resultSet.getString("mobile");
+				boolean userIsVerified = resultSet.getInt("isVerified") == 1;
+				boolean userIsValid = resultSet.getInt("isValid") == 1;
+				Date userLastLogin = new Date(resultSet.getTimestamp("lastLogin").getTime());
+				Date userRegistrationDate = new Date(resultSet.getTimestamp("registrationDate").getTime());
+				Date userLastUpdate = new Date(resultSet.getTimestamp("lastUpdate").getTime());
 				SecurityQuestion userSecurityQuestion = securityQuestionService.getSecurityQuestion(resultSet
 						.getInt("securityQuestionID"));
 				String userSecurityAnswer = resultSet.getString("securityQuestionAnswer");
-				String userLastPassword1 = resultSet.getString("userLastPassword1");
-				String userLastPassword2 = resultSet.getString("userLastPassword2");
-				Date userPasswordLastUpdate = new Date(resultSet.getTimestamp("userPasswordLastUpdate").getTime());
+				String userLastPassword1 = resultSet.getString("passwordLast1");
+				String userLastPassword2 = resultSet.getString("passwordLast2");
+				Date userPasswordLastUpdate = new Date(resultSet.getTimestamp("passwordLastUpdate").getTime());
 
 				user = new User(userID, userAddress, userFirstName, userLastName, userType, userEmail, userPassword,
 						userMobile, userIsValid, userIsVerified, userLastLogin, userRegistrationDate, userLastUpdate,
@@ -294,7 +294,7 @@ public class UserService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "UPDATE `User` SET userPassword = SHA2(? , 256), userLastUpdate = NOW() WHERE userID = ?";
+			String sql = "UPDATE `User` SET password = SHA2(? , 256), lastUpdate = NOW() WHERE userID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, userPassword);
 			pst.setInt(2, userID);
@@ -361,7 +361,7 @@ public class UserService {
 				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
 
-				String sql = "UPDATE `User` SET userPassword = ?, userPasswordLastUpdate = NOW(), userLastPassword1 = ?, userLastPassword2 = ?, userLastUpdate = NOW() WHERE userID = ?";
+				String sql = "UPDATE `User` SET password = ?, passwordLastUpdate = NOW(), passwordLast1 = ?, passwordLast2 = ?, lastUpdate = NOW() WHERE userID = ?";
 				pst = conn.prepareStatement(sql);
 				pst.setString(1, newUserPassword);
 				pst.setString(2, user.getUserLastPassword2());
@@ -394,7 +394,7 @@ public class UserService {
 			String sql = null;
 
 			if (addressPostalCode == null) {
-				sql = "UPDATE `User` SET userMobile = ?,  userFirstName = ?, userLastName = ?, securityQuestionID = ?, securityQuestionAnswer = SHA2(? , 256) WHERE userID = ?";
+				sql = "UPDATE `User` SET mobile = ?,  firstName = ?, lastName = ?, securityQuestionID = ?, securityQuestionAnswer = SHA2(? , 256) WHERE userID = ?";
 				pst = conn.prepareStatement(sql);
 				pst.setString(1, userMobile);
 				pst.setString(2, userFirstName);
@@ -411,7 +411,7 @@ public class UserService {
 				int addressID = addressService.getAddressID(addressPostalCode);
 
 				if (addressID != -1) {
-					sql = "UPDATE `User` SET userMobile = ?,  userFirstName = ?, userLastName = ?, securityQuestionID = ?, securityQuestionAnswer = SHA2(? , 256), addressID = ? WHERE userID = ?";
+					sql = "UPDATE `User` SET mobile = ?,  firstName = ?, lastName = ?, securityQuestionID = ?, securityQuestionAnswer = SHA2(? , 256), addressID = ? WHERE userID = ?";
 					pst = conn.prepareStatement(sql);
 					pst.setString(1, userMobile);
 					pst.setString(2, userFirstName);
@@ -427,7 +427,7 @@ public class UserService {
 				} else {
 					addressID = addressService.registerAddress(addressPostalCode, addressStreet, cityID);
 					
-					sql = "UPDATE `User` SET userMobile = ?,  userFirstName = ?, userLastName = ?, securityQuestionID = ?, securityQuestionAnswer = SHA2(? , 256), addressID = ? WHERE userID = ?";
+					sql = "UPDATE `User` SET mobile = ?,  firstName = ?, lastName = ?, securityQuestionID = ?, securityQuestionAnswer = SHA2(? , 256), addressID = ? WHERE userID = ?";
 					pst = conn.prepareStatement(sql);
 					pst.setString(1, userMobile);
 					pst.setString(2, userFirstName);
