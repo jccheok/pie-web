@@ -27,7 +27,7 @@ public class SecurityQuestionService {
 			
 			resultSet = pst.executeQuery();
 			if(resultSet.next()){
-				String securityQuestionDescription = resultSet.getString("securityQuestionDescription");
+				String securityQuestionDescription = resultSet.getString("question");
 				
 				securityQuestion = new SecurityQuestion(securityQuestionID, securityQuestionDescription);
 			}
@@ -50,7 +50,7 @@ public class SecurityQuestionService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT securityQuestionID FROM `SecurityQuestion` WHERE securityQuestionDescription = ?";
+			String sql = "SELECT securityQuestionID FROM `SecurityQuestion` WHERE question = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, securityQuestionDescription);
 			
@@ -75,13 +75,13 @@ public class SecurityQuestionService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT securityQuestionDescription FROM `SecurityQuestion` WHERE securityQuestionID = ?";
+			String sql = "SELECT question FROM `SecurityQuestion` WHERE securityQuestionID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, securityQuestionID);
 			
 			resultSet = pst.executeQuery();
 			if(resultSet.next()){
-				securityQuestionDescription = resultSet.getString("securityQuestionDescription");
+				securityQuestionDescription = resultSet.getString("question");
 			}
 			
 			conn.close();

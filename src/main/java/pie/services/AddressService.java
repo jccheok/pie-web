@@ -32,8 +32,8 @@ public class AddressService {
 
 			if (resultSet.next()) {
 				
-				String addressStreet = resultSet.getString("addressStreet");
-				String addressPostalCode = resultSet.getString("addressPostalCode");
+				String addressStreet = resultSet.getString("streetName");
+				String addressPostalCode = resultSet.getString("postalCode");
 				City addressCity = getCity(resultSet.getInt("cityID"));
 				
 				address = new Address(addressID, addressCity, addressStreet, addressPostalCode);
@@ -66,7 +66,7 @@ public class AddressService {
 
 			if (resultSet.next()) {
 				
-				String cityName = resultSet.getString("cityName");
+				String cityName = resultSet.getString("name");
 				Country cityCountry = getCountry(resultSet.getInt("countryID"));
 				
 				city = new City(cityID, cityCountry, cityName);
@@ -99,9 +99,9 @@ public class AddressService {
 
 			if (resultSet.next()) {
 				
-				String countryName = resultSet.getString("countryName");
-				String countryISO = resultSet.getString("countryISO");
-				String countryPhoneCode = resultSet .getString("countryPhoneCode");
+				String countryName = resultSet.getString("name");
+				String countryISO = resultSet.getString("ISO");
+				String countryPhoneCode = resultSet .getString("phoneCode");
 				
 				country = new Country(countryID, countryName, countryPhoneCode, countryISO);
 			}
@@ -125,7 +125,7 @@ public class AddressService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "INSERT INTO `Address` (cityID, addressStreet, addressPostalCode) VALUES (?, ?, ?)";
+			String sql = "INSERT INTO `Address` (cityID, streetName, postalCode) VALUES (?, ?, ?)";
 			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			pst.setInt(1, cityID);
 			pst.setString(2, addressStreet);
@@ -156,7 +156,7 @@ public class AddressService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "INSERT INTO `City` (countryID, cityName) VALUES (?, ?)";
+			String sql = "INSERT INTO `City` (countryID, name) VALUES (?, ?)";
 			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			pst.setInt(1, countryID);
 			pst.setString(2, cityName);
@@ -223,7 +223,7 @@ public class AddressService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT addressID FROM `Address` WHERE addressPostalCode = ?";
+			String sql = "SELECT addressID FROM `Address` WHERE postalCode = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, addressPostalCode);
 			resultSet = pst.executeQuery();

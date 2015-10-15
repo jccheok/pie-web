@@ -25,7 +25,7 @@ public class SchoolService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "SELECT * FROM `School` WHERE schoolCode = ?";
+			String sql = "SELECT * FROM `School` WHERE code = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, schoolCode);
 
@@ -50,7 +50,7 @@ public class SchoolService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT schoolID FROM `School` WHERE schoolCode = ?";
+			String sql = "SELECT schoolID FROM `School` WHERE code = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, schoolCode);
 
@@ -91,10 +91,10 @@ public class SchoolService {
 				school = new School();
 				school.setSchoolID(schoolID);
 				school.setSchoolAddress(new AddressService().getAddress(resultSet.getInt("addressID")));
-				school.setSchoolName(resultSet.getString("schoolName"));
-				school.setSchoolCreatedDate(new Date(resultSet.getTimestamp("schoolDateCreated").getTime()));
-				school.setSchoolLastUpdate(new Date(resultSet.getTimestamp("schoolLastUpdate").getTime()));
-				school.setSchoolCode(resultSet.getString("schoolCode"));
+				school.setSchoolName(resultSet.getString("name"));
+				school.setSchoolCreatedDate(new Date(resultSet.getTimestamp("dateCreated").getTime()));
+				school.setSchoolLastUpdate(new Date(resultSet.getTimestamp("lastUpdate").getTime()));
+				school.setSchoolCode(resultSet.getString("code"));
 			}
 			
 			conn.close();
@@ -117,7 +117,7 @@ public class SchoolService {
 				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
 
-				String sql = "INSERT INTO `School` (schoolname, schoolCode, addressID, schoolDateCreated) VALUES (?, ?, ?, NOW())";
+				String sql = "INSERT INTO `School` (name, code, addressID, dateCreated) VALUES (?, ?, ?, NOW())";
 				pst = conn.prepareStatement(sql);
 				pst.setString(1, schoolName);
 				pst.setString(2, schoolCode);
@@ -178,7 +178,7 @@ public class SchoolService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT groupID FROM `Group` WHERE schoolID = ? AND groupIsValid = ?";
+			String sql = "SELECT groupID FROM `Group` WHERE schoolID = ? AND isValid = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, schoolID);
 			pst.setInt(2, 1);
@@ -211,7 +211,7 @@ public class SchoolService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT staffID FROM `Staff` WHERE schoolID = ? AND staffIsSchoolAdmin = ?";
+			String sql = "SELECT staffID FROM `Staff` WHERE schoolID = ? AND isSchoolAdmin = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, schoolID);
 			pst.setInt(2, 1);

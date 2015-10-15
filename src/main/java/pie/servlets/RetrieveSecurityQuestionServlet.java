@@ -46,19 +46,21 @@ public class RetrieveSecurityQuestionServlet extends HttpServlet {
 		}
 		
 		JSONObject responseObject = new JSONObject();
-		User user = userService.getUser(userService.getUserID(userEmail));
-		String securityQuestionDescription =  user.getUserSecurityQuestion().getSecurityQuestionDescription();
 		
 		if(userService.getUserID(userEmail) == -1){
 			responseObject.put("result", "INVALID_EMAIL");
 			responseObject.put("message", "The email you entered is wrong");
-		}else if(securityQuestionDescription == null){
-			responseObject.put("result", "QUESTION_NOT_SET");
-			responseObject.put("message", "You did not set security question!");
-		}else{
-			responseObject.put("result", "Valid user");
-			responseObject.put("message", securityQuestionDescription);
-			responseObject.put("userID", user.getUserID());
+		}else {
+			User user = userService.getUser(userService.getUserID(userEmail));
+			String securityQuestionDescription =  user.getUserSecurityQuestion().getSecurityQuestionDescription();
+			if(securityQuestionDescription == null){
+				responseObject.put("result", "QUESTION_NOT_SET");
+				responseObject.put("message", "You did not set security question!");
+			}else{
+				responseObject.put("result", "Valid user");
+				responseObject.put("message", securityQuestionDescription);
+				responseObject.put("userID", user.getUserID());
+			}
 		}
 
 		PrintWriter out = response.getWriter();

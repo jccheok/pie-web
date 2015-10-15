@@ -22,7 +22,7 @@ public class StaffRoleService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT staffRoleID FROM `StaffRole` WHERE staffRoleName = ?";
+			String sql = "SELECT staffRoleID FROM `StaffRole` WHERE name = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, staffRoleName);
 
@@ -61,10 +61,10 @@ public class StaffRoleService {
 				
 				staffRole = new StaffRole();
 				staffRole.setStaffRoleID(staffRoleID);
-				staffRole.setStaffRoleName(resultSet.getString("staffRoleName"));
-				staffRole.setStaffRoleIsAdmin(resultSet.getInt("staffRoleIsAdmin") == 1);
-				staffRole.setStaffRoleIsOwner(resultSet.getInt("staffRoleIsOwner") == 1);
-				staffRole.setStaffRoleIsDefault(resultSet.getInt("staffRoleIsDefault") == 1);
+				staffRole.setStaffRoleName(resultSet.getString("name"));
+				staffRole.setStaffRoleIsAdmin(resultSet.getInt("isAdmin") == 1);
+				staffRole.setStaffRoleIsOwner(resultSet.getInt("isOwner") == 1);
+				staffRole.setStaffRoleIsDefault(resultSet.getInt("isDefault") == 1);
 			}
 
 			conn.close();
@@ -116,7 +116,7 @@ public class StaffRoleService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT staffRoleID FROM `StaffRole` WHERE staffRoleIsAdmin = ? AND staffRoleIsOwner = ? AND staffRoleIsDefault = ?";
+			String sql = "SELECT staffRoleID FROM `StaffRole` WHERE isAdmin = ? AND isOwner = ? AND isDefault = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, 1);
 			pst.setInt(2, 0);
@@ -147,7 +147,7 @@ public class StaffRoleService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT staffRoleID FROM `StaffRole` WHERE staffRoleIsAdmin = ? AND staffRoleIsOwner = ? AND staffRoleIsDefault = ?";
+			String sql = "SELECT staffRoleID FROM `StaffRole` WHERE isAdmin = ? AND isOwner = ? AND isDefault = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, 1);
 			pst.setInt(2, 1);
@@ -178,7 +178,7 @@ public class StaffRoleService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT staffRoleID FROM `StaffRole` WHERE staffRoleIsAdmin = ? AND staffRoleIsOwner = ? AND staffRoleIsDefault = ?";
+			String sql = "SELECT staffRoleID FROM `StaffRole` WHERE isAdmin = ? AND isOwner = ? AND isDefault = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, 0);
 			pst.setInt(2, 0);
@@ -213,7 +213,7 @@ public class StaffRoleService {
 				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
 
-				String sql = "INSERT INTO `StaffRole` (staffRoleName, staffRoleIsAdmin, staffRoleIsOwner) VALUES (?, ?, ?)";
+				String sql = "INSERT INTO `StaffRole` (name, isAdmin, isOwner) VALUES (?, ?, ?)";
 				pst = conn.prepareStatement(sql);
 				pst.setString(1, staffRoleName);
 				pst.setInt(2, staffRoleIsAdmin? 1:0);
@@ -237,7 +237,7 @@ public class StaffRoleService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "UPDATE `StaffRole` SET staffRoleIsOwner = ?, staffRoleIsAdmin = ?, staffRoleIsDefault = ? WHERE staffRoleID = ?";
+			String sql = "UPDATE `StaffRole` SET isOwner = ?, isAdmin = ?, isDefault = ? WHERE staffRoleID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, 1);
 			pst.setInt(2, 1);
@@ -264,7 +264,7 @@ public class StaffRoleService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "UPDATE `StaffRole` SET staffRoleIsOwner = ?, staffRoleIsAdmin = ?, staffRoleIsDefault = ? WHERE staffRoleID = ?";
+			String sql = "UPDATE `StaffRole` SET isOwner = ?, isAdmin = ?, isDefault = ? WHERE staffRoleID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, 0);
 			pst.setInt(2, 1);

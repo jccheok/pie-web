@@ -36,18 +36,18 @@ public class NoteService {
 			if (resultSet.next()) {
 
 				Staff noteAuthor = new StaffService().getStaff(resultSet.getInt("staffID"));
-				String noteTitle = resultSet.getString("noteTitle");
-				String noteDescription = resultSet.getString("noteDescription");
-				boolean noteIsTemplate = resultSet.getInt("noteIsTemplate") == 1;
-				boolean noteIsDraft = resultSet.getInt("noteIsDraft") == 1;
-				boolean noteIsDeleted = resultSet.getInt("noteIsDeleted") == 1;
-				Date noteDateCreated = new Date(resultSet.getTimestamp("noteDateCreated").getTime());
-				Date noteDateDeleted = new Date(resultSet.getTimestamp("noteDateDeleted").getTime());
+				String title = resultSet.getString("title");
+				String description = resultSet.getString("description");
+				boolean isTemplate = resultSet.getInt("isTemplate") == 1;
+				boolean isDraft = resultSet.getInt("isDraft") == 1;
+				boolean isDeleted = resultSet.getInt("isDeleted") == 1;
+				Date dateCreated = new Date(resultSet.getTimestamp("dateCreated").getTime());
+				Date dateDeleted = new Date(resultSet.getTimestamp("dateDeleted").getTime());
 				ResponseQuestion noteQuestionID = new ResponseQuestionService().getResponseQuestion(resultSet
 						.getInt("responseQuestionID"));
 
-				note = new Note(noteID, noteAuthor, noteTitle, noteDescription, noteIsTemplate, noteIsDraft,
-						noteIsDeleted, noteDateCreated, noteDateDeleted, noteQuestionID);
+				note = new Note(noteID, noteAuthor, title, description, isTemplate, isDraft,
+						isDeleted, dateCreated, dateDeleted, noteQuestionID);
 			}
 
 			conn.close();
@@ -59,7 +59,7 @@ public class NoteService {
 		return note;
 	}
 
-	public int createNote(int staffID, int responseQuestionID, String noteTitle, String noteDescription) {
+	public int createNote(int authorID, int responseQuestionID, String title, String description) {
 
 		int noteID = -1;
 
@@ -69,12 +69,12 @@ public class NoteService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "INSERT INTO `Note` (staffID, responseQuestionID, noteTitle, noteDescription) VALUES (?, ?, ?, ?)";
+			String sql = "INSERT INTO `Note` (authorID, responseQuestionID, title, description) VALUES (?, ?, ?, ?)";
 			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-			pst.setInt(1, staffID);
+			pst.setInt(1, authorID);
 			pst.setInt(2, responseQuestionID);
-			pst.setString(3, noteTitle);
-			pst.setString(4, noteDescription);
+			pst.setString(3, title);
+			pst.setString(4, description);
 			pst.executeUpdate();
 
 			resultSet = pst.getGeneratedKeys();
@@ -150,7 +150,7 @@ public class NoteService {
 		return sendResult;
 	}
 
-	public PublishNoteResult publishNote(int noteID, int groupID, int staffID) {
+	public PublishNoteResult publishNote(int noteID, int groupID, int publisherID) {
 
 		PublishNoteResult publishResult = PublishNoteResult.SUCCESS;
 		GroupService groupService = new GroupService();
@@ -160,7 +160,7 @@ public class NoteService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "UPDATE `Note` SET noteIsDraft = ? WHERE noteID = ?";
+			String sql = "UPDATE `Note` SET isDraft = ? WHERE noteID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, 0);
 			pst.setInt(2, noteID);
@@ -169,9 +169,9 @@ public class NoteService {
 			if (pst.executeUpdate() == 0) {
 				publishResult = PublishNoteResult.FAILED_DRAFT;
 			} else {
-				sql = "INSERT INTO `GroupNote` (staffID, noteID, groupID) VALUES (?, ?, ?)";
+				sql = "INSERT INTO `GroupNote` (publisherID, noteID, groupID) VALUES (?, ?, ?)";
 				pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-				pst.setInt(1, staffID);
+				pst.setInt(1, publisherID);
 				pst.setInt(2, noteID);
 				pst.setInt(3, groupID);
 				pst.executeUpdate();
@@ -183,6 +183,14 @@ public class NoteService {
 
 					for (Student student : groupStudents) {
 						if (!sendNote(noteID, student.getUserID())) {
+							publishResult = PublishNoteResult.FAILED_TO_SEND_TO_MEMBERS;
+						}
+					}
+					
+					Staff[] groupStaffs = groupService.getStaffMembers(groupID);
+					
+					for (Staff staff : groupStaffs) {
+						if (!sendNote(noteID, staff.getUserID())) {
 							publishResult = PublishNoteResult.FAILED_TO_SEND_TO_MEMBERS;
 						}
 					}
@@ -222,7 +230,7 @@ public class NoteService {
 		return deleteNoteResult;
 	}
 
-	public Note[] getNoteDrafts(int staffID) {
+	public Note[] getNoteDrafts(int authorID) {
 
 		Note[] noteDrafts = {};
 
@@ -232,9 +240,9 @@ public class NoteService {
 			ResultSet resultSet = null;
 			Connection conn = DatabaseConnector.getConnection();
 
-			String sql = "SELECT noteID FROM `Note` WHERE staffID = ? AND noteIsDraft = 1 AND noteIsDeleted = 0";
+			String sql = "SELECT noteID FROM `Note` WHERE authorID = ? AND isDraft = 1 AND isDeleted = 0";
 			pst = conn.prepareStatement(sql);
-			pst.setInt(1, staffID);
+			pst.setInt(1, authorID);
 			resultSet = pst.executeQuery();
 
 			ArrayList<Note> tempNotes = new ArrayList<Note>();
@@ -256,7 +264,7 @@ public class NoteService {
 		return noteDrafts;
 	}
 
-	public Note[] getSentNotes(int staffID) {
+	public Note[] getSentNotes(int authorID) {
 
 		Note[] sentNotes = {};
 
@@ -266,9 +274,9 @@ public class NoteService {
 			ResultSet resultSet = null;
 			Connection conn = DatabaseConnector.getConnection();
 
-			String sql = "SELECT noteID FROM `Note` WHERE staffID = ? AND noteIsDraft = 0 AND noteIsDeleted = 0";
+			String sql = "SELECT noteID FROM `Note` WHERE authorID = ? AND isDraft = 0 AND isDeleted = 0";
 			pst = conn.prepareStatement(sql);
-			pst.setInt(1, staffID);
+			pst.setInt(1, authorID);
 			resultSet = pst.executeQuery();
 
 			ArrayList<Note> tempNotes = new ArrayList<Note>();
@@ -290,7 +298,7 @@ public class NoteService {
 		return sentNotes;
 	}
 
-	public Note[] getNotes(int userID) {
+	public Note[] getNotes(int userID, int startNote, int endNote) {
 
 		Note[] notes = {};
 
@@ -300,9 +308,11 @@ public class NoteService {
 			ResultSet resultSet = null;
 			Connection conn = DatabaseConnector.getConnection();
 
-			String sql = "SELECT `Note`.noteID FROM `UserNote`,`Note` WHERE userID=? AND `Note`.noteID = `UserNote`.noteID AND noteIsDeleted = 0";
+			String sql = "SELECT `Note`.noteID FROM `UserNote`,`Note` WHERE userID=? AND `Note`.noteID = `UserNote`.noteID AND isDeleted = 0 LIMIT ?, ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, userID);
+			pst.setInt(2, startNote);
+			pst.setInt(3, endNote);
 			resultSet = pst.executeQuery();
 
 			ArrayList<Note> tempNotes = new ArrayList<Note>();
@@ -322,7 +332,7 @@ public class NoteService {
 		return notes;
 	}
 
-	public boolean updateNote(String newNoteTitle, String newNoteDescription, int newResponseQuestionID, int noteID) {
+	public boolean updateNote(String newTitle, String newNoteDescription, int newResponseQuestionID, int noteID) {
 
 		boolean isUpdated = false;
 
@@ -331,9 +341,9 @@ public class NoteService {
 			PreparedStatement pst = null;
 			Connection conn = DatabaseConnector.getConnection();
 
-			String sql = "UPDATE `Note` SET noteTitle = ?, noteDescription = ?, responseQuestionID = ? WHERE noteID = ?";
+			String sql = "UPDATE `Note` SET title = ?, description = ?, responseQuestionID = ? WHERE noteID = ?";
 			pst = conn.prepareStatement(sql);
-			pst.setString(1, newNoteTitle);
+			pst.setString(1, newTitle);
 			pst.setString(2, newNoteDescription);
 			pst.setInt(3, newResponseQuestionID);
 			pst.setInt(4, noteID);
@@ -359,7 +369,7 @@ public class NoteService {
 			PreparedStatement pst = null;
 			Connection conn = DatabaseConnector.getConnection();
 
-			String sql = "UPDATE `Note` SET noteIsDeleted = ? WHERE noteID = ?";
+			String sql = "UPDATE `Note` SET isDeleted = ? WHERE noteID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, 1);
 			pst.setInt(2, noteID);
@@ -384,7 +394,7 @@ public class NoteService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 		
-			String sql = "DELETE FROM `Note` WHERE noteID = ? AND noteIsDraft = ?";
+			String sql = "DELETE FROM `Note` WHERE noteID = ? AND isDraft = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, noteID);
 			pst.setInt(2, 1);

@@ -35,14 +35,16 @@ public class AddChildServlet extends HttpServlet{
 		int parentID = 0;
 		int relationshipID = 0;
 		String studentCode = null;
+		int isMainParent = 0;
 
 		try {
 
 			Map<String, String> requestParameters = Utilities.getParameters(request, "parentID", "relationshipID",
-					"studentCode");
+					"studentCode", "isMainParent");
 			parentID = Integer.parseInt(requestParameters.get("parentID"));
 			relationshipID = Integer.parseInt(requestParameters.get("relationshipID"));
 			studentCode = requestParameters.get("studentCode");
+			isMainParent = Integer.parseInt(requestParameters.get("isMainParent"));
 
 		} catch (Exception e) {
 
@@ -50,7 +52,7 @@ public class AddChildServlet extends HttpServlet{
 			return;
 		}
 
-		AddChildResult addChildResult = parentService.addChild(parentID, relationshipID, studentCode);
+		AddChildResult addChildResult = parentService.addChild(parentID, relationshipID, studentCode, isMainParent);
 
 		JSONObject responseObject = new JSONObject();
 		responseObject.put("result", addChildResult.toString());

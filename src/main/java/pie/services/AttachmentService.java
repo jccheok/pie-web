@@ -7,15 +7,16 @@ import java.sql.Statement;
 
 import javax.servlet.http.Part;
 
-import pie.Attachment;
-import pie.AttachmentType;
+import pie.HomeworkAttachment;
+import pie.NoteAttachment;
 import pie.utilities.DatabaseConnector;
 
 public class AttachmentService {
 
-	public Attachment getAttachment(int attachmentID) {
+	public int createNoteAttachment(String attachmentURL) {
 
-		Attachment attachment = null;
+		int noteAttachmentID = -1;
+		int tempNoteID = 1;
 
 		try {
 
@@ -23,18 +24,15 @@ public class AttachmentService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT * FROM `Attachment` WHERE attachmentID = ?";
-			pst = conn.prepareStatement(sql);
-			pst.setInt(1, attachmentID);
+			String sql = "INSERT INTO `NoteAttachment` (attachmentURL, noteID) VALUES (?, ?)";
+			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			pst.setString(1, attachmentURL);
+			pst.setInt(2, tempNoteID);
+			pst.executeUpdate();
 
-			resultSet = pst.executeQuery();
-
-			if(resultSet.next()) {
-
-				String attachmentURL = resultSet.getString("attachmentURL");
-				AttachmentType attachmentTypeID = AttachmentType.getAttachmentType(resultSet.getInt("attachmentTypeID"));
-
-				attachment = new Attachment(attachmentID, attachmentURL, attachmentTypeID);
+			resultSet = pst.getGeneratedKeys();
+			if (resultSet.next()) {
+				noteAttachmentID = resultSet.getInt(1);
 			}
 
 			conn.close();
@@ -43,13 +41,13 @@ public class AttachmentService {
 			e.printStackTrace();
 		}
 
-		return attachment;
-
+		return noteAttachmentID;
 	}
 
-	public int createAttachment(String attachmentURL, int attachmentTypeID) {
+	public int createHomeworkAttachment(String attachmentURL) {
 
-		int attachmentID = -1;
+		int homeworkAttachmentID = -1;
+		int tempHomeworkID = 1;
 
 		try {
 
@@ -57,34 +55,153 @@ public class AttachmentService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "INSERT INTO `Attachment` (attachmentURL, attachmentTypeID) VALUES (?, ?)";
+			String sql = "INSERT INTO `HomeworkAttachment` (attachmentURL, homeworkID) VALUES (?, ?)";
 			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			pst.setString(1, attachmentURL);
-			pst.setInt(2, attachmentTypeID);
+			pst.setInt(2, tempHomeworkID);
 			pst.executeUpdate();
 
 			resultSet = pst.getGeneratedKeys();
 			if (resultSet.next()) {
-				attachmentID = resultSet.getInt(1);
+				homeworkAttachmentID = resultSet.getInt(1);
 			}
 
+			conn.close();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return attachmentID;
+		return homeworkAttachmentID;
+	}
+
+	public NoteAttachment getNoteAttachment(int noteAttachmentID) {
+
+		NoteAttachment noteAttachment = null;
+		String attachmentURL = null;
+		int noteID = 0;	
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT * FROM `NoteAttachment` WHERE noteAttachmentID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, noteAttachmentID);
+			resultSet = pst.executeQuery();
+
+			if(resultSet.next()) {
+				attachmentURL = resultSet.getString("attachmentURL");
+				noteID = resultSet.getInt("noteID");
+
+				noteAttachment = new NoteAttachment(noteAttachmentID, attachmentURL, noteID);
+			}
+
+			conn.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return noteAttachment;	
+	}
+
+	public HomeworkAttachment getHomeworkAttachment(int homeworkAttachmentID) {
+
+		HomeworkAttachment homeworkAttachment = null;
+		String attachmentURL = null;
+		int homeworkID = 0;	
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT * FROM `HomeworkAttachment` WHERE homeworkAttachmentID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, homeworkAttachmentID);
+			resultSet = pst.executeQuery();
+
+			if(resultSet.next()) {
+				attachmentURL = resultSet.getString("attachmentURL");
+				homeworkID = resultSet.getInt("homeworkID");
+
+				homeworkAttachment = new HomeworkAttachment(homeworkAttachmentID, attachmentURL, homeworkID);
+			}
+
+			conn.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return homeworkAttachment;	
+	}
+
+	public boolean UpdateNoteAttachmentID(int noteAttachmentID, int noteID) {
+
+		boolean isUpdated = false;
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+
+			String sql = "UPDATE `NoteAttachment` SET noteID = ? WHERE noteAttachmentID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, noteID);
+			pst.setInt(2, noteAttachmentID);
+
+			pst.executeUpdate();
+			isUpdated = true;
+
+			conn.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return isUpdated;
+	}
+	
+	public boolean UpdateHomeworkAttachmentID(int homeworkAttachmentID, int homeworkID) {
+
+		boolean isUpdated = false;
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+
+			String sql = "UPDATE `HomeworkAttachment` SET homeworkID = ? WHERE homeworkAttachmentID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, homeworkID);
+			pst.setInt(2, homeworkAttachmentID);
+
+			pst.executeUpdate();
+			isUpdated = true;
+
+			conn.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return isUpdated;
 	}
 
 	public String getFileName(Part part) {
-        String contentDisp = part.getHeader("content-disposition");
-        String[] items = contentDisp.split(";");
-        for (String s : items) {
-            if (s.trim().startsWith("filename")) {
-                return s.substring(s.indexOf("=") + 2, s.length()-1);
-            }
-        }
-        return null;
-    }
+		String contentDisp = part.getHeader("content-disposition");
+		String[] items = contentDisp.split(";");
+		for (String s : items) {
+			if (s.trim().startsWith("filename")) {
+				return s.substring(s.indexOf("=") + 2, s.length()-1);
+			}
+		}
+		return null;
+	}
 
 }
