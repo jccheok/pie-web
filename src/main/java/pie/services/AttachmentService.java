@@ -7,6 +7,7 @@ import java.sql.Statement;
 
 import javax.servlet.http.Part;
 
+import pie.HomeworkAttachment;
 import pie.NoteAttachment;
 import pie.utilities.DatabaseConnector;
 
@@ -100,10 +101,39 @@ public class AttachmentService {
 			e.printStackTrace();
 		}
 		
-		return noteAttachment;
-		
+		return noteAttachment;	
 	}
 	
+	public HomeworkAttachment getHomeworkAttachment(int homeworkAttachmentID) {
+		
+		HomeworkAttachment homeworkAttachment = null;
+		String attachmentURL = null;
+		int homeworkID = 0;	
+		
+		try {
+			
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+			
+			String sql = "SELECT * FROM `HomeworkAttachment` WHERE homeworkAttachmentID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, homeworkAttachmentID);
+			resultSet = pst.executeQuery();
+			
+			if(resultSet.next()) {
+				attachmentURL = resultSet.getString("attachmentURL");
+				homeworkID = resultSet.getInt("homeworkID");
+				
+				homeworkAttachment = new NoteAttachment(homeworkAttachmentID, attachmentURL, homeworkID);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return homeworkAttachment;	
+	}
 
 	public String getFileName(Part part) {
         String contentDisp = part.getHeader("content-disposition");
