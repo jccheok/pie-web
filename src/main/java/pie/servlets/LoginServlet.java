@@ -82,7 +82,7 @@ public class LoginServlet extends HttpServlet {
 			userJSON.put("userType", user.getUserType().toString());
 			userJSON.put("userEmail", user.getUserEmail());
 			userJSON.put("userMobile", user.getUserMobile());
-			
+			userJSON.put("userLastPasswordUpdate", user.getUserPasswordLastUpdate());
 			switch(user.getUserType()) {
 				case STAFF: {
 					
