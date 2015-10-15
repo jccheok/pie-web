@@ -2,7 +2,7 @@ package pie;
 
 public enum GroupType {
 
-	HOME(1), CCA(2), SUBJECT(3), LEVEL(4);
+	HOME(1), CCA(2), SUBJECT(3), LEVEL(4), ADHOC(5);
 	
 	private int groupTypeID;
 	
