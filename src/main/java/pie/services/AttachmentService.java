@@ -125,7 +125,7 @@ public class AttachmentService {
 				attachmentURL = resultSet.getString("attachmentURL");
 				homeworkID = resultSet.getInt("homeworkID");
 				
-				homeworkAttachment = new NoteAttachment(homeworkAttachmentID, attachmentURL, homeworkID);
+				homeworkAttachment = new HomeworkAttachment(homeworkAttachmentID, attachmentURL, homeworkID);
 			}
 			
 		} catch (Exception e) {
