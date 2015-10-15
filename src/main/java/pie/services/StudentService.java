@@ -104,7 +104,7 @@ public class StudentService {
 	public boolean enlistStudent(String userFirstName, String userLastName, String studentCode, int schoolID,
 			int groupID, int studentGroupIndexNumber) {
 
-		GroupService groupService = new GroupService();
+		StudentGroupService studentGroupService = new StudentGroupService();
 		boolean enlistResult = false;
 
 		if (isAvailableStudentCode(studentCode)) {
@@ -135,7 +135,7 @@ public class StudentService {
 					pst.setString(3, studentCode);
 					pst.executeUpdate();
 
-					enlistResult = groupService.addStudentToGroup(groupID, newStudentID, studentGroupIndexNumber);
+					enlistResult = studentGroupService.addStudentToGroup(groupID, newStudentID, studentGroupIndexNumber);
 
 				}
 
@@ -322,6 +322,8 @@ public class StudentService {
 	public JoinGroupResult joinGroup(int studentID, int groupID, String groupCode) {
 		
 		GroupService groupService = new GroupService();
+		StudentGroupService studentGroupService = new StudentGroupService();
+
 		JoinGroupResult joinGroupResult = JoinGroupResult.SUCCESS;
 
 		Group group = groupService.getGroup(groupID);
@@ -338,7 +340,7 @@ public class StudentService {
 			joinGroupResult = JoinGroupResult.ALREADY_MEMBER;
 		} else {
 			int nextStudentIndexNumber = groupService.getNextStudentIndexNumber(groupID);
-			groupService.addStudentToGroup(groupID, studentID, nextStudentIndexNumber);
+			studentGroupService.addStudentToGroup(groupID, studentID, nextStudentIndexNumber);
 		}
 
 		return joinGroupResult;
