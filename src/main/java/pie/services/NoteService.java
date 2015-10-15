@@ -154,6 +154,7 @@ public class NoteService {
 
 		PublishNoteResult publishResult = PublishNoteResult.SUCCESS;
 		GroupService groupService = new GroupService();
+		StudentGroupService studentGroupService = new StudentGroupService();
 
 		try {
 
@@ -179,7 +180,7 @@ public class NoteService {
 				if (pst.executeUpdate() == 0) {
 					publishResult = PublishNoteResult.FAILED_TO_UPDATE_GROUP;
 				} else {
-					Student[] groupStudents = groupService.getStudentMembers(groupID);
+					Student[] groupStudents = studentGroupService.getStudentMembers(groupID);
 
 					for (Student student : groupStudents) {
 						if (!sendNote(noteID, student.getUserID())) {
