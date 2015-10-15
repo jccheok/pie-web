@@ -64,7 +64,7 @@ public class ParentService {
 				PreparedStatement pst = null;
 				ResultSet resultSet = null;
 
-				String sql = "INSERT INTO `User` (userTypeID, userFirstName, userLastName, userEmail, userPassword, userMobile, securityQuestionID, securityQuestionAnswer) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+				String sql = "INSERT INTO `User` (userTypeID, firstName, lastName, email, password, mobile, securityQuestionID, securityQuestionAnswer) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 				pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 				pst.setInt(1, UserType.PARENT.getUserTypeID());
 				pst.setString(2, userFirstName);
@@ -149,7 +149,7 @@ public class ParentService {
 	}
 	
 	
-	public AddChildResult addChild(int parentID, int relationshipID, String studentCode){
+	public AddChildResult addChild(int parentID, int relationshipID, String studentCode, int isMainParent){
 		
 		StudentService student = new StudentService();
 		AddChildResult addChildResult = AddChildResult.SUCCESS;
@@ -166,11 +166,12 @@ public class ParentService {
 				PreparedStatement pst = null;
 				Connection conn = DatabaseConnector.getConnection();
 
-				String sql = "INSERT INTO `ParentStudent` (parentID, studentID, relationshipID) VALUES (?, ?, ?)";
+				String sql = "INSERT INTO `ParentStudent` (parentID, studentID, relationshipID, mainParent) VALUES (?, ?, ?, ?)";
 				pst = conn.prepareStatement(sql);
 				pst.setInt(1, parentID);
 				pst.setInt(2, studentID);
 				pst.setInt(3, relationshipID);
+				pst.setInt(4, isMainParent);
 
 				pst.executeUpdate();
 				

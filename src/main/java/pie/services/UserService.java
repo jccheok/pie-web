@@ -31,7 +31,7 @@ public class UserService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "SELECT * FROM `User` WHERE email = ?";
+			String sql = "SELECT * FROM `User` WHERE emailAddress = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, userEmail);
 
@@ -56,7 +56,7 @@ public class UserService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT isVerified FROM `User` WHERE email = ?";
+			String sql = "SELECT isVerified FROM `User` WHERE emailAddress = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, userEmail);
 
@@ -88,7 +88,7 @@ public class UserService {
 				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
 
-				String sql = "UPDATE `User` SET isVerified = ? WHERE email = ?";
+				String sql = "UPDATE `User` SET isVerified = ? WHERE emailAddress = ?";
 				pst = conn.prepareStatement(sql);
 				pst.setInt(1, 1);
 				pst.setString(2, userEmail);
@@ -114,7 +114,7 @@ public class UserService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT isValid FROM `User` WHERE email = ?";
+			String sql = "SELECT isValid FROM `User` WHERE emailAddress = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, userEmail);
 
@@ -143,7 +143,7 @@ public class UserService {
 				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
 
-				String sql = "SELECT * FROM `User` WHERE email = ? AND password = ?";
+				String sql = "SELECT * FROM `User` WHERE emailAddress = ? AND password = ?";
 				pst = conn.prepareStatement(sql);
 				pst.setString(1, userEmail);
 				pst.setString(2, userPassword);
@@ -185,7 +185,7 @@ public class UserService {
 					Connection conn = DatabaseConnector.getConnection();
 					PreparedStatement pst = null;
 
-					String sql = "UPDATE `User` SET lastLogin = CURRENT_TIMESTAMP() WHERE email = ?";
+					String sql = "UPDATE `User` SET lastLogin = CURRENT_TIMESTAMP() WHERE emailAddress = ?";
 					pst = conn.prepareStatement(sql);
 					pst.setString(1, userEmail);
 					pst.executeUpdate();
@@ -211,7 +211,7 @@ public class UserService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT userID FROM `User` WHERE email = ?";
+			String sql = "SELECT userID FROM `User` WHERE emailAddress = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, userEmail);
 
@@ -255,7 +255,7 @@ public class UserService {
 				Address userAddress = addressService.getAddress(resultSet.getInt("addressID"));
 				String userFirstName = resultSet.getString("firstName");
 				String userLastName = resultSet.getString("lastName");
-				String userEmail = resultSet.getString("email");
+				String userEmail = resultSet.getString("emailAddress");
 				String userPassword = resultSet.getString("password");
 				String userMobile = resultSet.getString("mobile");
 				boolean userIsVerified = resultSet.getInt("isVerified") == 1;

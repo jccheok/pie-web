@@ -29,7 +29,7 @@ public class ResponseQuestionService {
 				
 				responseQuestion = new ResponseQuestion();
 				responseQuestion.setResponseQuestionID(responseQuestionID);
-				responseQuestion.setResponseQuestionText(resultSet.getString("responseQuestionText"));
+				responseQuestion.setResponseQuestionText(resultSet.getString("question"));
 			}
 
 			conn.close();
