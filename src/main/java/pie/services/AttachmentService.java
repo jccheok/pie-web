@@ -17,7 +17,7 @@ public class AttachmentService {
 
 		int noteAttachmentID = -1;
 		int tempNoteID = 1;
-		
+
 		try {
 
 			Connection conn = DatabaseConnector.getConnection();
@@ -35,6 +35,7 @@ public class AttachmentService {
 				noteAttachmentID = resultSet.getInt(1);
 			}
 
+			conn.close();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -42,12 +43,12 @@ public class AttachmentService {
 
 		return noteAttachmentID;
 	}
-	
+
 	public int createHomeworkAttachment(String attachmentURL) {
 
 		int homeworkAttachmentID = -1;
 		int tempHomeworkID = 1;
-		
+
 		try {
 
 			Connection conn = DatabaseConnector.getConnection();
@@ -65,6 +66,7 @@ public class AttachmentService {
 				homeworkAttachmentID = resultSet.getInt(1);
 			}
 
+			conn.close();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -72,78 +74,134 @@ public class AttachmentService {
 
 		return homeworkAttachmentID;
 	}
-	
+
 	public NoteAttachment getNoteAttachment(int noteAttachmentID) {
-		
+
 		NoteAttachment noteAttachment = null;
 		String attachmentURL = null;
 		int noteID = 0;	
-		
+
 		try {
-			
+
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
-			
+
 			String sql = "SELECT * FROM `NoteAttachment` WHERE noteAttachmentID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, noteAttachmentID);
 			resultSet = pst.executeQuery();
-			
+
 			if(resultSet.next()) {
 				attachmentURL = resultSet.getString("attachmentURL");
 				noteID = resultSet.getInt("noteID");
-				
+
 				noteAttachment = new NoteAttachment(noteAttachmentID, attachmentURL, noteID);
 			}
-			
+
+			conn.close();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return noteAttachment;	
 	}
-	
+
 	public HomeworkAttachment getHomeworkAttachment(int homeworkAttachmentID) {
-		
+
 		HomeworkAttachment homeworkAttachment = null;
 		String attachmentURL = null;
 		int homeworkID = 0;	
-		
+
 		try {
-			
+
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
-			
+
 			String sql = "SELECT * FROM `HomeworkAttachment` WHERE homeworkAttachmentID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, homeworkAttachmentID);
 			resultSet = pst.executeQuery();
-			
+
 			if(resultSet.next()) {
 				attachmentURL = resultSet.getString("attachmentURL");
 				homeworkID = resultSet.getInt("homeworkID");
-				
+
 				homeworkAttachment = new HomeworkAttachment(homeworkAttachmentID, attachmentURL, homeworkID);
 			}
-			
+
+			conn.close();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return homeworkAttachment;	
 	}
 
+	public boolean UpdateNoteAttachmentID(int noteAttachmentID, int noteID) {
+
+		boolean isUpdated = false;
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+
+			String sql = "UPDATE `NoteAttachment` SET noteID = ? WHERE noteAttachmentID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, noteID);
+			pst.setInt(2, noteAttachmentID);
+
+			pst.executeUpdate();
+			isUpdated = true;
+
+			conn.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return isUpdated;
+	}
+	
+	public boolean UpdateHomeworkAttachmentID(int homeworkAttachmentID, int homeworkID) {
+
+		boolean isUpdated = false;
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+
+			String sql = "UPDATE `HomeworkAttachment` SET homeworkID = ? WHERE homeworkAttachmentID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, homeworkID);
+			pst.setInt(2, homeworkAttachmentID);
+
+			pst.executeUpdate();
+			isUpdated = true;
+
+			conn.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return isUpdated;
+	}
+
 	public String getFileName(Part part) {
-        String contentDisp = part.getHeader("content-disposition");
-        String[] items = contentDisp.split(";");
-        for (String s : items) {
-            if (s.trim().startsWith("filename")) {
-                return s.substring(s.indexOf("=") + 2, s.length()-1);
-            }
-        }
-        return null;
-    }
+		String contentDisp = part.getHeader("content-disposition");
+		String[] items = contentDisp.split(";");
+		for (String s : items) {
+			if (s.trim().startsWith("filename")) {
+				return s.substring(s.indexOf("=") + 2, s.length()-1);
+			}
+		}
+		return null;
+	}
 
 }
