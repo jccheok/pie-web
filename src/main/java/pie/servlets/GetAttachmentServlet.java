@@ -30,7 +30,7 @@ public class GetAttachmentServlet extends HttpServlet {
 		this.attachmentService = attachmentService;
 	}
 
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String fileURL = null;
 		
@@ -44,7 +44,6 @@ public class GetAttachmentServlet extends HttpServlet {
 			return;
 		}
 		
-		
 		String uploadPath = System.getenv("OPENSHIFT_DATA_DIR") + "uploadFiles/" + fileURL;
 		File downloadFile = new File(uploadPath);
 		FileInputStream inStream = new FileInputStream(downloadFile);
@@ -55,7 +54,6 @@ public class GetAttachmentServlet extends HttpServlet {
 		if (mimeType == null) {        
 			mimeType = "application/octet-stream";
 		}
-		System.out.println("MIME type: " + mimeType);
 
 		response.setContentType(mimeType);
 		response.setContentLength((int) downloadFile.length());

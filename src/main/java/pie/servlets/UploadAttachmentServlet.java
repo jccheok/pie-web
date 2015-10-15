@@ -33,6 +33,10 @@ public class UploadAttachmentServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		/*
+		 * TODO: database sql insertion
+		 */
+		
 		JSONObject responseObject = new JSONObject();
 		PrintWriter out = response.getWriter();
 
