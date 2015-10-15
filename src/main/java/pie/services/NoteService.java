@@ -186,6 +186,14 @@ public class NoteService {
 							publishResult = PublishNoteResult.FAILED_TO_SEND_TO_MEMBERS;
 						}
 					}
+					
+					Staff[] groupStaffs = groupService.getStaffMembers(groupID);
+					
+					for (Staff staff : groupStaffs) {
+						if (!sendNote(noteID, staff.getUserID())) {
+							publishResult = PublishNoteResult.FAILED_TO_SEND_TO_MEMBERS;
+						}
+					}
 				}
 			}
 
@@ -290,7 +298,7 @@ public class NoteService {
 		return sentNotes;
 	}
 
-	public Note[] getNotes(int userID) {
+	public Note[] getNotes(int userID, int startNote, int endNote) {
 
 		Note[] notes = {};
 
@@ -300,9 +308,11 @@ public class NoteService {
 			ResultSet resultSet = null;
 			Connection conn = DatabaseConnector.getConnection();
 
-			String sql = "SELECT `Note`.noteID FROM `UserNote`,`Note` WHERE userID=? AND `Note`.noteID = `UserNote`.noteID AND noteIsDeleted = 0";
+			String sql = "SELECT `Note`.noteID FROM `UserNote`,`Note` WHERE userID=? AND `Note`.noteID = `UserNote`.noteID AND noteIsDeleted = 0 LIMIT ?, ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, userID);
+			pst.setInt(2, startNote);
+			pst.setInt(3, endNote);
 			resultSet = pst.executeQuery();
 
 			ArrayList<Note> tempNotes = new ArrayList<Note>();
