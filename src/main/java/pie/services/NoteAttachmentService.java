@@ -48,7 +48,7 @@ public class NoteAttachmentService {
 
 		NoteAttachment noteAttachment = null;
 		String attachmentURL = null;
-		Note noteID = null;	
+		Note note = null;	
 
 		try {
 
@@ -63,9 +63,9 @@ public class NoteAttachmentService {
 
 			if(resultSet.next()) {
 				attachmentURL = resultSet.getString("attachmentURL");
-				noteID = new NoteService().getNote(resultSet.getInt("noteID"));
+				note = new NoteService().getNote(resultSet.getInt("noteID"));
 
-				noteAttachment = new NoteAttachment(noteAttachmentID, attachmentURL, noteID);
+				noteAttachment = new NoteAttachment(noteAttachmentID, attachmentURL, note);
 			}
 
 			conn.close();
