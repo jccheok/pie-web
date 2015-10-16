@@ -16,6 +16,7 @@ import pie.Group;
 import pie.Staff;
 import pie.services.GroupService;
 import pie.services.SchoolService;
+import pie.services.StaffGroupService;
 import pie.services.StaffService;
 import pie.utilities.Utilities;
 
@@ -30,12 +31,14 @@ public class ViewOpenGroupsServlet extends HttpServlet {
 	GroupService groupService;
 	SchoolService schoolService;
 	StaffService staffService;
+	StaffGroupService staffGroupService;
 
 	@Inject
-	public ViewOpenGroupsServlet(GroupService groupService, SchoolService schoolService, StaffService staffService) {
+	public ViewOpenGroupsServlet(GroupService groupService, SchoolService schoolService, StaffService staffService, StaffGroupService staffGroupService) {
 		this.groupService = groupService;
 		this.schoolService = schoolService;
 		this.staffService = staffService;
+		this.staffGroupService = staffGroupService;
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -73,7 +76,7 @@ public class ViewOpenGroupsServlet extends HttpServlet {
 			groupDetails.put("isGroupMember", groupService.hasGroupMember(groupID, schoolMemberID));
 		
 			JSONArray adminList = new JSONArray();
-			for (Staff adminStaff : groupService.getGroupAdministrators(groupID)) {
+			for (Staff adminStaff : staffGroupService.getGroupAdministrators(groupID)) {
 			
 				JSONObject adminDetails = new JSONObject();
 				adminDetails.put("staffFullName", adminStaff.getUserFullName());
