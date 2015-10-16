@@ -17,6 +17,7 @@ import pie.Staff;
 import pie.constants.JoinGroupResult;
 import pie.services.EmailService;
 import pie.services.GroupService;
+import pie.services.StaffGroupService;
 import pie.services.StudentService;
 import pie.utilities.Utilities;
 
@@ -31,12 +32,14 @@ public class StudentJoinGroupServlet extends HttpServlet {
 	StudentService studentService;
 	GroupService groupService;
 	EmailService emailService;
+	StaffGroupService staffGroupService;
 
 	@Inject
-	public StudentJoinGroupServlet(StudentService studentService, GroupService groupService, EmailService emailService) {
+	public StudentJoinGroupServlet(StudentService studentService, GroupService groupService, EmailService emailService, StaffGroupService staffGroupService) {
 		this.studentService = studentService;
 		this.groupService = groupService;
 		this.emailService = emailService;
+		this.staffGroupService = staffGroupService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -78,7 +81,7 @@ public class StudentJoinGroupServlet extends HttpServlet {
 			
 			String[] groupAdministratorsEmail = {};
 			
-			Staff[] groupAdministrators = groupService.getGroupAdministrators(groupID);
+			Staff[] groupAdministrators = staffGroupService.getGroupAdministrators(groupID);
 			List<String> tempGroupAdministratorsEmail = new ArrayList<String>(); 
 			for (Staff groupAdmin : groupAdministrators) {
 				tempGroupAdministratorsEmail.add(groupAdmin.getUserEmail());
