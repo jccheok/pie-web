@@ -18,6 +18,7 @@ import pie.StaffRole;
 import pie.constants.JoinGroupResult;
 import pie.services.EmailService;
 import pie.services.GroupService;
+import pie.services.StaffGroupService;
 import pie.services.StaffRoleService;
 import pie.services.StaffService;
 import pie.utilities.Utilities;
@@ -34,13 +35,15 @@ public class StaffJoinGroupServlet extends HttpServlet {
 	GroupService groupService;
 	StaffRoleService staffRoleService;
 	EmailService emailService;
+	StaffGroupService staffGroupService;
 
 	@Inject
-	public StaffJoinGroupServlet(StaffService staffService, GroupService groupService, StaffRoleService staffRoleService, EmailService emailService) {
+	public StaffJoinGroupServlet(StaffService staffService, GroupService groupService, StaffRoleService staffRoleService, EmailService emailService, StaffGroupService staffGroupService) {
 		this.staffService = staffService;
 		this.groupService = groupService;
 		this.staffRoleService = staffRoleService;
 		this.emailService = emailService;
+		this.staffGroupService = staffGroupService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -86,7 +89,7 @@ public class StaffJoinGroupServlet extends HttpServlet {
 			
 			String[] groupAdministratorsEmail = {};
 			
-			Staff[] groupAdministrators = groupService.getGroupAdministrators(groupID);
+			Staff[] groupAdministrators = staffGroupService.getGroupAdministrators(groupID);
 			List<String> tempGroupAdministratorsEmail = new ArrayList<String>(); 
 			for (Staff groupAdmin : groupAdministrators) {
 				tempGroupAdministratorsEmail.add(groupAdmin.getUserEmail());
