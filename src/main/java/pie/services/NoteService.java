@@ -78,7 +78,7 @@ public class NoteService {
 			pst.executeUpdate();
 
 			resultSet = pst.getGeneratedKeys();
-			
+
 			if (resultSet.next()) {
 				noteID = resultSet.getInt(1);
 			}
@@ -116,8 +116,7 @@ public class NoteService {
 			conn.close();
 
 		} catch (Exception e) {
-
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return hasReceived;
@@ -190,6 +189,7 @@ public class NoteService {
 					
 					Staff[] groupStaffs = staffGroupService.getStaffMembers(groupID);
 					
+
 					for (Staff staff : groupStaffs) {
 						if (!sendNote(noteID, staff.getUserID())) {
 							publishResult = PublishNoteResult.FAILED_TO_SEND_TO_MEMBERS;
@@ -201,8 +201,7 @@ public class NoteService {
 			conn.close();
 
 		} catch (Exception e) {
-
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return publishResult;
@@ -211,20 +210,24 @@ public class NoteService {
 	public DeleteNoteResult deleteNote(int noteID) {
 
 		DeleteNoteResult deleteNoteResult = DeleteNoteResult.SUCCESS;
-		try{
+		try {
+
 			Note note = getNote(noteID);
-			if(note == null){
+			if(note == null) {	
 				deleteNoteResult = DeleteNoteResult.NOTE_DOES_NOT_EXIST;
-			}else if(note.isNoteDraft()){
-				if(!deleteDraftNote(noteID)){
+			} else if(note.isNoteDraft()) {
+
+				if(!deleteDraftNote(noteID)) {
 					deleteNoteResult = DeleteNoteResult.FAILED_REMOVE_NOTE;
 				}
-			}else{
-				if(!deletePublishedNote(noteID)){
+
+			} else {
+
+				if(!deletePublishedNote(noteID)) {
 					deleteNoteResult = DeleteNoteResult.FAILED_TO_SET_TO_DELETE;
 				}
 			}
-		}catch(Exception e){
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 
@@ -259,7 +262,7 @@ public class NoteService {
 		}
 
 		catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return noteDrafts;
@@ -293,7 +296,7 @@ public class NoteService {
 		}
 
 		catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return sentNotes;
@@ -360,10 +363,10 @@ public class NoteService {
 
 		return isUpdated;
 	}
-	
+
 	public boolean deletePublishedNote(int noteID){
 		boolean deleteNoteResult = false;
-		
+
 		try {
 
 			PreparedStatement pst = null;
@@ -373,41 +376,41 @@ public class NoteService {
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, 1);
 			pst.setInt(2, noteID);
-			
+
 			pst.executeUpdate();
 			deleteNoteResult = true;
-			
+
 			conn.close();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return deleteNoteResult;
 	}
-	
+
 	public boolean deleteDraftNote(int noteID){
 		boolean deleteNoteResult = false;
-		
+
 		try {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
-		
+
 			String sql = "DELETE FROM `Note` WHERE noteID = ? AND isDraft = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, noteID);
 			pst.setInt(2, 1);
-			
+
 			pst.executeUpdate();
-			
+
 			deleteNoteResult = true;
-			
+
 			conn.close();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return deleteNoteResult;
 	}
 
