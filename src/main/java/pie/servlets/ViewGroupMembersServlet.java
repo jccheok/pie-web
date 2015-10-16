@@ -17,6 +17,7 @@ import pie.Staff;
 import pie.StaffRole;
 import pie.Student;
 import pie.services.GroupService;
+import pie.services.StaffGroupService;
 import pie.services.StaffService;
 import pie.services.StudentGroupService;
 import pie.utilities.Utilities;
@@ -29,13 +30,13 @@ public class ViewGroupMembersServlet extends HttpServlet{
 
 	private static final long serialVersionUID = 2879025505322510247L;
 
-	GroupService groupService;
 	StudentGroupService studentGroupService;
+	StaffGroupService staffGroupService;
 
 	@Inject
-	public ViewGroupMembersServlet(GroupService groupService, 	StudentGroupService studentGroupService) {
-		this.groupService = groupService;
+	public ViewGroupMembersServlet(StudentGroupService studentGroupService, StaffGroupService staffGroupService) {
 		this.studentGroupService = studentGroupService;
+		this.staffGroupService = staffGroupService;
 	}
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -54,7 +55,7 @@ public class ViewGroupMembersServlet extends HttpServlet{
 		} 
 		
 		Student[] studentMembers = studentGroupService.getStudentMembers(groupID);
-		Staff[] staffMembers = groupService.getStaffMembers(groupID);
+		Staff[] staffMembers = staffGroupService.getStaffMembers(groupID);
 
 		JSONObject responseObject = new JSONObject();
 		
