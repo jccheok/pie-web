@@ -1,5 +1,6 @@
 package pie.services;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -112,6 +113,40 @@ public class HomeworkAttachmentService {
 			}
 		}
 		return null;
+	}
+	
+	public boolean deleteHomeworkAttachment(String homeworkAttachmentURL) {
+		
+		boolean isDeleted = false;
+		
+		String uploadPath = System.getenv("OPENSHIFT_DATA_DIR");
+		String uploadedDir = uploadPath + File.separator + "uploadedHomeworkDIR" + "/" + homeworkAttachmentURL;
+		
+		File homeworkAttachmentDIR = new File(uploadedDir);
+		if(!homeworkAttachmentDIR.exists()) {
+			homeworkAttachmentDIR.delete();
+			
+			isDeleted = true;
+		}
+
+		return isDeleted;
+	}
+	
+	public boolean checkIfHomeworkFolderExist() {
+		
+		boolean isDeleted = false;
+	
+		String uploadPath = System.getenv("OPENSHIFT_DATA_DIR");
+		String uploadedDir = uploadPath + File.separator + "uploadedHomeworkDIR";
+		
+		File homeworkAttachmentDIR = new File(uploadedDir);
+		if(!homeworkAttachmentDIR.exists()) {
+			homeworkAttachmentDIR.mkdir();
+			
+			isDeleted = true;
+		}
+		
+		return isDeleted;
 	}
 
 }
