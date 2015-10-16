@@ -11,7 +11,6 @@ import pie.servlets.GenerateCodeServlet;
 import pie.servlets.GetAllDraftNoteServlet;
 import pie.servlets.GetAllSecurityQuestionsServlet;
 import pie.servlets.GetAllSentNotesServlet;
-import pie.servlets.GetAttachmentServlet;
 import pie.servlets.GetNoteDetailsServlet;
 import pie.servlets.LoginServlet;
 import pie.servlets.RegisterGroupServlet;
@@ -33,7 +32,6 @@ import pie.servlets.UpdateGroupServlet;
 import pie.servlets.UpdateNoteDraftServlet;
 import pie.servlets.UpdatePasswordServlet;
 import pie.servlets.UpdateUserAccountDetailsServlet;
-import pie.servlets.UploadAttachmentServlet;
 import pie.servlets.VerifyUserServlet;
 import pie.servlets.ViewAllGroupMembersServlet;
 import pie.servlets.ViewAllSchoolsServlet;
@@ -113,9 +111,6 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				
 				serve("*/servlets/secured/admin/registerschool").with(RegisterSchoolServlet.class);
 				serve("*/servlets/secured/admin/allschools").with(ViewAllSchoolsServlet.class);
-
-				serve("*/servlets/secured/attachmentdownload").with(GetAttachmentServlet.class);
-				serve("*/servlets/secured/uploadattachment").with(UploadAttachmentServlet.class);
 				
 			}
 		});

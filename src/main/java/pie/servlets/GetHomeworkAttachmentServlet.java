@@ -12,38 +12,38 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import pie.services.AttachmentService;
+import pie.services.HomeworkAttachmentService;
 import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class GetAttachmentServlet extends HttpServlet {
+public class GetHomeworkAttachmentServlet extends HttpServlet {
 
-	private static final long serialVersionUID = 404605948552377058L;
+	private static final long serialVersionUID = 8015672858794411554L;
 
-	AttachmentService attachmentService;
+	HomeworkAttachmentService homeworkAttachmentService;
 
 	@Inject
-	public GetAttachmentServlet(AttachmentService attachmentService) {
-		this.attachmentService = attachmentService;
+	public GetHomeworkAttachmentServlet(HomeworkAttachmentService homeworkAttachmentService) {
+		this.homeworkAttachmentService = homeworkAttachmentService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+
 		String fileURL = null;
-		
+
 		try {
-			
+
 			Map<String, String> requestParameters = Utilities.getParameters(request, "fileURL");
 			fileURL = requestParameters.get("fileURL");
-			
+
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 			return;
 		}
-		
+
 		String uploadPath = System.getenv("OPENSHIFT_DATA_DIR") + "uploadFiles/" + fileURL;
 		File downloadFile = new File(uploadPath);
 		FileInputStream inStream = new FileInputStream(downloadFile);
