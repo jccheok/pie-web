@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import pie.Group;
 import pie.Student;
 import pie.services.ParentService;
+import pie.services.StudentGroupService;
 import pie.services.StudentService;
 import pie.utilities.Utilities;
 
@@ -28,11 +29,13 @@ public class ViewParentChildrenServlet extends HttpServlet {
 	
 	ParentService parentService;
 	StudentService studentService;
+	StudentGroupService studentGroupService;
 	
 	@Inject
-	public ViewParentChildrenServlet(ParentService parentService, StudentService studentService) {
+	public ViewParentChildrenServlet(ParentService parentService, StudentService studentService, StudentGroupService studentGroupService) {
 		this.parentService = parentService;
 		this.studentService = studentService;
+		this.studentGroupService = studentGroupService;
 	}
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -74,7 +77,7 @@ public class ViewParentChildrenServlet extends HttpServlet {
 				groupDetails.put("groupName", joinedGroup.getGroupName());
 				groupDetails.put("groupTypeName", joinedGroup.getGroupType().toString());
 				groupDetails.put("studentGroupIndexNumber", studentService.getStudentGroupIndexNumber(joinedGroupID, studentID));
-				groupDetails.put("studentGroupJoinDateUnix", Utilities.toUnixSeconds(studentService.getStudentGroupJoinDate(joinedGroupID, studentID)));
+				groupDetails.put("studentGroupJoinDateUnix", Utilities.toUnixSeconds(studentGroupService.getStudentGroupJoinDate(joinedGroupID, studentID)));
 				studentGroupsList.put(groupDetails);
 			}
 			studentDetails.put("studentJoinedGroups", studentGroupsList);
