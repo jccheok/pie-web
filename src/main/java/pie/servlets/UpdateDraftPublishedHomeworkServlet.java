@@ -27,7 +27,9 @@ import pie.services.UserHomeworkService;
 import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
+@Singleton
 public class UpdateDraftPublishedHomeworkServlet {
 
 	private static final long serialVersionUID = -1957825813083294498L;
