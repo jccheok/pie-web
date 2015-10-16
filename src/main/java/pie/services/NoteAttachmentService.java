@@ -1,5 +1,6 @@
 package pie.services;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -112,6 +113,40 @@ public class NoteAttachmentService {
 			}
 		}
 		return null;
+	}
+	
+	public boolean deleteNoteAttachment(String noteAttachmentURL) {
+		
+		boolean isDeleted = false;
+		
+		String uploadPath = System.getenv("OPENSHIFT_DATA_DIR");
+		String uploadedDir = uploadPath + File.separator + "noteHomeworkDIR" + "/" + noteAttachmentURL;
+		
+		File noteAttachmentDIR = new File(uploadedDir);
+		if(!noteAttachmentDIR.exists()) {
+			noteAttachmentDIR.delete();
+			
+			isDeleted = true;
+		}
+
+		return isDeleted;
+	}
+	
+	public boolean checkIfNoteFolderExist() {
+		
+		boolean isDeleted = false;
+	
+		String uploadPath = System.getenv("OPENSHIFT_DATA_DIR");
+		String uploadedDir = uploadPath + File.separator + "uploadedNoteDIR";
+		
+		File noteAttachmentDIR = new File(uploadedDir);
+		if(!noteAttachmentDIR.exists()) {
+			noteAttachmentDIR.mkdir();
+			
+			isDeleted = true;
+		}
+		
+		return isDeleted;
 	}
 
 }
