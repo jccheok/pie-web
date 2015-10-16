@@ -4,12 +4,12 @@ public class NoteAttachment {
 
 	private int noteAttachmentID;
 	private String attachmentURL;
-	private Note noteID;
+	private Note note;
 	
-	public NoteAttachment(int noteAttachmentID, String attachmentURL, Note noteID) {
+	public NoteAttachment(int noteAttachmentID, String attachmentURL, Note note) {
 		setNoteAttachmentID(noteAttachmentID);
 		setAttachmentURL(attachmentURL);
-		setNoteID(noteID);
+		setNote(note);
 	}
 
 	public int getNoteAttachmentID() {
@@ -28,12 +28,12 @@ public class NoteAttachment {
 		this.attachmentURL = attachmentURL;
 	}
 
-	public Note getNoteID() {
-		return noteID;
+	public Note getNote() {
+		return note;
 	}
 
-	public void setNoteID(Note noteID) {
-		this.noteID = noteID;
+	public void setNote(Note note) {
+		this.note = note;
 	}
 
 }
