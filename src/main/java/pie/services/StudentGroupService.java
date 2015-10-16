@@ -142,4 +142,37 @@ public class StudentGroupService {
 		return studentMembers;
 	}
 	
+	public Date getStudentGroupJoinDate(int groupID, int studentID) {
+
+		Date studentGroupJoinDate = null;
+
+		try {
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT joinDate FROM `StudentGroup` WHERE groupID = ? AND studentID = ? AND isValid = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, groupID);
+			pst.setInt(2, studentID);
+			pst.setInt(3, 1);
+
+			resultSet = pst.executeQuery();
+
+			if (resultSet.next()) {
+
+				studentGroupJoinDate = new Date(resultSet.getTimestamp(1).getTime());
+
+			}
+
+			conn.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return studentGroupJoinDate;
+	}
+
+	
 }
