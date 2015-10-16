@@ -14,7 +14,7 @@ import org.json.JSONObject;
 import com.google.inject.Inject;
 
 import pie.Homework;
-import pie.constants.PublishHomeworkResult;
+import pie.constants.SaveHomeworkAsDraftResult;
 import pie.services.GroupService;
 import pie.services.HomeworkService;
 import pie.services.StaffService;
@@ -37,7 +37,7 @@ public class SaveHomeworkAsDraftServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		PublishHomeworkResult result = null;
+		int result = 0;
 		try {
 			Map<String, String> requestParams = Utilities.getParameters(request, "authorID", "homeworkTitle",
 					"homeworkSubject", "homeworkDescription", "homeworkMinutesReqStudent", "homeworkLevel");
@@ -48,7 +48,7 @@ public class SaveHomeworkAsDraftServlet extends HttpServlet {
 					Integer.parseInt(requestParams.get("homeworkMinutesReqStudent")), null, false, false, null,
 					requestParams.get("homeworkLevel"));
 
-			result = homeworkService.publishDraftHomework(homework);
+			result = homeworkService.saveHomeworkAsDraft(homework);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -56,9 +56,15 @@ public class SaveHomeworkAsDraftServlet extends HttpServlet {
 
 		JSONObject responseObject = new JSONObject();
 
-		responseObject.put("result", result.toString());
-		responseObject.put("message", result.getDefaultMessage());
+		if (result == -1) {
 
+			responseObject.put("result", SaveHomeworkAsDraftResult.FAILED_TO_SAVE_HOMEWORK_AS_DRAFT.toString());
+			responseObject.put("message",
+					SaveHomeworkAsDraftResult.FAILED_TO_SAVE_HOMEWORK_AS_DRAFT.getDefaultMessage());
+		} else {
+			responseObject.put("result", SaveHomeworkAsDraftResult.SUCCESS.toString());
+			responseObject.put("message", SaveHomeworkAsDraftResult.SUCCESS.getDefaultMessage());
+		}
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
 
