@@ -70,8 +70,8 @@ public class SaveHomeworkAsDraftServlet extends HttpServlet {
 
 		JSONObject responseObject = new JSONObject();
 
-		int homeworkID = homeworkService.createHomework(staffID, groupID, homeworkTitle, homeworkSubject,
-				homeworkDescription, homeworkMinutesRequired, homeworkDueDate, homeworkIsGraded);
+		int homeworkID = homeworkService.createHomework(staffID, homeworkTitle, homeworkSubject, homeworkDescription,
+				homeworkMinutesRequired, homeworkDescription);
 
 		if (homeworkID != -1) {
 			responseObject.put("result", GenericResult.SUCCESS.toString());

@@ -70,8 +70,8 @@ public class SendHomeworkServlet extends HttpServlet {
 			return;
 		}
 
-		int homeworkID = homeworkService.createHomework(staffID, groupID, homeworkTitle, homeworkSubject,
-				homeworkDescription, homeworkMinutesRequired, homeworkDueDate, homeworkIsGraded);
+		int homeworkID = homeworkService.createHomework(staffID, homeworkTitle, homeworkSubject,
+				homeworkDescription, homeworkMinutesRequired, homeworkDescription);
 
 		JSONObject responseObject = new JSONObject();
 

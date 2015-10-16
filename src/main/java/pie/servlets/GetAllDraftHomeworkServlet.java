@@ -59,7 +59,7 @@ public class GetAllDraftHomeworkServlet extends HttpServlet {
 				homeworkObject.put("homeworkID", homework.getHomeworkID());
 				homeworkObject.put("homeworkDateCreated", homework.getHomeworkDateCreated());
 				homeworkObject.put("homeworkDescription", homework.getHomeworkDescription());
-				homeworkObject.put("homeworkDueDateUnix", Utilities.toUnixSeconds(homework.getHomeworkDueDate()));
+//				homeworkObject.put("homeworkDueDateUnix", Utilities.toUnixSeconds(homework.getHomeworkDueDate()));
 				homeworkObject.put("homeworkTitle", homework.getHomeworkTitle());
 				homeworkObject.put("homeworkSubject", homework.getHomeworkSubject());
 				homeworkList.put(homeworkObject);

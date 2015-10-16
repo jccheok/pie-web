@@ -48,11 +48,11 @@ public class ViewHomeworkDetailsServlet extends HttpServlet {
 
 		responseObject.put("homeworkSubject", homework.getHomeworkSubject());
 		responseObject.put("homeworkTitle", homework.getHomeworkTitle());
-		responseObject.put("homeworkMinutesRequired", homework.getHomeworkMinutesRequired());
+		responseObject.put("homeworkMinutesRequired", homework.gethomeworkMinutesReqStudent());
 		responseObject.put("homeworkDateCreated", Utilities.toUnixSeconds(homework.getHomeworkDateCreated()));
 		responseObject.put("homeworkAuthor", homework.getHomeworkAuthor().getUserFullName());
 		responseObject.put("homeworkDescription", homework.getHomeworkDescription());
-		responseObject.put("homeworkDueDate", Utilities.toUnixSeconds(homework.getHomeworkDueDate()));
+//		responseObject.put("homeworkDueDate", Utilities.toUnixSeconds(homework.getHomeworkDueDate()));
 
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());

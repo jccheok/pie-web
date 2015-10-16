@@ -60,7 +60,7 @@ public class GetAllHomeworkServlet extends HttpServlet {
 				JSONObject homeworkObject = new JSONObject();
 				homeworkObject.put("homeworkTitle", homework.getHomeworkTitle());
 				homeworkObject.put("homeworkSubject", homework.getHomeworkSubject());
-				homeworkObject.put("homeworkDueDate", Utilities.toUnixSeconds(homework.getHomeworkDueDate()));
+//				homeworkObject.put("homeworkDueDate", Utilities.toUnixSeconds(homework.getHomeworkDueDate()));
 				homeworkObject.put("homeworkDescription", homework.getHomeworkDescription());
 				homeworkObject.put("homeworkAuthor", homework.getHomeworkAuthor().getUserFullName());
 				groupHomeworks.put(homeworkObject);
