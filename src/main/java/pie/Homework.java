@@ -9,34 +9,27 @@ public class Homework {
 	private String homeworkTitle;
 	private String homeworkSubject;
 	private String homeworkDescription;
-	private int homeworkMinutesRequired;
-	private Date homeworkDueDate;
-	private boolean homeworkIsOpen;
+	private int homeworkMinutesReqStudent;
 	private Date homeworkDateCreated;
 	private boolean homeworkIsDraft;
-	private boolean homeworkIsTemplate;
 	private boolean homeworkIsDeleted;
 	private Date homeworkDateDeleted;
-	private boolean homeworkIsGraded;
+	private String homeworkLevel;
 
 	public Homework(int homeworkID, Staff homeworkAuthor, String homeworkTitle, String homeworkSubject,
-			String homeworkDescription, int homeworkMinutesRequired, Date homeworkDueDate, boolean homeworkOpen,
-			Date homeworkDateCreated, boolean homeworkIsDraft, boolean homeworkIsTemplate, boolean homeworkIsDeleted,
-			Date homeworkDateDeleted, boolean homeworkIsGraded) {
+			String homeworkDescription, int homeworkMinutesReqStudent, Date homeworkDateCreated,
+			boolean homeworkIsDraft, boolean homeworkIsDeleted, Date homeworkDateDeleted, String homeworkLevel) {
 		setHomeworkID(homeworkID);
 		setHomeworkAuthor(homeworkAuthor);
 		setHomeworkTitle(homeworkTitle);
 		setHomeworkSubject(homeworkSubject);
 		setHomeworkDescription(homeworkDescription);
-		setHomeworkMinutesRequired(homeworkMinutesRequired);
-		setHomeworkDueDate(homeworkDueDate);
-		setHomeworkIsOpen(homeworkIsDeleted);
+		sethomeworkMinutesReqStudent(homeworkMinutesReqStudent);
 		setHomeworkDateCreated(homeworkDateCreated);
 		setHomeworkIsDraft(homeworkIsDraft);
-		setHomeworkIsTemplate(homeworkIsTemplate);
 		setHomeworkIsDeleted(homeworkIsDeleted);
 		setHomeworkDateDeleted(homeworkDateDeleted);
-		setHomeworkIsGraded(homeworkIsGraded);
+		setHomeworkLevel(homeworkLevel);
 	}
 
 	public int getHomeworkID() {
@@ -71,28 +64,12 @@ public class Homework {
 		this.homeworkDescription = homeworkDescription;
 	}
 
-	public int getHomeworkMinutesRequired() {
-		return homeworkMinutesRequired;
+	public int gethomeworkMinutesReqStudent() {
+		return homeworkMinutesReqStudent;
 	}
 
-	public void setHomeworkMinutesRequired(int homeworkMinutesRequired) {
-		this.homeworkMinutesRequired = homeworkMinutesRequired;
-	}
-
-	public Date getHomeworkDueDate() {
-		return homeworkDueDate;
-	}
-
-	public void setHomeworkDueDate(Date homeworkDueDate) {
-		this.homeworkDueDate = homeworkDueDate;
-	}
-
-	public boolean isHomeworkOpen() {
-		return homeworkIsOpen;
-	}
-
-	public void setHomeworkIsOpen(boolean homeworkIsOpen) {
-		this.homeworkIsOpen = homeworkIsOpen;
+	public void sethomeworkMinutesReqStudent(int homeworkMinutesReqStudent) {
+		this.homeworkMinutesReqStudent = homeworkMinutesReqStudent;
 	}
 
 	public Date getHomeworkDateCreated() {
@@ -103,28 +80,12 @@ public class Homework {
 		this.homeworkDateCreated = homeworkDateCreated;
 	}
 
-	public boolean isHomeworkIsGraded() {
-		return homeworkIsGraded;
-	}
-
-	public void setHomeworkIsGraded(boolean homeworkIsGraded) {
-		this.homeworkIsGraded = homeworkIsGraded;
-	}
-
 	public boolean isHomeworkIsDraft() {
 		return homeworkIsDraft;
 	}
 
 	public void setHomeworkIsDraft(boolean homeworkIsDraft) {
 		this.homeworkIsDraft = homeworkIsDraft;
-	}
-
-	public boolean isHomeworkIsTemplate() {
-		return homeworkIsTemplate;
-	}
-
-	public void setHomeworkIsTemplate(boolean homeworkIsTemplate) {
-		this.homeworkIsTemplate = homeworkIsTemplate;
 	}
 
 	public boolean isHomeworkIsDeleted() {
@@ -149,6 +110,14 @@ public class Homework {
 
 	public void setHomeworkAuthor(Staff homeworkAuthor) {
 		this.homeworkAuthor = homeworkAuthor;
+	}
+
+	public String getHomeworkLevel() {
+		return homeworkLevel;
+	}
+
+	public void setHomeworkLevel(String homeworkLevel) {
+		this.homeworkLevel = homeworkLevel;
 	}
 
 }
