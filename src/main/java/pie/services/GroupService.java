@@ -175,27 +175,7 @@ public class GroupService {
 		return groupOwner;
 	}
 
-	public boolean setGroupOwner(int groupID, int staffID) {
-
-		StaffService staffService = new StaffService();
-		StaffRoleService staffRoleService = new StaffRoleService();
-
-		boolean setResult = false;
-
-		if (getGroupOwner(groupID) != null) {
-			StaffRole defaultTeacherRole = staffRoleService.getDefaultStaffRole();
-			staffService.setStaffRole(staffID, groupID, defaultTeacherRole);
-		}
-
-		StaffRole ownerTeacherRole = staffRoleService.getOwnerStaffRole();
-		if (staffService.isMember(staffID, groupID)) {
-			setResult = staffService.setStaffRole(staffID, groupID, ownerTeacherRole);
-		} else {
-			setResult = addStaffToGroup(groupID, staffID, ownerTeacherRole);
-		}
-
-		return setResult;
-	}
+	
 	
 	public boolean hasGroupMember(int groupID, int groupMemberID) {
 		
@@ -232,74 +212,12 @@ public class GroupService {
 
 
 
-	public boolean addStaffToGroup(int groupID, int staffID, StaffRole staffRole) {
-		
-		StaffService staffService = new StaffService();
-		boolean addResult = false;
-
-		if (!staffService.isMember(staffID, groupID)) {
-
-			try {
-
-				Connection conn = DatabaseConnector.getConnection();
-				PreparedStatement pst = null;
-
-				String sql = "INSERT INTO `StaffGroup` (groupID, staffID, staffRoleID) VALUES (?, ?, ?)";
-				pst = conn.prepareStatement(sql);
-				pst.setInt(1, groupID);
-				pst.setInt(2, staffID);
-				pst.setInt(3, staffRole.getStaffRoleID());
-				pst.executeUpdate();
-
-				addResult = true;
-
-				conn.close();
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-		return addResult;
-	}
-
-	public Staff[] getStaffMembers(int groupID) {
-
-		StaffService staffService = new StaffService();
-		Staff[] staffMembers = {};
-
-		try {
-
-			Connection conn = DatabaseConnector.getConnection();
-			PreparedStatement pst = null;
-			ResultSet resultSet = null;
-
-			String sql = "SELECT staffID FROM `StaffGroup` WHERE groupID = ? AND isValid = ?";
-			pst = conn.prepareStatement(sql);
-			pst.setInt(1, groupID);
-			pst.setInt(2, 1);
-
-			resultSet = pst.executeQuery();
-
-			ArrayList<Staff> tempStaffMembers = new ArrayList<Staff>();
-			while (resultSet.next()) {
-				tempStaffMembers.add(staffService.getStaff(resultSet.getInt(1)));
-			}
-			staffMembers = tempStaffMembers.toArray(staffMembers);
-
-			conn.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return staffMembers;
-	}
-
 	public GroupRegistrationResult registerGroup(Staff groupOwner, String groupName, String groupDescription,
 			int groupMaxDailyHomeworkMinutes, GroupType groupType, String groupCode) {
 
 		GroupRegistrationResult registrationResult = GroupRegistrationResult.SUCCESS;
+		
+		StaffGroupService staffGroupService = new StaffGroupService();
 
 		if (isRegisteredGroup(groupName)) {
 			registrationResult = GroupRegistrationResult.NAME_TAKEN;
@@ -327,7 +245,7 @@ public class GroupService {
 					if (resultSet.next()) {
 
 						int newGroupID = resultSet.getInt(1);
-						setGroupOwner(newGroupID, groupOwner.getUserID());
+						staffGroupService.setGroupOwner(newGroupID, groupOwner.getUserID());
 					}
 
 					conn.close();
@@ -416,82 +334,18 @@ public class GroupService {
 	public int getMemberCount(int groupID) {
 		int memberCount = 0;
 		StudentGroupService studentGroupService = new StudentGroupService();
+		StaffGroupService staffGroupService = new StaffGroupService();
+		
 		Student[] groupStudents = studentGroupService.getStudentMembers(groupID);
-		Staff[] groupStaffs = getStaffMembers(groupID);
+		Staff[] groupStaffs = staffGroupService.getStaffMembers(groupID);
 
 		memberCount += groupStudents.length;
 		memberCount += groupStaffs.length;
 
 		return memberCount;
 	}
-
-	public Staff[] getGroupAdministrators(int groupID) {
-		Staff[] groupAdmins = {};
-
-		Staff[] groupStaff = getStaffMembers(groupID);
-		StaffRoleService staffRoleService = new StaffRoleService();
-
-		ArrayList<Staff> tempGroupAdmins = new ArrayList<Staff>();
-		for (Staff staff : groupStaff) {
-			try {
-				Connection conn = DatabaseConnector.getConnection();
-				PreparedStatement pst = null;
-				ResultSet resultSet = null;
-
-				String sql = "SELECT `StaffRole`.staffRoleID FROM `StaffRole`, `StaffGroup` WHERE `StaffRole`.staffRoleID = `StaffGroup`.staffRoleID AND `StaffGroup`.groupID = ? AND `StaffGroup`.staffID = ? AND `StaffGroup`.isValid = ?";
-				pst = conn.prepareStatement(sql);
-				pst.setInt(1, groupID);
-				pst.setInt(2, staff.getUserID());
-				pst.setInt(3, 1);
-
-				resultSet = pst.executeQuery();
-
-				if (resultSet.next()) {
-					int staffRoleID = resultSet.getInt(1);
-					StaffRole staffRole = staffRoleService.getStaffRole(staffRoleID);
-
-					if (staffRole.staffRoleIsAdmin()) {
-						tempGroupAdmins.add(staff);
-					}
-				}
-
-				conn.close();
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-		groupAdmins = tempGroupAdmins.toArray(groupAdmins);
-		return groupAdmins;
-	}
-
-	public boolean removeStaffFromGroup(int groupID, int staffID) {
-		boolean removeResult = false;
-
-		try {
-			Connection conn = DatabaseConnector.getConnection();
-			PreparedStatement pst = null;
-
-			String sql = "UPDATE `StaffGroup` SET isValid = ? WHERE groupID = ? AND staffID = ?";
-			pst = conn.prepareStatement(sql);
-			pst.setInt(1, 0);
-			pst.setInt(2, groupID);
-			pst.setInt(3, staffID);
-
-			pst.executeUpdate();
-
-			removeResult = true;
-
-			conn.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return removeResult;
-	}
-
+	
+	
 	public boolean removeStudentFromGroup(int groupID, int studentID) {
 		boolean removeResult = true;
 
@@ -520,8 +374,11 @@ public class GroupService {
 
 	public DeactivateGroupResult deactivateGroup(int groupID, int staffID, String userPassword) {
 		DeactivateGroupResult deactivateGroupResult = DeactivateGroupResult.SUCCESS;
+		
 		StaffService staffService = new StaffService();
 		StudentGroupService studentGroupService = new StudentGroupService();
+		StaffGroupService staffGroupService = new StaffGroupService();
+		
 		Group group = getGroup(groupID);
 		
 		Staff staffUser = staffService.getStaff(staffID);
@@ -535,7 +392,7 @@ public class GroupService {
 			deactivateGroupResult = DeactivateGroupResult.WRONG_PASSWORD;
 		}else{
 			Student[] students = studentGroupService.getStudentMembers(groupID);
-			Staff[] staffs = getStaffMembers(groupID);
+			Staff[] staffs = staffGroupService.getStaffMembers(groupID);
 
 			for (Student student : students) {
 				if (!removeStudentFromGroup(groupID, student.getUserID())) {
@@ -545,7 +402,7 @@ public class GroupService {
 			}
 
 			for (Staff staff : staffs) {
-				if (!removeStaffFromGroup(groupID, staff.getUserID())) {
+				if (!staffGroupService.removeStaffFromGroup(groupID, staff.getUserID())) {
 					deactivateGroupResult = DeactivateGroupResult.GENERAL_FAILURE;
 					return deactivateGroupResult;
 				}
@@ -573,26 +430,5 @@ public class GroupService {
 		return deactivateGroupResult;
 	}
 	
-	public TransferGroupOwnershipResult transferGroupOwnership(int ownerID, int groupID, String transfereeEmail, String ownerPassword) {
-		
-		UserService userService = new UserService();
-		TransferGroupOwnershipResult transferResult = TransferGroupOwnershipResult.SUCCESS;
-		
-		if (!userService.credentialsMatch(userService.getUser(ownerID).getUserEmail(), ownerPassword)) {
-			transferResult = TransferGroupOwnershipResult.WRONG_PASSWORD;
-		} else if (!userService.isRegisteredUser(transfereeEmail)) {
-			transferResult = TransferGroupOwnershipResult.INVALID_TRANSFEREE;
-		} else {
-			
-			User transfereeUser = userService.getUser(userService.getUserID(transfereeEmail));
-			if (transfereeUser == null || transfereeUser.getUserType() != UserType.STAFF) {
-				transferResult = TransferGroupOwnershipResult.INVALID_TRANSFEREE;
-			} else {
-				setGroupOwner(groupID, transfereeUser.getUserID());
-				removeStaffFromGroup(groupID, ownerID);
-			}
-		}
-		
-		return transferResult;
-	}
+	
 }
