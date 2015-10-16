@@ -4,24 +4,24 @@ import java.util.Date;
 
 public class UserHomework {
 	private int userHomeworkID;
-	private int homeworkID;
-	private int userID;
+	private Homework homework;
+	private User user;
 	private boolean isRead;
 	private boolean isSubmitted;
 	private Date submissionDate;
 	private boolean isArchived;
 	private Date dateArchived;
 	private Date dateRead;
-	private char grade;
+	private String grade;
 	private boolean isMarked;
 
-	public UserHomework(int userHomeworkID, int homeworkID, int userID, boolean isRead, boolean isSubmitted,
-			Date submissionDate, boolean isArchived, Date dateArchived, Date dateRead, char grade, boolean isMarked) {
+	public UserHomework(int userHomeworkID, Homework homework, User user, boolean isRead, boolean isSubmitted,
+			Date submissionDate, boolean isArchived, Date dateArchived, Date dateRead, String grade, boolean isMarked) {
 		// TODO Auto-generated constructor stub
 
 		setUserHomeworkID(userHomeworkID);
-		setHomeworkID(homeworkID);
-		setUserID(userID);
+		setHomework(homework);	
+		setUser(user);		
 		setRead(isRead);
 		setSubmitted(isSubmitted);
 		setSubmissionDate(submissionDate);
@@ -40,21 +40,7 @@ public class UserHomework {
 		this.userHomeworkID = userHomeworkID;
 	}
 
-	public int getHomeworkID() {
-		return homeworkID;
-	}
-
-	public void setHomeworkID(int homeworkID) {
-		this.homeworkID = homeworkID;
-	}
-
-	public int getUserID() {
-		return userID;
-	}
-
-	public void setUserID(int userID) {
-		this.userID = userID;
-	}
+	
 
 	public boolean isRead() {
 		return isRead;
@@ -104,11 +90,27 @@ public class UserHomework {
 		this.dateRead = dateRead;
 	}
 
-	public char getGrade() {
+	public Homework getHomework() {
+		return homework;
+	}
+
+	public void setHomework(Homework homework) {
+		this.homework = homework;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public String getGrade() {
 		return grade;
 	}
 
-	public void setGrade(char grade) {
+	public void setGrade(String grade) {
 		this.grade = grade;
 	}
 
