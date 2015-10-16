@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import pie.constants.TransferGroupOwnershipResult;
 import pie.services.GroupService;
+import pie.services.StaffGroupService;
 import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
@@ -24,10 +25,12 @@ public class TransferGroupOwnershipServlet extends HttpServlet {
 	private static final long serialVersionUID = 8345217294139531580L;
 	
 	GroupService groupService;
+	StaffGroupService staffGroupService = new StaffGroupService();
 	
 	@Inject
-	public TransferGroupOwnershipServlet(GroupService groupService){
+	public TransferGroupOwnershipServlet(GroupService groupService, StaffGroupService staffGroupService){
 		this.groupService = groupService;
+		this.staffGroupService = staffGroupService;
 	}
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -51,7 +54,7 @@ public class TransferGroupOwnershipServlet extends HttpServlet {
 			return;
 		}
 		
-		TransferGroupOwnershipResult transferGroupOwnershipResult = groupService.transferGroupOwnership(ownerID, groupID, transfereeEmail, ownerPassword);
+		TransferGroupOwnershipResult transferGroupOwnershipResult = staffGroupService.transferGroupOwnership(ownerID, groupID, transfereeEmail, ownerPassword);
 		
 		JSONObject responseObject = new JSONObject();
 		responseObject.put("result", transferGroupOwnershipResult.toString());
