@@ -309,7 +309,7 @@ public class NoteService {
 			ResultSet resultSet = null;
 			Connection conn = DatabaseConnector.getConnection();
 
-			String sql = "SELECT `Note`.noteID FROM `UserNote`,`Note` WHERE userID=? AND `Note`.noteID = `UserNote`.noteID AND isDeleted = 0 LIMIT ?, ?";
+			String sql = "SELECT `Note`.noteID FROM `UserNote`,`Note` WHERE userID = ? AND `Note`.noteID = `UserNote`.noteID AND isDeleted = 0 LIMIT ?, ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, userID);
 			pst.setInt(2, startNote);
@@ -355,8 +355,7 @@ public class NoteService {
 			conn.close();
 
 		} catch (Exception e) {
-
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		return isUpdated;
@@ -381,8 +380,7 @@ public class NoteService {
 			conn.close();
 
 		} catch (Exception e) {
-
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		
 		return deleteNoteResult;
