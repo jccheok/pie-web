@@ -14,7 +14,7 @@ import pie.utilities.DatabaseConnector;
 
 public class HomeworkAttachmentService {
 
-	public int createHomeworkAttachment(String attachmentURL) {
+	public int createHomeworkAttachment(String homeworkAttachmentURL) {
 
 		int homeworkAttachmentID = -1;
 		int tempHomeworkID = 1;
@@ -27,7 +27,7 @@ public class HomeworkAttachmentService {
 
 			String sql = "INSERT INTO `HomeworkAttachment` (attachmentURL, homeworkID) VALUES (?, ?)";
 			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-			pst.setString(1, attachmentURL);
+			pst.setString(1, homeworkAttachmentURL);
 			pst.setInt(2, tempHomeworkID);
 			pst.executeUpdate();
 
@@ -104,7 +104,7 @@ public class HomeworkAttachmentService {
 		return isUpdated;
 	}
 
-	public String getFileName(Part part) {
+	public String getHomeworkFileName(Part part) {
 		String contentDisp = part.getHeader("content-disposition");
 		String[] items = contentDisp.split(";");
 		for (String s : items) {
@@ -114,39 +114,51 @@ public class HomeworkAttachmentService {
 		}
 		return null;
 	}
-	
+
 	public boolean deleteHomeworkAttachment(String homeworkAttachmentURL) {
-		
+
 		boolean isDeleted = false;
+		HomeworkAttachmentService homeworkAttachmentService = new HomeworkAttachmentService();
 		
-		String uploadPath = System.getenv("OPENSHIFT_DATA_DIR");
-		String uploadedDir = uploadPath + File.separator + "uploadedHomeworkDIR" + "/" + homeworkAttachmentURL;
-		
-		File homeworkAttachmentDIR = new File(uploadedDir);
+		File homeworkAttachmentDIR = new File(homeworkAttachmentService.getHomeworkAttachmentDIR(homeworkAttachmentURL));
 		if(!homeworkAttachmentDIR.exists()) {
 			homeworkAttachmentDIR.delete();
-			
+
 			isDeleted = true;
 		}
 
 		return isDeleted;
 	}
-	
+
 	public boolean checkIfHomeworkFolderExist() {
-		
-		boolean isDeleted = false;
-	
-		String uploadPath = System.getenv("OPENSHIFT_DATA_DIR");
-		String uploadedDir = uploadPath + File.separator + "uploadedHomeworkDIR";
-		
-		File homeworkAttachmentDIR = new File(uploadedDir);
+
+		boolean isExist = false;
+		HomeworkAttachmentService homeworkAttachmentService = new HomeworkAttachmentService();
+
+		File homeworkAttachmentDIR = new File(homeworkAttachmentService.getHomeworkDIR());
 		if(!homeworkAttachmentDIR.exists()) {
 			homeworkAttachmentDIR.mkdir();
-			
-			isDeleted = true;
+
+			isExist = true;
 		}
-		
-		return isDeleted;
+
+		return isExist;
 	}
 
+	public String getHomeworkDIR() {
+
+		String uploadPath = System.getenv("OPENSHIFT_DATA_DIR");
+		String uploadedDir = uploadPath + File.separator + "uploadedHomeworkDIR";
+
+		return uploadedDir;	
+	}
+
+	public String getHomeworkAttachmentDIR(String homeworkAttachmentURL) {
+		
+		String uploadPath = System.getenv("OPENSHIFT_DATA_DIR");
+		String uploadedDir = uploadPath + File.separator + "uploadedHomeworkDIR" + File.separator + homeworkAttachmentURL;
+		
+		return uploadedDir;
+	}
+	
 }
