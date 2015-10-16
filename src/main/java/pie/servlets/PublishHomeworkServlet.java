@@ -66,7 +66,6 @@ public class PublishHomeworkServlet extends HttpServlet {
 
 		JSONObject responseObject = new JSONObject();
 
-		PublishHomeworkResult result;
 		if (homeworkID == -1) {
 			responseObject.put("result", PublishHomeworkResult.FAILED_TO_UPDATE_HOMEWORK.toString());
 			responseObject.put("message", PublishHomeworkResult.FAILED_TO_UPDATE_HOMEWORK.getDefaultMessage());
