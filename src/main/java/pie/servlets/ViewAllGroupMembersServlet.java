@@ -60,7 +60,7 @@ public class ViewAllGroupMembersServlet extends HttpServlet{
 			return;
 		} 
 		
-		Group[] groups = staffService.getJoinedGroups(staffID);
+		Group[] groups = staffGroupService.getJoinedGroups(staffID);
 		JSONObject responseObject = new JSONObject();
 		JSONArray groupList = new JSONArray();
 		try{
