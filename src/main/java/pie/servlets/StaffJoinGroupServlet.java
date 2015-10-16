@@ -70,7 +70,7 @@ public class StaffJoinGroupServlet extends HttpServlet {
 
 		StaffRole staffRole = staffRoleService.getStaffRole(staffRoleID);
 
-		JoinGroupResult joinGroupResult = staffService.joinGroup(groupID, staffID, groupCode, staffRole);
+		JoinGroupResult joinGroupResult = staffGroupService.joinGroup(groupID, staffID, groupCode, staffRole);
 
 		JSONObject responseObject = new JSONObject();
 		responseObject.put("result", joinGroupResult.toString());
