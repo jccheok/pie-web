@@ -35,19 +35,18 @@ public class NoteService {
 
 			if (resultSet.next()) {
 
-				Staff noteAuthor = new StaffService().getStaff(resultSet.getInt("staffID"));
+				Staff staff = new StaffService().getStaff(resultSet.getInt("staffID"));
 				String title = resultSet.getString("title");
 				String description = resultSet.getString("description");
-				boolean isTemplate = resultSet.getInt("isTemplate") == 1;
 				boolean isDraft = resultSet.getInt("isDraft") == 1;
 				boolean isDeleted = resultSet.getInt("isDeleted") == 1;
 				Date dateCreated = new Date(resultSet.getTimestamp("dateCreated").getTime());
 				Date dateDeleted = new Date(resultSet.getTimestamp("dateDeleted").getTime());
-				ResponseQuestion noteQuestionID = new ResponseQuestionService().getResponseQuestion(resultSet
+				ResponseQuestion responseQuestion = new ResponseQuestionService().getResponseQuestion(resultSet
 						.getInt("responseQuestionID"));
 
-				note = new Note(noteID, noteAuthor, title, description, isTemplate, isDraft,
-						isDeleted, dateCreated, dateDeleted, noteQuestionID);
+				note = new Note(noteID, staff, title, description, isDraft,
+						isDeleted, dateCreated, dateDeleted, responseQuestion);
 			}
 
 			conn.close();
@@ -215,7 +214,7 @@ public class NoteService {
 			Note note = getNote(noteID);
 			if(note == null) {	
 				deleteNoteResult = DeleteNoteResult.NOTE_DOES_NOT_EXIST;
-			} else if(note.isNoteDraft()) {
+			} else if(note.isDraft()) {
 
 				if(!deleteDraftNote(noteID)) {
 					deleteNoteResult = DeleteNoteResult.FAILED_REMOVE_NOTE;

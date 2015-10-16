@@ -52,14 +52,14 @@ public class GetNoteDetailsServlet extends HttpServlet {
 		
 		if(note != null) {
 			
-			String publishDateStr = new SimpleDateFormat("dd-MM-yyyy").format(note.getNoteDateCreated());
-			String fullPublishDateStr = new SimpleDateFormat("dd MMMM yyyy").format(note.getNoteDateCreated());
+			String publishDateStr = new SimpleDateFormat("dd-MM-yyyy").format(note.getDateCreated());
+			String fullPublishDateStr = new SimpleDateFormat("dd MMMM yyyy").format(note.getDateCreated());
 			
 			responseObject.put("noteID", note.getNoteID());
-			responseObject.put("noteTitle", note.getNoteTitle());
-			responseObject.put("noteDescription", note.getNoteDescription());
-			responseObject.put("noteAuthor", note.getNoteAuthor().getUserFullName());
-			responseObject.put("noteResponseQuestionID", note.getNoteQuestionID().getResponseQuestionID());
+			responseObject.put("noteTitle", note.getTitle());
+			responseObject.put("noteDescription", note.getDescription());
+			responseObject.put("noteAuthor", note.getStaff().getUserFullName());
+			responseObject.put("noteResponseQuestionID", note.getResponseQuestion().getResponseQuestionID());
 			responseObject.put("noteDateCreated", publishDateStr);
 			responseObject.put("noteFullDateCreated", fullPublishDateStr);
 						

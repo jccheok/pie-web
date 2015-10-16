@@ -4,12 +4,12 @@ public class HomeworkAttachment {
 
 	private int homeworkAttachmentID;
 	private String attachmentURL;
-	private Homework homeworkID;
+	private Homework homework;
 	
-	public HomeworkAttachment(int homeworkAttachmentID, String attachmentURL, Homework homeworkID) {
+	public HomeworkAttachment(int homeworkAttachmentID, String attachmentURL, Homework homework) {
 		setHomeworkAttachmentID(homeworkAttachmentID);
 		setAttachmentURL(attachmentURL);
-		setHomeworkID(homeworkID);
+		setHomework(homework);
 	}
 	
 	public int getHomeworkAttachmentID() {
@@ -28,12 +28,12 @@ public class HomeworkAttachment {
 		this.attachmentURL = attachmentURL;
 	}
 	
-	public Homework getHomeworkID() {
-		return homeworkID;
+	public Homework getHomework() {
+		return homework;
 	}
 	
-	public void setHomeworkID(Homework homeworkID) {
-		this.homeworkID = homeworkID;
+	public void setHomework(Homework homework) {
+		this.homework = homework;
 	}
 		
 }

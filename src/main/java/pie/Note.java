@@ -5,30 +5,28 @@ import java.util.Date;
 public class Note {
 
 	private int noteID;
-	private Staff noteAuthor;
-	private String noteTitle;
-	private String noteDescription;
-	private boolean noteIsTemplate;
-	private boolean noteIsDraft;
-	private boolean noteIsDeleted;
-	private Date noteDateCreated;
-	private Date noteDateDeleted;
-	private ResponseQuestion noteQuestionID;
-
-	public Note(int noteID, Staff noteAuthor, String noteTitle,
-			String noteDescription, boolean noteIsTemplate,
-			boolean noteIsDraft, boolean noteIsDeleted, Date noteDateCreated,
-			Date noteDateDeleted, ResponseQuestion noteQuestionID) {
+	private Staff staff;
+	private String title;
+	private String description;
+	private boolean isDraft;
+	private boolean isDeleted;
+	private Date dateCreated;
+	private Date dateDeleted;
+	private ResponseQuestion responseQuestion;
+	
+	public Note(int noteID, Staff staff, String title, String description,
+			boolean isDraft, boolean isDeleted, Date dateCreated,
+			Date dateDeleted, ResponseQuestion responseQuestion) {
+		
 		setNoteID(noteID);
-		setNoteAuthor(noteAuthor);
-		setNoteTitle(noteTitle);
-		setNoteDescription(noteDescription);
-		setNoteIsTemplate(noteIsTemplate);
-		setNoteIsDraft(noteIsDraft);
-		setNoteIsDeleted(noteIsDeleted);
-		setNoteDateCreated(noteDateCreated);
-		setNoteDateDeleted(noteDateDeleted);
-		setNoteQuestionID(noteQuestionID);
+		setStaff(staff);
+		setTitle(title);
+		setDescription(description);
+		setDraft(isDraft);
+		setDeleted(isDeleted);
+		setDateCreated(dateCreated);
+		setDateDeleted(dateDeleted);
+		setResponseQuestion(responseQuestion);
 	}
 
 	public int getNoteID() {
@@ -39,76 +37,68 @@ public class Note {
 		this.noteID = noteID;
 	}
 
-	public String getNoteTitle() {
-		return noteTitle;
+	public Staff getStaff() {
+		return staff;
 	}
 
-	public void setNoteTitle(String noteTitle) {
-		this.noteTitle = noteTitle;
+	public void setStaff(Staff staff) {
+		this.staff = staff;
 	}
 
-	public String getNoteDescription() {
-		return noteDescription;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setNoteDescription(String noteDescription) {
-		this.noteDescription = noteDescription;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
-	public boolean isNoteTemplate() {
-		return noteIsTemplate;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setNoteIsTemplate(boolean noteIsTemplate) {
-		this.noteIsTemplate = noteIsTemplate;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
-	public boolean isNoteDraft() {
-		return noteIsDraft;
+	public boolean isDraft() {
+		return isDraft;
 	}
 
-	public void setNoteIsDraft(boolean noteIsDraft) {
-		this.noteIsDraft = noteIsDraft;
+	public void setDraft(boolean isDraft) {
+		this.isDraft = isDraft;
 	}
 
-	public boolean isNoteDeleted() {
-		return noteIsDeleted;
+	public boolean isDeleted() {
+		return isDeleted;
 	}
 
-	public void setNoteIsDeleted(boolean noteIsDeleted) {
-		this.noteIsDeleted = noteIsDeleted;
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
 	}
 
-	public Date getNoteDateCreated() {
-		return noteDateCreated;
+	public Date getDateCreated() {
+		return dateCreated;
 	}
 
-	public void setNoteDateCreated(Date noteDateCreated) {
-		this.noteDateCreated = noteDateCreated;
+	public void setDateCreated(Date dateCreated) {
+		this.dateCreated = dateCreated;
 	}
 
-	public Date getNoteDateDeleted() {
-		return noteDateDeleted;
+	public Date getDateDeleted() {
+		return dateDeleted;
 	}
 
-	public void setNoteDateDeleted(Date noteDateDeleted) {
-		this.noteDateDeleted = noteDateDeleted;
+	public void setDateDeleted(Date dateDeleted) {
+		this.dateDeleted = dateDeleted;
 	}
 
-	public Staff getNoteAuthor() {
-		return noteAuthor;
+	public ResponseQuestion getResponseQuestion() {
+		return responseQuestion;
 	}
 
-	public void setNoteAuthor(Staff noteAuthor) {
-		this.noteAuthor = noteAuthor;
+	public void setResponseQuestion(ResponseQuestion responseQuestion) {
+		this.responseQuestion = responseQuestion;
 	}
 	
-	public ResponseQuestion getNoteQuestionID() {
-		return noteQuestionID;
-	}
-	
-	public void setNoteQuestionID(ResponseQuestion noteQuestionID) {
-		this.noteQuestionID = noteQuestionID;
-	}
-
 }
