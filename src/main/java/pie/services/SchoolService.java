@@ -254,7 +254,7 @@ public class SchoolService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT groupID FROM `Group` WHERE schoolID = ? AND groupIsValid = ? AND groupIsOpen = ?";
+			String sql = "SELECT groupID FROM `Group` WHERE schoolID = ? AND isValid = ? AND isOpen = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, schoolID);
 			pst.setInt(2, 1);
