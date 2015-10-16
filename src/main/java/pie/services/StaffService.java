@@ -4,18 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
-import pie.Group;
 import pie.School;
 import pie.Staff;
-import pie.StaffRole;
 import pie.User;
 import pie.UserType;
-import pie.constants.JoinGroupResult;
-import pie.constants.LeaveGroupResult;
 import pie.constants.UserRegistrationResult;
 import pie.utilities.DatabaseConnector;
 
@@ -44,8 +37,8 @@ public class StaffService {
 
 				User user = userService.getUser(staffID);
 				School staffSchool = schoolService.getSchool(resultSet.getInt("schoolID"));
-				String staffDesignation = resultSet.getString("staffDesignation");
-				boolean staffIsSchoolAdmin = resultSet.getInt("staffIsSchoolAdmin") == 1;
+				String staffDesignation = resultSet.getString("title");
+				boolean staffIsSchoolAdmin = resultSet.getInt("isSchoolAdmin") == 1;
 
 				staff = new Staff(user, staffSchool, staffDesignation, staffIsSchoolAdmin);
 			}
@@ -57,131 +50,6 @@ public class StaffService {
 		}
 
 		return staff;
-	}
-
-	public Group[] getJoinedGroups(int staffID) {
-
-		GroupService groupService = new GroupService();
-		Group[] joinedGroups = {};
-
-		try {
-
-			Connection conn = DatabaseConnector.getConnection();
-			PreparedStatement pst = null;
-			ResultSet resultSet = null;
-
-			String sql = "SELECT `StaffGroup`.groupID FROM `StaffGroup`,`Group` WHERE `StaffGroup`.groupID = `Group`.groupID AND groupIsValid = ? AND staffGroupIsValid = ? AND staffID = ?";
-			pst = conn.prepareStatement(sql);
-			pst.setInt(1, 1);
-			pst.setInt(2, 1);
-			pst.setInt(3, staffID);
-
-			resultSet = pst.executeQuery();
-
-			List<Group> tempJoinedGroups = new ArrayList<Group>();
-			while (resultSet.next()) {
-				tempJoinedGroups.add(groupService.getGroup(resultSet.getInt(1)));
-			}
-			joinedGroups = tempJoinedGroups.toArray(joinedGroups);
-
-			conn.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return joinedGroups;
-	}
-
-	public boolean isMember(int staffID, int groupID) {
-
-		boolean isMember = false;
-
-		try {
-
-			Connection conn = DatabaseConnector.getConnection();
-			PreparedStatement pst = null;
-
-			String sql = "SELECT * FROM `StaffGroup` WHERE staffID = ? AND groupID = ? AND staffGroupIsValid = ?";
-			pst = conn.prepareStatement(sql);
-			pst.setInt(1, staffID);
-			pst.setInt(2, groupID);
-			pst.setInt(3, 1);
-
-			isMember = pst.executeQuery().next();
-
-			conn.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return isMember;
-
-	}
-
-	public boolean setStaffRole(int staffID, int groupID, StaffRole staffRole) {
-
-		boolean setResult = false;
-
-		if (isMember(staffID, groupID)) {
-			if (!getStaffRole(staffID, groupID).equals(staffRole)) {
-
-				try {
-
-					Connection conn = DatabaseConnector.getConnection();
-					PreparedStatement pst = null;
-
-					String sql = "UPDATE `StaffGroup` SET staffRoleID = ? WHERE staffID = ? AND groupID = ?";
-					pst = conn.prepareStatement(sql);
-					pst.setInt(1, staffRole.getStaffRoleID());
-					pst.setInt(2, staffID);
-					pst.setInt(3, groupID);
-					pst.executeUpdate();
-
-					setResult = true;
-
-					conn.close();
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-		return setResult;
-	}
-
-	public StaffRole getStaffRole(int staffID, int groupID) {
-
-		StaffRoleService staffRoleService = new StaffRoleService();
-		StaffRole staffRole = null;
-
-		try {
-
-			Connection conn = DatabaseConnector.getConnection();
-			PreparedStatement pst = null;
-			ResultSet resultSet = null;
-
-			String sql = "SELECT staffRoleID FROM `StaffGroup` WHERE staffID = ? AND groupID = ? AND staffGroupIsValid = ?";
-			pst = conn.prepareStatement(sql);
-			pst.setInt(1, staffID);
-			pst.setInt(2, groupID);
-			pst.setInt(3, 1);
-
-			resultSet = pst.executeQuery();
-
-			if (resultSet.next()) {
-				staffRole = staffRoleService.getStaffRole(resultSet.getInt(1));
-			}
-
-			conn.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return staffRole;
 	}
 
 	public UserRegistrationResult registerStaff(String userFirstName, String userLastName, String userEmail,
@@ -239,74 +107,5 @@ public class StaffService {
 		}
 
 		return registrationResult;
-	}
-
-	public JoinGroupResult joinGroup(int groupID, int staffID, String groupCode, StaffRole staffRole) {
-
-		GroupService groupService = new GroupService();
-		StaffGroupService staffGroupService = new StaffGroupService();
-		
-		JoinGroupResult joinGroupResult = JoinGroupResult.SUCCESS;
-
-		Group group = groupService.getGroup(groupID);
-
-		if (group == null || !group.groupIsValid()) {
-			joinGroupResult = JoinGroupResult.INVALID_GROUP;
-		} else if (!group.groupIsOpen()) {
-			joinGroupResult = JoinGroupResult.GROUP_CLOSED;
-		} else if (group.getGroupCode() != null && groupCode == null) {
-			joinGroupResult = JoinGroupResult.MISSING_GROUP_CODE;
-		} else if (!group.getGroupCode().equals(groupCode)) {
-			joinGroupResult = JoinGroupResult.INVALID_GROUP_CODE;
-		} else if (groupService.hasGroupMember(groupID, staffID)) {
-			joinGroupResult = JoinGroupResult.ALREADY_MEMBER;
-		} else {
-			staffGroupService.addStaffToGroup(groupID, staffID, staffRole);
-		}
-
-		return joinGroupResult;
-	}
-
-	public LeaveGroupResult leaveGroup(int groupID, int staffID) {
-		StaffGroupService staffGroupService = new StaffGroupService();
-		LeaveGroupResult leaveGroupResult = LeaveGroupResult.SUCCESS;
-
-		if (!isMember(staffID, groupID)) {
-			leaveGroupResult = LeaveGroupResult.NOT_MEMBER;
-		} else {
-			staffGroupService.removeStaffFromGroup(groupID, staffID);
-		}
-
-		return leaveGroupResult;
-	}
-	
-	public Date getStaffGroupJoinedDate(int groupID, int userID) {
-
-		Date userGroupJoinDate = null;
-		try {
-			Connection conn = DatabaseConnector.getConnection();
-			PreparedStatement pst = null;
-			ResultSet resultSet = null;
-
-			String sql = "SELECT staffGroupJoinDate FROM `StaffGroup` WHERE groupID = ? AND staffID = ? AND studentGroupIsValid = ?";
-			pst = conn.prepareStatement(sql);
-			pst.setInt(1, groupID);
-			pst.setInt(2, userID);
-			pst.setInt(3, 1);
-			
-			resultSet = pst.executeQuery();
-
-			if (resultSet.next()) {
-				userGroupJoinDate = new Date(resultSet.getTimestamp(1).getTime());
-			}
-
-			conn.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return userGroupJoinDate;
-	}
-	
+	}	
 }
