@@ -140,42 +140,6 @@ public class GroupService {
 
 		return group;
 	}
-
-	public Staff getGroupOwner(int groupID) {
-
-		StaffRoleService staffRoleService = new StaffRoleService();
-		StaffService staffService = new StaffService();
-
-		Staff groupOwner = null;
-
-		try {
-
-			Connection conn = DatabaseConnector.getConnection();
-			PreparedStatement pst = null;
-			ResultSet resultSet = null;
-
-			String sql = "SELECT staffID FROM `Group`,`StaffGroup` WHERE `Group`.groupID = `StaffGroup`.groupID AND staffRoleID = ? AND `Group`.groupID = ? AND `StaffGroup`.isValid = ?";
-			pst = conn.prepareStatement(sql);
-			pst.setInt(1, staffRoleService.getOwnerStaffRole().getStaffRoleID());
-			pst.setInt(2, groupID);
-			pst.setInt(3, 1);
-
-			resultSet = pst.executeQuery();
-
-			if (resultSet.next()) {
-				groupOwner = staffService.getStaff(resultSet.getInt(1));
-			}
-
-			conn.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return groupOwner;
-	}
-
-	
 	
 	public boolean hasGroupMember(int groupID, int groupMemberID) {
 		
@@ -382,7 +346,7 @@ public class GroupService {
 		Group group = getGroup(groupID);
 		
 		Staff staffUser = staffService.getStaff(staffID);
-		Staff groupOwner = getGroupOwner(groupID);
+		Staff groupOwner = staffGroupService.getGroupOwner(groupID);
 		
 		if(!group.groupIsValid()){
 			deactivateGroupResult = DeactivateGroupResult.GROUP_IS_NOT_VALID;
