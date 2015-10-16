@@ -244,6 +244,8 @@ public class StaffService {
 	public JoinGroupResult joinGroup(int groupID, int staffID, String groupCode, StaffRole staffRole) {
 
 		GroupService groupService = new GroupService();
+		StaffGroupService staffGroupService = new StaffGroupService();
+		
 		JoinGroupResult joinGroupResult = JoinGroupResult.SUCCESS;
 
 		Group group = groupService.getGroup(groupID);
@@ -259,20 +261,20 @@ public class StaffService {
 		} else if (groupService.hasGroupMember(groupID, staffID)) {
 			joinGroupResult = JoinGroupResult.ALREADY_MEMBER;
 		} else {
-			groupService.addStaffToGroup(groupID, staffID, staffRole);
+			staffGroupService.addStaffToGroup(groupID, staffID, staffRole);
 		}
 
 		return joinGroupResult;
 	}
 
 	public LeaveGroupResult leaveGroup(int groupID, int staffID) {
-		GroupService groupService = new GroupService();
+		StaffGroupService staffGroupService = new StaffGroupService();
 		LeaveGroupResult leaveGroupResult = LeaveGroupResult.SUCCESS;
 
 		if (!isMember(staffID, groupID)) {
 			leaveGroupResult = LeaveGroupResult.NOT_MEMBER;
 		} else {
-			groupService.removeStaffFromGroup(groupID, staffID);
+			staffGroupService.removeStaffFromGroup(groupID, staffID);
 		}
 
 		return leaveGroupResult;
