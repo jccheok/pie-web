@@ -48,7 +48,7 @@ public class HomeworkAttachmentService {
 
 		HomeworkAttachment homeworkAttachment = null;
 		String attachmentURL = null;
-		Homework homeworkID = null;	
+		Homework homework = null;	
 
 		try {
 
@@ -63,9 +63,9 @@ public class HomeworkAttachmentService {
 
 			if(resultSet.next()) {
 				attachmentURL = resultSet.getString("attachmentURL");
-				homeworkID = new HomeworkService().getHomework(resultSet.getInt("homeworkID"));
+				homework = new HomeworkService().getHomework(resultSet.getInt("homeworkID"));
 
-				homeworkAttachment = new HomeworkAttachment(homeworkAttachmentID, attachmentURL, homeworkID);
+				homeworkAttachment = new HomeworkAttachment(homeworkAttachmentID, attachmentURL, homework);
 			}
 
 			conn.close();
