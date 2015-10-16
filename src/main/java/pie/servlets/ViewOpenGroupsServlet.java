@@ -80,7 +80,7 @@ public class ViewOpenGroupsServlet extends HttpServlet {
 			
 				JSONObject adminDetails = new JSONObject();
 				adminDetails.put("staffFullName", adminStaff.getUserFullName());
-				adminDetails.put("staffGroupRole", staffService.getStaffRole(adminStaff.getUserID(), openGroup.getGroupID()).getStaffRoleName());
+				adminDetails.put("staffGroupRole", staffGroupService.getStaffRole(adminStaff.getUserID(), openGroup.getGroupID()).getStaffRoleName());
 				adminList.put(adminDetails);
 			}
 			
