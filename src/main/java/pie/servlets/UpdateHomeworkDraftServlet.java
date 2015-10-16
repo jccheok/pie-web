@@ -69,11 +69,11 @@ public class UpdateHomeworkDraftServlet extends HttpServlet {
 
 		JSONObject responseObject = new JSONObject();
 		
-		UpdateHomeworkDraftResult updateHomeworkDraftResult = homeworkService.updateDraftHomework(homeworkID, homeworkTitle, homeworkSubject, homeworkDescription, homeworkMinutesRequired, homeworkDueDate, homeworkIsGraded);
+/*		UpdateHomeworkDraftResult updateHomeworkDraftResult = homeworkService.updateDraftHomework(homeworkID, homeworkTitle, homeworkSubject, homeworkDescription, homeworkMinutesRequired, homeworkDueDate, homeworkIsGraded);
 		
 		responseObject.put("result", updateHomeworkDraftResult.toString());
 		responseObject.put("message",updateHomeworkDraftResult.getDefaultMessage());
-		
+*/		
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
 	}
