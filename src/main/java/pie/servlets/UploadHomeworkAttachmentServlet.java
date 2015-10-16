@@ -1,6 +1,5 @@
 package pie.servlets;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -35,40 +34,30 @@ public class UploadHomeworkAttachmentServlet extends HttpServlet {
 
 		JSONObject responseObject = new JSONObject();
 		PrintWriter out = response.getWriter();
+		
+		if(homeworkAttachmentService.checkIfHomeworkFolderExist()) {
+			responseObject.put("Debug Log", "Homework Folder exist");
+		} else {
+			responseObject.put("Folder", "Homework Folder did not exist but was created during the process");
+		}
+		
+		if(request.getParts() != null) {
+			responseObject.put("result", "SUCCESS");
+			responseObject.put("message", "Homework File is uploaded");
+		} else {
+			responseObject.put("result", "FAILED");
+			responseObject.put("message", "No homework file is uploaded");
+		}
 
-		try {
-
-			String uploadPath = System.getenv("OPENSHIFT_DATA_DIR");
-			String uploadDir = uploadPath + File.separator + "uploadFiles";
-
-			File fileSaveDir = new File(uploadDir);
-			if(!fileSaveDir.exists()) {
-				fileSaveDir.mkdir();
-			}
-
-			for(Part part : request.getParts()) {
-				String fileName = homeworkAttachmentService.getFileName(part);
-				part.write(uploadDir + File.separator + fileName);
-			}
-
-			String debugLog = "Debug Log: " + uploadDir + " | " + request.getParts();
-
-			if(request.getParts() != null) {
-				responseObject.put("result", "SUCCESS");
-				responseObject.put("message", "File is uploaded");
-				responseObject.put("debug", debugLog);
-			} else {
-				responseObject.put("result", "FAILED");
-				responseObject.put("message", "No file is uploaded");
-				responseObject.put("debug", debugLog);
-			}
-
-		} catch (Exception e) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
-			return;
+		for(Part part : request.getParts()) {
+			String homeworkAttachmentURL = homeworkAttachmentService.getHomeworkFileName(part);
+			int homeworkAttachmentID = homeworkAttachmentService.createHomeworkAttachment(homeworkAttachmentURL);
+			responseObject.put("homeworkAttachmentID", homeworkAttachmentID);
+	
+			part.write(homeworkAttachmentService.getHomeworkAttachmentDIR(homeworkAttachmentURL));
+			responseObject.put("Write Result", "Homework file is successfully written to the server");
 		}
 
 		out.println(responseObject);
 	}
-
 }

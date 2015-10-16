@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import pie.Homework;
 import pie.constants.SaveHomeworkAsDraftResult;
@@ -20,6 +21,7 @@ import pie.services.HomeworkService;
 import pie.services.StaffService;
 import pie.utilities.Utilities;
 
+@Singleton
 public class SaveHomeworkAsDraftServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -4157557648698715877L;

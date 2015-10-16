@@ -1,5 +1,6 @@
 package pie.services;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +14,7 @@ import pie.utilities.DatabaseConnector;
 
 public class NoteAttachmentService {
 
-	public int createNoteAttachment(String attachmentURL) {
+	public int createNoteAttachment(String noteAttachmentURL) {
 
 		int noteAttachmentID = -1;
 		int tempNoteID = 1;
@@ -26,7 +27,7 @@ public class NoteAttachmentService {
 
 			String sql = "INSERT INTO `NoteAttachment` (attachmentURL, noteID) VALUES (?, ?)";
 			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-			pst.setString(1, attachmentURL);
+			pst.setString(1, noteAttachmentURL);
 			pst.setInt(2, tempNoteID);
 			pst.executeUpdate();
 
@@ -103,7 +104,7 @@ public class NoteAttachmentService {
 		return isUpdated;
 	}
 
-	public String getFileName(Part part) {
+	public String getNoteFileName(Part part) {
 		String contentDisp = part.getHeader("content-disposition");
 		String[] items = contentDisp.split(";");
 		for (String s : items) {
@@ -112,6 +113,52 @@ public class NoteAttachmentService {
 			}
 		}
 		return null;
+	}
+	
+	public boolean deleteNoteAttachment(String noteAttachmentURL) {
+		
+		boolean isDeleted = false;
+		NoteAttachmentService noteAttachmentService = new NoteAttachmentService();
+		
+		File noteAttachmentDIR = new File(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
+		if(!noteAttachmentDIR.exists()) {
+			noteAttachmentDIR.delete();
+			
+			isDeleted = true;
+		}
+
+		return isDeleted;
+	}
+	
+	public boolean checkIfNoteFolderExist() {
+		
+		boolean isExist = false;
+		NoteAttachmentService noteAttachmentService = new NoteAttachmentService();
+		
+		File noteAttachmentDIR = new File(noteAttachmentService.getNoteDIR());
+		if(!noteAttachmentDIR.exists()) {
+			noteAttachmentDIR.mkdir();
+			
+			isExist = true;
+		}
+		
+		return isExist;
+	}
+	
+	public String getNoteDIR() {
+
+		String uploadPath = System.getenv("OPENSHIFT_DATA_DIR");
+		String uploadedDir = uploadPath + File.separator + "uploadedNoteDIR";
+
+		return uploadedDir;	
+	}
+
+	public String getNoteAttachmentDIR(String noteAttachmentURL) {
+		
+		String uploadPath = System.getenv("OPENSHIFT_DATA_DIR");
+		String uploadedDir = uploadPath + File.separator + "uploadedNoteDIR" + File.separator + noteAttachmentURL;
+		
+		return uploadedDir;
 	}
 
 }

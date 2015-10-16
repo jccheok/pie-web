@@ -1,6 +1,5 @@
 package pie.servlets;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -32,43 +31,30 @@ public class UploadNoteAttachmentServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		/*
-		 * TODO: database sql insertion
-		 */
-		
 		JSONObject responseObject = new JSONObject();
 		PrintWriter out = response.getWriter();
 
-		try {
+		if(noteAttachmentService.checkIfNoteFolderExist()) {
+			responseObject.put("Debug Log", "Note Folder exist");
+		} else {
+			responseObject.put("Debug Log", "Note Folder did not exist but was created during the process");
+		}
 
-			String uploadPath = System.getenv("OPENSHIFT_DATA_DIR");
-			String uploadDir = uploadPath + File.separator + "uploadFiles";
+		if(request.getParts() != null) {
+			responseObject.put("result", "SUCCESS");
+			responseObject.put("message", "Note file is uploaded");
+		} else {
+			responseObject.put("result", "FAILED");
+			responseObject.put("message", "No note file is uploaded");
+		}
 
-			File fileSaveDir = new File(uploadDir);
-			if(!fileSaveDir.exists()) {
-				fileSaveDir.mkdir();
-			}
+		for(Part part : request.getParts()) {
+			String noteAttachmentURL = noteAttachmentService.getNoteFileName(part);
+			int noteAttachmentID = noteAttachmentService.createNoteAttachment(noteAttachmentURL);
+			responseObject.put("noteAttachmentID", noteAttachmentID);
 
-			for(Part part : request.getParts()) {
-				String fileName = noteAttachmentService.getFileName(part);
-				part.write(uploadDir + File.separator + fileName);
-			}
-
-			String debugLog = "Debug Log: " + uploadDir + " | " + request.getParts();
-
-			if(request.getParts() != null) {
-				responseObject.put("result", "SUCCESS");
-				responseObject.put("message", "File is uploaded");
-				responseObject.put("debug", debugLog);
-			} else {
-				responseObject.put("result", "FAILED");
-				responseObject.put("message", "No file is uploaded");
-				responseObject.put("debug", debugLog);
-			}
-			
-		} catch (Exception e) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
-			return;
+			part.write(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
+			responseObject.put("Write Result", "Note is successfully written to server");
 		}
 
 		out.println(responseObject);

@@ -12,24 +12,26 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import pie.Homework;
-import pie.constants.PublishHomeworkResult;
+import pie.constants.UpdateHomeworkDraftResult;
 import pie.services.GroupService;
 import pie.services.HomeworkService;
 import pie.services.StaffService;
 import pie.utilities.Utilities;
 
-public class PublishDraftHomeworkServlet extends HttpServlet {
+@Singleton
+public class UpdateDraftHomeworkServlet extends HttpServlet {
 
-	private static final long serialVersionUID = 1682436975726322347L;
+	private static final long serialVersionUID = -8122982326172375224L;
 
 	HomeworkService homeworkService;
 	GroupService groupService;
 	StaffService staffService;
 
 	@Inject
-	public PublishDraftHomeworkServlet(HomeworkService homeworkService, GroupService groupService,
+	public UpdateDraftHomeworkServlet(HomeworkService homeworkService, GroupService groupService,
 			StaffService staffService) {
 		this.homeworkService = homeworkService;
 		this.groupService = groupService;
@@ -38,21 +40,20 @@ public class PublishDraftHomeworkServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		PublishHomeworkResult result = null;
-
+		UpdateHomeworkDraftResult result = null;
 		try {
 			Map<String, String> requestParams = Utilities.getParameters(request, "homeworkID", "authorID",
 					"homeworkTitle", "homeworkSubject", "homeworkDescription", "homeworkMinutesReqStudent",
 					"homeworkLevel");
 
 			Homework homework = homeworkService.getHomework(Integer.parseInt(requestParams.get("homeworkID")));
+			homework.setHomeworkTitle(requestParams.get("homeworkTitle"));
 			homework.setHomeworkSubject(requestParams.get("homeworkSubject"));
 			homework.setHomeworkDescription(requestParams.get("homeworkDescription"));
-			homework.setHomeworkTitle(requestParams.get("homeworkTitle"));
 			homework.sethomeworkMinutesReqStudent(Integer.parseInt(requestParams.get("homeworkMinutesReqStudent")));
 			homework.setHomeworkLevel(requestParams.get("homeworkLevel"));
 
-			result = homeworkService.publishDraftHomework(homework);
+			result = homeworkService.updateDraftHomework(homework);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -65,5 +66,6 @@ public class PublishDraftHomeworkServlet extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
+
 	}
 }
