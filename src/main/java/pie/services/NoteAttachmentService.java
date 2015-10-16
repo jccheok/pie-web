@@ -7,11 +7,11 @@ import java.sql.Statement;
 
 import javax.servlet.http.Part;
 
-import pie.HomeworkAttachment;
+import pie.Note;
 import pie.NoteAttachment;
 import pie.utilities.DatabaseConnector;
 
-public class AttachmentService {
+public class NoteAttachmentService {
 
 	public int createNoteAttachment(String attachmentURL) {
 
@@ -44,42 +44,11 @@ public class AttachmentService {
 		return noteAttachmentID;
 	}
 
-	public int createHomeworkAttachment(String attachmentURL) {
-
-		int homeworkAttachmentID = -1;
-		int tempHomeworkID = 1;
-
-		try {
-
-			Connection conn = DatabaseConnector.getConnection();
-			PreparedStatement pst = null;
-			ResultSet resultSet = null;
-
-			String sql = "INSERT INTO `HomeworkAttachment` (attachmentURL, homeworkID) VALUES (?, ?)";
-			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-			pst.setString(1, attachmentURL);
-			pst.setInt(2, tempHomeworkID);
-			pst.executeUpdate();
-
-			resultSet = pst.getGeneratedKeys();
-			if (resultSet.next()) {
-				homeworkAttachmentID = resultSet.getInt(1);
-			}
-
-			conn.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return homeworkAttachmentID;
-	}
-
 	public NoteAttachment getNoteAttachment(int noteAttachmentID) {
 
 		NoteAttachment noteAttachment = null;
 		String attachmentURL = null;
-		int noteID = 0;	
+		Note noteID = null;	
 
 		try {
 
@@ -94,7 +63,7 @@ public class AttachmentService {
 
 			if(resultSet.next()) {
 				attachmentURL = resultSet.getString("attachmentURL");
-				noteID = resultSet.getInt("noteID");
+				noteID = new NoteService().getNote(resultSet.getInt("noteID"));
 
 				noteAttachment = new NoteAttachment(noteAttachmentID, attachmentURL, noteID);
 			}
@@ -106,39 +75,6 @@ public class AttachmentService {
 		}
 
 		return noteAttachment;	
-	}
-
-	public HomeworkAttachment getHomeworkAttachment(int homeworkAttachmentID) {
-
-		HomeworkAttachment homeworkAttachment = null;
-		String attachmentURL = null;
-		int homeworkID = 0;	
-
-		try {
-
-			Connection conn = DatabaseConnector.getConnection();
-			PreparedStatement pst = null;
-			ResultSet resultSet = null;
-
-			String sql = "SELECT * FROM `HomeworkAttachment` WHERE homeworkAttachmentID = ?";
-			pst = conn.prepareStatement(sql);
-			pst.setInt(1, homeworkAttachmentID);
-			resultSet = pst.executeQuery();
-
-			if(resultSet.next()) {
-				attachmentURL = resultSet.getString("attachmentURL");
-				homeworkID = resultSet.getInt("homeworkID");
-
-				homeworkAttachment = new HomeworkAttachment(homeworkAttachmentID, attachmentURL, homeworkID);
-			}
-
-			conn.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return homeworkAttachment;	
 	}
 
 	public boolean UpdateNoteAttachmentID(int noteAttachmentID, int noteID) {
@@ -154,32 +90,6 @@ public class AttachmentService {
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, noteID);
 			pst.setInt(2, noteAttachmentID);
-
-			pst.executeUpdate();
-			isUpdated = true;
-
-			conn.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return isUpdated;
-	}
-	
-	public boolean UpdateHomeworkAttachmentID(int homeworkAttachmentID, int homeworkID) {
-
-		boolean isUpdated = false;
-
-		try {
-
-			Connection conn = DatabaseConnector.getConnection();
-			PreparedStatement pst = null;
-
-			String sql = "UPDATE `HomeworkAttachment` SET homeworkID = ? WHERE homeworkAttachmentID = ?";
-			pst = conn.prepareStatement(sql);
-			pst.setInt(1, homeworkID);
-			pst.setInt(2, homeworkAttachmentID);
 
 			pst.executeUpdate();
 			isUpdated = true;

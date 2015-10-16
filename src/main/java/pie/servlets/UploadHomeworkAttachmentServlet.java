@@ -13,30 +13,26 @@ import javax.servlet.http.Part;
 
 import org.json.JSONObject;
 
-import pie.services.AttachmentService;
+import pie.services.HomeworkAttachmentService;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
 @MultipartConfig(location = "/var/lib/openshift/560246382d52714ebe00004d/app-root/data", fileSizeThreshold = 1024*1024*2, maxFileSize = 1024*1024*10, maxRequestSize = 1024*1024*50)
-public class UploadAttachmentServlet extends HttpServlet {
+public class UploadHomeworkAttachmentServlet extends HttpServlet {
 
-	private static final long serialVersionUID = 4834340741739873069L;
+	private static final long serialVersionUID = -3935192767647779004L;
 
-	AttachmentService attachmentService;
+	HomeworkAttachmentService homeworkAttachmentService;
 
 	@Inject
-	public UploadAttachmentServlet(AttachmentService attachmentService) {
-		this.attachmentService = attachmentService;
+	public UploadHomeworkAttachmentServlet(HomeworkAttachmentService homeworkAttachmentService) {
+		this.homeworkAttachmentService = homeworkAttachmentService; 
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		/*
-		 * TODO: database sql insertion
-		 */
-		
 		JSONObject responseObject = new JSONObject();
 		PrintWriter out = response.getWriter();
 
@@ -51,7 +47,7 @@ public class UploadAttachmentServlet extends HttpServlet {
 			}
 
 			for(Part part : request.getParts()) {
-				String fileName = attachmentService.getFileName(part);
+				String fileName = homeworkAttachmentService.getFileName(part);
 				part.write(uploadDir + File.separator + fileName);
 			}
 
@@ -66,7 +62,7 @@ public class UploadAttachmentServlet extends HttpServlet {
 				responseObject.put("message", "No file is uploaded");
 				responseObject.put("debug", debugLog);
 			}
-			
+
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 			return;
@@ -74,4 +70,5 @@ public class UploadAttachmentServlet extends HttpServlet {
 
 		out.println(responseObject);
 	}
+
 }

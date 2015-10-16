@@ -1,0 +1,117 @@
+package pie.services;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+import javax.servlet.http.Part;
+
+import pie.Homework;
+import pie.HomeworkAttachment;
+import pie.utilities.DatabaseConnector;
+
+public class HomeworkAttachmentService {
+
+	public int createHomeworkAttachment(String attachmentURL) {
+
+		int homeworkAttachmentID = -1;
+		int tempHomeworkID = 1;
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "INSERT INTO `HomeworkAttachment` (attachmentURL, homeworkID) VALUES (?, ?)";
+			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			pst.setString(1, attachmentURL);
+			pst.setInt(2, tempHomeworkID);
+			pst.executeUpdate();
+
+			resultSet = pst.getGeneratedKeys();
+			if (resultSet.next()) {
+				homeworkAttachmentID = resultSet.getInt(1);
+			}
+
+			conn.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return homeworkAttachmentID;
+	}
+
+	public HomeworkAttachment getHomeworkAttachment(int homeworkAttachmentID) {
+
+		HomeworkAttachment homeworkAttachment = null;
+		String attachmentURL = null;
+		Homework homeworkID = null;	
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT * FROM `HomeworkAttachment` WHERE homeworkAttachmentID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, homeworkAttachmentID);
+			resultSet = pst.executeQuery();
+
+			if(resultSet.next()) {
+				attachmentURL = resultSet.getString("attachmentURL");
+				homeworkID = new HomeworkService().getHomework(resultSet.getInt("homeworkID"));
+
+				homeworkAttachment = new HomeworkAttachment(homeworkAttachmentID, attachmentURL, homeworkID);
+			}
+
+			conn.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return homeworkAttachment;	
+	}
+
+	public boolean UpdateHomeworkAttachmentID(int homeworkAttachmentID, int homeworkID) {
+
+		boolean isUpdated = false;
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+
+			String sql = "UPDATE `HomeworkAttachment` SET homeworkID = ? WHERE homeworkAttachmentID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, homeworkID);
+			pst.setInt(2, homeworkAttachmentID);
+
+			pst.executeUpdate();
+			isUpdated = true;
+
+			conn.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return isUpdated;
+	}
+
+	public String getFileName(Part part) {
+		String contentDisp = part.getHeader("content-disposition");
+		String[] items = contentDisp.split(";");
+		for (String s : items) {
+			if (s.trim().startsWith("filename")) {
+				return s.substring(s.indexOf("=") + 2, s.length()-1);
+			}
+		}
+		return null;
+	}
+
+}

@@ -5,9 +5,9 @@ import java.util.Date;
 public class GroupHomework {
 
 	private int groupHomeworkID;
-	private int groupID;
-	private int homeworkID;
-	private int publisherID;
+	private Group group;
+	private Homework homework;
+	private Staff publisher;
 	private int markingEffort;
 	private Date actualMarkingCompletionDate;
 	private Date targetMarkingCompletionDate;
@@ -15,21 +15,47 @@ public class GroupHomework {
 	private Date publishDate;
 	private boolean isDraft;
 	private boolean isGraded;
+	private boolean isDeleted;
 
-	public GroupHomework(int groupHomeworkID, int groupID, int homeworkID, int publisherID, int markingEffort,
+	public GroupHomework(int groupHomeworkID, Group group, Homework homework, Staff publisher, int markingEffort,
 			Date actualMarkingCompletionDate, Date targetMarkingCompletionDate, Date dueDate, Date publishDate,
-			boolean isDraft, boolean isGraded) {
+			boolean isDraft, boolean isGraded, boolean isDeleted) {
 		// TODO Auto-generated constructor stub
 		setGroupHomeworkID(groupHomeworkID);
-		setGroupID(groupID);
-		setHomeworkID(homeworkID);
-		setPublisherID(publisherID);
+		setGroup(group);
+		setHomework(homework);
+		setPublisher(publisher);
 		setMarkingEffort(markingEffort);
 		setActualMarkingCompletionDate(actualMarkingCompletionDate);
 		setTargetMarkingCompletionDate(targetMarkingCompletionDate);
 		setDueDate(dueDate);
 		setDraft(isDraft);
 		setGraded(isGraded);
+		setDeleted(isDeleted);
+	}
+
+	public Group getGroup() {
+		return group;
+	}
+
+	public void setGroup(Group group) {
+		this.group = group;
+	}
+
+	public Homework getHomework() {
+		return homework;
+	}
+
+	public void setHomework(Homework homework) {
+		this.homework = homework;
+	}
+
+	public Staff getPublisher() {
+		return publisher;
+	}
+
+	public void setPublisher(Staff publisher) {
+		this.publisher = publisher;
 	}
 
 	public int getGroupHomeworkID() {
@@ -40,29 +66,6 @@ public class GroupHomework {
 		this.groupHomeworkID = groupHomeworkID;
 	}
 
-	public int getGroupID() {
-		return groupID;
-	}
-
-	public void setGroupID(int groupID) {
-		this.groupID = groupID;
-	}
-
-	public int getHomeworkID() {
-		return homeworkID;
-	}
-
-	public void setHomeworkID(int homeworkID) {
-		this.homeworkID = homeworkID;
-	}
-
-	public int getPublisherID() {
-		return publisherID;
-	}
-
-	public void setPublisherID(int publisherID) {
-		this.publisherID = publisherID;
-	}
 
 	public int getMarkingEffort() {
 		return markingEffort;
@@ -118,6 +121,14 @@ public class GroupHomework {
 
 	public void setGraded(boolean isGraded) {
 		this.isGraded = isGraded;
+	}
+
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
 	}
 
 }
