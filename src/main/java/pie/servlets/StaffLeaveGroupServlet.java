@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import pie.constants.LeaveGroupResult;
 import pie.services.GroupService;
+import pie.services.StaffGroupService;
 import pie.services.StaffService;
 import pie.utilities.Utilities;
 
@@ -26,11 +27,13 @@ public class StaffLeaveGroupServlet extends HttpServlet{
 
 	StaffService staffService;
 	GroupService groupService;
+	StaffGroupService staffGroupService;
 
 	@Inject
-	public StaffLeaveGroupServlet(StaffService staffService, GroupService groupService) {
+	public StaffLeaveGroupServlet(StaffService staffService, GroupService groupService, StaffGroupService staffGroupService) {
 		this.staffService = staffService;
 		this.groupService = groupService;
+		this.staffGroupService = staffGroupService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -50,7 +53,7 @@ public class StaffLeaveGroupServlet extends HttpServlet{
 			return;
 		}
 
-		LeaveGroupResult leaveGroupResult = staffService.leaveGroup(groupID, staffID);
+		LeaveGroupResult leaveGroupResult = staffGroupService.leaveGroup(groupID, staffID);
 		JSONObject responseObject = new JSONObject();
 		responseObject.put("result", leaveGroupResult.toString());
 		responseObject.put("message", leaveGroupResult.getDefaultMessage());

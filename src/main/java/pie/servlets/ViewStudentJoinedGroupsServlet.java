@@ -83,7 +83,7 @@ public class ViewStudentJoinedGroupsServlet extends HttpServlet {
 				
 				JSONObject adminDetails = new JSONObject();
 				adminDetails.put("staffFullName", adminStaff.getUserFullName());
-				adminDetails.put("staffGroupRole", staffService.getStaffRole(adminStaff.getUserID(), group.getGroupID()).getStaffRoleName());
+				adminDetails.put("staffGroupRole", staffGroupService.getStaffRole(adminStaff.getUserID(), group.getGroupID()).getStaffRoleName());
 				groupAdministrators.put(adminDetails);
 			}
 			groupDetails.put("groupAdministrators", groupAdministrators);
