@@ -153,7 +153,7 @@ public class NoteService {
 	public PublishNoteResult publishNote(int noteID, int groupID, int publisherID) {
 
 		PublishNoteResult publishResult = PublishNoteResult.SUCCESS;
-		GroupService groupService = new GroupService();
+		StaffGroupService staffGroupService = new StaffGroupService();
 		StudentGroupService studentGroupService = new StudentGroupService();
 
 		try {
@@ -188,7 +188,7 @@ public class NoteService {
 						}
 					}
 					
-					Staff[] groupStaffs = groupService.getStaffMembers(groupID);
+					Staff[] groupStaffs = staffGroupService.getStaffMembers(groupID);
 					
 					for (Staff staff : groupStaffs) {
 						if (!sendNote(noteID, staff.getUserID())) {
