@@ -54,10 +54,10 @@ public class GetAllDraftNoteServlet extends HttpServlet {
 			for (Note note : noteDrafts) {
 				JSONObject noteObject = new JSONObject();
 				noteObject.put("noteID", note.getNoteID());
-				noteObject.put("noteTitle", note.getNoteTitle());
-				noteObject.put("noteDescription", note.getNoteDescription());
-				noteObject.put("noteAuthor", note.getNoteAuthor().getUserFullName());
-				noteObject.put("noteResponseQuestionID", note.getNoteQuestionID().getResponseQuestionID());
+				noteObject.put("noteTitle", note.getTitle());
+				noteObject.put("noteDescription", note.getDescription());
+				noteObject.put("noteAuthor", note.getStaff().getUserFirstName());
+				noteObject.put("noteResponseQuestionID", note.getResponseQuestion().getResponseQuestionID());
 				noteList.put(noteObject);
 			}
 		}

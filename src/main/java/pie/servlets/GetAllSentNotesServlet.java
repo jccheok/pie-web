@@ -58,10 +58,10 @@ public class GetAllSentNotesServlet extends HttpServlet {
 			for (Note note : notes) {
 				JSONObject noteObject = new JSONObject();
 				noteObject.put("noteID", note.getNoteID());
-				noteObject.put("noteTitle", note.getNoteTitle());
-				noteObject.put("noteDescription", note.getNoteDescription());
-				noteObject.put("noteAuthor", note.getNoteAuthor().getUserFullName());
-				noteObject.put("noteResponseQuestionID", note.getNoteQuestionID().getResponseQuestionID());
+				noteObject.put("noteTitle", note.getTitle());
+				noteObject.put("noteDescription", note.getDescription());
+				noteObject.put("noteAuthor", note.getStaff().getUserFullName());
+				noteObject.put("noteResponseQuestionID", note.getResponseQuestion().getResponseQuestionID());
 				sentNoteList.put(noteObject);
 			}
 			
