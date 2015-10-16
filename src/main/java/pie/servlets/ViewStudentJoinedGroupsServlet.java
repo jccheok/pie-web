@@ -18,6 +18,7 @@ import pie.services.GroupService;
 import pie.services.SchoolService;
 import pie.services.StaffGroupService;
 import pie.services.StaffService;
+import pie.services.StudentGroupService;
 import pie.services.StudentService;
 import pie.utilities.Utilities;
 
@@ -34,14 +35,17 @@ public class ViewStudentJoinedGroupsServlet extends HttpServlet {
 	SchoolService schoolService;
 	StaffService staffService;
 	StaffGroupService staffGroupService;
+	StudentGroupService studentGroupService;
 
 	@Inject
-	public ViewStudentJoinedGroupsServlet(GroupService groupService, StudentService studentService, SchoolService schoolService, StaffService staffService, StaffGroupService staffGroupService) {
+	public ViewStudentJoinedGroupsServlet(GroupService groupService, StudentService studentService, SchoolService schoolService, StaffService staffService,
+			StaffGroupService staffGroupService, StudentGroupService studentGroupService) {
 		this.groupService = groupService;
 		this.studentService = studentService;
 		this.schoolService = schoolService;
 		this.staffService = staffService;
 		this.staffGroupService = staffGroupService;
+		this.studentGroupService = studentGroupService;
 	}
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -72,7 +76,7 @@ public class ViewStudentJoinedGroupsServlet extends HttpServlet {
 			groupDetails.put("groupDescription", group.getGroupDescription());
 			groupDetails.put("groupMemberCount", groupService.getMemberCount(group.getGroupID()));
 			groupDetails.put("groupTypeName", group.getGroupType().toString());
-			groupDetails.put("studentGroupJoinDateUnix", Utilities.toUnixSeconds(studentService.getStudentGroupJoinDate(groupID, studentID)));
+			groupDetails.put("studentGroupJoinDateUnix", Utilities.toUnixSeconds(studentGroupService.getStudentGroupJoinDate(groupID, studentID)));
 
 			JSONArray groupAdministrators = new JSONArray();
 			for(Staff adminStaff : staffGroupService.getGroupAdministrators(groupID)){
