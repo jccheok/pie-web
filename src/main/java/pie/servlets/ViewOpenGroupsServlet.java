@@ -85,7 +85,7 @@ public class ViewOpenGroupsServlet extends HttpServlet {
 			}
 			
 			groupDetails.put("groupAdministrators", adminList);
-			groupDetails.put("groupOwner", groupService.getGroupOwner(openGroup.getGroupID()).getUserFullName());
+			groupDetails.put("groupOwner", staffGroupService.getGroupOwner(openGroup.getGroupID()).getUserFullName());
 			groupList.put(groupDetails);
 		}
 		responseObject.put("groupList", groupList);
