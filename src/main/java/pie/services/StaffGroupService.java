@@ -176,11 +176,10 @@ public class StaffGroupService {
 	public boolean setGroupOwner(int groupID, int staffID) {
 
 		StaffRoleService staffRoleService = new StaffRoleService();
-		GroupService groupService = new GroupService();
 
 		boolean setResult = false;
 
-		if (groupService.getGroupOwner(groupID) != null) {
+		if (getGroupOwner(groupID) != null) {
 			StaffRole defaultTeacherRole = staffRoleService.getDefaultStaffRole();
 			setStaffRole(staffID, groupID, defaultTeacherRole);
 		}
@@ -384,5 +383,40 @@ public class StaffGroupService {
 		}
 
 		return joinGroupResult;
+	}
+	
+
+	public Staff getGroupOwner(int groupID) {
+
+		StaffRoleService staffRoleService = new StaffRoleService();
+		StaffService staffService = new StaffService();
+
+		Staff groupOwner = null;
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT staffID FROM `Group`,`StaffGroup` WHERE `Group`.groupID = `StaffGroup`.groupID AND staffRoleID = ? AND `Group`.groupID = ? AND `StaffGroup`.isValid = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, staffRoleService.getOwnerStaffRole().getStaffRoleID());
+			pst.setInt(2, groupID);
+			pst.setInt(3, 1);
+
+			resultSet = pst.executeQuery();
+
+			if (resultSet.next()) {
+				groupOwner = staffService.getStaff(resultSet.getInt(1));
+			}
+
+			conn.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return groupOwner;
 	}
 }
