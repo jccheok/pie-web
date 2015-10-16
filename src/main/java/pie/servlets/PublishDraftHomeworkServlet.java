@@ -41,14 +41,16 @@ public class PublishDraftHomeworkServlet extends HttpServlet {
 		PublishHomeworkResult result = null;
 
 		try {
-			Map<String, String> requestParams = Utilities.getParameters(request, "authorID", "homeworkSubject",
-					"homeworkDescription", "homeworkMinutesReqStudent", "homeworkLevel");
+			Map<String, String> requestParams = Utilities.getParameters(request, "homeworkID", "authorID",
+					"homeworkTitle", "homeworkSubject", "homeworkDescription", "homeworkMinutesReqStudent",
+					"homeworkLevel");
 
-			Homework homework = new Homework(0, staffService.getStaff(Integer.parseInt(requestParams.get("authorID"))),
-					requestParams.get("homeworkTitle"), requestParams.get("homeworkSubject"),
-					requestParams.get("homeworkDescription"),
-					Integer.parseInt(requestParams.get("homeworkMinutesReqStudent")), null, false, false, null,
-					requestParams.get("homeworkLevel"));
+			Homework homework = homeworkService.getHomework(Integer.parseInt(requestParams.get("homeworkID")));
+			homework.setHomeworkSubject(requestParams.get("homeworkSubject"));
+			homework.setHomeworkDescription(requestParams.get("homeworkDescription"));
+			homework.setHomeworkTitle(requestParams.get("homeworkTitle"));
+			homework.sethomeworkMinutesReqStudent(Integer.parseInt(requestParams.get("homeworkMinutesReqStudent")));
+			homework.setHomeworkLevel(requestParams.get("homeworkLevel"));
 
 			result = homeworkService.publishDraftHomework(homework);
 
