@@ -1,6 +1,5 @@
 package pie.servlets;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
@@ -12,14 +11,23 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
+import pie.services.HomeworkAttachmentService;
 import pie.utilities.Utilities;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
 public class DeleteHomeworkAttachmentServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 8070651806066866278L;
+	
+	HomeworkAttachmentService homeworkAttachmentService;
+	
+	@Inject
+	public DeleteHomeworkAttachmentServlet(HomeworkAttachmentService homeworkAttachmentService) {
+		this.homeworkAttachmentService = homeworkAttachmentService;
+	}
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
@@ -37,13 +45,7 @@ public class DeleteHomeworkAttachmentServlet extends HttpServlet {
 			return;
 		}
 		
-		String uploadPath = System.getenv("OPENSHIFT_DATA_DIR");
-		String uploadDir = uploadPath + File.separator + "uploadFiles" + "/" + homeworkAttachmentURL;
-		
-		File fileSaveDir = new File(uploadDir);
-		if(!fileSaveDir.exists()) {
-			fileSaveDir.delete();
-			
+		if(homeworkAttachmentService.deleteHomeworkAttachment(homeworkAttachmentURL)) {
 			responseObject.put("result", "SUCCESSFUL");
 			responseObject.put("message", homeworkAttachmentURL + " is deleted");
 		} else {
@@ -53,8 +55,5 @@ public class DeleteHomeworkAttachmentServlet extends HttpServlet {
 			
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
-
 	}
-	
-	
 }

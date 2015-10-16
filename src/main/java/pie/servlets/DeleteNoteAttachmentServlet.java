@@ -1,6 +1,5 @@
 package pie.servlets;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
@@ -12,8 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
+import pie.services.NoteAttachmentService;
 import pie.utilities.Utilities;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
@@ -21,6 +22,13 @@ public class DeleteNoteAttachmentServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 2448974350801163124L;
 
+	NoteAttachmentService noteAttachmentService;
+	
+	@Inject
+	public DeleteNoteAttachmentServlet(NoteAttachmentService noteAttachmentService) {
+		this.noteAttachmentService = noteAttachmentService;
+	}
+	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String noteAttachmentURL = null;
@@ -37,13 +45,7 @@ public class DeleteNoteAttachmentServlet extends HttpServlet {
 			return;
 		}
 		
-		String uploadPath = System.getenv("OPENSHIFT_DATA_DIR");
-		String uploadDir = uploadPath + File.separator + "uploadFiles" + "/" + noteAttachmentURL;
-		
-		File fileSaveDir = new File(uploadDir);
-		if(!fileSaveDir.exists()) {
-			fileSaveDir.delete();
-			
+		if(noteAttachmentService.deleteNoteAttachment(noteAttachmentURL)) {
 			responseObject.put("result", "SUCCESSFUL");
 			responseObject.put("message", noteAttachmentURL + " is deleted");
 		} else {

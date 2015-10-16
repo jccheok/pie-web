@@ -32,25 +32,24 @@ public class GetHomeworkAttachmentServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		String fileURL = null;
+		String homeworkAttachmentURL = null;
 
 		try {
 
-			Map<String, String> requestParameters = Utilities.getParameters(request, "fileURL");
-			fileURL = requestParameters.get("fileURL");
+			Map<String, String> requestParameters = Utilities.getParameters(request, "homeworkAttachmentURL");
+			homeworkAttachmentURL = requestParameters.get("homeworkAttachmentURL");
 
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 			return;
 		}
 
-		String uploadPath = System.getenv("OPENSHIFT_DATA_DIR") + "uploadFiles/" + fileURL;
-		File downloadFile = new File(uploadPath);
+		File downloadFile = new File(homeworkAttachmentService.getHomeworkAttachmentDIR(homeworkAttachmentURL));
 		FileInputStream inStream = new FileInputStream(downloadFile);
 
 		ServletContext context = getServletContext();
 
-		String mimeType = context.getMimeType(uploadPath);
+		String mimeType = context.getMimeType(homeworkAttachmentService.getHomeworkAttachmentDIR(homeworkAttachmentURL));
 		if (mimeType == null) {        
 			mimeType = "application/octet-stream";
 		}
