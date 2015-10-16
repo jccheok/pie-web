@@ -30,7 +30,7 @@ public class StudentService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "SELECT * FROM `Student` WHERE studentCode = ?";
+			String sql = "SELECT * FROM `Student` WHERE code = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, studentCode);
 
@@ -55,7 +55,7 @@ public class StudentService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT userIsVerified FROM `Student`,`User` WHERE `Student`.studentID = `User`.userID AND studentCode = ?";
+			String sql = "SELECT isVerified FROM `Student`,`User` WHERE `Student`.studentID = `User`.userID AND code = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, studentCode);
 
@@ -115,7 +115,7 @@ public class StudentService {
 				PreparedStatement pst = null;
 				ResultSet resultSet = null;
 
-				String sql = "INSERT INTO `User` (userTypeID, userFirstName, userLastName) VALUES (?, ?, ?)";
+				String sql = "INSERT INTO `User` (userTypeID, firstName, lastName) VALUES (?, ?, ?)";
 				pst = conn.prepareStatement(sql,
 						Statement.RETURN_GENERATED_KEYS);
 				pst.setInt(1, UserType.STUDENT.getUserTypeID());
@@ -128,7 +128,7 @@ public class StudentService {
 				if (resultSet.next()) {
 
 					int newStudentID = resultSet.getInt(1);
-					sql = "INSERT INTO `Student` (studentID, schoolID, studentCode) VALUES (?, ?, ?)";
+					sql = "INSERT INTO `Student` (studentID, schoolID, code) VALUES (?, ?, ?)";
 					pst = conn.prepareStatement(sql);
 					pst.setInt(1, newStudentID);
 					pst.setInt(2, schoolID);
@@ -158,7 +158,7 @@ public class StudentService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT `StudentGroup`.groupID FROM `StudentGroup`,`Group` WHERE `StudentGroup`.groupID = `Group`.groupID AND groupIsValid = ? AND studentGroupIsValid = ? AND studentID = ?";
+			String sql = "SELECT `StudentGroup`.groupID FROM `StudentGroup`,`Group` WHERE `StudentGroup`.groupID = `Group`.groupID AND `Group`.isValid = ? AND `StudentGroup`.isValid = ? AND studentID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, 1);
 			pst.setInt(2, 1);
@@ -189,7 +189,7 @@ public class StudentService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT studentGroupIndexNumber FROM `StudentGroup` WHERE groupID = ? AND studentID = ? AND studentGroupIsValid = ?";
+			String sql = "SELECT studentGroupIndexNumber FROM `StudentGroup` WHERE groupID = ? AND studentID = ? AND isValid = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, groupID);
 			pst.setInt(2, studentID);
@@ -221,7 +221,7 @@ public class StudentService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT studentGroupJoinDate FROM `StudentGroup` WHERE groupID = ? AND studentID = ? AND studentGroupIsValid = ?";
+			String sql = "SELECT groupJoinDate FROM `StudentGroup` WHERE groupID = ? AND studentID = ? AND isValid = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, groupID);
 			pst.setInt(2, studentID);
@@ -266,8 +266,8 @@ public class StudentService {
 
 				User user = userService.getUser(studentID);
 				School studentSchool = schoolService.getSchool(resultSet.getInt("schoolID"));
-				String studentCode = resultSet.getString("studentCode");
-				Date studentEnlistmentDate = new Date(resultSet.getTimestamp("studentEnlistmentDate").getTime());
+				String studentCode = resultSet.getString("code");
+				Date studentEnlistmentDate = new Date(resultSet.getTimestamp("enlistmentDate").getTime());
 
 				student = new Student(user, studentSchool, studentCode, studentEnlistmentDate);
 			}
@@ -299,7 +299,7 @@ public class StudentService {
 				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
 
-				String sql = "UPDATE `User`,`Student` SET userRegistrationDate = NOW(), userLastUpdate = NOW(), userEmail = ?, userPassword = ?, userMobile = ?, securityQuestionID = ?, securityQuestionAnswer = ? WHERE `User`.userID = `Student`.studentID AND studentCode = ?";
+				String sql = "UPDATE `User`,`Student` SET registrationDate = NOW(), lastUpdate = NOW(), email = ?, password = ?, mobile = ?, securityQuestionID = ?, securityQuestionAnswer = ? WHERE `User`.userID = `Student`.studentID AND code = ?";
 				pst = conn.prepareStatement(sql);
 				pst.setString(1, userEmail);
 				pst.setString(2, userPassword);
@@ -365,7 +365,7 @@ public class StudentService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT studentID FROM `Student` WHERE studentCode = ?";
+			String sql = "SELECT studentID FROM `Student` WHERE code = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, studentCode);
 
