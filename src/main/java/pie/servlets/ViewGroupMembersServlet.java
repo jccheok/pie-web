@@ -73,7 +73,7 @@ public class ViewGroupMembersServlet extends HttpServlet{
 		StaffService staffService = new StaffService();
 		
 		for(Staff staff : staffMembers){
-			StaffRole staffRole = staffService.getStaffRole(staff.getUserID(), groupID);
+			StaffRole staffRole = staffGroupService.getStaffRole(staff.getUserID(), groupID);
 			HashMap<String, String> staffs = new HashMap<String, String>();
 			staffs.put("staffFullName", staff.getUserFullName());
 			staffs.put("staffMobile", staff.getUserMobile());
