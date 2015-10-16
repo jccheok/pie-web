@@ -319,4 +319,32 @@ public class GroupHomeworkService {
 		return updateResult;
 	}
 	
+	public boolean setDraftPublishedHomework(int groupHomeworkID){
+		boolean setResult = false;
+		
+		try{
+			
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			
+			String sql = "UPDATE `GroupHomework` SET isDraft = ? WHERE groupHomeworkID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, 0);
+			pst.setInt(2, groupHomeworkID);
+			
+			
+			pst.executeUpdate();
+			
+			setResult = true;
+			
+			conn.close();
+			
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return setResult;
+	}
+	
 }
