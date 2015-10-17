@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.Map;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -30,10 +31,10 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class UpdateDraftPublishedHomeworkServlet {
+public class UpdateDraftPublishedHomeworkServlet extends HttpServlet {
 
-	private static final long serialVersionUID = -1957825813083294498L;
-
+	private static final long serialVersionUID = -6774908996761981046L;
+	
 	GroupHomeworkService groupHomeworkService;
 	UserHomeworkService userHomeworkService;
 	StaffService staffService;
