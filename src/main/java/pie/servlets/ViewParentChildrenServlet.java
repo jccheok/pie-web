@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import pie.Group;
+import pie.Parent;
 import pie.Student;
 import pie.services.ParentStudentService;
 import pie.services.StudentGroupService;
@@ -59,6 +60,7 @@ public class ViewParentChildrenServlet extends HttpServlet {
 		for (Student student : parentStudentService.getChildren(parentID)) {
 			
 			int studentID = student.getUserID();
+			Parent mainParent = parentStudentService.getMainParent(studentID);
 			
 			JSONObject studentDetails = new JSONObject();
 			studentDetails.put("studentID", studentID);
@@ -66,6 +68,8 @@ public class ViewParentChildrenServlet extends HttpServlet {
 			studentDetails.put("studentLastName", student.getUserLastName());
 			studentDetails.put("studentSchoolName", student.getSchool().getSchoolName());
 			studentDetails.put("studentSchoolID", student.getSchool().getSchoolID());
+			studentDetails.put("mainParentID", mainParent.getUserID());
+			studentDetails.put("mainParentFirstName", mainParent.getUserFirstName());
 			
 			JSONArray studentGroupsList = new JSONArray();
 			for (Group joinedGroup : studentService.getJoinedGroups(studentID)) {
