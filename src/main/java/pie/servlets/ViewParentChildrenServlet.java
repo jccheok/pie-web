@@ -14,7 +14,7 @@ import org.json.JSONObject;
 
 import pie.Group;
 import pie.Student;
-import pie.services.ParentService;
+import pie.services.ParentStudentService;
 import pie.services.StudentGroupService;
 import pie.services.StudentService;
 import pie.utilities.Utilities;
@@ -27,13 +27,13 @@ public class ViewParentChildrenServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 11940297912398677L;
 	
-	ParentService parentService;
+	ParentStudentService parentStudentService;
 	StudentService studentService;
 	StudentGroupService studentGroupService;
 	
 	@Inject
-	public ViewParentChildrenServlet(ParentService parentService, StudentService studentService, StudentGroupService studentGroupService) {
-		this.parentService = parentService;
+	public ViewParentChildrenServlet(ParentStudentService parentStudentService, StudentService studentService, StudentGroupService studentGroupService) {
+		this.parentStudentService = parentStudentService;
 		this.studentService = studentService;
 		this.studentGroupService = studentGroupService;
 	}
@@ -56,7 +56,7 @@ public class ViewParentChildrenServlet extends HttpServlet {
 		JSONObject responseObject = new JSONObject();
 		
 		JSONArray childrenList = new JSONArray();
-		for (Student student : parentService.getChildren(parentID)) {
+		for (Student student : parentStudentService.getChildren(parentID)) {
 			
 			int studentID = student.getUserID();
 			

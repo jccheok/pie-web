@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
 
 import pie.constants.AddChildResult;
-import pie.services.ParentService;
+import pie.services.ParentStudentService;
 import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
@@ -23,11 +23,11 @@ public class AddChildServlet extends HttpServlet{
 
 	private static final long serialVersionUID = 811697721299744514L;
 	
-	ParentService parentService;
+	ParentStudentService parentStudentService;
 
 	@Inject
-	public AddChildServlet(ParentService parentService) {
-		this.parentService = parentService;
+	public AddChildServlet(ParentStudentService parentStudentService) {
+		this.parentStudentService = parentStudentService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -35,16 +35,14 @@ public class AddChildServlet extends HttpServlet{
 		int parentID = 0;
 		int relationshipID = 0;
 		String studentCode = null;
-		int isMainParent = 0;
 
 		try {
 
 			Map<String, String> requestParameters = Utilities.getParameters(request, "parentID", "relationshipID",
-					"studentCode", "isMainParent");
+					"studentCode");
 			parentID = Integer.parseInt(requestParameters.get("parentID"));
 			relationshipID = Integer.parseInt(requestParameters.get("relationshipID"));
 			studentCode = requestParameters.get("studentCode");
-			isMainParent = Integer.parseInt(requestParameters.get("isMainParent"));
 
 		} catch (Exception e) {
 
@@ -52,7 +50,7 @@ public class AddChildServlet extends HttpServlet{
 			return;
 		}
 
-		AddChildResult addChildResult = parentService.addChild(parentID, relationshipID, studentCode, isMainParent);
+		AddChildResult addChildResult = parentStudentService.addChild(parentID, relationshipID, studentCode);
 
 		JSONObject responseObject = new JSONObject();
 		responseObject.put("result", addChildResult.toString());
