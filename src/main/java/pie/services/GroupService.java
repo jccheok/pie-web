@@ -4,20 +4,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Date;
 
 import pie.Group;
 import pie.GroupType;
 import pie.School;
 import pie.Staff;
-import pie.StaffRole;
 import pie.Student;
-import pie.User;
-import pie.UserType;
 import pie.constants.DeactivateGroupResult;
 import pie.constants.GroupRegistrationResult;
-import pie.constants.TransferGroupOwnershipResult;
 import pie.utilities.DatabaseConnector;
 import pie.utilities.Utilities;
 

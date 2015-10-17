@@ -1,15 +1,14 @@
 package pie.services;
 
 import java.sql.Connection;
-import java.util.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 
 import pie.Homework;
 import pie.Staff;
-import pie.Student;
 import pie.constants.PublishHomeworkResult;
 import pie.constants.UpdateHomeworkDraftResult;
 import pie.utilities.DatabaseConnector;

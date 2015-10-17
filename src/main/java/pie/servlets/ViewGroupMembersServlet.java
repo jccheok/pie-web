@@ -16,9 +16,7 @@ import org.json.JSONObject;
 import pie.Staff;
 import pie.StaffRole;
 import pie.Student;
-import pie.services.GroupService;
 import pie.services.StaffGroupService;
-import pie.services.StaffService;
 import pie.services.StudentGroupService;
 import pie.utilities.Utilities;
 
@@ -69,8 +67,6 @@ public class ViewGroupMembersServlet extends HttpServlet{
 		}
 				
 		JSONArray staffList = new JSONArray();
-		
-		StaffService staffService = new StaffService();
 		
 		for(Staff staff : staffMembers){
 			StaffRole staffRole = staffGroupService.getStaffRole(staff.getUserID(), groupID);
