@@ -9,6 +9,7 @@ import pie.Parent;
 import pie.Relationship;
 import pie.Student;
 import pie.constants.AddChildResult;
+import pie.constants.SetAsMainParentResult;
 import pie.utilities.DatabaseConnector;
 
 public class ParentStudentService {
@@ -142,13 +143,75 @@ public class ParentStudentService {
 		return mainParent;
 	}
 
+	public boolean isMainParent(int parentID, int studentID) {
+		boolean isMainParent = false;
+
+		try {
+
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+			Connection conn = DatabaseConnector.getConnection();
+
+			String sql = "SELECT * FROM `ParentStudent` WHERE studentID = ? AND parentID = ? AND isMainParent = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, studentID);
+			pst.setInt(2, parentID);
+			pst.setInt(3, 1);
+			resultSet = pst.executeQuery();
+
+			isMainParent = resultSet.next();
+
+			conn.close();
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+
+		return isMainParent;
+	}
+
+	public SetAsMainParentResult setAsMainParent(int parentID, int studentID) {
+		
+		SetAsMainParentResult setAsMainParentResult = SetAsMainParentResult.SUCCESS;
+			
+		if (getRelationship(parentID, studentID) == null) {
+			setAsMainParentResult = SetAsMainParentResult.NO_RELATIONSHIP;
+		} else if (isMainParent(parentID, studentID)) {
+			setAsMainParentResult = SetAsMainParentResult.ALREADY_MAIN;
+		} else {
+			
+			try {
+
+				PreparedStatement pst = null;
+				Connection conn = DatabaseConnector.getConnection();
+
+				String sql = "UPDATE `ParentStudent` SET isMainParent = ? WHERE parentID = ? AND studentID = ?";
+				pst = conn.prepareStatement(sql);
+				pst.setInt(1, 1);
+				pst.setInt(2, parentID);
+				pst.setInt(3, studentID);
+
+				pst.executeUpdate();
+				
+				conn.close();
+
+			} catch (Exception e) {
+
+				e.printStackTrace();
+			}
+		}
+		
+		return setAsMainParentResult;
+	}
+
 	public AddChildResult addChild(int parentID, int relationshipID, String studentCode) {
 
 		StudentService student = new StudentService();
 		AddChildResult addChildResult = AddChildResult.SUCCESS;
 
 		int studentID = student.getStudentID(studentCode);
-		
+
 		boolean isMainParent = false;
 		if (getMainParent(studentID) == null) {
 			isMainParent = true;
@@ -170,7 +233,7 @@ public class ParentStudentService {
 				pst.setInt(1, parentID);
 				pst.setInt(2, studentID);
 				pst.setInt(3, relationshipID);
-				pst.setInt(4, isMainParent ? 1:0);
+				pst.setInt(4, isMainParent ? 1 : 0);
 
 				pst.executeUpdate();
 
