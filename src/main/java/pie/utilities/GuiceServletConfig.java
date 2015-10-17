@@ -3,7 +3,6 @@ package pie.utilities;
 import pie.filters.AuthFilter;
 import pie.filters.ResponseFilter;
 import pie.servlets.AddChildServlet;
-import pie.servlets.AddChildToGroupServlet;
 import pie.servlets.DeactivateGroupServlet;
 import pie.servlets.DeleteNoteServlet;
 import pie.servlets.EnlistStudentsToGroupServlet;
@@ -83,7 +82,6 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				
 				serve("*/servlets/secured/parent/children").with(ViewParentChildrenServlet.class);
 				serve("*/servlets/secured/parent/addchild").with(AddChildServlet.class);
-				serve("*/servlets/secured/parent/addchildtogroup").with(AddChildToGroupServlet.class);
 				serve("*/servlets/secured/parent/removechildfromgroup").with(RemoveStudentFromGroupServlet.class);
 				serve("*/servlets/secured/parent/relationships").with(ViewRelationshipsServlet.class);
 				
