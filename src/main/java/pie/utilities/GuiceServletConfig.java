@@ -17,7 +17,6 @@ import pie.servlets.RegisterParentServlet;
 import pie.servlets.RegisterSchoolServlet;
 import pie.servlets.RegisterStaffServlet;
 import pie.servlets.RegisterStudentServlet;
-import pie.servlets.RemoveStudentFromGroupServlet;
 import pie.servlets.ResetPasswordServlet;
 import pie.servlets.RetrieveSecurityQuestionServlet;
 import pie.servlets.SaveNoteAsDraftServlet;
@@ -82,7 +81,6 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				
 				serve("*/servlets/secured/parent/children").with(ViewParentChildrenServlet.class);
 				serve("*/servlets/secured/parent/addchild").with(AddChildServlet.class);
-				serve("*/servlets/secured/parent/removechildfromgroup").with(RemoveStudentFromGroupServlet.class);
 				serve("*/servlets/secured/parent/relationships").with(ViewRelationshipsServlet.class);
 				
 				serve("*/servlets/secured/staff/gencode").with(GenerateCodeServlet.class);
