@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import pie.Parent;
+import pie.Relationship;
 import pie.Student;
 import pie.constants.AddChildResult;
 import pie.utilities.DatabaseConnector;
@@ -79,17 +80,35 @@ public class ParentStudentService {
 		return parents;
 	}
 
-	public boolean hasChild(int parentID, int studentID) {
-		boolean hasChild = false;
-		Student[] children = getChildren(parentID);
+	public Relationship getRelationship(int parentID, int studentID) {
+		
+		RelationshipService relationshipService = new RelationshipService();
+		Relationship relationship = null;
 
-		for (Student student : children) {
-			if (studentID == student.getUserID()) {
-				hasChild = true;
-				break;
+		try {
+
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+			Connection conn = DatabaseConnector.getConnection();
+
+			String sql = "SELECT relationshipID FROM `ParentStudent` WHERE studentID = ? AND parentID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, studentID);
+			pst.setInt(2, parentID);
+			resultSet = pst.executeQuery();
+
+			if (resultSet.next()) {
+				relationship = relationshipService.getRelationship(resultSet.getInt(1));
 			}
+
+			conn.close();
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
 		}
-		return hasChild;
+
+		return relationship;
 	}
 
 	public Parent getMainParent(int studentID) {
@@ -137,7 +156,7 @@ public class ParentStudentService {
 
 		if (studentID == -1) {
 			addChildResult = AddChildResult.INVALID_STUDENT_CODE;
-		} else if (hasChild(parentID, studentID)) {
+		} else if (getRelationship(parentID, studentID) != null) {
 			addChildResult = AddChildResult.CHILD_ALREADY_ADDED;
 		} else {
 
