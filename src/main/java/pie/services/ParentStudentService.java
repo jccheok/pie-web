@@ -112,7 +112,7 @@ public class ParentStudentService {
 	}
 
 	public Parent getMainParent(int studentID) {
-		
+
 		ParentService parentService = new ParentService();
 		Parent mainParent = null;
 
@@ -122,7 +122,7 @@ public class ParentStudentService {
 			ResultSet resultSet = null;
 			Connection conn = DatabaseConnector.getConnection();
 
-			String sql = "SELECT parentID FROM `ParentStudent` WHERE studentID = ? AND mainParent = ?";
+			String sql = "SELECT parentID FROM `ParentStudent` WHERE studentID = ? AND isMainParent = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, studentID);
 			pst.setInt(2, 1);
@@ -165,7 +165,7 @@ public class ParentStudentService {
 				PreparedStatement pst = null;
 				Connection conn = DatabaseConnector.getConnection();
 
-				String sql = "INSERT INTO `ParentStudent` (parentID, studentID, relationshipID, mainParent) VALUES (?, ?, ?, ?)";
+				String sql = "INSERT INTO `ParentStudent` (parentID, studentID, relationshipID, isMainParent) VALUES (?, ?, ?, ?)";
 				pst = conn.prepareStatement(sql);
 				pst.setInt(1, parentID);
 				pst.setInt(2, studentID);
