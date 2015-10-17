@@ -189,7 +189,7 @@ public class StudentService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT studentGroupIndexNumber FROM `StudentGroup` WHERE groupID = ? AND studentID = ? AND isValid = ?";
+			String sql = "SELECT indexNumber FROM `StudentGroup` WHERE groupID = ? AND studentID = ? AND isValid = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, groupID);
 			pst.setInt(2, studentID);
