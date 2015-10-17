@@ -101,7 +101,6 @@ public class HomeworkService {
 			try {
 				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
-				ResultSet resultSet = null;
 
 				String sql = "UPDATE `Homework` SET isDraft = ? WHERE homeworkID = ?";
 				pst = conn.prepareStatement(sql);
