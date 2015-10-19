@@ -5,7 +5,7 @@ import java.util.Date;
 public class UserNote {
 
 	private int userNoteID;
-	private ResponseOption repsonseOption;
+	private ResponseOption responseOption;
 	private	Note note;
 	private User user;
 	private boolean isRead;
@@ -15,13 +15,13 @@ public class UserNote {
 	private String responseText;
 	
 	
-	public UserNote(int userNoteID, ResponseOption repsonseOption, Note note, User user, boolean isRead,
+	public UserNote(int userNoteID, ResponseOption responseOption, Note note, User user, boolean isRead,
 			boolean isArchive, Date dateRead, Date dateArchived, String responseText) {
 		
 		setUserNoteID(userNoteID);
 		setNote(note);
 		setUser(user);
-		setRepsonseOption(repsonseOption);
+		setRepsonseOption(responseOption);
 		setResponseText(responseText);
 		setArchive(isArchive);
 		setRead(isRead);
@@ -37,11 +37,11 @@ public class UserNote {
 	public void setUserNoteID(int userNoteID) {
 		this.userNoteID = userNoteID;
 	}
-	public ResponseOption getRepsonseOption() {
-		return repsonseOption;
+	public ResponseOption getResponseOption() {
+		return responseOption;
 	}
-	public void setRepsonseOption(ResponseOption repsonseOption) {
-		this.repsonseOption = repsonseOption;
+	public void setRepsonseOption(ResponseOption responseOption) {
+		this.responseOption = responseOption;
 	}
 	public Note getNote() {
 		return note;
