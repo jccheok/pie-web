@@ -49,10 +49,10 @@ public class DeleteGroupHomeworkServlet extends HttpServlet {
 		JSONObject responseObject = new JSONObject();
 		if(deleteResult){
 			responseObject.put("result", "Success");
-			responseObject.put("message", "Successfully deleted the message");
+			responseObject.put("message", "Successfully deleted the homework");
 		}else{
 			responseObject.put("result","Failure");
-			responseObject.put("message", "Failed to delete message");
+			responseObject.put("message", "Failed to delete homework");
 		}
 		
 		PrintWriter out = response.getWriter();
