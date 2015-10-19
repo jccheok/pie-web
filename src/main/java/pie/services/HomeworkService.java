@@ -9,6 +9,7 @@ import java.util.Date;
 
 import pie.Homework;
 import pie.Staff;
+import pie.constants.DeleteHomeworkResult;
 import pie.constants.PublishHomeworkResult;
 import pie.constants.UpdateHomeworkDraftResult;
 import pie.utilities.DatabaseConnector;
@@ -254,8 +255,8 @@ public class HomeworkService {
 	// return homework;
 	// }
 
-	public boolean deleteHomework(Homework homework) {
-		boolean deleteResult = false;
+	public DeleteHomeworkResult deleteHomework(Homework homework) {
+		DeleteHomeworkResult result = DeleteHomeworkResult.SUCCESS;
 
 		if (!homework.isHomeworkIsDraft()) {
 			try {
@@ -269,12 +270,10 @@ public class HomeworkService {
 
 				pst.executeUpdate();
 
-				deleteResult = true;
-
 				conn.close();
 
 			} catch (Exception e) {
-				e.printStackTrace();
+				result = DeleteHomeworkResult.FAILED_TO_SET_TO_DELETE;
 			}
 		} else if (homework.isHomeworkIsDraft()) {
 			try {
@@ -288,16 +287,14 @@ public class HomeworkService {
 
 				pst.executeUpdate();
 
-				deleteResult = true;
-
 				conn.close();
 
 			} catch (Exception e) {
-				e.printStackTrace();
+				result = DeleteHomeworkResult.FAILED_TO_SET_TO_DELETE;
 			}
 		}
 
-		return deleteResult;
+		return result;
 	}
 
 	public UpdateHomeworkDraftResult updateDraftHomework(Homework homework) {
