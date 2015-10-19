@@ -11,41 +11,40 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
-import pie.services.GroupHomeworkService;
+import pie.services.UserHomeworkService;
 import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class DeleteGroupHomeworkServlet extends HttpServlet {
-
-	private static final long serialVersionUID = 4001648799535140886L;
+public class DeleteUserHomeworkServlet extends HttpServlet {
 	
-	GroupHomeworkService groupHomeworkService;
+	private static final long serialVersionUID = -6407725742563961773L;
+	
+	UserHomeworkService userHomeworkService;
 	
 	@Inject
-	public DeleteGroupHomeworkServlet(GroupHomeworkService groupHomeworkService) {
-		this.groupHomeworkService = groupHomeworkService;
+	public DeleteUserHomeworkServlet(UserHomeworkService userHomeworkService) {
+		this.userHomeworkService = userHomeworkService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		int groupHomeworkID = 0;
+		int userHomeworkID = 0;
 		
 		try {
 
-			Map<String, String> requestParameters = Utilities.getParameters(request, "groupHomeworkID");
+			Map<String, String> requestParameters = Utilities.getParameters(request, "userHomeworkID");
 
-			groupHomeworkID = Integer.parseInt(requestParameters.get("groupHomeworkID"));
+			userHomeworkID = Integer.parseInt(requestParameters.get("userHomeworkID"));
 
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 			return;
 		}
 
-		boolean deleteResult = groupHomeworkService.deleteSentHomework(groupHomeworkID);
-		
+		boolean deleteResult = userHomeworkService.deleteHomework(userHomeworkID);
 		JSONObject responseObject = new JSONObject();
 		if(deleteResult){
 			responseObject.put("result", "Success");
