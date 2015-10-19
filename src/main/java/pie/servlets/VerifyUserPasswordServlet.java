@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
+import pie.services.AuthService;
 import pie.services.UserService;
 import pie.utilities.Utilities;
 
@@ -18,10 +19,12 @@ import com.google.inject.Inject;
 public class VerifyUserPasswordServlet {
 
 	UserService userService;
+	AuthService authService;
 	
 	@Inject
-	public VerifyUserPasswordServlet(UserService userService) {
+	public VerifyUserPasswordServlet(UserService userService, AuthService authService) {
 		this.userService = userService;
+		this.authService = authService;
 	}
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -44,8 +47,16 @@ public class VerifyUserPasswordServlet {
 		boolean verifyResult = userService.credentialsMatch(userEmail, userPassword);
 		
 		JSONObject responseObject = new JSONObject();
-		
-		responseObject.put("result", verifyResult);
+		if(verifyResult){
+			String authToken = authService.getAuthToken(userService.getUserID(userEmail));
+			
+			responseObject.put("result", "SUCCESS");
+			responseObject.put("message", authToken);
+
+		}else{
+			responseObject.put("result", "INVALID_PASSWORD");
+			responseObject.put("message", "You entered the wrong password.");
+		}
 		
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
