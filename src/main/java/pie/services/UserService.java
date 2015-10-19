@@ -355,7 +355,7 @@ public class UserService {
 			String sql = null;
 			if(authToken.equals(authService.getAuthToken(userID))){
 				if (addressPostalCode == null) {
-					sql = "UPDATE `User` SET mobile = ?, securityQuestionID = ?, securityQuestionAnswer = ? WHERE userID = ?";
+					sql = "UPDATE `User` SET mobile = ?, securityQuestionID = ?, securityQuestionAnswer = ?, lastUpdate = NOW() WHERE userID = ?";
 					pst = conn.prepareStatement(sql);
 					pst.setString(1, userMobile);
 					pst.setInt(2, securityQuestionID);
@@ -370,7 +370,7 @@ public class UserService {
 					int addressID = addressService.getAddressID(addressPostalCode);
 
 					if (addressID != -1) {
-						sql = "UPDATE `User` SET mobile = ?, securityQuestionID = ?, securityQuestionAnswer = ?, addressID = ? WHERE userID = ?";
+						sql = "UPDATE `User` SET mobile = ?, securityQuestionID = ?, securityQuestionAnswer = ?, addressID = ?, lastUpdate = NOW() WHERE userID = ?";
 						pst = conn.prepareStatement(sql);
 						pst.setString(1, userMobile);
 						pst.setInt(2, securityQuestionID);
@@ -384,7 +384,7 @@ public class UserService {
 					} else {
 						addressID = addressService.registerAddress(addressPostalCode, addressStreet, cityID);
 						
-						sql = "UPDATE `User` SET mobile = ?, securityQuestionID = ?, securityQuestionAnswer = ?, addressID = ? WHERE userID = ?";
+						sql = "UPDATE `User` SET mobile = ?, securityQuestionID = ?, securityQuestionAnswer = ?, addressID = ?, lastUpdate = NOW() WHERE userID = ?";
 						pst = conn.prepareStatement(sql);
 						pst.setString(1, userMobile);
 						pst.setInt(2, securityQuestionID);

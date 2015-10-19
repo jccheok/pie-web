@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
+import pie.Address;
 import pie.Staff;
 import pie.Student;
 import pie.User;
@@ -74,6 +75,7 @@ public class LoginServlet extends HttpServlet {
 		if (loginResult == LoginResult.SUCCESS) {
 			
 			User user = userService.getUser(userService.getUserID(userEmail));
+			Address userAddress = user.getUserAddress();
 			
 			JSONObject userJSON = new JSONObject();
 			userJSON.put("userID", user.getUserID());
@@ -82,7 +84,11 @@ public class LoginServlet extends HttpServlet {
 			userJSON.put("userType", user.getUserType().toString());
 			userJSON.put("userEmail", user.getUserEmail());
 			userJSON.put("userMobile", user.getUserMobile());
-			userJSON.put("userLastPasswordUpdate", user.getUserPasswordLastUpdate());
+			userJSON.put("userAddressStreetName", userAddress.getAddressStreet());
+			userJSON.put("userAddressPostalCode", userAddress.getAddressPostalCode());
+			userJSON.put("userAddressCityID", userAddress.getAddressCity().getCityID());
+			userJSON.put("userLastUpdate", Utilities.toUnixSeconds(user.getUserLastUpdate()));
+			
 			switch(user.getUserType()) {
 				case STAFF: {
 					
