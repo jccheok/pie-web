@@ -123,6 +123,7 @@ public class NoteService {
 		PublishNoteResult publishResult = PublishNoteResult.SUCCESS;
 		StaffGroupService staffGroupService = new StaffGroupService();
 		StudentGroupService studentGroupService = new StudentGroupService();
+		GroupNoteService groupNoteService = new GroupNoteService();
 
 		try {
 
@@ -138,8 +139,6 @@ public class NoteService {
 			if (pst.executeUpdate() == 0) {
 				publishResult = PublishNoteResult.FAILED_DRAFT;
 			} else {
-
-				GroupNoteService groupNoteService = new GroupNoteService();
 
 				int groupNoteID = groupNoteService.createGroupNote(noteID, groupID, publisherID);
 
