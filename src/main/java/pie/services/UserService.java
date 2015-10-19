@@ -287,11 +287,13 @@ public class UserService {
 		User user = getUser(userID);
 		
 		try {
+
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
 			String sql = "UPDATE `User` SET password = ?, passwordLastUpdate = NOW(), passwordLast1 = ?, passwordLast2 = ?, lastUpdate = NOW() WHERE userID = ?";
 			pst = conn.prepareStatement(sql);
+			
 			pst.setString(1, newUserPassword);
 			pst.setString(2, user.getUserPassword());
 			pst.setString(3, user.getUserLastPassword1());
