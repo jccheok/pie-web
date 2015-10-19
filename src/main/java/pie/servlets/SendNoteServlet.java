@@ -25,10 +25,12 @@ public class SendNoteServlet extends HttpServlet {
 	private static final long serialVersionUID = -4985014150620092494L;
 
 	NoteService noteService;
-
+	NoteAttachmentService noteAttachmentService;
+	
 	@Inject
-	public SendNoteServlet(NoteService noteService) {
+	public SendNoteServlet(NoteService noteService, NoteAttachmentService noteAttachmentService) {
 		this.noteService = noteService;
+		this.noteAttachmentService = noteAttachmentService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -37,7 +39,7 @@ public class SendNoteServlet extends HttpServlet {
 		int staffID = 0;
 		int groupID = 0;
 		int responseQuestionID = 0;
-		int noteAttachmentID = 0;
+		int noteAttachmentID = 1;
 		String noteTitle = null;
 		String noteDescription = null;
 
@@ -65,8 +67,7 @@ public class SendNoteServlet extends HttpServlet {
 
 		if(noteID != -1) {
 
-			if(noteAttachmentID != 0) {
-				NoteAttachmentService noteAttachmentService = new NoteAttachmentService();
+			if(noteAttachmentID != 1) {
 				noteAttachmentService.UpdateNoteAttachmentID(noteAttachmentID, noteID);
 			}
 
