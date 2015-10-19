@@ -3,6 +3,7 @@ package pie.services;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Date;
 
 import pie.Group;
@@ -46,6 +47,40 @@ public class GroupNoteService {
 		}
 		
 		return groupNote;
+		
+	}
+	
+	public int createGroupNote(int noteID, int groupID, int publisherID) {
+		
+		int groupNoteID = -1;
+		
+		try {
+			
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+			
+			String sql = "INSERT INTO `GroupNote` (noteID, groupID, publisherID) VALUES (?, ?, ?)";
+			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			pst.setInt(1, noteID);
+			pst.setInt(2, groupID);
+			pst.setInt(3, publisherID);
+			
+			pst.executeUpdate();
+			
+			resultSet = pst.getGeneratedKeys();
+			
+			if(resultSet.next()) {
+				groupNoteID = resultSet.getInt(1);
+			}
+			
+			conn.close();
+			
+		} catch (Exception e ) {
+			e.printStackTrace();
+		}
+		
+		return groupNoteID;
 		
 	}
 	
