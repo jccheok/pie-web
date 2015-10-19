@@ -141,4 +141,31 @@ public class UserNoteService {
 		
 	}
 	
+	public boolean userResponse(int userNoteID, String responseText) {
+		
+		boolean isUpdated = false;
+		
+		try {
+			
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			
+			String sql = "UPDATE `UserNote` SET responseText = ? WHERE userNoteID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setString(1, responseText);
+			pst.setInt(2, userNoteID);
+			
+			pst.executeUpdate();
+			isUpdated = true;
+			
+			conn.close();
+			
+		} catch (Exception e ) {
+			e.printStackTrace();
+		}
+		
+		return isUpdated;
+		
+	}
+	
 }
