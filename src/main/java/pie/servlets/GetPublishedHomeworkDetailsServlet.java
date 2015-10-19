@@ -51,11 +51,14 @@ public class GetPublishedHomeworkDetailsServlet extends HttpServlet {
 		
 			JSONObject homeworkObject = new JSONObject();
 			
+			homeworkObject.put("groupHomeworkID", groupHomework.getGroupHomeworkID());
+			homeworkObject.put("homeworkID", groupHomework.getHomework().getHomeworkID());
 			homeworkObject.put("homeworkTitle", groupHomework.getHomework().getHomeworkTitle());
 			homeworkObject.put("homeworkDescription", groupHomework.getHomework().getHomeworkDescription());
 			homeworkObject.put("subject", groupHomework.getHomework().getHomeworkSubject());
 			homeworkObject.put("minutesRequired", groupHomework.getHomework().gethomeworkMinutesReqStudent());
 			homeworkObject.put("dueDate", Utilities.toUnixSeconds(groupHomework.getDueDate()));
+			homeworkObject.put("publisherID", groupHomework.getPublisher().getUserID());
 			homeworkObject.put("publisherName", groupHomework.getPublisher().getUserFullName());
 			homeworkObject.put("publishedDate", Utilities.toUnixSeconds(groupHomework.getPublishDate()));
 			homeworkObject.put("markingEffort", groupHomework.getMarkingEffort());
