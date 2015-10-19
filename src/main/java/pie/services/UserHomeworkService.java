@@ -86,7 +86,7 @@ public class UserHomeworkService {
 	}
 	
 	
-	public boolean deleteHomework(int userHomeworkID, int userID){
+	public boolean deleteHomework(int userHomeworkID){
 		boolean deleteResult = false;
 		
 		try{
@@ -94,11 +94,10 @@ public class UserHomeworkService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "UPDATE `UserHomework` SET isDeleted = ? WHERE userID = ? AND userHomeworkID = ?";
+			String sql = "UPDATE `UserHomework` SET isDeleted = ? WHERE userHomeworkID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, 1);
-			pst.setInt(2, userID);
-			pst.setInt(3, userHomeworkID);
+			pst.setInt(2, userHomeworkID);
 			
 			pst.executeUpdate();
 			
