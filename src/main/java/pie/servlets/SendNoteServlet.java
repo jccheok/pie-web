@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
 
 import pie.constants.PublishNoteResult;
+import pie.services.NoteAttachmentService;
 import pie.services.NoteService;
 import pie.utilities.Utilities;
 
@@ -24,10 +25,12 @@ public class SendNoteServlet extends HttpServlet {
 	private static final long serialVersionUID = -4985014150620092494L;
 
 	NoteService noteService;
+	NoteAttachmentService noteAttachmentService;
 	
 	@Inject
-	public SendNoteServlet(NoteService noteService) {
+	public SendNoteServlet(NoteService noteService, NoteAttachmentService noteAttachmentService) {
 		this.noteService = noteService;
+		this.noteAttachmentService = noteAttachmentService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -36,17 +39,19 @@ public class SendNoteServlet extends HttpServlet {
 		int staffID = 0;
 		int groupID = 0;
 		int responseQuestionID = 0;
+		int noteAttachmentID = 1;
 		String noteTitle = null;
 		String noteDescription = null;
 
 		try {
 
 			Map<String, String> requestParameters = Utilities.getParameters(request, "staffID", "groupID", "responseQuestionID", 
-					"noteTitle", "noteDescription");
+					"noteAttachmentID", "noteTitle", "noteDescription");
 
 			staffID = Integer.parseInt(requestParameters.get("staffID"));
 			groupID = Integer.parseInt(requestParameters.get("groupID"));
 			responseQuestionID = Integer.parseInt(requestParameters.get("responseQuestionID"));
+			noteAttachmentID = Integer.parseInt(requestParameters.get("noteAttachmentID"));
 			noteTitle = requestParameters.get("noteTitle");
 			noteDescription = requestParameters.get("noteDescription");	
 
@@ -59,18 +64,22 @@ public class SendNoteServlet extends HttpServlet {
 
 		noteID = noteService.createNote(staffID, responseQuestionID, noteTitle, noteDescription);
 		JSONObject responseObject = new JSONObject();
-		
+
 		if(noteID != -1) {
+
+			if(noteAttachmentID != 1) {
+				noteAttachmentService.UpdateNoteAttachmentID(noteAttachmentID, noteID);
+			}
 
 			PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID, staffID);
 			responseObject.put("result", publishNoteResult.toString());
 			responseObject.put("message", publishNoteResult.getDefaultMessage());
-			
+
 		} else {
 			responseObject.put("result", "FAILED");
 			responseObject.put("message", "Note is not created");
 		}
-		
+
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
 	}
