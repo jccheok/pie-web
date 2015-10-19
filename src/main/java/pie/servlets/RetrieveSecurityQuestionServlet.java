@@ -22,9 +22,9 @@ import com.google.inject.Singleton;
 public class RetrieveSecurityQuestionServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -7865633897590634094L;
-	
+
 	UserService userService;
-	
+
 	@Inject
 	public RetrieveSecurityQuestionServlet(UserService userService) {
 		this.userService = userService;
@@ -44,28 +44,25 @@ public class RetrieveSecurityQuestionServlet extends HttpServlet {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 			return;
 		}
-		
+
 		JSONObject responseObject = new JSONObject();
+
+		int userID = userService.getUserID(userEmail);
 		
-		if(userService.getUserID(userEmail) == -1){
-			responseObject.put("result", "INVALID_EMAIL");
-			responseObject.put("message", "The email you entered is wrong");
-		}else {
+		if (userID != -1) {
 			User user = userService.getUser(userService.getUserID(userEmail));
-			String securityQuestionDescription =  user.getUserSecurityQuestion().getSecurityQuestionDescription();
-			if(securityQuestionDescription == null){
-				responseObject.put("result", "QUESTION_NOT_SET");
-				responseObject.put("message", "You did not set security question!");
-			}else{
-				responseObject.put("result", "Valid user");
-				responseObject.put("message", securityQuestionDescription);
-				responseObject.put("userID", user.getUserID());
-			}
+
+			responseObject.put("result", "SUCCESS");
+			responseObject.put("message", user.getUserSecurityQuestion().getSecurityQuestionDescription());
+			responseObject.put("userID", userID);
+
+		} else {
+			responseObject.put("result", "INVALID_EMAIL");
+			responseObject.put("message", "The email you entered is not registered!");
 		}
 
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
 	}
-
 
 }
