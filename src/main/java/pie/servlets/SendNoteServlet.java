@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
 
 import pie.constants.PublishNoteResult;
+import pie.services.NoteAttachmentService;
 import pie.services.NoteService;
 import pie.utilities.Utilities;
 
@@ -36,17 +37,19 @@ public class SendNoteServlet extends HttpServlet {
 		int staffID = 0;
 		int groupID = 0;
 		int responseQuestionID = 0;
+		int noteAttachmentID = 0;
 		String noteTitle = null;
 		String noteDescription = null;
 
 		try {
 
 			Map<String, String> requestParameters = Utilities.getParameters(request, "staffID", "groupID", "responseQuestionID", 
-					"noteTitle", "noteDescription");
+					"noteAttachmentID", "noteTitle", "noteDescription");
 
 			staffID = Integer.parseInt(requestParameters.get("staffID"));
 			groupID = Integer.parseInt(requestParameters.get("groupID"));
 			responseQuestionID = Integer.parseInt(requestParameters.get("responseQuestionID"));
+			noteAttachmentID = Integer.parseInt(requestParameters.get("noteAttachmentID"));
 			noteTitle = requestParameters.get("noteTitle");
 			noteDescription = requestParameters.get("noteDescription");	
 
@@ -61,6 +64,9 @@ public class SendNoteServlet extends HttpServlet {
 		JSONObject responseObject = new JSONObject();
 		
 		if(noteID != -1) {
+			
+			NoteAttachmentService noteAttachmentService = new NoteAttachmentService();
+			noteAttachmentService.UpdateNoteAttachmentID(noteAttachmentID, noteID);
 
 			PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID, staffID);
 			responseObject.put("result", publishNoteResult.toString());
