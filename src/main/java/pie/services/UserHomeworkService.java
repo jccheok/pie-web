@@ -3,8 +3,8 @@ package pie.services;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Date;
-
 
 import pie.Homework;
 import pie.User;
@@ -167,5 +167,38 @@ public class UserHomeworkService {
 		}
 		
 		return gradeResult;
+	}
+	
+	public UserHomework[] getUserHomeworkRecipients(int homeworkID, int groupHomeworkID, int publisherID){
+		UserHomework[] userHomeworkRecipients = {};
+		
+		try{
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+			
+			String sql = "SELECT userHomeworkID FROM `Homework`, `GroupHomework`, `UserHomework` WHERE `Homework`.homeworkID = `GroupHomework`.homeworkID AND `UserHomework`.homeworkID = `Homework`.homeworkID "
+					+ "AND `GroupHomework`.groupHomeworkID = ? AND `GroupHomework`.publisherID = ? AND `UserHomework`.homeworkID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, groupHomeworkID);
+			pst.setInt(2, publisherID);
+			pst.setInt(3, homeworkID);
+			
+			resultSet = pst.executeQuery();
+			
+			ArrayList<UserHomework> tempUserHomeworkList = new ArrayList<UserHomework>();
+			while(resultSet.next()){
+				tempUserHomeworkList.add(getUserHomework(resultSet.getInt("userHomeworkID")));
+			}
+			
+			userHomeworkRecipients = tempUserHomeworkList.toArray(userHomeworkRecipients);
+			
+			conn.close();
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return userHomeworkRecipients;
 	}
 }
