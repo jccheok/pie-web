@@ -36,8 +36,6 @@ public class UpdateUserAccountDetailsServlet extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		int userID = 0;
-		String userFirstName = null;
-		String userLastName = null;
 		String userMobile = null;
 		int securityQuestionID = 0;
 		String securityQuestionAnswer = null;
@@ -48,13 +46,11 @@ public class UpdateUserAccountDetailsServlet extends HttpServlet {
 
 		try {
 
-			Map<String, String> requestParameters = Utilities.getParameters(request, "userID", "userFirstName",
-					"userLastName", "userMobile", "securityQuestionID", "securityQuestionAnswer", "addressStreet",
+			Map<String, String> requestParameters = Utilities.getParameters(request, "userID", "userMobile", "securityQuestionID", "securityQuestionAnswer", "addressStreet",
 					"addressPostalCode", "cityID", "authToken");
 
 			userID = Integer.parseInt(requestParameters.get("userID"));
-			userFirstName = requestParameters.get("userFirstName");
-			userLastName = requestParameters.get("userLastName");
+			
 			userMobile = requestParameters.get("userMobile");
 			securityQuestionID = Integer.parseInt(requestParameters.get("securityQuestionID"));
 			securityQuestionAnswer = requestParameters.get("securityQuestionAnswer");
@@ -70,8 +66,7 @@ public class UpdateUserAccountDetailsServlet extends HttpServlet {
 
 		JSONObject responseObject = new JSONObject();
 
-		UpdateAccountResult updateAccountResult = userService.updateUserAccountDetails(userID, userFirstName,
-				userLastName, userMobile, securityQuestionID, securityQuestionAnswer, addressStreet,
+		UpdateAccountResult updateAccountResult = userService.updateUserAccountDetails(userID, userMobile, securityQuestionID, securityQuestionAnswer, addressStreet,
 				addressPostalCode, cityID, authToken);
 		responseObject.put("result", updateAccountResult.toString());
 		responseObject.put("message", updateAccountResult.getDefaultMessage());
