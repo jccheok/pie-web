@@ -87,6 +87,8 @@ public class LoginServlet extends HttpServlet {
 			userJSON.put("userAddressStreetName", userAddress.getAddressStreet());
 			userJSON.put("userAddressPostalCode", userAddress.getAddressPostalCode());
 			userJSON.put("userAddressCityID", userAddress.getAddressCity().getCityID());
+			userJSON.put("userSecurityQuestionID", user.getUserSecurityQuestion().getSecurityQuestionID());
+			userJSON.put("userSecurityQuestionAnswer", user.getUserSecurityAnswer());
 			userJSON.put("userLastUpdate", Utilities.toUnixSeconds(user.getUserLastUpdate()));
 			
 			switch(user.getUserType()) {
