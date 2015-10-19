@@ -168,4 +168,35 @@ public class UserNoteService {
 		
 	}
 	
+	public boolean hasReceived(int noteID, int userID) {
+
+		boolean hasReceived = false;
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT * FROM `UserNote` WHERE userID = ? and noteID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, userID);
+			pst.setInt(2, noteID);
+
+			resultSet = pst.executeQuery();
+
+			if (resultSet.next()) {
+				hasReceived = true;
+			}
+
+			conn.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return hasReceived;
+		
+	}
+	
 }
