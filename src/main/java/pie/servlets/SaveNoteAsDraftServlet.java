@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
+import pie.services.NoteAttachmentService;
 import pie.services.NoteService;
 import pie.utilities.Utilities;
 
@@ -23,10 +24,12 @@ public class SaveNoteAsDraftServlet extends HttpServlet {
 	private static final long serialVersionUID = 9157470052062586665L;
 
 	NoteService noteService;
+	NoteAttachmentService noteAttachmentService;
 
 	@Inject
-	public SaveNoteAsDraftServlet(NoteService noteService) {
+	public SaveNoteAsDraftServlet(NoteService noteService, NoteAttachmentService noteAttachmentService) {
 		this.noteService = noteService;
+		this.noteAttachmentService = noteAttachmentService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -34,15 +37,17 @@ public class SaveNoteAsDraftServlet extends HttpServlet {
 		int noteID = 0;
 		int staffID = 0;
 		int responseQuestionID = 0;
+		int noteAttachmentID = 1;
 		String noteTitle = null;
 		String noteDescription = null;
 
 		try {
 
-			Map<String, String> requestParameters = Utilities.getParameters(request, "staffID", "responseQuestionID", "noteTitle", "noteDescription");
+			Map<String, String> requestParameters = Utilities.getParameters(request, "staffID", "responseQuestionID", "noteAttachmentID", "noteTitle", "noteDescription");
 
 			staffID = Integer.parseInt(requestParameters.get("staffID"));
 			responseQuestionID = Integer.parseInt(requestParameters.get("responseQuestionID"));
+			noteAttachmentID = Integer.parseInt(requestParameters.get("noteAttachmentID"));
 			noteTitle = requestParameters.get("noteTitle");
 			noteDescription = requestParameters.get("noteDescription");
 
@@ -56,6 +61,11 @@ public class SaveNoteAsDraftServlet extends HttpServlet {
 		JSONObject responseObject = new JSONObject();
 
 		if (noteID != -1) {
+			
+			if(noteAttachmentID != 1) {
+				noteAttachmentService.UpdateNoteAttachmentID(noteAttachmentID, noteID);
+			}
+			
 			responseObject.put("result", "SUCCESS");
 			responseObject.put("message", "Note is successfully created and saved as draft");
 		} else {
