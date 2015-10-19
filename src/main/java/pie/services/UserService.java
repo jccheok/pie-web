@@ -288,16 +288,20 @@ public class UserService {
 
 	public boolean setNewPassword(int userID, String userPassword) {
 		boolean setPasswordResult = false;
-
+		
 		try {
-
+			User user = getUser(userID);
+			
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "UPDATE `User` SET password = SHA2(? , 256), lastUpdate = NOW() WHERE userID = ?";
+			String sql = "UPDATE `User` SET password = SHA2(? , 256), lastUpdate = NOW(), passwordUpdate = NOW(), passwordLast2 = ?, passwordLast1 = ?  WHERE userID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, userPassword);
-			pst.setInt(2, userID);
+			pst.setString(2, user.getUserPassword());
+			pst.setString(3, user.getUserLastPassword2());
+			pst.setInt(4, userID);
+			
 			pst.executeUpdate();
 
 			conn.close();
