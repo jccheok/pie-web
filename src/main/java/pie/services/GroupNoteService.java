@@ -84,4 +84,31 @@ public class GroupNoteService {
 		
 	}
 	
+	public boolean publishGroupNote(int groupNoteID) {
+		
+		boolean isPublished = false;
+		
+		try {
+			
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			
+			String sql = "UPDATE `GroupNote` SET publishDate = NOW() WHERE groupNoteID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, groupNoteID);
+			
+			pst.executeUpdate();
+			isPublished = true;
+			
+			conn.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return isPublished;
+		
+	}
+	
+	
 }
