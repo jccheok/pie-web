@@ -2,6 +2,7 @@ package pie.utilities;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -15,11 +16,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.io.IOUtils;
 
 public class Utilities {
-	
+
 	static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	
+
 	public static String generateString(int length) {
-		
+
 		Random random = new Random();
 
 		StringBuilder sb = new StringBuilder(length);
@@ -29,16 +30,40 @@ public class Utilities {
 
 		return sb.toString();
 	}
-	
+
+	public static String hash256(String base) {
+		
+		String hashedString = null;
+		
+		try {
+			MessageDigest digest = MessageDigest.getInstance("SHA-256");
+			byte[] hash = digest.digest(base.getBytes("UTF-8"));
+			StringBuilder hexString = new StringBuilder();
+
+			for (int i = 0; i < hash.length; i++) {
+				String hex = Integer.toHexString(0xff & hash[i]);
+				if (hex.length() == 1) {
+					hexString.append('0');
+				}
+				hexString.append(hex);
+			}
+			hashedString = hexString.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return hashedString;
+	}
+
 	public static long toUnixSeconds(Date date) {
 		return (long) date.getTime() / 1000;
 	}
-	
-	public static Map<String, String> getParameters(HttpServletRequest servletRequest, String... parameters) throws ServletException {
-		
+
+	public static Map<String, String> getParameters(HttpServletRequest servletRequest, String... parameters)
+			throws ServletException {
+
 		Map<String, String> requestParameters = new HashMap<String, String>();
 		List<String> missingParameters = new ArrayList<String>();
-		
+
 		for (String parameter : parameters) {
 			String value = servletRequest.getParameter(parameter);
 			if (value == null) {
@@ -46,14 +71,14 @@ public class Utilities {
 			}
 			requestParameters.put(parameter, value);
 		}
-		
+
 		if (!missingParameters.isEmpty()) {
 			throw new ServletException("BAD REQUEST: MISSING " + missingParameters.toString() + " IN HEADER");
 		}
-		
+
 		return requestParameters;
 	}
-	
+
 	public static String convertStreamToString(InputStream inputStream) throws IOException {
 		return IOUtils.toString(inputStream, "UTF-8");
 	}
