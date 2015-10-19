@@ -118,13 +118,27 @@ public class NoteAttachmentService {
 	public boolean deleteNoteAttachment(String noteAttachmentURL) {
 		
 		boolean isDeleted = false;
-		NoteAttachmentService noteAttachmentService = new NoteAttachmentService();
 		
-		File noteAttachmentDIR = new File(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
+		File noteAttachmentDIR = new File(getNoteAttachmentDIR(noteAttachmentURL));
 		if(!noteAttachmentDIR.exists()) {
-			noteAttachmentDIR.delete();
 			
-			isDeleted = true;
+			try {
+				
+				Connection conn = DatabaseConnector.getConnection();
+				PreparedStatement pst = null;
+
+				String sql = "DELETE FROM `NoteAttachment` WHERE noteAttachmentURL = ?";
+				pst = conn.prepareStatement(sql);
+				pst.setString(1, noteAttachmentURL);
+				
+				pst.executeUpdate();
+				
+				noteAttachmentDIR.delete();
+				isDeleted = true;
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		return isDeleted;
@@ -133,9 +147,8 @@ public class NoteAttachmentService {
 	public boolean checkIfNoteFolderExist() {
 		
 		boolean isExist = false;
-		NoteAttachmentService noteAttachmentService = new NoteAttachmentService();
 		
-		File noteAttachmentDIR = new File(noteAttachmentService.getNoteDIR());
+		File noteAttachmentDIR = new File(getNoteDIR());
 		if(!noteAttachmentDIR.exists()) {
 			noteAttachmentDIR.mkdir();
 			
