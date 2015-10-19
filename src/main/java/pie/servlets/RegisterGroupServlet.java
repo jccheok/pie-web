@@ -2,6 +2,9 @@ package pie.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -36,24 +39,30 @@ public class RegisterGroupServlet extends HttpServlet {
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
 		String groupName = null;
 		String groupDescription = null;
 		int groupMaxDailyHomeworkMinutes = 0;
 		int groupTypeID = 0;
 		String groupCode = null;
 		int groupOwnerID = 0;
+		Date expiryDate = null;
+		int subjectID = 0;
 
 		try {
 
 			Map<String, String> requestParameters = Utilities.getParameters(request, "groupName", "groupDescription",
-					"groupMaxDailyHomeworkMinutes", "groupTypeID", "groupCode", "staffID");
+					"groupMaxDailyHomeworkMinutes", "groupTypeID", "groupCode", "staffID", "expiryDate", "subjectID");
 			groupName = requestParameters.get("groupName");
 			groupDescription = requestParameters.get("groupDescription");
 			groupMaxDailyHomeworkMinutes = Integer.parseInt(requestParameters.get("groupMaxDailyHomeworkMinutes"));
 			groupTypeID = Integer.parseInt(requestParameters.get("groupTypeID"));
 			groupCode = requestParameters.get("groupCode");
 			groupOwnerID = Integer.parseInt(requestParameters.get("staffID"));
+			expiryDate = dateFormat.parse(requestParameters.get("expiryDate"));
+			subjectID = Integer.parseInt(requestParameters.get("subjectID"));
 
 		} catch (Exception e) {
 
@@ -66,7 +75,7 @@ public class RegisterGroupServlet extends HttpServlet {
 		Staff groupOwner = staffService.getStaff(groupOwnerID);
 
 		GroupRegistrationResult registrationResult = groupService.registerGroup(groupOwner, groupName,
-				groupDescription, groupMaxDailyHomeworkMinutes, groupType, groupCode);
+				groupDescription, groupMaxDailyHomeworkMinutes, groupType, groupCode, expiryDate, subjectID);
 
 		JSONObject responseObject = new JSONObject();
 		responseObject.put("result", registrationResult.toString());

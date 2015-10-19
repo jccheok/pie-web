@@ -20,15 +20,16 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class GetAllSentHomeworkServlet extends HttpServlet{
+public class GetAllDraftPublishedHomeworkServlet extends HttpServlet{
 
-	private static final long serialVersionUID = -8358466550092241188L;
+	private static final long serialVersionUID = -2416369044315926719L;
 	
 	GroupHomeworkService groupHomeworkService;
 	
 	@Inject
-	public GetAllSentHomeworkServlet(GroupHomeworkService groupHomeworkService){
+	public GetAllDraftPublishedHomeworkServlet(GroupHomeworkService groupHomeworkService) {
 		this.groupHomeworkService = groupHomeworkService;
+		
 	}
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -46,9 +47,10 @@ public class GetAllSentHomeworkServlet extends HttpServlet{
 			return;
 		}
 		
-		GroupHomework[] groupHomework = groupHomeworkService.getAllSentHomework(publisherID);
+		GroupHomework[] groupHomework = groupHomeworkService.getAllPublishedDraftHomework(publisherID);
 		
 		JSONObject responseObject = new JSONObject();
+		
 		if(groupHomework != null){
 			
 			JSONArray sentHomeworkList = new JSONArray();		
@@ -66,8 +68,8 @@ public class GetAllSentHomeworkServlet extends HttpServlet{
 			
 			responseObject.put("sentHomework", sentHomeworkList);
 		}else{
-			responseObject.put("result", "No Sent Homework");
-			responseObject.put("message", "No Homework was sent by this user");
+			responseObject.put("result", "No Drafted Homework");
+			responseObject.put("message", "No homework was saved as Draft by this publisher");
 		}
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
