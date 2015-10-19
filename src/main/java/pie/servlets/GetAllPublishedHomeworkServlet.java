@@ -10,8 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONObject;
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -24,20 +22,14 @@ import pie.utilities.Utilities;
 @Singleton
 public class GetAllPublishedHomeworkServlet extends HttpServlet {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 5438895086826432496L;
+
 	private HomeworkService homeworkService;
-	private GroupService groupService;
-	private StaffService staffService;
 
 	@Inject
 	public GetAllPublishedHomeworkServlet(HomeworkService homeworkService, GroupService groupService,
 			StaffService staffService) {
 		this.homeworkService = homeworkService;
-		this.groupService = groupService;
-		this.staffService = staffService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -46,7 +38,6 @@ public class GetAllPublishedHomeworkServlet extends HttpServlet {
 		try {
 			Map<String, String> requestParams = Utilities.getParameters(request, "staffID");
 			staffID = Integer.parseInt(requestParams.get("staffID"));
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
