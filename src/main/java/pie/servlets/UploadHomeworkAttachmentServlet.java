@@ -54,7 +54,7 @@ public class UploadHomeworkAttachmentServlet extends HttpServlet {
 			int homeworkAttachmentID = homeworkAttachmentService.createHomeworkAttachment(homeworkAttachmentURL);
 			responseObject.put("homeworkAttachmentID", homeworkAttachmentID);
 	
-			part.write(homeworkAttachmentService.getHomeworkAttachmentDIR(homeworkAttachmentURL));
+			part.write(homeworkAttachmentService.getHomeworkAttachmentDIR(homeworkAttachmentID + "-" + homeworkAttachmentURL));
 			responseObject.put("Write Result", "Homework file is successfully written to the server");
 		}
 

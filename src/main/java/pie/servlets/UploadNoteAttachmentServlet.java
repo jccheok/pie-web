@@ -53,7 +53,7 @@ public class UploadNoteAttachmentServlet extends HttpServlet {
 			int noteAttachmentID = noteAttachmentService.createNoteAttachment(noteAttachmentURL);
 			responseObject.put("noteAttachmentID", noteAttachmentID);
 
-			part.write(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
+			part.write(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentID + "-" + noteAttachmentURL));
 			responseObject.put("Write Result", "Note is successfully written to server");
 		}
 
