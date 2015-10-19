@@ -10,6 +10,9 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 
+import pie.User;
+import pie.utilities.Utilities;
+
 import com.google.inject.Singleton;
 
 @Singleton
@@ -17,6 +20,7 @@ public class AuthService {
 
 	private static final Key SECRET_KEY = MacProvider.generateKey();
 	private static final String ISSUER = System.getenv("OPENSHIFT_APP_NAME");
+	private static final String PETAL_SECRET_KEY = System.getenv("PETAL_SECRET_KEY");
 
 	public Key getSecretKey() {
 		return SECRET_KEY;
@@ -48,6 +52,14 @@ public class AuthService {
 		Claims claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(jwt).getBody();
 
 		return claims;
+	}
+	
+	public String getAuthToken(int userID){
+		UserService userService = new UserService();
+		User user = userService.getUser(userID);
+		
+		return Utilities.hash256(user.getUserEmail() + PETAL_SECRET_KEY);
+		
 	}
 
 }
