@@ -172,7 +172,7 @@ public class GroupService {
 
 
 	public GroupRegistrationResult registerGroup(Staff groupOwner, String groupName, String groupDescription,
-			int groupMaxDailyHomeworkMinutes, GroupType groupType, String groupCode) {
+			int groupMaxDailyHomeworkMinutes, GroupType groupType, String groupCode, Date expiryDate, int subjectID) {
 
 		GroupRegistrationResult registrationResult = GroupRegistrationResult.SUCCESS;
 		
@@ -189,7 +189,7 @@ public class GroupService {
 					PreparedStatement pst = null;
 					ResultSet resultSet = null;
 
-					String sql = "INSERT INTO `Group` (schoolID, name, description, maxDailyHomeworkMin, groupTypeID, code) VALUES (?, ?, ?, ?, ?, ?)";
+					String sql = "INSERT INTO `Group` (schoolID, name, description, maxDailyHomeworkMin, groupTypeID, code, expiryDate, subjectID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 					pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 					pst.setInt(1, groupOwner.getSchool().getSchoolID());
 					pst.setString(2, groupName);
@@ -197,6 +197,8 @@ public class GroupService {
 					pst.setInt(4, groupMaxDailyHomeworkMinutes);
 					pst.setInt(5, groupType.getGroupTypeID());
 					pst.setString(6, groupCode);
+					pst.setDate(7, new java.sql.Date(expiryDate.getTime()));
+					pst.setInt(8, subjectID);
 					pst.executeUpdate();
 
 					resultSet = pst.getGeneratedKeys();
