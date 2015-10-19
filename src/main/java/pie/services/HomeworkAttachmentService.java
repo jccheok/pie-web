@@ -114,17 +114,31 @@ public class HomeworkAttachmentService {
 		}
 		return null;
 	}
-
+	
 	public boolean deleteHomeworkAttachment(String homeworkAttachmentURL) {
 
 		boolean isDeleted = false;
-		HomeworkAttachmentService homeworkAttachmentService = new HomeworkAttachmentService();
 		
-		File homeworkAttachmentDIR = new File(homeworkAttachmentService.getHomeworkAttachmentDIR(homeworkAttachmentURL));
+		File homeworkAttachmentDIR = new File(getHomeworkAttachmentDIR(homeworkAttachmentURL));
 		if(!homeworkAttachmentDIR.exists()) {
-			homeworkAttachmentDIR.delete();
+			
+			try {
+				
+				Connection conn = DatabaseConnector.getConnection();
+				PreparedStatement pst = null;
 
-			isDeleted = true;
+				String sql = "DELETE FROM `HomeworkAttachment` WHERE homeworkAttachmentURL = ?";
+				pst = conn.prepareStatement(sql);
+				pst.setString(1, homeworkAttachmentURL);
+				
+				pst.executeUpdate();
+				
+				homeworkAttachmentDIR.delete();
+				isDeleted = true;
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		return isDeleted;
@@ -133,9 +147,8 @@ public class HomeworkAttachmentService {
 	public boolean checkIfHomeworkFolderExist() {
 
 		boolean isExist = false;
-		HomeworkAttachmentService homeworkAttachmentService = new HomeworkAttachmentService();
 
-		File homeworkAttachmentDIR = new File(homeworkAttachmentService.getHomeworkDIR());
+		File homeworkAttachmentDIR = new File(getHomeworkDIR());
 		if(!homeworkAttachmentDIR.exists()) {
 			homeworkAttachmentDIR.mkdir();
 
