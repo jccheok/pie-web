@@ -2,9 +2,8 @@ package pie.constants;
 
 public enum ResetPasswordResult {
 	
-	SUCCESS("Password has been reset. Please check your email."), 
-	INVALID_ANSWER("The answer you have entered is wrong!"),
-	RESET_FAILED("The password failed to reset");
+	SUCCESS("Your password has been reset. A temporary password has been sent to your email."), 
+	INVALID_ANSWER("The answer you have entered is wrong!");
 
 	private String defaultMessage;
 

@@ -1,6 +1,7 @@
 package pie.servlets;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Map;
 
@@ -11,7 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
+import pie.User;
 import pie.constants.ResetPasswordResult;
+import pie.services.EmailService;
 import pie.services.UserService;
 import pie.utilities.Utilities;
 
@@ -24,10 +27,12 @@ public class ResetPasswordServlet extends HttpServlet {
 	private static final long serialVersionUID = 8828191475435776429L;
 	
 	UserService userService;
+	EmailService emailService;
 	
 	@Inject
-	public ResetPasswordServlet(UserService userService) {
+	public ResetPasswordServlet(UserService userService, EmailService emailService) {
 		this.userService = userService;
+		this.emailService = emailService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -47,15 +52,38 @@ public class ResetPasswordServlet extends HttpServlet {
 			return;
 		}
 		
-		ResetPasswordResult resetPasswordResult = userService.resetPassword(userID, securityQuestionAnswer, this);
+		User user = userService.getUser(userID);
+		
+		String newPassword = Utilities.generateString(10);
+		String hashedNewPassword = Utilities.hash256(newPassword);
+		
+		while (hashedNewPassword.equals(user.getUserPassword())) {
+			newPassword = Utilities.generateString(10);
+			hashedNewPassword = Utilities.hash256(newPassword);
+		}
+				
+		ResetPasswordResult resetPasswordResult = userService.resetPassword(userID, securityQuestionAnswer, hashedNewPassword);
 		
 		JSONObject responseObject = new JSONObject();
 		
 		responseObject.put("result", resetPasswordResult.toString());
 		responseObject.put("message", resetPasswordResult.getDefaultMessage());
-
+		
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
+		
+		if (resetPasswordResult == ResetPasswordResult.SUCCESS) {
+				
+			InputStream emailTemplateStream = getServletContext().getResourceAsStream("/resources/resetPasswordTemplate.html");
+			
+			String emailSubject = "Password Reset on Partners in Education";
+			String emailTemplate = Utilities.convertStreamToString(emailTemplateStream);
+
+			String emailContent = emailTemplate.replaceAll("\\$FIRST_NAME", user.getUserFirstName());
+			emailContent = emailContent.replaceAll("\\$PASSWORD", newPassword);
+			
+			emailService.sendEmail(emailSubject, emailContent, new String[] { user.getUserEmail() });
+		}
 	}
 
 
