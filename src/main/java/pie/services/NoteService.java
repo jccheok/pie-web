@@ -138,16 +138,17 @@ public class NoteService {
 			if (pst.executeUpdate() == 0) {
 				publishResult = PublishNoteResult.FAILED_DRAFT;
 			} else {
-				sql = "INSERT INTO `GroupNote` (publisherID, noteID, groupID) VALUES (?, ?, ?)";
-				pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-				pst.setInt(1, publisherID);
-				pst.setInt(2, noteID);
-				pst.setInt(3, groupID);
-				pst.executeUpdate();
 
-				if (pst.executeUpdate() == 0) {
+				GroupNoteService groupNoteService = new GroupNoteService();
+
+				int groupNoteID = groupNoteService.createGroupNote(noteID, groupID, publisherID);
+
+				if (groupNoteID == -1) {
+
 					publishResult = PublishNoteResult.FAILED_TO_UPDATE_GROUP;
+
 				} else {
+
 					Student[] groupStudents = studentGroupService.getStudentMembers(groupID);
 
 					for (Student student : groupStudents) {
@@ -155,9 +156,8 @@ public class NoteService {
 							publishResult = PublishNoteResult.FAILED_TO_SEND_TO_MEMBERS;
 						}
 					}
-					
+
 					Staff[] groupStaffs = staffGroupService.getStaffMembers(groupID);
-					
 
 					for (Staff staff : groupStaffs) {
 						if (!sendNote(noteID, staff.getUserID())) {
