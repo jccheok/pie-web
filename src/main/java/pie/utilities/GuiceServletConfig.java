@@ -12,6 +12,7 @@ import pie.servlets.GetAllSecurityQuestionsServlet;
 import pie.servlets.GetAllSentNotesServlet;
 import pie.servlets.GetNoteDetailsServlet;
 import pie.servlets.LoginServlet;
+import pie.servlets.PublishHomeworkServlet;
 import pie.servlets.RegisterGroupServlet;
 import pie.servlets.RegisterParentServlet;
 import pie.servlets.RegisterSchoolServlet;
@@ -19,6 +20,7 @@ import pie.servlets.RegisterStaffServlet;
 import pie.servlets.RegisterStudentServlet;
 import pie.servlets.ResetPasswordServlet;
 import pie.servlets.RetrieveSecurityQuestionServlet;
+import pie.servlets.SaveHomeworkAsDraftServlet;
 import pie.servlets.SaveNoteAsDraftServlet;
 import pie.servlets.SendDraftNoteServlet;
 import pie.servlets.SendNoteServlet;
@@ -106,6 +108,10 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/group/notedetails").with(GetNoteDetailsServlet.class);
 				serve("*/servlets/secured/staff/group/allsentnotes").with(GetAllSentNotesServlet.class);
 				serve("*/servlets/secured/staff/group/updatedraftnote").with(UpdateNoteDraftServlet.class);
+				
+				serve("*/servlets/secured/staff/group/createhomework").with(PublishHomeworkServlet.class);
+				serve("*/servlets/secured/staff/group/savehomeworkasdraft").with(SaveHomeworkAsDraftServlet.class);
+
 				
 				serve("*/servlets/secured/admin/registerschool").with(RegisterSchoolServlet.class);
 				serve("*/servlets/secured/admin/allschools").with(ViewAllSchoolsServlet.class);
