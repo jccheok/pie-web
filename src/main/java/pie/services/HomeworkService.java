@@ -59,7 +59,8 @@ public class HomeworkService {
 		return homework;
 	}
 
-	public int publishHomework(Homework homework) {
+	public int publishHomework(int authorID, String title, String subject, String description, int minutesRequired,
+			String level) {
 
 		int homeworkID = -1;
 
@@ -71,12 +72,12 @@ public class HomeworkService {
 			String sql = "INSERT INTO `Homework` (authorID,title,subject,description,minutesReqPerStudent, "
 					+ "level,isDraft,dateCreated) VALUES (?,?,?,?,?,?,?,NOW())";
 			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-			pst.setInt(1, homework.getHomeworkAuthor().getUserID());
-			pst.setString(2, homework.getHomeworkTitle());
-			pst.setString(3, homework.getHomeworkSubject());
-			pst.setString(4, homework.getHomeworkDescription());
-			pst.setInt(5, homework.gethomeworkMinutesReqStudent());
-			pst.setString(6, homework.getHomeworkLevel());
+			pst.setInt(1, authorID);
+			pst.setString(2, title);
+			pst.setString(3, subject);
+			pst.setString(4, description);
+			pst.setInt(5, minutesRequired);
+			pst.setString(6, level);
 			pst.setInt(7, 0);
 			pst.executeUpdate();
 
