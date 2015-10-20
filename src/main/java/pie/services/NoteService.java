@@ -35,18 +35,16 @@ public class NoteService {
 
 			if (resultSet.next()) {
 
-				Staff staff = new StaffService().getStaff(resultSet.getInt("staffID"));
+				Staff staff = new StaffService().getStaff(resultSet.getInt("authorID"));
 				String title = resultSet.getString("title");
 				String description = resultSet.getString("description");
 				boolean isDraft = resultSet.getInt("isDraft") == 1;
 				boolean isDeleted = resultSet.getInt("isDeleted") == 1;
 				Date dateCreated = new Date(resultSet.getTimestamp("dateCreated").getTime());
 				Date dateDeleted = new Date(resultSet.getTimestamp("dateDeleted").getTime());
-				ResponseQuestion responseQuestion = new ResponseQuestionService().getResponseQuestion(resultSet
-						.getInt("responseQuestionID"));
+				ResponseQuestion responseQuestion = new ResponseQuestionService().getResponseQuestion(resultSet.getInt("responseQuestionID"));
 
-				note = new Note(noteID, staff, title, description, isDraft,
-						isDeleted, dateCreated, dateDeleted, responseQuestion);
+				note = new Note(noteID, staff, title, description, isDraft, isDeleted, dateCreated, dateDeleted, responseQuestion);
 			}
 
 			conn.close();
@@ -91,32 +89,6 @@ public class NoteService {
 		return noteID;
 	}
 
-	public boolean sendNote(int noteID, int studentID) {
-
-		boolean sendResult = false;
-
-		try {
-
-			Connection conn = DatabaseConnector.getConnection();
-			PreparedStatement pst = null;
-
-			String sql = "INSERT `UserNote` (noteID, userID) VALUES (?, ?)";
-			pst = conn.prepareStatement(sql);
-			pst.setInt(1, noteID);
-			pst.setInt(2, studentID);
-
-			pst.executeUpdate();
-
-			sendResult = true;
-
-			conn.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return sendResult;
-	}
 
 	public PublishNoteResult publishNote(int noteID, int groupID, int publisherID) {
 
@@ -124,6 +96,7 @@ public class NoteService {
 		StaffGroupService staffGroupService = new StaffGroupService();
 		StudentGroupService studentGroupService = new StudentGroupService();
 		GroupNoteService groupNoteService = new GroupNoteService();
+		UserNoteService userNoteService = new UserNoteService();
 
 		try {
 
@@ -141,6 +114,7 @@ public class NoteService {
 			} else {
 
 				int groupNoteID = groupNoteService.createGroupNote(noteID, groupID, publisherID);
+				groupNoteService.publishGroupNote(groupNoteID);
 
 				if (groupNoteID == -1) {
 
@@ -151,7 +125,7 @@ public class NoteService {
 					Student[] groupStudents = studentGroupService.getStudentMembers(groupID);
 
 					for (Student student : groupStudents) {
-						if (!sendNote(noteID, student.getUserID())) {
+						if (!userNoteService.sendNote(noteID, student.getUserID())) {
 							publishResult = PublishNoteResult.FAILED_TO_SEND_TO_MEMBERS;
 						}
 					}
@@ -159,7 +133,7 @@ public class NoteService {
 					Staff[] groupStaffs = staffGroupService.getStaffMembers(groupID);
 
 					for (Staff staff : groupStaffs) {
-						if (!sendNote(noteID, staff.getUserID())) {
+						if (!userNoteService.sendNote(noteID, staff.getUserID())) {
 							publishResult = PublishNoteResult.FAILED_TO_SEND_TO_MEMBERS;
 						}
 					}
@@ -205,16 +179,18 @@ public class NoteService {
 	public Note[] getNoteDrafts(int authorID) {
 
 		Note[] noteDrafts = {};
-
+		
 		try {
 
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 			Connection conn = DatabaseConnector.getConnection();
 
-			String sql = "SELECT noteID FROM `Note` WHERE authorID = ? AND isDraft = 1 AND isDeleted = 0";
+			String sql = "SELECT noteID FROM `Note` WHERE authorID = ? AND isDraft = ? AND isDeleted = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, authorID);
+			pst.setInt(2, 1);
+			pst.setInt(3, 0);
 			resultSet = pst.executeQuery();
 
 			ArrayList<Note> tempNotes = new ArrayList<Note>();
