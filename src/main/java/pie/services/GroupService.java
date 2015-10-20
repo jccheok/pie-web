@@ -45,22 +45,26 @@ public class GroupService {
 	public boolean isAvailableGroupCode(String groupCode) {
 
 		boolean isAvailable = false;
-
-		try {
-
-			Connection conn = DatabaseConnector.getConnection();
-			PreparedStatement pst = null;
-
-			String sql = "SELECT * FROM `Group` WHERE code = ?";
-			pst = conn.prepareStatement(sql);
-			pst.setString(1, groupCode);
-
-			isAvailable = !pst.executeQuery().next();
-
-			conn.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
+		if(groupCode.equals("NONE")){
+			isAvailable = true;
+		}else{
+			
+			try {
+	
+				Connection conn = DatabaseConnector.getConnection();
+				PreparedStatement pst = null;
+	
+				String sql = "SELECT * FROM `Group` WHERE code = ?";
+				pst = conn.prepareStatement(sql);
+				pst.setString(1, groupCode);
+	
+				isAvailable = !pst.executeQuery().next();
+	
+				conn.close();
+	
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		return isAvailable;
@@ -274,7 +278,7 @@ public class GroupService {
 			String sql = "UPDATE `Group` SET name = ?, description = ?, maxDailyHomeworkMin = ?, lastUpdate = NOW(), isOpen = ? WHERE groupID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, groupName);
-			pst.setString(1, groupDescription);
+			pst.setString(2, groupDescription);
 			pst.setInt(3, groupMaxDailyHomeworkMinutes);
 			pst.setInt(4, groupID);
 			pst.setInt(5, groupIsOpen ? 1 : 0);

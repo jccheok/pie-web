@@ -106,14 +106,14 @@ public class NoteAttachmentService {
 	
 	public String updateNoteAttachmentName(int noteAttachmentID, String noteAttachmentURL) {
 		
-		String newNoteAttachmentURL = noteAttachmentID + "-" + noteAttachmentURL;
+		String newNoteAttachmentURL = "" + noteAttachmentID + "-" + noteAttachmentURL;
 		
 		try {
 			
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "UPDATE `NoteAttachment` SET noteAttachmentURL = ? WHERE noteAttachmentID = ?";
+			String sql = "UPDATE `NoteAttachment` SET attachmentURL = ? WHERE noteAttachmentID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, newNoteAttachmentURL);
 			pst.setInt(2, noteAttachmentID);
@@ -145,14 +145,14 @@ public class NoteAttachmentService {
 		boolean isDeleted = false;
 		
 		File noteAttachmentDIR = new File(getNoteAttachmentDIR(noteAttachmentURL));
-		if(!noteAttachmentDIR.exists()) {
+		if(noteAttachmentDIR.exists()) {
 			
 			try {
 				
 				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
 
-				String sql = "DELETE FROM `NoteAttachment` WHERE noteAttachmentURL = ?";
+				String sql = "DELETE FROM `NoteAttachment` WHERE attachmentURL = ?";
 				pst = conn.prepareStatement(sql);
 				pst.setString(1, noteAttachmentURL);
 				
