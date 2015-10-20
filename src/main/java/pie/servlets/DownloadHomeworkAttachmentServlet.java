@@ -12,43 +12,44 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import pie.services.NoteAttachmentService;
+import pie.services.HomeworkAttachmentService;
 import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class GetNoteAttachmentServlet extends HttpServlet {
+public class DownloadHomeworkAttachmentServlet extends HttpServlet {
 
-	private static final long serialVersionUID = 5561911532605799305L;
-	NoteAttachmentService noteAttachmentService;
+	private static final long serialVersionUID = 8015672858794411554L;
+
+	HomeworkAttachmentService homeworkAttachmentService;
 
 	@Inject
-	public GetNoteAttachmentServlet(NoteAttachmentService noteAttachmentService) {
-		this.noteAttachmentService = noteAttachmentService;
+	public DownloadHomeworkAttachmentServlet(HomeworkAttachmentService homeworkAttachmentService) {
+		this.homeworkAttachmentService = homeworkAttachmentService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		String noteAttachmentURL = null;
+		String homeworkAttachmentURL = null;
 
 		try {
 
-			Map<String, String> requestParameters = Utilities.getParameters(request, "noteAttachmentURL");
-			noteAttachmentURL = requestParameters.get("noteAttachmentURL");
+			Map<String, String> requestParameters = Utilities.getParameters(request, "homeworkAttachmentURL");
+			homeworkAttachmentURL = requestParameters.get("homeworkAttachmentURL");
 
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 			return;
 		}
 
-		File downloadFile = new File(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
+		File downloadFile = new File(homeworkAttachmentService.getHomeworkAttachmentDIR(homeworkAttachmentURL));
 		FileInputStream inStream = new FileInputStream(downloadFile);
 
 		ServletContext context = getServletContext();
 
-		String mimeType = context.getMimeType(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
+		String mimeType = context.getMimeType(homeworkAttachmentService.getHomeworkAttachmentDIR(homeworkAttachmentURL));
 		if (mimeType == null) {        
 			mimeType = "application/octet-stream";
 		}

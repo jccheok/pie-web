@@ -63,7 +63,7 @@ public class SaveNoteAsDraftServlet extends HttpServlet {
 		if (noteID != -1) {
 			
 			if(noteAttachmentID != 1) {
-				noteAttachmentService.UpdateNoteAttachmentID(noteAttachmentID, noteID);
+				noteAttachmentService.updateNoteAttachmentID(noteAttachmentID, noteID);
 			}
 			
 			responseObject.put("result", "SUCCESS");

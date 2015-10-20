@@ -78,7 +78,7 @@ public class HomeworkAttachmentService {
 		return homeworkAttachment;	
 	}
 
-	public boolean UpdateHomeworkAttachmentID(int homeworkAttachmentID, int homeworkID) {
+	public boolean updateHomeworkAttachmentID(int homeworkAttachmentID, int homeworkID) {
 
 		boolean isUpdated = false;
 
@@ -103,6 +103,32 @@ public class HomeworkAttachmentService {
 
 		return isUpdated;
 	}
+	
+	public String updateHomeworkAttachmentName(int homeworkAttachmentID, String homeworkAttachmentURL) {
+		
+		String newHomeworkAttachmentURL = homeworkAttachmentID + "-" + homeworkAttachmentURL;
+		
+		try {
+			
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+
+			String sql = "UPDATE `HomeworkAttachment` SET attachmentURL = ? WHERE homeworkAttachmentID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setString(1, newHomeworkAttachmentURL);
+			pst.setInt(2, homeworkAttachmentID);
+
+			pst.executeUpdate();
+
+			conn.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return newHomeworkAttachmentURL;
+	}
+	
 
 	public String getHomeworkFileName(Part part) {
 		String contentDisp = part.getHeader("content-disposition");
@@ -127,7 +153,7 @@ public class HomeworkAttachmentService {
 				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
 
-				String sql = "DELETE FROM `HomeworkAttachment` WHERE homeworkAttachmentURL = ?";
+				String sql = "DELETE FROM `HomeworkAttachment` WHERE attachmentURL = ?";
 				pst = conn.prepareStatement(sql);
 				pst.setString(1, homeworkAttachmentURL);
 				

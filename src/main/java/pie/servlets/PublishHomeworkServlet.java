@@ -11,8 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
-import pie.Homework;
-import pie.Staff;
 import pie.constants.PublishHomeworkResult;
 import pie.services.GroupService;
 import pie.services.HomeworkService;
@@ -26,7 +24,7 @@ import com.google.inject.Singleton;
 public class PublishHomeworkServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -6931499866512426095L;
-	
+
 	HomeworkService homeworkService;
 	GroupService groupService;
 	StaffService staffService;
@@ -40,7 +38,7 @@ public class PublishHomeworkServlet extends HttpServlet {
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Staff homeworkAuthor = null;
+		int homeworkAuthor = 0;
 		String homeworkTitle = null;
 		String homeworkSubject = null;
 		String homeworkDescription = null;
@@ -51,7 +49,7 @@ public class PublishHomeworkServlet extends HttpServlet {
 			Map<String, String> requestParams = Utilities.getParameters(request, "authorID", "homeworkTitle",
 					"homeworkSubject", "homeworkDescription", "homeworkMinutesReqStudent", "homeworkLevel");
 
-			homeworkAuthor = staffService.getStaff(Integer.parseInt(requestParams.get("authorID")));
+			homeworkAuthor = Integer.parseInt(requestParams.get("authorID"));
 			homeworkTitle = requestParams.get("homeworkTitle");
 			homeworkSubject = requestParams.get("homeworkSubject");
 			homeworkDescription = requestParams.get("homeworkDescription");
@@ -62,10 +60,8 @@ public class PublishHomeworkServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 
-		Homework homework = new Homework(0, homeworkAuthor, homeworkTitle, homeworkSubject, homeworkDescription,
-				homeworkMinutesReqStudent, null, false, false, null, homeworkLevel);
-
-		int homeworkID = homeworkService.publishHomework(homework);
+		int homeworkID = homeworkService.publishHomework(homeworkAuthor, homeworkTitle, homeworkSubject,
+				homeworkDescription, homeworkMinutesReqStudent, homeworkLevel);
 
 		JSONObject responseObject = new JSONObject();
 
