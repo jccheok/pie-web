@@ -50,7 +50,6 @@ public class GetNoteDetailsServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		JSONObject responseObject = new JSONObject();
 		
-		responseObject.put("debug", noteID + " " + note);
 		if(note != null) {
 			String publishDateStr = new SimpleDateFormat("dd-MM-yyyy").format(note.getDateCreated());
 			String fullPublishDateStr = new SimpleDateFormat("dd MMMM yyyy").format(note.getDateCreated());
