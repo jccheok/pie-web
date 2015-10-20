@@ -11,8 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
-import com.google.inject.Inject;
-
 import pie.Homework;
 import pie.Staff;
 import pie.constants.PublishHomeworkResult;
@@ -21,9 +19,14 @@ import pie.services.HomeworkService;
 import pie.services.StaffService;
 import pie.utilities.Utilities;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
+@Singleton
 public class PublishHomeworkServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -6931499866512426095L;
+	
 	HomeworkService homeworkService;
 	GroupService groupService;
 	StaffService staffService;
