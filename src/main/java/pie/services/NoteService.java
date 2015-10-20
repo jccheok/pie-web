@@ -181,16 +181,18 @@ public class NoteService {
 	public Note[] getNoteDrafts(int authorID) {
 
 		Note[] noteDrafts = {};
-
+		
 		try {
 
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 			Connection conn = DatabaseConnector.getConnection();
 
-			String sql = "SELECT noteID FROM `Note` WHERE authorID = ? AND isDraft = 1 AND isDeleted = 0";
+			String sql = "SELECT noteID FROM `Note` WHERE authorID = ? AND isDraft = ? AND isDeleted = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, authorID);
+			pst.setInt(2, 1);
+			pst.setInt(3, 0);
 			resultSet = pst.executeQuery();
 
 			ArrayList<Note> tempNotes = new ArrayList<Note>();
