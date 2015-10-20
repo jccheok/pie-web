@@ -274,7 +274,7 @@ public class GroupService {
 			String sql = "UPDATE `Group` SET name = ?, description = ?, maxDailyHomeworkMin = ?, lastUpdate = NOW(), isOpen = ? WHERE groupID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, groupName);
-			pst.setString(1, groupDescription);
+			pst.setString(2, groupDescription);
 			pst.setInt(3, groupMaxDailyHomeworkMinutes);
 			pst.setInt(4, groupID);
 			pst.setInt(5, groupIsOpen ? 1 : 0);
