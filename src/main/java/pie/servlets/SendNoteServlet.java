@@ -68,7 +68,7 @@ public class SendNoteServlet extends HttpServlet {
 		if(noteID != -1) {
 
 			if(noteAttachmentID != 1) {
-				noteAttachmentService.UpdateNoteAttachmentID(noteAttachmentID, noteID);
+				noteAttachmentService.updateNoteAttachmentID(noteAttachmentID, noteID);
 			}
 
 			PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID, staffID);
