@@ -39,7 +39,7 @@ public class GetAllSentNotesServlet extends HttpServlet {
 			
 			Map<String, String> requestParameters = Utilities.getParameters(request, "staffID");
 
-			staffID = Integer.parseInt(requestParameters.get("noteID"));
+			staffID = Integer.parseInt(requestParameters.get("staffID"));
 			
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
