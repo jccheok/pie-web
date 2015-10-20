@@ -217,6 +217,32 @@ public class UserHomeworkService {
 			pst.executeUpdate();
 			
 			readResult = true;
+	public boolean archiveHomework(int userHomeworkID) {
+		boolean archiveResult = false;
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+
+			String sql = "UPDATE `UserHomework` SET isArchived = ?, dateArchived = NOW() WHERE userHomeworkID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, 1);
+			pst.setInt(2, userHomeworkID);
+
+			pst.executeUpdate();
+
+			archiveResult = true;
+
+			conn.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return archiveResult;
+	}
+
 			
 			conn.close();
 			
