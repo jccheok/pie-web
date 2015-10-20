@@ -16,6 +16,7 @@ import pie.servlets.GetAllDraftNoteServlet;
 import pie.servlets.GetAllPublishedHomeworkServlet;
 import pie.servlets.GetAllSecurityQuestionsServlet;
 import pie.servlets.GetAllSentNotesServlet;
+import pie.servlets.GetAllSubjectsServlet;
 import pie.servlets.GetNoteDetailsServlet;
 import pie.servlets.LoginServlet;
 import pie.servlets.PublishHomeworkServlet;
@@ -80,6 +81,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/forgetpassword").with(RetrieveSecurityQuestionServlet.class);
 				serve("*/servlets/resetpassword").with(ResetPasswordServlet.class);
 				serve("*/servlets/getsecurityquestions").with(GetAllSecurityQuestionsServlet.class);
+				serve("*/servlets/getsubjects").with(GetAllSubjectsServlet.class);
 
 				serve("*/servlets/secured/opengroups").with(ViewOpenGroupsServlet.class);
 				serve("*/servlets/secured/updatepassword").with(UpdatePasswordServlet.class);
