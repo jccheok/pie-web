@@ -184,8 +184,24 @@ public class UserService {
 					String sql = "UPDATE `User` SET lastLogin = CURRENT_TIMESTAMP() WHERE emailAddress = ?";
 					pst = conn.prepareStatement(sql);
 					pst.setString(1, userEmail);
-					pst.executeUpdate();
-
+					
+					if(pst.executeUpdate() != 0){
+						
+						ResultSet resultSet = null;
+						
+						sql = "SELECT DATEDIFF(day, ? , NOW())";
+						pst = conn.prepareStatement(sql);
+						pst.setDate(1, new java.sql.Date(user.getUserLastUpdate().getTime()));
+						
+						resultSet = pst.executeQuery();
+						
+						if(resultSet.next()){
+							if(resultSet.getInt(1) >= 90){
+								loginResult = LoginResult.PASSWORD_EXPIRED;
+							}
+						}
+					}
+					
 					conn.close();
 
 				} catch (Exception e) {
