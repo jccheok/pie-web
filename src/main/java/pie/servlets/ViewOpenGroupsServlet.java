@@ -72,7 +72,7 @@ public class ViewOpenGroupsServlet extends HttpServlet {
 			groupDetails.put("groupTypeName", openGroup.getGroupType().toString());
 			groupDetails.put("groupDescription", openGroup.getGroupDescription());
 			groupDetails.put("groupMemberCount", groupService.getMemberCount(openGroup.getGroupID()));
-			groupDetails.put("groupIsPasswordProtected", !openGroup.getGroupCode().equals(""));
+			groupDetails.put("groupIsPasswordProtected", !openGroup.getGroupCode().equals("NONE"));
 			groupDetails.put("isGroupMember", groupService.hasGroupMember(groupID, schoolMemberID));
 		
 			JSONArray adminList = new JSONArray();
