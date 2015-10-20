@@ -243,6 +243,32 @@ public class UserHomeworkService {
 		return archiveResult;
 	}
 
+	public boolean submitHomework(int userHomeworkID) {
+		boolean submitResult = false;
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+
+			String sql = "UPDATE `UserHomework` SET isSubmitted = ?, submissionDate = NOW() WHERE userHomeworkID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, 1);
+			pst.setInt(2, userHomeworkID);
+
+			pst.executeUpdate();
+
+			submitResult = true;
+
+			conn.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return submitResult;
+	}
+	
 			
 			conn.close();
 			
