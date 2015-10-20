@@ -42,20 +42,20 @@ public class UploadHomeworkAttachmentServlet extends HttpServlet {
 		}
 		
 		if(request.getParts() != null) {
-			responseObject.put("result", "SUCCESS");
-			responseObject.put("message", "Homework File is uploaded");
+			
+			for(Part part : request.getParts()) {
+				String homeworkAttachmentURL = homeworkAttachmentService.getHomeworkFileName(part);
+				int homeworkAttachmentID = homeworkAttachmentService.createHomeworkAttachment(homeworkAttachmentURL);
+				homeworkAttachmentURL = homeworkAttachmentService.updateHomeworkAttachmentName(homeworkAttachmentID, homeworkAttachmentURL);
+		
+				part.write(homeworkAttachmentService.getHomeworkAttachmentDIR(homeworkAttachmentURL));
+				responseObject.put("homeworkAttachmentID", homeworkAttachmentID);
+				responseObject.put("homeworkAttachmentURL", homeworkAttachmentURL);
+			}
+			
 		} else {
 			responseObject.put("result", "FAILED");
 			responseObject.put("message", "No homework file is uploaded");
-		}
-
-		for(Part part : request.getParts()) {
-			String homeworkAttachmentURL = homeworkAttachmentService.getHomeworkFileName(part);
-			int homeworkAttachmentID = homeworkAttachmentService.createHomeworkAttachment(homeworkAttachmentURL);
-			responseObject.put("homeworkAttachmentID", homeworkAttachmentID);
-	
-			part.write(homeworkAttachmentService.getHomeworkAttachmentDIR(homeworkAttachmentID + "-" + homeworkAttachmentURL));
-			responseObject.put("Write Result", "Homework file is successfully written to the server");
 		}
 
 		out.println(responseObject);

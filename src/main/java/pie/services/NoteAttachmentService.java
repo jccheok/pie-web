@@ -78,7 +78,7 @@ public class NoteAttachmentService {
 		return noteAttachment;	
 	}
 
-	public boolean UpdateNoteAttachmentID(int noteAttachmentID, int noteID) {
+	public boolean updateNoteAttachmentID(int noteAttachmentID, int noteID) {
 
 		boolean isUpdated = false;
 
@@ -103,7 +103,32 @@ public class NoteAttachmentService {
 
 		return isUpdated;
 	}
+	
+	public String updateNoteAttachmentName(int noteAttachmentID, String noteAttachmentURL) {
+		
+		String newNoteAttachmentURL = noteAttachmentID + "-" + noteAttachmentURL;
+		
+		try {
+			
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
 
+			String sql = "UPDATE `NoteAttachment` SET noteAttachmentURL = ? WHERE noteAttachmentID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setString(1, newNoteAttachmentURL);
+			pst.setInt(2, noteAttachmentID);
+
+			pst.executeUpdate();
+
+			conn.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return newNoteAttachmentURL;
+	}
+	
 	public String getNoteFileName(Part part) {
 		String contentDisp = part.getHeader("content-disposition");
 		String[] items = contentDisp.split(";");
