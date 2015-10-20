@@ -145,7 +145,7 @@ public class NoteAttachmentService {
 		boolean isDeleted = false;
 		
 		File noteAttachmentDIR = new File(getNoteAttachmentDIR(noteAttachmentURL));
-		if(!noteAttachmentDIR.exists()) {
+		if(noteAttachmentDIR.exists()) {
 			
 			try {
 				
