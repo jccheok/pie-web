@@ -113,7 +113,7 @@ public class HomeworkAttachmentService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "UPDATE `HomeworkAttachment` SET homeworkAttachmentURL = ? WHERE homeworkAttachmentID = ?";
+			String sql = "UPDATE `HomeworkAttachment` SET attachmentURL = ? WHERE homeworkAttachmentID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, newHomeworkAttachmentURL);
 			pst.setInt(2, homeworkAttachmentID);
@@ -153,7 +153,7 @@ public class HomeworkAttachmentService {
 				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
 
-				String sql = "DELETE FROM `HomeworkAttachment` WHERE homeworkAttachmentURL = ?";
+				String sql = "DELETE FROM `HomeworkAttachment` WHERE attachmentURL = ?";
 				pst = conn.prepareStatement(sql);
 				pst.setString(1, homeworkAttachmentURL);
 				
