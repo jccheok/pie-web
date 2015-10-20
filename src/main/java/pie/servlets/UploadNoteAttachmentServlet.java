@@ -41,20 +41,20 @@ public class UploadNoteAttachmentServlet extends HttpServlet {
 		}
 
 		if(request.getParts() != null) {
-			responseObject.put("result", "SUCCESS");
-			responseObject.put("message", "Note file is uploaded");
+			
+			for(Part part : request.getParts()) {
+				String noteAttachmentURL = noteAttachmentService.getNoteFileName(part);
+				int noteAttachmentID = noteAttachmentService.createNoteAttachment(noteAttachmentURL);
+				noteAttachmentURL = noteAttachmentService.updateNoteAttachmentName(noteAttachmentID, noteAttachmentURL);
+
+				part.write(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
+				responseObject.put("noteAttachmentID", noteAttachmentID);
+				responseObject.put("noteAttachmentURL", noteAttachmentURL);
+			}
+			
 		} else {
 			responseObject.put("result", "FAILED");
 			responseObject.put("message", "No note file is uploaded");
-		}
-
-		for(Part part : request.getParts()) {
-			String noteAttachmentURL = noteAttachmentService.getNoteFileName(part);
-			int noteAttachmentID = noteAttachmentService.createNoteAttachment(noteAttachmentURL);
-			responseObject.put("noteAttachmentID", noteAttachmentID);
-
-			part.write(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentID + "-" + noteAttachmentURL));
-			responseObject.put("Write Result", "Note is successfully written to server");
 		}
 
 		out.println(responseObject);
