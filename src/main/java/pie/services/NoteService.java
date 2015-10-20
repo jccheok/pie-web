@@ -152,6 +152,7 @@ public class NoteService {
 	public DeleteNoteResult deleteNote(int noteID) {
 
 		DeleteNoteResult deleteNoteResult = DeleteNoteResult.SUCCESS;
+		
 		try {
 
 			Note note = getNote(noteID);
@@ -169,6 +170,7 @@ public class NoteService {
 					deleteNoteResult = DeleteNoteResult.FAILED_TO_SET_TO_DELETE;
 				}
 			}
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -316,7 +318,7 @@ public class NoteService {
 			PreparedStatement pst = null;
 			Connection conn = DatabaseConnector.getConnection();
 
-			String sql = "UPDATE `Note` SET isDeleted = ? WHERE noteID = ?";
+			String sql = "UPDATE `Note` SET isDeleted = ?, dateDeleted = NOW() WHERE noteID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, 1);
 			pst.setInt(2, noteID);
