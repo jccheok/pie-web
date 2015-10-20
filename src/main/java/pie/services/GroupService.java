@@ -45,22 +45,26 @@ public class GroupService {
 	public boolean isAvailableGroupCode(String groupCode) {
 
 		boolean isAvailable = false;
-
-		try {
-
-			Connection conn = DatabaseConnector.getConnection();
-			PreparedStatement pst = null;
-
-			String sql = "SELECT * FROM `Group` WHERE code = ?";
-			pst = conn.prepareStatement(sql);
-			pst.setString(1, groupCode);
-
-			isAvailable = !pst.executeQuery().next();
-
-			conn.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
+		if(groupCode.equals("NONE")){
+			isAvailable = true;
+		}else{
+			
+			try {
+	
+				Connection conn = DatabaseConnector.getConnection();
+				PreparedStatement pst = null;
+	
+				String sql = "SELECT * FROM `Group` WHERE code = ?";
+				pst = conn.prepareStatement(sql);
+				pst.setString(1, groupCode);
+	
+				isAvailable = !pst.executeQuery().next();
+	
+				conn.close();
+	
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		return isAvailable;
