@@ -200,4 +200,30 @@ public class UserHomeworkService {
 		
 		return userHomeworkRecipients;
 	}
+	
+	public boolean readHomework(int userHomeworkID){
+		boolean readResult = false;
+
+		try{
+			
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+
+			String sql = "UPDATE `UserHomework` SET isRead = ? WHERE userHomeworkID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, 1);
+			pst.setInt(2, userHomeworkID);
+			
+			pst.executeUpdate();
+			
+			readResult = true;
+			
+			conn.close();
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return readResult;
+	}
 }
