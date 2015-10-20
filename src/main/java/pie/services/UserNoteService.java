@@ -199,4 +199,32 @@ public class UserNoteService {
 		
 	}
 	
+	public boolean sendNote(int noteID, int studentID) {
+
+		boolean sendResult = false;
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+
+			String sql = "INSERT `UserNote` (noteID, userID) VALUES (?, ?)";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, noteID);
+			pst.setInt(2, studentID);
+
+			pst.executeUpdate();
+
+			sendResult = true;
+
+			conn.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return sendResult;
+		
+	}
+	
 }
