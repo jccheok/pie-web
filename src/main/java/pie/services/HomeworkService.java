@@ -82,7 +82,9 @@ public class HomeworkService {
 
 			resultSet = pst.getGeneratedKeys();
 
-			homeworkID = resultSet.getInt(1);
+			if (resultSet.next()) {
+				homeworkID = resultSet.getInt(1);
+			}
 
 			conn.close();
 
