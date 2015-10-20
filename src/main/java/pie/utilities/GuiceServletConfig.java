@@ -103,7 +103,6 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/group/owner/deactivategroup").with(DeactivateGroupServlet.class);
 				serve("*/servlets/secured/staff/group/member/allgroupmembers").with(ViewAllGroupMembersServlet.class);
 				
-				
 				serve("*/servlets/secured/staff/group/sendnote").with(SendNoteServlet.class);
 				serve("*/servlets/secured/staff/group/savenoteasdraft").with(SaveNoteAsDraftServlet.class);
 				serve("*/servlets/secured/staff/group/alldraftnote").with(GetAllDraftNoteServlet.class);
