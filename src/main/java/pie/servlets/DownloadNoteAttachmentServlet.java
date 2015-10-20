@@ -19,13 +19,13 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class GetNoteAttachmentServlet extends HttpServlet {
+public class DownloadNoteAttachmentServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 5561911532605799305L;
 	NoteAttachmentService noteAttachmentService;
 
 	@Inject
-	public GetNoteAttachmentServlet(NoteAttachmentService noteAttachmentService) {
+	public DownloadNoteAttachmentServlet(NoteAttachmentService noteAttachmentService) {
 		this.noteAttachmentService = noteAttachmentService;
 	}
 
