@@ -146,7 +146,7 @@ public class HomeworkAttachmentService {
 		boolean isDeleted = false;
 		
 		File homeworkAttachmentDIR = new File(getHomeworkAttachmentDIR(homeworkAttachmentURL));
-		if(!homeworkAttachmentDIR.exists()) {
+		if(homeworkAttachmentDIR.exists()) {
 			
 			try {
 				
