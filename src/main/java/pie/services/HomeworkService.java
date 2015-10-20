@@ -69,8 +69,7 @@ public class HomeworkService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "INSERT INTO `Homework` (authorID,title,subject,description,minutesReqPerStudent, "
-					+ "level,isDraft,dateCreated) VALUES (?,?,?,?,?,?,?,NOW())";
+			String sql = "INSERT INTO `Homework` (authorID,title,subject,description,minutesReqPerStudent,level,isDraft,dateCreated) VALUES(?,?,?,?,?,?,?,NOW())";
 			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			pst.setInt(1, authorID);
 			pst.setString(2, title);
@@ -83,7 +82,9 @@ public class HomeworkService {
 
 			resultSet = pst.getGeneratedKeys();
 
-			homeworkID = resultSet.getInt(1);
+			if (resultSet.next()) {
+				homeworkID = resultSet.getInt(1);
+			}
 
 			conn.close();
 
