@@ -4,6 +4,8 @@ import pie.filters.AuthFilter;
 import pie.filters.ResponseFilter;
 import pie.servlets.AddChildServlet;
 import pie.servlets.DeactivateGroupServlet;
+import pie.servlets.DeleteHomeworkAttachmentServlet;
+import pie.servlets.DeleteNoteAttachmentServlet;
 import pie.servlets.DeleteNoteServlet;
 import pie.servlets.DownloadHomeworkAttachmentServlet;
 import pie.servlets.DownloadNoteAttachmentServlet;
@@ -114,6 +116,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/group/updatedraftnote").with(UpdateNoteDraftServlet.class);
 				serve("*/servlets/secured/staff/group/uploadnoteattachment").with(UploadNoteAttachmentServlet.class);
 				serve("*/servlets/secured/staff/group/downloadnoteattachment").with(DownloadNoteAttachmentServlet.class);
+				serve("*/servlets/secured/staff/group/deletenoteattachment").with(DeleteNoteAttachmentServlet.class);
 				
 				serve("*/servlets/secured/staff/group/createhomework").with(PublishHomeworkServlet.class);
 				serve("*/servlets/secured/staff/group/savehomeworkasdraft").with(SaveHomeworkAsDraftServlet.class);
@@ -121,6 +124,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/group/allcreatedhomework").with(GetAllPublishedHomeworkServlet.class);
 				serve("*/servlets/secured/staff/group/uploadhomeworkattachment").with(UploadHomeworkAttachmentServlet.class);
 				serve("*/servlets/secured/staff/group/downloadhomeworkattachment").with(DownloadHomeworkAttachmentServlet.class);
+				serve("*/servlets/secured/staff/group/deletehomeworkattachment").with(DeleteHomeworkAttachmentServlet.class);
 				
 				serve("*/servlets/secured/admin/registerschool").with(RegisterSchoolServlet.class);
 				serve("*/servlets/secured/admin/allschools").with(ViewAllSchoolsServlet.class);
