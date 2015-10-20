@@ -49,10 +49,10 @@ public class ReadHomeworkServlet extends HttpServlet{
 		
 		if(readResult){
 			responseObject.put("result", "Success");
-			responseObject.put("message", "Successfully deleted the homework");
+			responseObject.put("message", "Successfully set homework to read");
 		}else{
 			responseObject.put("result","Failure");
-			responseObject.put("message", "Failed to delete homework");
+			responseObject.put("message", "Failed to set the homework to read");
 		}
 		
 		PrintWriter out = response.getWriter();
