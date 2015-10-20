@@ -35,18 +35,16 @@ public class NoteService {
 
 			if (resultSet.next()) {
 
-				Staff staff = new StaffService().getStaff(resultSet.getInt("staffID"));
+				Staff staff = new StaffService().getStaff(resultSet.getInt("authorID"));
 				String title = resultSet.getString("title");
 				String description = resultSet.getString("description");
 				boolean isDraft = resultSet.getInt("isDraft") == 1;
 				boolean isDeleted = resultSet.getInt("isDeleted") == 1;
 				Date dateCreated = new Date(resultSet.getTimestamp("dateCreated").getTime());
 				Date dateDeleted = new Date(resultSet.getTimestamp("dateDeleted").getTime());
-				ResponseQuestion responseQuestion = new ResponseQuestionService().getResponseQuestion(resultSet
-						.getInt("responseQuestionID"));
+				ResponseQuestion responseQuestion = new ResponseQuestionService().getResponseQuestion(resultSet.getInt("responseQuestionID"));
 
-				note = new Note(noteID, staff, title, description, isDraft,
-						isDeleted, dateCreated, dateDeleted, responseQuestion);
+				note = new Note(noteID, staff, title, description, isDraft, isDeleted, dateCreated, dateDeleted, responseQuestion);
 			}
 
 			conn.close();
