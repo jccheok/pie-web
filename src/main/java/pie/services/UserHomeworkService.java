@@ -269,8 +269,65 @@ public class UserHomeworkService {
 		return submitResult;
 	}
 	
+	public UserHomework[] getAllUserHomework(int userID){
+		UserHomework[] allUserHomework = {};
+		
+		try {
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT userHomeworkID FROM `UserHomework` WHERE userID = ? AND isDeleted = ? ";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, userID);
+			pst.setInt(2, 0);
+
+			resultSet = pst.executeQuery();
+
+			ArrayList<UserHomework> tempUserHomeworkList = new ArrayList<UserHomework>();
+			while (resultSet.next()) {
+				tempUserHomeworkList.add(getUserHomework(resultSet.getInt("userHomeworkID")));
+			}
+
+			allUserHomework = tempUserHomeworkList.toArray(allUserHomework);
+
+			conn.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return allUserHomework;
+	}
+	
+	public Staff getUserHomeworkPublisher(int userHomeworkID){
+		
+		Staff publisher = null;
+		
+		try {
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT publisherID FROM `Homework`, `GroupHomework`, `UserHomework` WHERE `Homework`.homeworkID = `GroupHomework`.homeworkID AND `UserHomework`.homeworkID = `Homework`.homeworkID "
+					+ "AND `UserHomework`.userHomeworkID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, userHomeworkID);
+
+			resultSet = pst.executeQuery();
+
+			if(resultSet.next()){
+				StaffService staffService = new StaffService();
+				publisher = staffService.getStaff(resultSet.getInt("publisherID"));
+			}
 			
 			conn.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return publisher;
 			
 		}catch(Exception e){
 			e.printStackTrace();
