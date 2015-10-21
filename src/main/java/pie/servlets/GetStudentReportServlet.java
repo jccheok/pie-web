@@ -37,7 +37,8 @@ public class GetStudentReportServlet extends HttpServlet {
 			Map<String, String> requestParams = Utilities.getParameters(request, "groupID");
 			groupID = Integer.parseInt(requestParams.get("groupID"));
 		} catch (Exception e) {
-
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+			return;
 		}
 		GroupHomework[] listGh = groupHomeworkService.getSentHomeworkForGroup(groupID);
 
