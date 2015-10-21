@@ -50,18 +50,18 @@ public class GetStaffReportServlet extends HttpServlet {
 
 		JSONObject responseObject = new JSONObject();
 		JSONArray listHomeworkEfforts = new JSONArray();
-		for (GroupHomework x : listSentHomework) {
+		for (GroupHomework gh : listSentHomework) {
 			JSONObject effortReport = new JSONObject();
-			int minutes = x.getMarkingEffort();
-			long diff = x.getTargetMarkingCompletionDate().getTime() - x.getDueDate().getTime();
+			int minutes = gh.getMarkingEffort();
+			long diff = gh.getTargetMarkingCompletionDate().getTime() - gh.getDueDate().getTime();
 			int daysTaken = (int) TimeUnit.DAYS.convert(diff, TimeUnit.DAYS);
 			int effortPerDay = daysTaken / minutes;
-			effortReport.put("groupHomeworkID", x.getGroupHomeworkID());
+			effortReport.put("groupHomeworkID", gh.getGroupHomeworkID());
 			effortReport.put("EffortPerDay", effortPerDay);
 			effortReport.put("DaysTaken", daysTaken);
-			effortReport.put("subject", x.getHomework().getHomeworkSubject());
-			effortReport.put("startDate", x.getDueDate().getTime());
-			effortReport.put("endDate", x.getTargetMarkingCompletionDate().getTime());
+			effortReport.put("subject", gh.getHomework().getHomeworkSubject());
+			effortReport.put("startDate", gh.getDueDate().getTime());
+			effortReport.put("endDate", gh.getTargetMarkingCompletionDate().getTime());
 			listHomeworkEfforts.put(effortReport);
 		}
 
