@@ -19,7 +19,9 @@ import pie.services.UserHomeworkService;
 import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
+@Singleton
 public class GetAllUserHomeworkServlet extends HttpServlet{
 
 	private static final long serialVersionUID = -4832565000771009073L;
