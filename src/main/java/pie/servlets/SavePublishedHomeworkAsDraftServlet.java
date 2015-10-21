@@ -77,13 +77,13 @@ public class SavePublishedHomeworkAsDraftServlet extends HttpServlet{
 		try {
 
 			Map<String, String> requestParameters = Utilities.getParameters(request, "groupID", "homeworkID", "staffID", 
-					"markingEffort", "actualMarkingCompletionDate", "targetMarkingCompletionDate", "dueDate", "isGraded");
+					"markingEffort", "targetMarkingCompletionDate", "dueDate", "isGraded");
 
 			publisher = staffService.getStaff(Integer.parseInt(requestParameters.get("staffID")));
 			group = groupService.getGroup(Integer.parseInt(requestParameters.get("groupID")));
 			homework = homeworkService.getHomework(Integer.parseInt(requestParameters.get("homeworkID")));
 			markingEffort = Integer.parseInt(requestParameters.get("markingEffort"));
-			actualMarkingCompletionDate = dateFormat.parse(requestParameters.get("actualMarkingCompletionDate"));
+			actualMarkingCompletionDate = dateFormat.parse("1000-01-01");
 			targetMarkingCompletionDate = dateFormat.parse(requestParameters.get("targetMarkingCompletionDate"));
 			dueDate = dateFormat.parse(requestParameters.get("dueDate"));
 			isGraded = Integer.parseInt(requestParameters.get("isGraded")) == 1 ? true:false;
