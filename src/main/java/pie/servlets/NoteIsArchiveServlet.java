@@ -50,10 +50,10 @@ public class NoteIsArchiveServlet extends HttpServlet {
 		
 		if(userNoteService.isArchive(noteID, userID)) {
 			responseObject.put("result", "SUCCESS");
-			responseObject.put("message", "Note ID: " + noteID + " was read by " + " UserID(" + userID + ")");
+			responseObject.put("message", "Note ID: " + noteID + " was archived by " + " UserID(" + userID + ")");
 		} else {
 			responseObject.put("result", "FAILED");
-			responseObject.put("message", "Note was not successfully updated in DB");
+			responseObject.put("message", "Note was not successfully archived in DB");
 		}
 		
 		PrintWriter out = response.getWriter();
