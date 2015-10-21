@@ -21,53 +21,46 @@ import pie.services.GroupHomeworkService;
 import pie.utilities.Utilities;
 
 @Singleton
-public class GetStaffReportServlet extends HttpServlet {
+public class GetStudentReportServlet extends HttpServlet {
 
-	private static final long serialVersionUID = 1182747967757433531L;
-
+	private static final long serialVersionUID = 8871417025837577243L;
 	GroupHomeworkService groupHomeworkService;
 
 	@Inject
-	public GetStaffReportServlet(GroupHomeworkService groupHomeworkService) {
+	public GetStudentReportServlet(GroupHomeworkService groupHomeworkService) {
 		this.groupHomeworkService = groupHomeworkService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		// get staff ID
-		int staffID = 0;
-		GroupHomework[] listSentHomework = {};
-
+		int groupID = 0;
 		try {
-			// get request parameters
-			Map<String, String> requestParams = Utilities.getParameters(request, "staffID");
-			staffID = Integer.parseInt(requestParams.get("staffID"));
-			listSentHomework = groupHomeworkService.getAllSentHomework(staffID);
+			Map<String, String> requestParams = Utilities.getParameters(request, "groupID");
+			groupID = Integer.parseInt(requestParams.get("groupID"));
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 			return;
 		}
+		GroupHomework[] listGh = groupHomeworkService.getSentHomeworkForGroup(groupID);
 
 		JSONObject responseObject = new JSONObject();
 		JSONArray listHomeworkEfforts = new JSONArray();
-		for (GroupHomework gh : listSentHomework) {
-			JSONObject effortReport = new JSONObject();
-			int minutes = gh.getMarkingEffort();
-			long diff = gh.getTargetMarkingCompletionDate().getTime() - gh.getDueDate().getTime();
+		for (GroupHomework gh : listGh) {
+			JSONObject groupHomework = new JSONObject();
+			long diff = gh.getPublishDate().getTime() - gh.getDueDate().getTime();
+			int effortByStudent = gh.getHomework().gethomeworkMinutesReqStudent();
 			int daysTaken = (int) TimeUnit.DAYS.convert(diff, TimeUnit.DAYS);
-			int effortPerDay = daysTaken / minutes;
-			effortReport.put("groupHomeworkID", gh.getGroupHomeworkID());
-			effortReport.put("EffortPerDay", effortPerDay);
-			effortReport.put("DaysTaken", daysTaken);
-			effortReport.put("subject", gh.getHomework().getHomeworkSubject());
-			effortReport.put("startDate", gh.getDueDate().getTime());
-			effortReport.put("endDate", gh.getTargetMarkingCompletionDate().getTime());
-			listHomeworkEfforts.put(effortReport);
+			int effortPerDay = daysTaken / effortByStudent;
+			groupHomework.put("groupHomeworkID", gh.getGroupHomeworkID());
+			groupHomework.put("EffortsPerDay", effortPerDay);
+			groupHomework.put("DaysTaken", daysTaken);
+			groupHomework.put("subject", gh.getHomework().getHomeworkSubject());
+			groupHomework.put("startDate", gh.getPublishDate().getTime());
+			groupHomework.put("endDate", gh.getDueDate().getTime());
+			listHomeworkEfforts.put(groupHomework);
 		}
 
 		responseObject.put("listEfforts", listHomeworkEfforts);
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
 	}
-
 }
