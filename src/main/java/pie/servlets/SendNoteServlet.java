@@ -67,7 +67,7 @@ public class SendNoteServlet extends HttpServlet {
 		noteID = noteService.createNote(staffID, responseQuestionID, noteTitle, noteDescription);
 
 		if(noteID != -1) {
-
+/*
 			if(noteAttachmentService.checkIfNoteFolderExist()) {
 				responseObject.put("Debug Log", "Note Folder exist");
 			} else {
@@ -90,7 +90,9 @@ public class SendNoteServlet extends HttpServlet {
 				responseObject.put("result", "FAILED");
 				responseObject.put("message", "No note file is uploaded");
 			}
-
+*/			
+			
+						
 			PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID, staffID);
 			responseObject.put("result", publishNoteResult.toString());
 			responseObject.put("message", publishNoteResult.getDefaultMessage());
