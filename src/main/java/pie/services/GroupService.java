@@ -128,9 +128,10 @@ public class GroupService {
 				boolean groupIsOpen = resultSet.getInt("isOpen") == 1;
 				Date groupLastUpdate = new Date(resultSet.getTimestamp("lastUpdate").getTime());
 				Date groupDateCreated = new Date(resultSet.getTimestamp("dateCreated").getTime());
+				Date expiryDate = new Date(resultSet.getTimestamp("expiryDate").getTime());
 
 				group = new Group(groupID, groupSchool, groupName, groupDescription, groupMaxDailyHomeworkMinutes,
-						groupType, groupCode, groupIsValid, groupIsOpen, groupLastUpdate, groupDateCreated);
+						groupType, groupCode, groupIsValid, groupIsOpen, groupLastUpdate, groupDateCreated, expiryDate);
 			}
 
 		} catch (Exception e) {
