@@ -16,7 +16,7 @@ import pie.utilities.DatabaseConnector;
 public class GroupHomeworkService {
 
 	public GroupHomework getGroupHomework(int groupHomeworkID) {
-		
+
 		GroupHomework groupHomework = null;
 
 		try {
@@ -62,8 +62,43 @@ public class GroupHomeworkService {
 		return groupHomework;
 	}
 
+	public GroupHomework[] getSentHomeworkForGroup(int groupID) {
+
+		GroupHomework[] groupHomework = {};
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT groupHomeworkID FROM `GroupHomework` WHERE groupID = ? AND isDraft = ? AND isDeleted = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, groupID);
+			pst.setInt(2, 0);
+			pst.setInt(3, 0);
+
+			resultSet = pst.executeQuery();
+
+			ArrayList<GroupHomework> tempGroupHomework = new ArrayList<GroupHomework>();
+			while (resultSet.next()) {
+				tempGroupHomework.add(getGroupHomework((resultSet.getInt("groupHomeworkID"))));
+			}
+
+			groupHomework = tempGroupHomework.toArray(groupHomework);
+
+			conn.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return groupHomework;
+
+	}
+
 	public GroupHomework[] getAllSentHomework(int publisherID) {
-		
+
 		GroupHomework[] groupHomework = {};
 
 		try {
@@ -97,7 +132,7 @@ public class GroupHomeworkService {
 	}
 
 	public GroupHomework[] getAllPublishedDraftHomework(int publisherID) {
-		
+
 		GroupHomework[] groupHomework = {};
 
 		try {
@@ -115,7 +150,7 @@ public class GroupHomeworkService {
 
 			ArrayList<GroupHomework> tempGroupHomework = new ArrayList<GroupHomework>();
 			while (resultSet.next()) {
-				tempGroupHomework.add(getGroupHomework((resultSet.getInt("groupHomeworkID"))));
+				tempGroupHomework.add(getGroupHomework((resultSet.getInt("homeworkID"))));
 			}
 
 			groupHomework = tempGroupHomework.toArray(groupHomework);
@@ -130,7 +165,7 @@ public class GroupHomeworkService {
 	}
 
 	public boolean updatePublishDate(int homeworkID, int publisherID, int groupID) {
-		
+
 		boolean updateResult = false;
 
 		try {
@@ -157,10 +192,10 @@ public class GroupHomeworkService {
 
 		return updateResult;
 	}
-	
-	public int sendPublishedHomework(GroupHomework groupHomework){
+
+	public int sendPublishedHomework(GroupHomework groupHomework) {
 		int groupHomeworkID = -1;
-		
+
 		try {
 
 			Connection conn = DatabaseConnector.getConnection();
@@ -177,7 +212,7 @@ public class GroupHomeworkService {
 			pst.setDate(5, new java.sql.Date(groupHomework.getTargetMarkingCompletionDate().getTime()));
 			pst.setDate(6, new java.sql.Date(groupHomework.getDueDate().getTime()));
 			pst.setInt(7, 0);
-			pst.setInt(8, groupHomework.isGraded() == true ? 1:0);
+			pst.setInt(8, groupHomework.isGraded() == true ? 1 : 0);
 			pst.executeUpdate();
 
 			resultSet = pst.getGeneratedKeys();
@@ -192,14 +227,13 @@ public class GroupHomeworkService {
 			e.printStackTrace();
 		}
 
-		
 		return groupHomeworkID;
 	}
-	
-	public int savePublishedHomeworkAsDraft(GroupHomework groupHomework){
-		
+
+	public int savePublishedHomeworkAsDraft(GroupHomework groupHomework) {
+
 		int groupHomeworkID = -1;
-		
+
 		try {
 
 			Connection conn = DatabaseConnector.getConnection();
@@ -215,7 +249,7 @@ public class GroupHomeworkService {
 			pst.setInt(4, groupHomework.getMarkingEffort());
 			pst.setDate(5, new java.sql.Date(groupHomework.getTargetMarkingCompletionDate().getTime()));
 			pst.setDate(6, new java.sql.Date(groupHomework.getDueDate().getTime()));
-			pst.setInt(7, groupHomework.isGraded() == true ? 1:0);
+			pst.setInt(7, groupHomework.isGraded() == true ? 1 : 0);
 			pst.executeUpdate();
 
 			resultSet = pst.getGeneratedKeys();
@@ -230,21 +264,20 @@ public class GroupHomeworkService {
 			e.printStackTrace();
 		}
 
-		
 		return groupHomeworkID;
 	}
-	
-	public boolean deleteSentHomework(int groupHomeworkID){
+
+	public boolean deleteSentHomework(int groupHomeworkID) {
 		boolean deleteResult = false;
-		
+
 		GroupHomework groupHomework = getGroupHomework(groupHomeworkID);
-		
-		if(!groupHomework.isDraft()){
-			try{
-				
+
+		if (!groupHomework.isDraft()) {
+			try {
+
 				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
-				
+
 				String sql = "UPDATE `GroupHomework` SET isDeleted = ? WHERE groupHomeworkID = ? AND isDraft = ?";
 				pst = conn.prepareStatement(sql);
 				pst.setInt(1, 1);
@@ -256,118 +289,113 @@ public class GroupHomeworkService {
 				deleteResult = true;
 
 				conn.close();
-				
-				
-			}catch(Exception e){
+
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}else{
-			try{
-				
+		} else {
+			try {
+
 				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
-				
+
 				String sql = "DELETE FROM `GroupHomework` WHERE groupHomeworkID = ? AND isDraft = ?";
 				pst = conn.prepareStatement(sql);
 				pst.setInt(1, groupHomeworkID);
 				pst.setInt(2, 1);
-				
+
 				pst.executeUpdate();
-				
+
 				deleteResult = true;
-				
+
 				conn.close();
 
-			}catch(Exception e){
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		
+
 		return deleteResult;
 	}
-	
-	
-	public boolean updateDraftPublishedHomework(GroupHomework groupHomework){
+
+	public boolean updateDraftPublishedHomework(GroupHomework groupHomework) {
 		boolean updateResult = true;
-		
-		try{
-			
+
+		try {
+
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
-			
+
 			String sql = "UPDATE `GroupHomework` SET groupID = ?, markingEffort = ?, targetMarkingCompletionDate = ?, dueDate = ?, isGraded = ? WHERE groupHomeworkID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, groupHomework.getGroup().getGroupID());
 			pst.setInt(2, groupHomework.getMarkingEffort());
 			pst.setDate(3, new java.sql.Date(groupHomework.getTargetMarkingCompletionDate().getTime()));
 			pst.setDate(4, new java.sql.Date(groupHomework.getDueDate().getTime()));
-			pst.setInt(5, groupHomework.isGraded() == true ? 1:0);
+			pst.setInt(5, groupHomework.isGraded() == true ? 1 : 0);
 			pst.setInt(6, groupHomework.getGroupHomeworkID());
-			
+
 			pst.executeUpdate();
-			
+
 			updateResult = true;
-			
+
 			conn.close();
-			
-		}catch(Exception e){
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return updateResult;
 	}
-	
-	public boolean setDraftPublishedHomework(int groupHomeworkID){
+
+	public boolean setDraftPublishedHomework(int groupHomeworkID) {
 		boolean setResult = false;
-		
-		try{
-			
+
+		try {
+
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
-			
+
 			String sql = "UPDATE `GroupHomework` SET isDraft = ? WHERE groupHomeworkID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, 0);
 			pst.setInt(2, groupHomeworkID);
-			
-			
+
 			pst.executeUpdate();
-			
+
 			setResult = true;
-			
+
 			conn.close();
-			
-			
-		}catch(Exception e){
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return setResult;
 	}
-	
-	public boolean updateActualMarkingCompletion(int groupHomeworkID){
+
+	public boolean updateActualMarkingCompletion(int groupHomeworkID) {
 		boolean setResult = false;
-		
-		try{
-			
+
+		try {
+
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
-			
+
 			String sql = "UPDATE `GroupHomework` SET actualMarkingCompletionDate = NOW() WHERE groupHomeworkID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, groupHomeworkID);
-			
+
 			pst.executeUpdate();
-			
+
 			setResult = true;
-			
+
 			conn.close();
-			
-			
-		}catch(Exception e){
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return setResult;
 	}
 }
