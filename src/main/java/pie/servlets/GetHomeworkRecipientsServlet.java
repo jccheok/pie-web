@@ -13,9 +13,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import pie.Parent;
+import pie.User;
 import pie.UserHomework;
+import pie.UserType;
 import pie.services.ParentStudentService;
 import pie.services.UserHomeworkService;
+import pie.services.UserService;
 import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
@@ -28,11 +31,13 @@ public class GetHomeworkRecipientsServlet extends HttpServlet {
 	
 	UserHomeworkService userHomeworkService;
 	ParentStudentService parentStudentService;
+	UserService userService;
 	
 	@Inject
-	public GetHomeworkRecipientsServlet(UserHomeworkService userHomeworkService, ParentStudentService parentStudentService) {
+	public GetHomeworkRecipientsServlet(UserHomeworkService userHomeworkService, ParentStudentService parentStudentService, UserService userService) {
 		this.userHomeworkService = userHomeworkService;
 		this.parentStudentService = parentStudentService;
+		this.userService = userService;
 	}
 	
 	
@@ -67,15 +72,20 @@ public class GetHomeworkRecipientsServlet extends HttpServlet {
 			for(UserHomework homework : userHomework){
 				
 				JSONObject homeworkObject = new JSONObject();
-				homeworkObject.put("userID", homework.getUser().getUserID());
-				homeworkObject.put("userName", homework.getUser().getUserFullName());
-				homeworkObject.put("userHomeworkID", homework.getUserHomeworkID());
-				homeworkObject.put("hasSubmitted", homework.isSubmitted());
-				homeworkObject.put("grade", homework.getGrade());
-				homeworkObject.put("hasMarked", homework.isMarked());
-				
-				Parent parent = parentStudentService.getMainParent(homework.getUser().getUserID());
-				homeworkObject.put("parent", parent.getUserFullName());
+				User user = userService.getUser(homework.getUser().getUserID());
+				if(user.getUserType() == UserType.STUDENT){
+					
+					homeworkObject.put("userID", user.getUserID());
+					homeworkObject.put("userName", user.getUserFullName());
+					homeworkObject.put("userHomeworkID", homework.getUserHomeworkID());
+					homeworkObject.put("hasSubmitted", homework.isSubmitted());
+					homeworkObject.put("grade", homework.getGrade());
+					homeworkObject.put("hasMarked", homework.isMarked());
+					
+					Parent parent = parentStudentService.getMainParent(homework.getUser().getUserID());
+					homeworkObject.put("parent", parent.getUserFullName());
+					
+				}
 				
 				homeworkList.put(homeworkObject);
 			}
