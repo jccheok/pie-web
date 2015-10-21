@@ -266,7 +266,7 @@ public class HomeworkService {
 				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
 
-				String sql = "UPDATE `Homework` SET homeworkIsDeleted = ? WHERE homeworkID = ?";
+				String sql = "UPDATE `Homework` SET isDeleted = ?,dateDeleted = NOW() WHERE homeworkID = ?";
 				pst = conn.prepareStatement(sql);
 				pst.setInt(1, 1);
 				pst.setInt(2, homework.getHomeworkID());
