@@ -89,7 +89,7 @@ public class UserNoteService {
 		
 	}
 	
-	public boolean isRead(int noteID, int userID) {
+	public boolean isRead(int userNoteID) {
 		
 		boolean isRead = false;
 		
@@ -98,10 +98,9 @@ public class UserNoteService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 			
-			String sql = "UPDATE `UserNote` SET isRead = 1, SET dateRead = NOW() WHERE noteID = ? and userID = ?";
+			String sql = "UPDATE `UserNote` SET isRead = 1, SET dateRead = NOW() WHERE userNoteID = ?";
 			pst = conn.prepareStatement(sql);
-			pst.setInt(1, noteID);
-			pst.setInt(2, userID);
+			pst.setInt(1, userNoteID);
 			
 			pst.executeUpdate();
 			isRead = true;
