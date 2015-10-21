@@ -91,21 +91,24 @@ public class SendNoteServlet extends HttpServlet {
 				if(items != null && items.size() > 0) {
 					for (FileItem item : items) {
 						if(!item.isFormField()) {
-							
+							responseObject.put("Phase 1", "1");
 							noteAttachmentURL = new File(item.getName()).getName();
+							responseObject.put("Phase 2", "1");
 							noteAttachmentID = noteAttachmentService.createNoteAttachment(noteAttachmentURL, noteID);
+							responseObject.put("Phase 3", "1");
 							noteAttachmentURL = noteAttachmentService.updateNoteAttachmentName(noteAttachmentID, noteAttachmentURL);
-							
+							responseObject.put("Phase 4", "1");
 							File storeFile = new File(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
+							responseObject.put("Phase 5", "1");
 							item.write(storeFile);
-							
+							responseObject.put("Phase 6", "1");
 							responseObject.put("noteAttachmentID", noteAttachmentID);
 							responseObject.put("noteAttachmentURL", noteAttachmentURL);
-						}
+						} else {
+							responseObject.put("result", "FAILED");
+							responseObject.put("message", "No note file is uploaded");
+						} 
 					}
-				} else {
-					responseObject.put("result", "FAILED");
-					responseObject.put("message", "No note file is uploaded");
 				}
 				
 			} catch (Exception e) {
