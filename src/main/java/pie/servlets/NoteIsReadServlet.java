@@ -1,6 +1,7 @@
 package pie.servlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -8,7 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import pie.services.NoteService;
+import org.json.JSONObject;
+
 import pie.services.UserNoteService;
 import pie.utilities.Utilities;
 
@@ -20,12 +22,11 @@ public class NoteIsReadServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 6267658636515588161L;
 
-	NoteService noteService;
 	UserNoteService userNoteService;
 	
 	@Inject
-	public NoteIsReadServlet(NoteService noteService) {
-		this.noteService = noteService;
+	public NoteIsReadServlet(UserNoteService userNoteService) {
+		this.userNoteService = userNoteService;
 	}
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -45,7 +46,18 @@ public class NoteIsReadServlet extends HttpServlet {
 			return;
 		}
 		
-		userNoteService.isRead(userNoteID)
+		JSONObject responseObject = new JSONObject();
+		
+		if(userNoteService.isRead(noteID, userID)) {
+			responseObject.put("result", "SUCCESS");
+			responseObject.put("message", "Note ID: " + noteID + " was read by " + " UserID(" + userID + ")");
+		} else {
+			responseObject.put("result", "FAILED");
+			responseObject.put("message", "Note was not successfully updated in DB");
+		}
+		
+		PrintWriter out = response.getWriter();
+		out.write(responseObject.toString());
 		
 	}
 	
