@@ -125,7 +125,7 @@ public class UserNoteService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 			
-			String sql = "UPDATE `UserNote` SET isArchive = 1, dateArchive = NOW() WHERE noteID = ? and userID = ?";
+			String sql = "UPDATE `UserNote` SET isArchive = 1, dateArchived = NOW() WHERE noteID = ? and userID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, noteID);
 			pst.setInt(2, userID);
