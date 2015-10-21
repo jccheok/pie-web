@@ -115,7 +115,7 @@ public class GroupHomeworkService {
 
 			ArrayList<GroupHomework> tempGroupHomework = new ArrayList<GroupHomework>();
 			while (resultSet.next()) {
-				tempGroupHomework.add(getGroupHomework((resultSet.getInt("homeworkID"))));
+				tempGroupHomework.add(getGroupHomework((resultSet.getInt("groupHomeworkID"))));
 			}
 
 			groupHomework = tempGroupHomework.toArray(groupHomework);
