@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import pie.Parent;
 import pie.UserHomework;
 import pie.services.ParentStudentService;
 import pie.services.UserHomeworkService;
@@ -73,7 +74,8 @@ public class GetHomeworkRecipientsServlet extends HttpServlet {
 				homeworkObject.put("grade", homework.getGrade());
 				homeworkObject.put("hasMarked", homework.isMarked());
 				
-				homeworkObject.put("parent", parentStudentService.getMainParent(homework.getUser().getUserID()).getUserFullName());
+				Parent parent = parentStudentService.getMainParent(homework.getUser().getUserID());
+				homeworkObject.put("parent", parent.getUserFullName());
 				
 				homeworkList.put(homeworkObject);
 			}
