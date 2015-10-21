@@ -14,10 +14,9 @@ import pie.utilities.DatabaseConnector;
 
 public class NoteAttachmentService {
 
-	public int createNoteAttachment(String noteAttachmentURL) {
+	public int createNoteAttachment(String noteAttachmentURL, int noteID) {
 
 		int noteAttachmentID = -1;
-		int tempNoteID = 1;
 
 		try {
 
@@ -28,7 +27,7 @@ public class NoteAttachmentService {
 			String sql = "INSERT INTO `NoteAttachment` (attachmentURL, noteID) VALUES (?, ?)";
 			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			pst.setString(1, noteAttachmentURL);
-			pst.setInt(2, tempNoteID);
+			pst.setInt(2, noteID);
 			pst.executeUpdate();
 
 			resultSet = pst.getGeneratedKeys();
