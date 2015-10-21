@@ -98,7 +98,7 @@ public class UserNoteService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 			
-			String sql = "UPDATE `UserNote` SET isRead = 1, SET dateRead = NOW() WHERE noteID = ? and userID = ?";
+			String sql = "UPDATE `UserNote` SET isRead = 1, dateRead = NOW() WHERE noteID = ? and userID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, noteID);
 			pst.setInt(2, userID);
@@ -125,7 +125,7 @@ public class UserNoteService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 			
-			String sql = "UPDATE `UserNote` SET isArchive = 1, SET dateArchive = NOW() WHERE noteID = ? and userID = ?";
+			String sql = "UPDATE `UserNote` SET isArchive = 1, dateArchived = NOW() WHERE noteID = ? and userID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, noteID);
 			pst.setInt(2, userID);
@@ -143,7 +143,34 @@ public class UserNoteService {
 		
 	}
 	
-	public boolean userResponse(int userNoteID, String responseText) {
+	public boolean unArchive(int noteID, int userID) {
+		
+		boolean unArchive = false;
+		
+		try {
+			
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			
+			String sql = "UPDATE `UserNote` SET isArchive = 0 WHERE noteID = ? and userID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, noteID);
+			pst.setInt(2, userID);
+			
+			pst.executeUpdate();
+			unArchive = true;
+			
+			conn.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return unArchive;
+		
+	}
+	
+	public boolean userResponse(int noteID, int userID, String responseText) {
 		
 		boolean isUpdated = false;
 		
@@ -152,10 +179,11 @@ public class UserNoteService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 			
-			String sql = "UPDATE `UserNote` SET responseText = ? WHERE userNoteID = ?";
+			String sql = "UPDATE `UserNote` SET responseText = ? WHERE noteID = ? AND userID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, responseText);
-			pst.setInt(2, userNoteID);
+			pst.setInt(2, noteID);
+			pst.setInt(3, userID);
 			
 			pst.executeUpdate();
 			isUpdated = true;

@@ -18,14 +18,14 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class NoteIsArchiveServlet extends HttpServlet {
+public class NoteUnArchiveServlet extends HttpServlet{
 
-	private static final long serialVersionUID = -1295128666342415143L;
-	
+	private static final long serialVersionUID = -1320416121525839532L;
+
 	UserNoteService userNoteService;
 	
 	@Inject
-	public NoteIsArchiveServlet(UserNoteService userNoteService) {
+	public NoteUnArchiveServlet(UserNoteService userNoteService) {
 		this.userNoteService = userNoteService;
 	}
 	
@@ -48,12 +48,12 @@ public class NoteIsArchiveServlet extends HttpServlet {
 		
 		JSONObject responseObject = new JSONObject();
 		
-		if(userNoteService.isArchive(noteID, userID)) {
+		if(userNoteService.unArchive(noteID, userID)) {
 			responseObject.put("result", "SUCCESS");
-			responseObject.put("message", "Note ID: " + noteID + " was archived by " + " UserID(" + userID + ")");
+			responseObject.put("message", "Note ID: " + noteID + " was un-archived by " + " UserID(" + userID + ")");
 		} else {
 			responseObject.put("result", "FAILED");
-			responseObject.put("message", "Note was not successfully archived in DB");
+			responseObject.put("message", "Note was not successfully un-archived in DB");
 		}
 		
 		PrintWriter out = response.getWriter();
