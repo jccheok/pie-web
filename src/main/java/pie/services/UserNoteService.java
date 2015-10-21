@@ -143,6 +143,33 @@ public class UserNoteService {
 		
 	}
 	
+	public boolean unArchive(int noteID, int userID) {
+		
+		boolean unArchive = false;
+		
+		try {
+			
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			
+			String sql = "UPDATE `UserNote` SET isArchive = 0 WHERE noteID = ? and userID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, noteID);
+			pst.setInt(2, userID);
+			
+			pst.executeUpdate();
+			unArchive = true;
+			
+			conn.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return unArchive;
+		
+	}
+	
 	public boolean userResponse(int noteID, int userID, String responseText) {
 		
 		boolean isUpdated = false;
