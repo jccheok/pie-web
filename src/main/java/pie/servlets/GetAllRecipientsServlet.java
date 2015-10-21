@@ -27,7 +27,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class ViewAllGroupMembersServlet extends HttpServlet{
+public class GetAllRecipientsServlet extends HttpServlet{
 
 
 	private static final long serialVersionUID = 8502515641450520829L;
@@ -38,7 +38,7 @@ public class ViewAllGroupMembersServlet extends HttpServlet{
 	StaffGroupService staffGroupService;
 	
 	@Inject
-	public ViewAllGroupMembersServlet(GroupService groupService, StaffService staffService, StudentGroupService studentGroupService, StaffGroupService staffGroupService) {
+	public GetAllRecipientsServlet(GroupService groupService, StaffService staffService, StudentGroupService studentGroupService, StaffGroupService staffGroupService) {
 		this.groupService = groupService;
 		this.staffService = staffService;
 		this.studentGroupService = studentGroupService;
@@ -67,6 +67,9 @@ public class ViewAllGroupMembersServlet extends HttpServlet{
 			
 			for(Group group : groups){
 				JSONObject groupMembers = new JSONObject();
+				
+				groupMembers.put("groupID", group.getGroupID());
+				groupMembers.put("groupName", group.getGroupName());
 				
 				Student[] studentMembers = studentGroupService.getStudentMembers(group.getGroupID());
 				Staff[] staffMembers = staffGroupService.getStaffMembers(group.getGroupID());
