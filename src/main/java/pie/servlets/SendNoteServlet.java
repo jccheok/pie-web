@@ -5,9 +5,11 @@ import java.io.PrintWriter;
 import java.util.Map;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
 import org.json.JSONObject;
 
@@ -20,6 +22,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
+@MultipartConfig(location = "/var/lib/openshift/560246382d52714ebe00004d/app-root/data", fileSizeThreshold = 1024*1024*2, maxFileSize = 1024*1024*10, maxRequestSize = 1024*1024*50)
 public class SendNoteServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -4985014150620092494L;
@@ -45,16 +48,13 @@ public class SendNoteServlet extends HttpServlet {
 
 		try {
 
-			Map<String, String> requestParameters = Utilities.getParameters(request, "staffID", "groupID", "responseQuestionID", 
-					"noteAttachmentID", "noteTitle", "noteDescription");
+			Map<String, String> requestParameters = Utilities.getParameters(request, "staffID", "groupID", "responseQuestionID", "noteTitle", "noteDescription");
 
 			staffID = Integer.parseInt(requestParameters.get("staffID"));
 			groupID = Integer.parseInt(requestParameters.get("groupID"));
 			responseQuestionID = Integer.parseInt(requestParameters.get("responseQuestionID"));
-			noteAttachmentID = Integer.parseInt(requestParameters.get("noteAttachmentID"));
 			noteTitle = requestParameters.get("noteTitle");
 			noteDescription = requestParameters.get("noteDescription");	
-
 
 		} catch (Exception e) {
 
@@ -62,13 +62,32 @@ public class SendNoteServlet extends HttpServlet {
 			return;
 		}
 
-		noteID = noteService.createNote(staffID, responseQuestionID, noteTitle, noteDescription);
 		JSONObject responseObject = new JSONObject();
-
+		noteID = noteService.createNote(staffID, responseQuestionID, noteTitle, noteDescription);
+		
 		if(noteID != -1) {
+			
+			if(noteAttachmentService.checkIfNoteFolderExist()) {
+				responseObject.put("Debug Log", "Note Folder exist");
+			} else {
+				responseObject.put("Debug Log", "Note Folder did not exist but was created during the process");
+			}
 
-			if(noteAttachmentID != 1) {
-				noteAttachmentService.updateNoteAttachmentID(noteAttachmentID, noteID);
+			if(request.getParts() != null) {
+				
+				for(Part part : request.getParts()) {
+					String noteAttachmentURL = noteAttachmentService.getNoteFileName(part);
+					noteAttachmentID = noteAttachmentService.createNoteAttachment(noteAttachmentURL, noteID);
+					noteAttachmentURL = noteAttachmentService.updateNoteAttachmentName(noteAttachmentID, noteAttachmentURL);
+
+					part.write(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
+					responseObject.put("noteAttachmentID", noteAttachmentID);
+					responseObject.put("noteAttachmentURL", noteAttachmentURL);
+				}
+				
+			} else {
+				responseObject.put("result", "FAILED");
+				responseObject.put("message", "No note file is uploaded");
 			}
 
 			PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID, staffID);
