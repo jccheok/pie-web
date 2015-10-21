@@ -158,14 +158,14 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 
 				serve("*/servlets/secured/staff/group/sendpublishedhomework").with(SendPublishedHomeworkServlet.class);
 				serve("*/servlets/secured/staff/group/senddraftpublishedhomework").with(SendDraftPublishedHomeworkServlet.class);
-				serve("*/servlets/secured/staff/group/savepublishedhomeworkasdraft").with(SavePublishedHomeworkAsDraftServlet.class);
+				serve("*/servlets/secured/staff/group/savepublishedhomeworkasdraft").with(SavePublishedHomeworkAsDraftServlet.class);//tested
 				serve("*/servlets/secured/staff/group/updatedraftpublishedhomework").with(UpdateDraftPublishedHomeworkServlet.class);
-				serve("*/servlets/secured/staff/group/allsenthomework").with(GetAllSentHomeworkServlet.class);
+				serve("*/servlets/secured/staff/group/allsenthomework").with(GetAllSentHomeworkServlet.class);//tested
 				serve("*/servlets/secured/staff/group/alldraftpublishedhomework").with(GetAllDraftPublishedHomeworkServlet.class);
-				serve("*/servlets/secured/staff/group/publishedhomeworkdetails").with(GetPublishedHomeworkDetailsServlet.class);
-				serve("*/servlets/secured/staff/group/deletegrouphomework").with(DeleteGroupHomeworkServlet.class);
+				serve("*/servlets/secured/staff/group/publishedhomeworkdetails").with(GetPublishedHomeworkDetailsServlet.class);//tested
+				serve("*/servlets/secured/staff/group/deletegrouphomework").with(DeleteGroupHomeworkServlet.class);//tested
 
-				serve("*/servlets/secured/staff/group/homeworkrecipients").with(GetHomeworkRecipientsServlet.class);
+				serve("*/servlets/secured/staff/group/homeworkrecipients").with(GetHomeworkRecipientsServlet.class);//tested
 				serve("*/servlets/secured/staff/group/markhomework").with(MarkHomeworkServlet.class);
 				serve("*/servlets/secured/staff/group/gradehomework").with(GradeHomeworkServlet.class);
 				serve("*/servlets/secured/staff/group/submithomework").with(SubmitHomeworkServlet.class);
