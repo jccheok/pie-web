@@ -70,10 +70,11 @@ public class GetHomeworkRecipientsServlet extends HttpServlet {
 			JSONArray homeworkList = new JSONArray();
 			
 			for(UserHomework homework : userHomework){
-				
-				JSONObject homeworkObject = new JSONObject();
+
 				User user = userService.getUser(homework.getUser().getUserID());
 				if(user.getUserType() == UserType.STUDENT){
+					
+					JSONObject homeworkObject = new JSONObject();
 					
 					homeworkObject.put("userID", user.getUserID());
 					homeworkObject.put("userName", user.getUserFullName());
@@ -85,9 +86,10 @@ public class GetHomeworkRecipientsServlet extends HttpServlet {
 					Parent parent = parentStudentService.getMainParent(homework.getUser().getUserID());
 					homeworkObject.put("parent", parent.getUserFullName());
 					
+					homeworkList.put(homeworkObject);
 				}
 				
-				homeworkList.put(homeworkObject);
+				
 			}
 		
 			responseObject.put("publishedHomeworkDetails", homeworkList);
