@@ -66,7 +66,7 @@ public class GetAllDraftPublishedHomeworkServlet extends HttpServlet{
 				sentHomeworkList.put(homeworkObject);
 			}
 			
-			responseObject.put("sentHomework", sentHomeworkList);
+			responseObject.put("draftPublishedHomework", sentHomeworkList);
 		}else{
 			responseObject.put("result", "No Drafted Homework");
 			responseObject.put("message", "No homework was saved as Draft by this publisher");
