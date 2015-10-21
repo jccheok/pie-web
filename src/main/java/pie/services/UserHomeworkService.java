@@ -24,7 +24,7 @@ public class UserHomeworkService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT * FROM `UserHomework` WHERE userHomeworkID = ?";
+			String sql = "SELECT * FROM `UserHomework` WHERE userHomework = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, userHomeworkID);
 
@@ -275,13 +275,13 @@ public class UserHomeworkService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return submitResult;
 	}
-	
-	public UserHomework[] getAllUserHomework(int userID){
+
+	public UserHomework[] getAllUserHomework(int userID) {
 		UserHomework[] allUserHomework = {};
-		
+
 		try {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
@@ -306,14 +306,44 @@ public class UserHomeworkService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return allUserHomework;
 	}
-	
-	public Staff getUserHomeworkPublisher(int userHomeworkID){
-		
+
+	public UserHomework[] getAllMarkedUserHomework(int userID) {
+		UserHomework[] allUserHomework = {};
+		try {
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT userHomeworkID FROM `UserHomework` WHERE userID = ? and isDeleted = ? AND isMarked = ? AND grade IS NOT NULL";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, userID);
+			pst.setInt(2, 0);
+			pst.setInt(3, 1);
+
+			resultSet = pst.executeQuery();
+
+			ArrayList<UserHomework> tempUserHomeworkList = new ArrayList<UserHomework>();
+			while (resultSet.next()) {
+				tempUserHomeworkList.add(getUserHomework(resultSet.getInt("userHomeworkID")));
+			}
+
+			allUserHomework = tempUserHomeworkList.toArray(allUserHomework);
+
+			conn.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return allUserHomework;
+	}
+
+	public Staff getUserHomeworkPublisher(int userHomeworkID) {
+
 		Staff publisher = null;
-		
+
 		try {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
@@ -326,23 +356,23 @@ public class UserHomeworkService {
 
 			resultSet = pst.executeQuery();
 
-			if(resultSet.next()){
+			if (resultSet.next()) {
 				StaffService staffService = new StaffService();
 				publisher = staffService.getStaff(resultSet.getInt("publisherID"));
 			}
-			
+
 			conn.close();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return publisher;
 	}
-	
-	public GroupHomework getGroupHomework (int userHomeworkID, int publisherID){
+
+	public GroupHomework getGroupHomework(int userHomeworkID, int publisherID) {
 		GroupHomework groupHomework = null;
-		
+
 		try {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
@@ -356,17 +386,17 @@ public class UserHomeworkService {
 
 			resultSet = pst.executeQuery();
 
-			if(resultSet.next()){
+			if (resultSet.next()) {
 				GroupHomeworkService groupHomeworkService = new GroupHomeworkService();
 				groupHomework = groupHomeworkService.getGroupHomework(resultSet.getInt("groupHomeworkID"));
 			}
-			
+
 			conn.close();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return groupHomework;
 	}
 }
