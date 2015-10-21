@@ -21,7 +21,6 @@ import pie.utilities.Utilities;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-
 @Singleton
 public class PublishDraftHomeworkServlet extends HttpServlet {
 
@@ -41,10 +40,10 @@ public class PublishDraftHomeworkServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		PublishHomeworkResult result = null;
+		PublishHomeworkResult result = PublishHomeworkResult.FAILED_TO_UPDATE_HOMEWORK;
 
 		try {
-			Map<String, String> requestParams = Utilities.getParameters(request, "homeworkID", "authorID",
+			Map<String, String> requestParams = Utilities.getParameters(request, "homeworkID", "staffID",
 					"homeworkTitle", "homeworkSubject", "homeworkDescription", "homeworkMinutesReqStudent",
 					"homeworkLevel");
 

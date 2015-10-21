@@ -52,6 +52,7 @@ public class GetAllDraftHomeworkServlet extends HttpServlet {
 		JSONArray jsonArrayHomework = new JSONArray();
 		for (Homework homework : listHomework) {
 			JSONObject jsonHomework = new JSONObject();
+			jsonHomework.put("id", homework.getHomeworkID());
 			jsonHomework.put("title", homework.getHomeworkTitle());
 			jsonHomework.put("subject", homework.getHomeworkSubject());
 			jsonHomework.put("description", homework.getHomeworkDescription());

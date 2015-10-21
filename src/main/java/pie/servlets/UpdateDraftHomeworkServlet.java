@@ -40,7 +40,7 @@ public class UpdateDraftHomeworkServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		UpdateHomeworkDraftResult result = null;
+		UpdateHomeworkDraftResult result = UpdateHomeworkDraftResult.SUCCESS;
 		try {
 			Map<String, String> requestParams = Utilities.getParameters(request, "homeworkID", "authorID",
 					"homeworkTitle", "homeworkSubject", "homeworkDescription", "homeworkMinutesReqStudent",
@@ -53,7 +53,13 @@ public class UpdateDraftHomeworkServlet extends HttpServlet {
 			homework.sethomeworkMinutesReqStudent(Integer.parseInt(requestParams.get("homeworkMinutesReqStudent")));
 			homework.setHomeworkLevel(requestParams.get("homeworkLevel"));
 
-			result = homeworkService.updateDraftHomework(homework);
+			if (homeworkService.updateDraftHomework(homework)
+					.equals(UpdateHomeworkDraftResult.FAIL_TO_UPDATE_HOMEWORK)) {
+				result = UpdateHomeworkDraftResult.FAIL_TO_UPDATE_HOMEWORK;
+			} else if (homeworkService.updateDraftHomework(homework)
+					.equals(UpdateHomeworkDraftResult.HOMEWORK_IS_NOT_DRAFT)) {
+				result = UpdateHomeworkDraftResult.HOMEWORK_IS_NOT_DRAFT;
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
