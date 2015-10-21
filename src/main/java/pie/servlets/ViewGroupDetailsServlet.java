@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
 
 import pie.Group;
+import pie.StaffRole;
 import pie.User;
 import pie.UserType;
 import pie.services.GroupService;
@@ -69,8 +70,15 @@ public class ViewGroupDetailsServlet extends HttpServlet {
 		
 		User user = userService.getUser(userID);
 		if(user.getUserType() == UserType.STAFF){
-			responseObject.put("userRole", staffGroupService.getStaffRole(userID, groupID).getStaffRoleName());
-			responseObject.put("userID", userID);
+			StaffRole staffRole = staffGroupService.getStaffRole(userID, groupID);
+			if(staffRole != null){
+				responseObject.put("userRole", staffRole.getStaffRoleName());
+				responseObject.put("userID", userID);
+			}else{
+				responseObject.put("userID", userID);
+				responseObject.put("isMember", staffGroupService.isMember(userID, groupID));
+			}
+			
 		}
 		
 		PrintWriter out = response.getWriter();
