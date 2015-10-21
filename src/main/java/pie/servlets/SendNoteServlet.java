@@ -74,10 +74,10 @@ public class SendNoteServlet extends HttpServlet {
 			}
 
 			Part part = request.getPart("fileName");
+			String noteAttachmentURL = noteAttachmentService.getNoteFileName(part);
 			
-			if(part != null) {
+			if(noteAttachmentURL != null) {
 				
-				String noteAttachmentURL = noteAttachmentService.getNoteFileName(part);
 				noteAttachmentID = noteAttachmentService.createNoteAttachment(noteAttachmentURL, noteID);
 				noteAttachmentURL = noteAttachmentService.updateNoteAttachmentName(noteAttachmentID, noteAttachmentURL);
 
