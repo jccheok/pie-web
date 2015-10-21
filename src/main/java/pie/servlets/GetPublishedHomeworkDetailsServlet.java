@@ -60,7 +60,7 @@ public class GetPublishedHomeworkDetailsServlet extends HttpServlet {
 			homeworkObject.put("dueDate", groupHomework.getDueDate());
 			homeworkObject.put("publisherID", groupHomework.getPublisher().getUserID());
 			homeworkObject.put("publisherName", groupHomework.getPublisher().getUserFullName());
-			homeworkObject.put("publishedDate", Utilities.toUnixSeconds(groupHomework.getPublishDate()));
+			homeworkObject.put("publishedDate", groupHomework.getPublishDate());
 			homeworkObject.put("markingEffort", groupHomework.getMarkingEffort());
 			homeworkObject.put("actualMarkingCompletionDate", groupHomework.getActualMarkingCompletionDate());
 			homeworkObject.put("targetMarkingCompletionDate", groupHomework.getTargetMarkingCompletionDate());
