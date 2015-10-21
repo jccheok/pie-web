@@ -73,7 +73,7 @@ public class SendNoteServlet extends HttpServlet {
 				responseObject.put("Debug Log", "Note Folder did not exist but was created during the process");
 			}
 
-			if(request.getPart("file").getName() != null) {
+			if(request.getPart("file").getContentType().equalsIgnoreCase("text/plain")) {
 				
 				Part part = request.getPart("file");
 
