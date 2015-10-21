@@ -46,10 +46,10 @@ public class PublishHomeworkServlet extends HttpServlet {
 		String homeworkLevel = null;
 
 		try {
-			Map<String, String> requestParams = Utilities.getParameters(request, "authorID", "homeworkTitle",
+			Map<String, String> requestParams = Utilities.getParameters(request, "staffID", "homeworkTitle",
 					"homeworkSubject", "homeworkDescription", "homeworkMinutesReqStudent", "homeworkLevel");
 
-			homeworkAuthor = Integer.parseInt(requestParams.get("authorID"));
+			homeworkAuthor = Integer.parseInt(requestParams.get("staffID"));
 			homeworkTitle = requestParams.get("homeworkTitle");
 			homeworkSubject = requestParams.get("homeworkSubject");
 			homeworkDescription = requestParams.get("homeworkDescription");
