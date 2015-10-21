@@ -12,7 +12,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
 
 import pie.Group;
+import pie.StaffRole;
+import pie.User;
+import pie.UserType;
 import pie.services.GroupService;
+import pie.services.StaffGroupService;
+import pie.services.UserService;
 import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
@@ -24,20 +29,26 @@ public class ViewGroupDetailsServlet extends HttpServlet {
 	private static final long serialVersionUID = -288687819678490074L;
 	
 	GroupService groupService;
-
+	UserService userService;
+	StaffGroupService staffGroupService;	
+	
 	@Inject
-	public ViewGroupDetailsServlet(GroupService groupService) {
+	public ViewGroupDetailsServlet(GroupService groupService, UserService userService, StaffGroupService staffGroupService) {
 		this.groupService = groupService;
+		this.userService = userService;
+		this.staffGroupService = staffGroupService;
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		int groupID = 0;
+		int userID = 0;
 
 		try {
 
-			Map<String, String> requestParameters = Utilities.getParameters(request, "groupID");
+			Map<String, String> requestParameters = Utilities.getParameters(request, "groupID", "userID");
 			groupID = Integer.parseInt(requestParameters.get("groupID"));
+			userID = Integer.parseInt(requestParameters.get("userID"));
 
 		} catch (Exception e) {
 
@@ -50,11 +61,26 @@ public class ViewGroupDetailsServlet extends HttpServlet {
 		JSONObject responseObject = new JSONObject();
 
 		responseObject.put("groupID", group.getGroupID());
+		responseObject.put("groupType", group.getGroupType().toString());
 		responseObject.put("groupName", group.getGroupName());
 		responseObject.put("schoolName", group.getSchool().getSchoolName());
 		responseObject.put("groupDescription", group.getGroupDescription());
 		responseObject.put("groupMaxDailyHomeworkMinutes", group.getGroupMaxDailyHomeworkMinutes());
-
+		responseObject.put("groupEndDate", group.getExpiryDate());
+		
+		User user = userService.getUser(userID);
+		if(user.getUserType() == UserType.STAFF){
+			StaffRole staffRole = staffGroupService.getStaffRole(userID, groupID);
+			if(staffRole != null){
+				responseObject.put("userRole", staffRole.getStaffRoleName());
+				responseObject.put("userID", userID);
+			}else{
+				responseObject.put("userID", userID);
+				responseObject.put("isMember", staffGroupService.isMember(userID, groupID));
+			}
+			
+		}
+		
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
 	}
