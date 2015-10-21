@@ -75,7 +75,8 @@ public class SendNoteServlet extends HttpServlet {
 
 			Part part = request.getPart("fileName");
 			String noteAttachmentURL = noteAttachmentService.getNoteFileName(part);
-			if(noteAttachmentURL != null) {
+			responseObject.put("debug", noteAttachmentURL);
+			if(noteAttachmentURL != null && noteAttachmentURL.isEmpty()) {
 				
 				noteAttachmentID = noteAttachmentService.createNoteAttachment(noteAttachmentURL, noteID);
 				noteAttachmentURL = noteAttachmentService.updateNoteAttachmentName(noteAttachmentID, noteAttachmentURL);
@@ -83,7 +84,6 @@ public class SendNoteServlet extends HttpServlet {
 				part.write(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
 				responseObject.put("noteAttachmentID", noteAttachmentID);
 				responseObject.put("noteAttachmentURL", noteAttachmentURL);
-				responseObject.put("debug", noteAttachmentURL);
 
 			} else {
 				responseObject.put("result", "FAILED");
