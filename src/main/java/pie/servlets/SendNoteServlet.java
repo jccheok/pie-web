@@ -29,7 +29,7 @@ public class SendNoteServlet extends HttpServlet {
 
 	NoteService noteService;
 	NoteAttachmentService noteAttachmentService;
-	
+
 	@Inject
 	public SendNoteServlet(NoteService noteService, NoteAttachmentService noteAttachmentService) {
 		this.noteService = noteService;
@@ -64,27 +64,28 @@ public class SendNoteServlet extends HttpServlet {
 
 		JSONObject responseObject = new JSONObject();
 		noteID = noteService.createNote(staffID, responseQuestionID, noteTitle, noteDescription);
-		
+
 		if(noteID != -1) {
-			
+
 			if(noteAttachmentService.checkIfNoteFolderExist()) {
 				responseObject.put("Debug Log", "Note Folder exist");
 			} else {
 				responseObject.put("Debug Log", "Note Folder did not exist but was created during the process");
 			}
 
-			if(request.getParts() != null) {
+			if(request.getPart("file")!= null) {
 				
-				for(Part part : request.getParts()) {
-					String noteAttachmentURL = noteAttachmentService.getNoteFileName(part);
-					noteAttachmentID = noteAttachmentService.createNoteAttachment(noteAttachmentURL, noteID);
-					noteAttachmentURL = noteAttachmentService.updateNoteAttachmentName(noteAttachmentID, noteAttachmentURL);
+				Part part = request.getPart("file");
 
-					part.write(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
-					responseObject.put("noteAttachmentID", noteAttachmentID);
-					responseObject.put("noteAttachmentURL", noteAttachmentURL);
-				}
-				
+				String noteAttachmentURL = noteAttachmentService.getNoteFileName(part);
+				noteAttachmentID = noteAttachmentService.createNoteAttachment(noteAttachmentURL, noteID);
+				noteAttachmentURL = noteAttachmentService.updateNoteAttachmentName(noteAttachmentID, noteAttachmentURL);
+
+				part.write(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
+				responseObject.put("noteAttachmentID", noteAttachmentID);
+				responseObject.put("noteAttachmentURL", noteAttachmentURL);
+
+
 			} else {
 				responseObject.put("result", "FAILED");
 				responseObject.put("message", "No note file is uploaded");
