@@ -61,7 +61,7 @@ public class GetAllDraftPublishedHomeworkServlet extends HttpServlet{
 				homeworkObject.put("homeworkTitle", homework.getHomework().getHomeworkTitle());
 				homeworkObject.put("homeworkDescription", homework.getHomework().getHomeworkDescription());
 				homeworkObject.put("publisherName", homework.getPublisher().getUserFullName());
-				homeworkObject.put("publishedDate", Utilities.toUnixSeconds(homework.getPublishDate()));
+				homeworkObject.put("publishedDate", homework.getPublishDate());
 				
 				sentHomeworkList.put(homeworkObject);
 			}
