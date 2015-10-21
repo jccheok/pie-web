@@ -286,7 +286,6 @@ public class HomeworkService {
 				String sql = "DELETE FROM `Homework` WHERE homeworkID = ?";
 				pst = conn.prepareStatement(sql);
 				pst.setInt(1, homework.getHomeworkID());
-				pst.setInt(2, 1);
 
 				pst.executeUpdate();
 
