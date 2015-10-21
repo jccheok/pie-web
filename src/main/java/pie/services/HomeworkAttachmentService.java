@@ -175,7 +175,7 @@ public class HomeworkAttachmentService {
 		boolean isExist = false;
 
 		File homeworkAttachmentDIR = new File(getHomeworkDIR());
-		if(!homeworkAttachmentDIR.exists()) {
+		if(homeworkAttachmentDIR.exists()) {
 			homeworkAttachmentDIR.mkdir();
 
 			isExist = true;
