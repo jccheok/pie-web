@@ -16,6 +16,7 @@ public class Group {
 	private Date groupDateCreated;
 	private Date groupDateDeleted;
 	private boolean groupIsValid;
+	private Date expiryDate;
 
 	public Group() {
 		
@@ -24,7 +25,7 @@ public class Group {
 	public Group(int groupID, School school, String groupName,
 			String groupDescription, int groupMaxDailyHomeworkMinutes,
 			GroupType groupType, String groupCode, boolean groupIsOpen,
-			boolean groupIsValid, Date groupLastUpdate, Date groupDateCreated) {
+			boolean groupIsValid, Date groupLastUpdate, Date groupDateCreated, Date expiryDate) {
 		this.groupID = groupID;
 		this.school = school;
 		this.groupName = groupName;
@@ -36,6 +37,7 @@ public class Group {
 		this.groupIsValid = groupIsValid;
 		this.groupLastUpdate = groupLastUpdate;
 		this.groupDateCreated = groupDateCreated;
+		this.setExpiryDate(expiryDate);
 	}
 
 	public int getGroupID() {
@@ -132,6 +134,14 @@ public class Group {
 
 	public void setGroupIsValid(boolean groupIsValid) {
 		this.groupIsValid = groupIsValid;
+	}
+
+	public Date getExpiryDate() {
+		return expiryDate;
+	}
+
+	public void setExpiryDate(Date expiryDate) {
+		this.expiryDate = expiryDate;
 	}
 
 }
