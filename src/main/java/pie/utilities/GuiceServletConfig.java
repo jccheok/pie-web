@@ -114,7 +114,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/student/joingroup").with(StudentJoinGroupServlet.class);
 				serve("*/servlets/secured/student/joinedgroups").with(ViewStudentJoinedGroupsServlet.class);
 				
-				serve("*/servlets/secured/parent/children").with(ViewParentChildrenServlet.class);
+				serve("*/servlets/secured/parent/children").with(ViewParentChildrenServlet.class);//tested
 				serve("*/servlets/secured/parent/addchild").with(AddChildServlet.class);
 				serve("*/servlets/secured/parent/relationships").with(ViewRelationshipsServlet.class);
 				serve("*/servlets/secured/parent/setmainparent").with(SetAsMainParentServlet.class);
