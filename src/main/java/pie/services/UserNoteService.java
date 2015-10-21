@@ -143,7 +143,7 @@ public class UserNoteService {
 		
 	}
 	
-	public boolean userResponse(int userNoteID, String responseText) {
+	public boolean userResponse(int noteID, int userID, String responseText) {
 		
 		boolean isUpdated = false;
 		
@@ -152,10 +152,11 @@ public class UserNoteService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 			
-			String sql = "UPDATE `UserNote` SET responseText = ? WHERE userNoteID = ?";
+			String sql = "UPDATE `UserNote` SET responseText = ? WHERE noteID = ? AND userID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, responseText);
-			pst.setInt(2, userNoteID);
+			pst.setInt(2, noteID);
+			pst.setInt(3, userID);
 			
 			pst.executeUpdate();
 			isUpdated = true;
