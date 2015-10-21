@@ -189,7 +189,7 @@ public class UserService {
 						
 						ResultSet resultSet = null;
 						
-						sql = "SELECT DATEDIFF(? , NOW())";
+						sql = "SELECT DATEDIFF(NOW(), ?)";
 						pst = conn.prepareStatement(sql);
 						pst.setDate(1, new java.sql.Date(user.getUserLastUpdate().getTime()));
 						
