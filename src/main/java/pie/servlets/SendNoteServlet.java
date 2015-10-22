@@ -125,6 +125,10 @@ public class SendNoteServlet extends HttpServlet {
 					} else {
 						responseObject.put("fileResult", "FAILED - NO FILE UPLOADED");
 					}
+					
+					PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID, staffID);
+					responseObject.put("result", publishNoteResult.toString());
+					responseObject.put("message", publishNoteResult.getDefaultMessage());
 
 				} else {
 					responseObject.put("noteResult", "Creation of note failed");
@@ -139,10 +143,7 @@ public class SendNoteServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 
-		PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID, staffID);
-		responseObject.put("result", publishNoteResult.toString());
-		responseObject.put("message", publishNoteResult.getDefaultMessage());
-
 		out.write(responseObject.toString());
+		
 	}
 }
