@@ -28,7 +28,7 @@ public class SendNoteServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -4985014150620092494L;
 	private static final int maxRequestSize = 1024*1024*10;
-	private static final int memorySize = 1024;
+	private static final int memorySize = 1024*1024*3;
 
 	NoteService noteService;
 	NoteAttachmentService noteAttachmentService;
@@ -46,10 +46,10 @@ public class SendNoteServlet extends HttpServlet {
 		int groupID = 0;
 		int responseQuestionID = 0;
 		int noteAttachmentID = 1;
+		boolean fileDetected = false;
 		String noteTitle = null;
 		String noteDescription = null;
 		String noteAttachmentURL = null;
-		boolean fileDetected = false;
 		FileItem fileUpload = null;
 
 		JSONObject responseObject = new JSONObject();
@@ -119,6 +119,7 @@ public class SendNoteServlet extends HttpServlet {
 					responseObject.put("fileResult", "SUCCESS");
 					responseObject.put("noteAttachmentID", noteAttachmentID);
 					responseObject.put("noteAttachmentURL", noteAttachmentURL);
+					
 				} else {
 					responseObject.put("fileResult", "FAILED - NO FILE UPLOADED");
 				}
