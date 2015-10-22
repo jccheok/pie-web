@@ -70,7 +70,7 @@ public class GetAllUserHomeworkServlet extends HttpServlet{
 				homeworkObject.put("publisherName", staff.getUserFullName());
 				GroupHomework groupHomework = userHomeworkService.getGroupHomework(homework.getUserHomeworkID(), homework.getHomework().getHomeworkID());
 				homeworkObject.put("groupHomeworkNAme", groupHomework.getHomework().getHomeworkTitle());
-				//homeworkObject.put("publishedDate", dateFormat.format(groupHomework.getPublishDate().getTime()));
+				homeworkObject.put("publishedDate", groupHomework.getPublishDate());
 				//homeworkObject.put("publishedDate", dateFormat.format(userHomeworkService.getGroupHomework(homework.getUserHomeworkID(), staff.getUserID()).getPublishDate()) );
 
 				homeworkList.put(homeworkObject);
