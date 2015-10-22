@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -20,7 +19,6 @@ import org.json.JSONObject;
 import pie.constants.PublishNoteResult;
 import pie.services.NoteAttachmentService;
 import pie.services.NoteService;
-import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -51,88 +49,87 @@ public class SendNoteServlet extends HttpServlet {
 		String noteTitle = null;
 		String noteDescription = null;
 		String noteAttachmentURL = null;
-		
+		boolean fileDetected = false;
+		FileItem fileUpload = null;
+
+		JSONObject responseObject = new JSONObject();
 		PrintWriter out = response.getWriter();
+		
+		if(noteAttachmentService.checkIfNoteFolderExist()) {
+			responseObject.put("folderResult", "Note Folder exist");
+		} else {
+			responseObject.put("folderResult", "Note Folder did not exist but was created during the process");
+		}
+
+		DiskFileItemFactory factory = new DiskFileItemFactory();
+		factory.setSizeThreshold(memorySize);
+		factory.setRepository(new File(System.getenv("OPENSHIFT_TMP_DIR")));
+
+		ServletFileUpload upload = new ServletFileUpload(factory);
+		upload.setSizeMax(maxRequestSize);
 
 		try {
 
-			Map<String, String> requestParameters = Utilities.getParameters(request, "staffID", "groupID", "responseQuestionID", "noteTitle", "noteDescription");
+			List<FileItem> items = upload.parseRequest(request);
 
-			staffID = Integer.parseInt(requestParameters.get("staffID"));
-			groupID = Integer.parseInt(requestParameters.get("groupID"));
-			responseQuestionID = Integer.parseInt(requestParameters.get("responseQuestionID"));
-			noteTitle = requestParameters.get("noteTitle");
-			noteDescription = requestParameters.get("noteDescription");	
+			if(items != null && items.size() > 0) {
 
-		} catch (Exception e) {
+				Iterator<FileItem> iter = items.iterator();
+				while (iter.hasNext()) {
+					FileItem item = iter.next();
 
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
-			return;
-		}
+					if (!item.isFormField() && item.getSize() > 0) {
 
-		JSONObject responseObject = new JSONObject();
-		noteID = noteService.createNote(staffID, responseQuestionID, noteTitle, noteDescription);
+						fileDetected = true;
+						fileUpload = item;
 
-		if(noteID != -1) {
-		
-			if(noteAttachmentService.checkIfNoteFolderExist()) {
-				responseObject.put("folderResult", "Note Folder exist");
-			} else {
-				responseObject.put("folderResult", "Note Folder did not exist but was created during the process");
-			}
-		
-			DiskFileItemFactory factory = new DiskFileItemFactory();
-			factory.setSizeThreshold(memorySize);
-			factory.setRepository(new File(System.getenv("OPENSHIFT_TMP_DIR")));
+						noteAttachmentURL = new File(item.getName()).getName();
 
-			ServletFileUpload upload = new ServletFileUpload(factory);
-			upload.setSizeMax(maxRequestSize);
-			
-			try {
+					} else {
 
-				List<FileItem> items = upload.parseRequest(request);
-				
-				if(items != null && items.size() > 0) {
-
-					Iterator<FileItem> iter = items.iterator();
-					while (iter.hasNext()) {
-						FileItem item = iter.next();
-
-						if (!item.isFormField() && item.getSize() > 0) {
-
-							noteAttachmentURL = new File(item.getName()).getName();
-							noteAttachmentID = noteAttachmentService.createNoteAttachment(noteAttachmentURL, noteID);
-							noteAttachmentURL = noteAttachmentService.updateNoteAttachmentName(noteAttachmentID, noteAttachmentURL);
-
-							File storeFile = new File(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
-							item.write(storeFile);
-							
-							responseObject.put("fileResult", "SUCCESS");
-							responseObject.put("noteAttachmentID", noteAttachmentID);
-							responseObject.put("noteAttachmentURL", noteAttachmentURL);
-							
-						} else {
-							responseObject.put("fileResult", "No file is uploaded / 0 bytes");
+						if(item.getFieldName() == "staffID") {
+							staffID = Integer.parseInt(item.getName());
+						} else if(item.getFieldName() == "groupID") {
+							groupID = Integer.parseInt(item.getName());
+						} else if(item.getFieldName() == "responseQuestionID") {
+							responseQuestionID = Integer.parseInt(item.getName());
+						} else if(item.getFieldName() == "noteTitle") {
+							noteTitle = item.getName();
+						} else if(item.getFieldName() == "noteDescription") {
+							noteDescription = item.getName();
 						}
-					}
-					
-				} else {
-					responseObject.put("uploadResult", "No item found");
+					} 
 				}
 				
-			} catch (Exception e) {
-				e.printStackTrace();
+				noteID = noteService.createNote(staffID, responseQuestionID, noteTitle, noteDescription);
+
+				if(fileDetected) {
+
+					noteAttachmentID = noteAttachmentService.createNoteAttachment(noteAttachmentURL, noteID);
+					noteAttachmentURL = noteAttachmentService.updateNoteAttachmentName(noteAttachmentID, noteAttachmentURL);
+
+					File storeFile = new File(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
+					fileUpload.write(storeFile);
+
+					responseObject.put("fileResult", "SUCCESS");
+					responseObject.put("noteAttachmentID", noteAttachmentID);
+					responseObject.put("noteAttachmentURL", noteAttachmentURL);
+				} else {
+					responseObject.put("fileResult", "FAILED - NO FILE UPLOADED");
+				}
+
+			} else {
+				responseObject.put("uploadResult", "No item found");
 			}
 
-			PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID, staffID);
-			responseObject.put("result", publishNoteResult.toString());
-			responseObject.put("message", publishNoteResult.getDefaultMessage());
-
-		} else {
-			responseObject.put("noteResult", "Note was not created");
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
-		
+		PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID, staffID);
+		responseObject.put("result", publishNoteResult.toString());
+		responseObject.put("message", publishNoteResult.getDefaultMessage());
+
 		out.write(responseObject.toString());
 	}
 }
