@@ -2,6 +2,8 @@ package pie.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -40,7 +42,7 @@ public class ViewGroupDetailsServlet extends HttpServlet {
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		int groupID = 0;
 		int userID = 0;
 
@@ -66,7 +68,7 @@ public class ViewGroupDetailsServlet extends HttpServlet {
 		responseObject.put("schoolName", group.getSchool().getSchoolName());
 		responseObject.put("groupDescription", group.getGroupDescription());
 		responseObject.put("groupMaxDailyHomeworkMinutes", group.getGroupMaxDailyHomeworkMinutes());
-		responseObject.put("groupEndDate", group.getExpiryDate());
+		responseObject.put("groupEndDate", dateFormat.format(group.getExpiryDate()));
 		
 		User user = userService.getUser(userID);
 		if(user.getUserType() == UserType.STAFF){
