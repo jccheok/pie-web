@@ -349,7 +349,7 @@ public class UserHomeworkService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT publisherID FROM `Homework`, `GroupHomework`, `UserHomework` WHERE `Homework`.homeworkID = `GroupHomework`.homeworkID AND `UserHomework`.homeworkID = `Homework`.homeworkID "
+			String sql = "SELECT DISTINCT publisherID FROM `Homework`, `GroupHomework`, `UserHomework` WHERE `Homework`.homeworkID = `GroupHomework`.homeworkID AND `UserHomework`.homeworkID = `Homework`.homeworkID "
 					+ "AND `UserHomework`.userHomeworkID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, userHomeworkID);
