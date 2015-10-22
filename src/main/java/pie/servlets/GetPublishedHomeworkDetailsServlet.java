@@ -2,6 +2,8 @@ package pie.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -30,7 +32,7 @@ public class GetPublishedHomeworkDetailsServlet extends HttpServlet {
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		int groupHomeworkID = 0;
 
 		try {
@@ -62,7 +64,7 @@ public class GetPublishedHomeworkDetailsServlet extends HttpServlet {
 			homeworkObject.put("publisherName", groupHomework.getPublisher().getUserFullName());
 			homeworkObject.put("publishedDate", groupHomework.getPublishDate());
 			homeworkObject.put("markingEffort", groupHomework.getMarkingEffort());
-			homeworkObject.put("actualMarkingCompletionDate", groupHomework.getActualMarkingCompletionDate());
+			homeworkObject.put("actualMarkingCompletionDate", dateFormat.format(groupHomework.getActualMarkingCompletionDate()));
 			homeworkObject.put("targetMarkingCompletionDate", groupHomework.getTargetMarkingCompletionDate());
 			homeworkObject.put("isGraded", groupHomework.isGraded());
 			homeworkObject.put("group", groupHomework.getGroup().getGroupName());
