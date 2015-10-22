@@ -28,6 +28,7 @@ public class GroupHomework {
 		setMarkingEffort(markingEffort);
 		setActualMarkingCompletionDate(actualMarkingCompletionDate);
 		setTargetMarkingCompletionDate(targetMarkingCompletionDate);
+		setPublishDate(publishDate);
 		setDueDate(dueDate);
 		setDraft(isDraft);
 		setGraded(isGraded);
