@@ -2,7 +2,6 @@ package pie.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -80,7 +79,7 @@ public class GetAllRecipientsServlet extends HttpServlet {
 				for (Student student : studentMembers) {
 					JSONObject memberDetails = new JSONObject();
 					memberDetails.put("studentID", student.getUserID());
-					memberDetails.put("studentFullName", student.getUserFullName());
+					memberDetails.put("fullName", student.getUserFullName());
 					memberDetails.put("studentEmail", student.getUserEmail());
 
 					memberList.put(memberDetails);
@@ -89,7 +88,7 @@ public class GetAllRecipientsServlet extends HttpServlet {
 				for (Staff staff : staffMembers) {
 					JSONObject memberDetails = new JSONObject();
 					memberDetails.put("staffID", staff.getUserID());
-					memberDetails.put("staffFullName", staff.getUserFullName());
+					memberDetails.put("fullName", staff.getUserFullName());
 					memberDetails.put("staffEmail", staff.getUserEmail());
 					
 					memberList.put(memberDetails);
