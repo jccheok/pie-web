@@ -67,7 +67,7 @@ public class UploadNoteServlet extends HttpServlet {
 				Iterator<FileItem> iter = items.iterator();
 				while (iter.hasNext()) {
 					FileItem item = iter.next();
-
+					out.write(item.getName());
 					if (!item.isFormField() && item.getSize() > 0) {
 						responseObject.put("Name", item.getName());
 						responseObject.put("Size", item.getSize());
@@ -89,19 +89,7 @@ public class UploadNoteServlet extends HttpServlet {
 						if(item.getFieldName() == "staffID") {
 							int staffID = Integer.parseInt(item.getName());
 							responseObject.put("staffID", staffID);
-						} else if(item.getFieldName() == "groupID") {
-							int groupID = Integer.parseInt(item.getName());
-							responseObject.put("groupID", groupID);
-						} else if(item.getFieldName() == "responseQuestionID") {
-							int responseQuestionID = Integer.parseInt(item.getName());
-							responseObject.put("responseQuestion", responseQuestionID);
-						} else if(item.getFieldName() == "noteTitle") {
-							String noteTitle = item.getName();
-							responseObject.put("noteTitle", noteTitle);
-						} else if(item.getFieldName() == "noteDescription") {
-							String noteDescription = item.getName();
-							responseObject.put("noteDescription", noteDescription);
-						}
+						} 
 					}
 				}
 			} else {
