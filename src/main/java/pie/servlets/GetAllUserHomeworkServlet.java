@@ -68,7 +68,7 @@ public class GetAllUserHomeworkServlet extends HttpServlet{
 				homeworkObject.put("homeworkTitle", homework.getHomework().getHomeworkTitle());
 				homeworkObject.put("homeworkDescription", homework.getHomework().getHomeworkDescription());
 				homeworkObject.put("publisherName", staff.getUserFullName());
-				homeworkObject.put("publishedDate", dateFormat.format(userHomeworkService.getGroupHomework(homework.getUserHomeworkID(), staff.getUserID()).getPublishDate()) );
+				//homeworkObject.put("publishedDate", dateFormat.format(userHomeworkService.getGroupHomework(homework.getUserHomeworkID(), staff.getUserID()).getPublishDate()) );
 
 				homeworkList.put(homeworkObject);
 			}
