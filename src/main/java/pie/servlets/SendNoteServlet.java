@@ -88,19 +88,19 @@ public class SendNoteServlet extends HttpServlet {
 					} else {
 
 						if(item.getFieldName() == "staffID") {
-							staffID = Integer.parseInt(item.getString());
+							staffID = Integer.parseInt(item.getName());
 							responseObject.put("staffID", staffID);
 						} else if(item.getFieldName() == "groupID") {
-							groupID = Integer.parseInt(item.getString());
+							groupID = Integer.parseInt(item.getName());
 							responseObject.put("groupID", groupID);
 						} else if(item.getFieldName() == "responseQuestionID") {
-							responseQuestionID = Integer.parseInt(item.getString());
+							responseQuestionID = Integer.parseInt(item.getName());
 							responseObject.put("responseQuestion", responseQuestionID);
 						} else if(item.getFieldName() == "noteTitle") {
-							noteTitle = item.getString();
+							noteTitle = item.getName();
 							responseObject.put("noteTitle", noteTitle);
 						} else if(item.getFieldName() == "noteDescription") {
-							noteDescription = item.getString();
+							noteDescription = item.getName();
 							responseObject.put("noteDescription", noteDescription);
 						}
 					} 
