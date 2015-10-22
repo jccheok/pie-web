@@ -68,8 +68,9 @@ public class UploadNoteServlet extends HttpServlet {
 				while (iter.hasNext()) {
 					FileItem item = iter.next();
 					String value = item.getString();
+					String test = item.getFieldName();
 					responseObject.put("staff", item.getFieldName() + " | " + value);
-					if(item.getFieldName() == "staffID") {
+					if(test == "staffID") {
 						int staffID = Integer.parseInt(value);
 						responseObject.put("staffID", staffID);
 					}
