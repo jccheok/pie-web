@@ -55,7 +55,7 @@ public class GetIndividualStudentReport extends HttpServlet {
 			JSONObject jsonUH = new JSONObject();
 			Staff staff = userHomeworkService.getUserHomeworkPublisher(uh.getUserHomeworkID());
 			GroupHomework groupHomework = userHomeworkService.getGroupHomework(uh.getUserHomeworkID(),
-					staff.getUserID());
+					uh.getHomework().getHomeworkID());
 
 			Date startDate = groupHomework.getPublishDate();
 			Date endDate = groupHomework.getTargetMarkingCompletionDate();
