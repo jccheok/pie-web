@@ -24,7 +24,7 @@ public class UserHomeworkService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT * FROM `UserHomework` WHERE userHomework = ?";
+			String sql = "SELECT * FROM `UserHomework` WHERE userHomeworkID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, userHomeworkID);
 

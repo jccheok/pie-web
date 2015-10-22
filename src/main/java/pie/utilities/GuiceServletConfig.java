@@ -130,7 +130,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/group/owner/enliststudents").with(EnlistStudentsToGroupServlet.class);
 				serve("*/servlets/secured/staff/group/owner/transfergroupownership").with(TransferGroupOwnershipServlet.class);
 				serve("*/servlets/secured/staff/group/owner/deactivategroup").with(DeactivateGroupServlet.class);
-				serve("*/servlets/secured/staff/group/member/allrecipients").with(GetAllRecipientsServlet.class);				
+				serve("*/servlets/secured/staff/group/member/allrecipients").with(GetAllRecipientsServlet.class);//tested			
 				
 				serve("*/servlets/secured/staff/group/sendnote").with(SendNoteServlet.class); //deprecated - not merged with attachment
 				serve("*/servlets/secured/staff/group/savenoteasdraft").with(SaveNoteAsDraftServlet.class); //deprecated - not merged with attachment
@@ -173,7 +173,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/group/submithomework").with(SubmitHomeworkServlet.class);//tested
 				serve("*/servlets/secured/student/deletehomework").with(DeleteUserHomeworkServlet.class); //tested
 				serve("*/servlets/secured/student/archivehomework").with(ArchiveHomeworkServlet.class);//tested
-				serve("*/servlets/secured/student/readhomework").with(ReadHomeworkServlet.class);
+				serve("*/servlets/secured/student/readhomework").with(ReadHomeworkServlet.class);//tested
 				serve("*/servlets/secured/student/allrecievedhomework").with(GetAllUserHomeworkServlet.class);
 
 				serve("*/servlets/secured/staff/group/uploadhomeworkattachment").with(UploadHomeworkAttachmentServlet.class);
