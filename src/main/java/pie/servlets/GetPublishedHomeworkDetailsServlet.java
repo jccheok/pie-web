@@ -59,13 +59,13 @@ public class GetPublishedHomeworkDetailsServlet extends HttpServlet {
 			homeworkObject.put("homeworkDescription", groupHomework.getHomework().getHomeworkDescription());
 			homeworkObject.put("subject", groupHomework.getHomework().getHomeworkSubject());
 			homeworkObject.put("minutesRequired", groupHomework.getHomework().gethomeworkMinutesReqStudent());
-			homeworkObject.put("dueDate", groupHomework.getDueDate());
+			homeworkObject.put("dueDate", dateFormat.format(groupHomework.getDueDate()));
 			homeworkObject.put("publisherID", groupHomework.getPublisher().getUserID());
 			homeworkObject.put("publisherName", groupHomework.getPublisher().getUserFullName());
-			homeworkObject.put("publishedDate", groupHomework.getPublishDate());
+			homeworkObject.put("publishedDate", dateFormat.format(groupHomework.getPublishDate()));
 			homeworkObject.put("markingEffort", groupHomework.getMarkingEffort());
 			homeworkObject.put("actualMarkingCompletionDate", dateFormat.format(groupHomework.getActualMarkingCompletionDate()));
-			homeworkObject.put("targetMarkingCompletionDate", groupHomework.getTargetMarkingCompletionDate());
+			homeworkObject.put("targetMarkingCompletionDate", dateFormat.format(groupHomework.getTargetMarkingCompletionDate()));
 			homeworkObject.put("isGraded", groupHomework.isGraded());
 			homeworkObject.put("group", groupHomework.getGroup().getGroupName());
 			

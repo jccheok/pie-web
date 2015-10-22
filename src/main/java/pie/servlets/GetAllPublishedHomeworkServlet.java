@@ -40,7 +40,9 @@ public class GetAllPublishedHomeworkServlet extends HttpServlet {
 			Map<String, String> requestParams = Utilities.getParameters(request, "staffID");
 			staffID = Integer.parseInt(requestParams.get("staffID"));
 		} catch (Exception e) {
-			e.printStackTrace();
+
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+			return;
 		}
 
 		Homework[] publishedHomework = homeworkService.getAllPublishedHomework(staffID);
