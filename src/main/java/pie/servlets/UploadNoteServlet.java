@@ -69,7 +69,7 @@ public class UploadNoteServlet extends HttpServlet {
 					FileItem item = iter.next();
 
 					if (!item.isFormField() && item.getSize() > 0) {
-
+						responseObject.put("Name", item.getName());
 						responseObject.put("Size", item.getSize());
 						noteAttachmentURL = new File(item.getName()).getName();
 						responseObject.put("AttachmentName", noteAttachmentURL);
@@ -86,6 +86,22 @@ public class UploadNoteServlet extends HttpServlet {
 						item.write(storeFile);
 					} else {
 						responseObject.put("result", "FAILED");
+						if(item.getFieldName() == "staffID") {
+							int staffID = Integer.parseInt(item.getName());
+							responseObject.put("staffID", staffID);
+						} else if(item.getFieldName() == "groupID") {
+							int groupID = Integer.parseInt(item.getName());
+							responseObject.put("groupID", groupID);
+						} else if(item.getFieldName() == "responseQuestionID") {
+							int responseQuestionID = Integer.parseInt(item.getName());
+							responseObject.put("responseQuestion", responseQuestionID);
+						} else if(item.getFieldName() == "noteTitle") {
+							String noteTitle = item.getName();
+							responseObject.put("noteTitle", noteTitle);
+						} else if(item.getFieldName() == "noteDescription") {
+							String noteDescription = item.getName();
+							responseObject.put("noteDescription", noteDescription);
+						}
 					}
 				}
 			} else {
