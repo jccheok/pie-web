@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,12 +26,11 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-@MultipartConfig(location = "/var/lib/openshift/560246382d52714ebe00004d/app-root/data", fileSizeThreshold = 1024*1024*2, maxFileSize = 1024*1024*10, maxRequestSize = 1024*1024*50)
 public class SendNoteServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -4985014150620092494L;
 	private static final int maxRequestSize = 1024*1024*10;
-	private static final int memorySize = 1024*1024*3;
+	private static final int memorySize = 1024;
 
 	NoteService noteService;
 	NoteAttachmentService noteAttachmentService;
