@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -41,7 +42,6 @@ public class GetAllUserHomeworkServlet extends HttpServlet{
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		int userID = 0;
 		String publishedDate = null;
-
 		try {
 
 			Map<String, String> requestParameters = Utilities.getParameters(request, "userID");
@@ -65,7 +65,9 @@ public class GetAllUserHomeworkServlet extends HttpServlet{
 				
 				Staff staff = userHomeworkService.getUserHomeworkPublisher(homework.getUserHomeworkID());
 				JSONObject homeworkObject = new JSONObject();
-				publishedDate = dateFormat.format(userHomeworkService.getGroupHomework(homework.getUserHomeworkID(), staff.getUserID()).getPublishDate());
+				
+				Date publishDate = userHomeworkService.getGroupHomework(homework.getUserHomeworkID(), staff.getUserID()).getPublishDate();
+				publishedDate = dateFormat.format(publishDate);
 				homeworkObject.put("homeworkTitle", homework.getHomework().getHomeworkTitle());
 				homeworkObject.put("homeworkDescription", homework.getHomework().getHomeworkDescription());
 				homeworkObject.put("publisherName", staff.getUserFullName());
