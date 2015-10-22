@@ -19,6 +19,7 @@ import pie.servlets.GetAllDraftHomeworkServlet;
 import pie.servlets.GetAllDraftNoteServlet;
 import pie.servlets.GetAllDraftPublishedHomeworkServlet;
 import pie.servlets.GetAllPublishedHomeworkServlet;
+import pie.servlets.GetAllRecipientsServlet;
 import pie.servlets.GetAllSecurityQuestionsServlet;
 import pie.servlets.GetAllSentHomeworkServlet;
 import pie.servlets.GetAllSentNotesServlet;
@@ -30,9 +31,9 @@ import pie.servlets.GetNoteDetailsServlet;
 import pie.servlets.GetPublishedHomeworkDetailsServlet;
 import pie.servlets.GradeHomeworkServlet;
 import pie.servlets.LoginServlet;
+import pie.servlets.MarkHomeworkServlet;
 import pie.servlets.NoteIsArchiveServlet;
 import pie.servlets.NoteIsReadServlet;
-import pie.servlets.MarkHomeworkServlet;
 import pie.servlets.NoteUnArchiveServlet;
 import pie.servlets.PublishDraftHomeworkServlet;
 import pie.servlets.PublishHomeworkServlet;
@@ -65,8 +66,8 @@ import pie.servlets.UpdateNoteDraftServlet;
 import pie.servlets.UpdatePasswordServlet;
 import pie.servlets.UpdateUserAccountDetailsServlet;
 import pie.servlets.UploadHomeworkAttachmentServlet;
+import pie.servlets.UploadNoteServlet;
 import pie.servlets.VerifyUserServlet;
-import pie.servlets.GetAllRecipientsServlet;
 import pie.servlets.ViewAllSchoolsServlet;
 import pie.servlets.ViewCitiesServlet;
 import pie.servlets.ViewGroupDetailsServlet;
@@ -131,21 +132,22 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/group/owner/deactivategroup").with(DeactivateGroupServlet.class);
 				serve("*/servlets/secured/staff/group/member/allrecipients").with(GetAllRecipientsServlet.class);				
 				
-				serve("*/servlets/secured/staff/group/sendnote").with(SendNoteServlet.class);
-				serve("*/servlets/secured/staff/group/savenoteasdraft").with(SaveNoteAsDraftServlet.class);
-				serve("*/servlets/secured/staff/group/alldraftnote").with(GetAllDraftNoteServlet.class);
-				serve("*/servlets/secured/staff/group/senddraftnote").with(SendDraftNoteServlet.class);
-				serve("*/servlets/secured/staff/group/deletenote").with(DeleteNoteServlet.class);
-				serve("*/servlets/secured/staff/group/notedetails").with(GetNoteDetailsServlet.class);
-				serve("*/servlets/secured/staff/group/allsentnotes").with(GetAllSentNotesServlet.class);
-				serve("*/servlets/secured/staff/group/updatedraftnote").with(UpdateNoteDraftServlet.class);
+				serve("*/servlets/secured/staff/group/sendnote").with(SendNoteServlet.class); //deprecated - not merged with attachment
+				serve("*/servlets/secured/staff/group/savenoteasdraft").with(SaveNoteAsDraftServlet.class); //deprecated - not merged with attachment
+				serve("*/servlets/secured/staff/group/alldraftnote").with(GetAllDraftNoteServlet.class); // tested
+				serve("*/servlets/secured/staff/group/senddraftnote").with(SendDraftNoteServlet.class); // tested
+				serve("*/servlets/secured/staff/group/deletenote").with(DeleteNoteServlet.class); // tested
+				serve("*/servlets/secured/staff/group/notedetails").with(GetNoteDetailsServlet.class); // tested
+				serve("*/servlets/secured/staff/group/allsentnotes").with(GetAllSentNotesServlet.class); // tested
+				serve("*/servlets/secured/staff/group/updatedraftnote").with(UpdateNoteDraftServlet.class); //tested
 				
-				serve("*/servlets/secured/staff/group/downloadnoteattachment").with(DownloadNoteAttachmentServlet.class);
-				serve("*/servlets/secured/staff/group/deletenoteattachment").with(DeleteNoteAttachmentServlet.class);
-				serve("*/servlets/secured/staff/group/noteisread").with(NoteIsReadServlet.class);
-				serve("*/servlets/secured/staff/group/noteisarchive").with(NoteIsArchiveServlet.class);
-				serve("*/servlets/secured/staff/group/noteunarchive").with(NoteUnArchiveServlet.class);
-				serve("*/servlets/secured/staff/group/sendnoteresponse").with(SendNoteResponseServlet.class);
+				serve("*/servlets/secured/staff/group/downloadnoteattachment").with(DownloadNoteAttachmentServlet.class); //tested
+				serve("*/servlets/secured/staff/group/deletenoteattachment").with(DeleteNoteAttachmentServlet.class); //tested
+				serve("*/servlets/secured/staff/group/noteisread").with(NoteIsReadServlet.class); //tested
+				serve("*/servlets/secured/staff/group/noteisarchive").with(NoteIsArchiveServlet.class); //tested
+				serve("*/servlets/secured/staff/group/noteunarchive").with(NoteUnArchiveServlet.class); //tested
+				serve("*/servlets/secured/staff/group/sendnoteresponse").with(SendNoteResponseServlet.class); //tested
+				serve("*/servlets/secured/staff/group/uploadatt").with(UploadNoteServlet.class);
 							
 				serve("*/servlets/secured/staff/group/createhomework").with(PublishHomeworkServlet.class);
 				serve("*/servlets/secured/staff/group/createdrafthomework").with(PublishDraftHomeworkServlet.class);
