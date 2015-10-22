@@ -67,6 +67,7 @@ import pie.servlets.UpdatePasswordServlet;
 import pie.servlets.UpdateUserAccountDetailsServlet;
 import pie.servlets.UploadHomeworkAttachmentServlet;
 import pie.servlets.UploadNoteServlet;
+import pie.servlets.VerifyUserPasswordServlet;
 import pie.servlets.VerifyUserServlet;
 import pie.servlets.ViewAllSchoolsServlet;
 import pie.servlets.ViewCitiesServlet;
@@ -110,6 +111,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/opengroups").with(ViewOpenGroupsServlet.class);
 				serve("*/servlets/secured/updatepassword").with(UpdatePasswordServlet.class);
 				serve("*/servlets/secured/updateaccountdetails").with(UpdateUserAccountDetailsServlet.class);
+				serve("*/servlets/secured/authenticate").with(VerifyUserPasswordServlet.class);
 			
 				serve("*/servlets/secured/student/leavegroup").with(StudentLeaveGroupServlet.class);
 				serve("*/servlets/secured/student/joingroup").with(StudentJoinGroupServlet.class);

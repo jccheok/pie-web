@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.Map;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -15,9 +16,13 @@ import pie.services.UserService;
 import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
-public class VerifyUserPasswordServlet {
+@Singleton
+public class VerifyUserPasswordServlet extends HttpServlet {
 
+	private static final long serialVersionUID = 4661920460507518844L;
+	
 	UserService userService;
 	AuthService authService;
 	
