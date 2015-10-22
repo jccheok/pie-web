@@ -70,10 +70,7 @@ public class UploadNoteServlet extends HttpServlet {
 					String value = item.getString();
 					String test = item.getFieldName();
 					responseObject.put("staff", item.getFieldName() + " | " + value);
-					if(test.equalsIgnoreCase("staffID")) {
-						int staffID = Integer.parseInt(value);
-						responseObject.put("staffID", staffID);
-					}
+	
 					if (!item.isFormField() && item.getSize() > 0) {
 						responseObject.put("Name", item.getName());
 						responseObject.put("Size", item.getSize());
@@ -92,6 +89,10 @@ public class UploadNoteServlet extends HttpServlet {
 						item.write(storeFile);
 					} else {
 						responseObject.put("result", "FAILED");
+						if(test.equalsIgnoreCase("staffID")) {
+							int staffID = Integer.parseInt(value);
+							responseObject.put("staffID", staffID);
+						}
  
 					}
 				}
