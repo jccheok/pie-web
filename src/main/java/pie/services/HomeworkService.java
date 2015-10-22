@@ -7,6 +7,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 
+import pie.Group;
 import pie.Homework;
 import pie.Staff;
 import pie.constants.DeleteHomeworkResult;
@@ -195,8 +196,7 @@ public class HomeworkService {
 
 	}
 
-	public Homework[] getAllPublishedHomework(int staffID) {
-
+	public Homework[] getAllPublishedHomework() {
 		Homework[] homework = {};
 
 		try {
@@ -204,11 +204,10 @@ public class HomeworkService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT * FROM `Homework` WHERE authorID = ? AND isDraft = ? AND isDeleted = ?";
+			String sql = "SELECT * FROM `Homework` WHERE isDraft = ? AND isDeleted = ?";
 			pst = conn.prepareStatement(sql);
-			pst.setInt(1, staffID);
+			pst.setInt(1, 0);
 			pst.setInt(2, 0);
-			pst.setInt(3, 0);
 
 			resultSet = pst.executeQuery();
 
