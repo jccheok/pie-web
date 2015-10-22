@@ -370,7 +370,7 @@ public class UserHomeworkService {
 		return publisher;
 	}
 
-	public GroupHomework getGroupHomework(int userHomeworkID, int publisherID) {
+	public GroupHomework getGroupHomework(int userHomeworkID, int homeworkID) {
 		GroupHomework groupHomework = null;
 
 		try {
@@ -379,10 +379,10 @@ public class UserHomeworkService {
 			ResultSet resultSet = null;
 
 			String sql = "SELECT groupHomeworkID FROM `Homework`, `GroupHomework`, `UserHomework` WHERE `Homework`.homeworkID = `GroupHomework`.homeworkID AND `UserHomework`.homeworkID = `Homework`.homeworkID "
-					+ "AND `UserHomework`.userHomeworkID = ? AND `GroupHomework`.publisherID = ? ";
+					+ "AND `UserHomework`.userHomeworkID = ? AND `UserHomework`.homeworkID = ? ";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, userHomeworkID);
-			pst.setInt(2, publisherID);
+			pst.setInt(2, homeworkID);
 
 			resultSet = pst.executeQuery();
 
