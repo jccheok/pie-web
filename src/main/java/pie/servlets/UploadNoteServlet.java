@@ -67,7 +67,8 @@ public class UploadNoteServlet extends HttpServlet {
 				Iterator<FileItem> iter = items.iterator();
 				while (iter.hasNext()) {
 					FileItem item = iter.next();
-					responseObject.put("staff", item.getFieldName() + " | " + item.getName());
+					String value = item.getString();
+					responseObject.put("staff", item.getFieldName() + " | " + value);
 					if (!item.isFormField() && item.getSize() > 0) {
 						responseObject.put("Name", item.getName());
 						responseObject.put("Size", item.getSize());
