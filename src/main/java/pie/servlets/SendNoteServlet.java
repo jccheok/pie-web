@@ -106,37 +106,37 @@ public class SendNoteServlet extends HttpServlet {
 					} 
 				}
 
-				if(staffID != 0 && responseQuestionID != 0) {
-
-					noteID = noteService.createNote(staffID, responseQuestionID, noteTitle, noteDescription);
-
-					if(fileDetected) {
-
-						noteAttachmentID = noteAttachmentService.createNoteAttachment(noteAttachmentURL, noteID);
-						noteAttachmentURL = noteAttachmentService.updateNoteAttachmentName(noteAttachmentID, noteAttachmentURL);
-
-						File storeFile = new File(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
-						fileUpload.write(storeFile);
-
-						responseObject.put("fileResult", "SUCCESS");
-						responseObject.put("noteAttachmentID", noteAttachmentID);
-						responseObject.put("noteAttachmentURL", noteAttachmentURL);
-
-					} else {
-						responseObject.put("fileResult", "FAILED - NO FILE UPLOADED");
-					}
-					
-					PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID, staffID);
-					responseObject.put("result", publishNoteResult.toString());
-					responseObject.put("message", publishNoteResult.getDefaultMessage());
-
-				} else {
-					responseObject.put("noteResult", "Creation of note failed");
-				}
-
-
 			} else {
 				responseObject.put("uploadResult", "No item found");
+			}
+			
+			if(staffID != 0 && responseQuestionID != 0) {
+
+				noteID = noteService.createNote(staffID, responseQuestionID, noteTitle, noteDescription);
+
+				if(fileDetected) {
+
+					noteAttachmentID = noteAttachmentService.createNoteAttachment(noteAttachmentURL, noteID);
+					noteAttachmentURL = noteAttachmentService.updateNoteAttachmentName(noteAttachmentID, noteAttachmentURL);
+
+					File storeFile = new File(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
+
+					fileUpload.write(storeFile);
+
+					responseObject.put("fileResult", "SUCCESS");
+					responseObject.put("noteAttachmentID", noteAttachmentID);
+					responseObject.put("noteAttachmentURL", noteAttachmentURL);
+
+				} else {
+					responseObject.put("fileResult", "FAILED - NO FILE UPLOADED");
+				}
+
+				PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID, staffID);
+				responseObject.put("result", publishNoteResult.toString());
+				responseObject.put("message", publishNoteResult.getDefaultMessage());
+
+			} else {
+				responseObject.put("noteResult", "Creation of note failed");
 			}
 
 		} catch (Exception e) {
@@ -144,6 +144,6 @@ public class SendNoteServlet extends HttpServlet {
 		}
 
 		out.write(responseObject.toString());
-		
+
 	}
 }
