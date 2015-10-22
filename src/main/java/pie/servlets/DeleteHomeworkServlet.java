@@ -43,8 +43,7 @@ public class DeleteHomeworkServlet extends HttpServlet {
 			homeworkID = Integer.parseInt(requestParams.get("homeworkID"));
 
 		} catch (Exception e) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
-			return;
+			e.printStackTrace();
 		}
 
 		Homework homework = homeworkService.getHomework(homeworkID);
