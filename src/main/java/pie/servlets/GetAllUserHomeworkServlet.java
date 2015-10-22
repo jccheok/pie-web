@@ -65,6 +65,8 @@ public class GetAllUserHomeworkServlet extends HttpServlet{
 				Staff staff = userHomeworkService.getUserHomeworkPublisher(homework.getUserHomeworkID());
 				JSONObject homeworkObject = new JSONObject();
 				
+				homeworkObject.put("homeworkID", homework.getHomework().getHomeworkID());
+				homeworkObject.put("userHomeworkID", homework.getUserHomeworkID());
 				homeworkObject.put("homeworkTitle", homework.getHomework().getHomeworkTitle());
 				homeworkObject.put("homeworkDescription", homework.getHomework().getHomeworkDescription());
 				homeworkObject.put("publisherName", staff.getUserFullName());
