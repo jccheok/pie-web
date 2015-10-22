@@ -54,7 +54,7 @@ public class SendNoteServlet extends HttpServlet {
 
 		JSONObject responseObject = new JSONObject();
 		PrintWriter out = response.getWriter();
-		
+
 		if(noteAttachmentService.checkIfNoteFolderExist()) {
 			responseObject.put("folderResult", "Note Folder exist");
 		} else {
@@ -86,7 +86,7 @@ public class SendNoteServlet extends HttpServlet {
 						noteAttachmentURL = new File(item.getName()).getName();
 
 					} else {
-												
+
 						if(item.getFieldName().equalsIgnoreCase("staffID")) {
 							staffID = Integer.parseInt(item.getString());
 							responseObject.put("staffID", staffID);
@@ -105,24 +105,31 @@ public class SendNoteServlet extends HttpServlet {
 						}
 					} 
 				}
-				
-				noteID = noteService.createNote(staffID, responseQuestionID, noteTitle, noteDescription);
 
-				if(fileDetected) {
+				if(staffID != 0 && responseQuestionID != 0) {
 
-					noteAttachmentID = noteAttachmentService.createNoteAttachment(noteAttachmentURL, noteID);
-					noteAttachmentURL = noteAttachmentService.updateNoteAttachmentName(noteAttachmentID, noteAttachmentURL);
+					noteID = noteService.createNote(staffID, responseQuestionID, noteTitle, noteDescription);
 
-					File storeFile = new File(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
-					fileUpload.write(storeFile);
+					if(fileDetected) {
 
-					responseObject.put("fileResult", "SUCCESS");
-					responseObject.put("noteAttachmentID", noteAttachmentID);
-					responseObject.put("noteAttachmentURL", noteAttachmentURL);
-					
+						noteAttachmentID = noteAttachmentService.createNoteAttachment(noteAttachmentURL, noteID);
+						noteAttachmentURL = noteAttachmentService.updateNoteAttachmentName(noteAttachmentID, noteAttachmentURL);
+
+						File storeFile = new File(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
+						fileUpload.write(storeFile);
+
+						responseObject.put("fileResult", "SUCCESS");
+						responseObject.put("noteAttachmentID", noteAttachmentID);
+						responseObject.put("noteAttachmentURL", noteAttachmentURL);
+
+					} else {
+						responseObject.put("fileResult", "FAILED - NO FILE UPLOADED");
+					}
+
 				} else {
-					responseObject.put("fileResult", "FAILED - NO FILE UPLOADED");
+					responseObject.put("noteResult", "Creation of note failed");
 				}
+
 
 			} else {
 				responseObject.put("uploadResult", "No item found");
