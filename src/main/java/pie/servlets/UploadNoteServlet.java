@@ -88,7 +88,7 @@ public class UploadNoteServlet extends HttpServlet {
 					} else {
 						responseObject.put("result", "FAILED");
 						if(item.getFieldName() == "staffID") {
-							int staffID = Integer.parseInt(item.getName());
+							int staffID = Integer.parseInt(value);
 							responseObject.put("staffID", staffID);
 						} 
 					}
