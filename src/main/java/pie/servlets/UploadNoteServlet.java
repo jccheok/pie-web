@@ -70,7 +70,7 @@ public class UploadNoteServlet extends HttpServlet {
 					String value = item.getString();
 					String test = item.getFieldName();
 					responseObject.put("staff", item.getFieldName() + " | " + value);
-					if(test == "staffID") {
+					if(test.equalsIgnoreCase("staffID")) {
 						int staffID = Integer.parseInt(value);
 						responseObject.put("staffID", staffID);
 					}
