@@ -3,6 +3,7 @@ package pie.servlets;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +31,8 @@ import com.google.inject.Singleton;
 public class SendNoteServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -4985014150620092494L;
+	private static final int maxRequestSize = 1024*1024*10;
+	private static final int memorySize = 1024*1024*3;
 
 	NoteService noteService;
 	NoteAttachmentService noteAttachmentService;
@@ -50,6 +53,8 @@ public class SendNoteServlet extends HttpServlet {
 		String noteTitle = null;
 		String noteDescription = null;
 		String noteAttachmentURL = null;
+		
+		PrintWriter out = response.getWriter();
 
 		try {
 
@@ -73,42 +78,48 @@ public class SendNoteServlet extends HttpServlet {
 		if(noteID != -1) {
 		
 			if(noteAttachmentService.checkIfNoteFolderExist()) {
-				responseObject.put("Debug Log", "Note Folder exist");
+				responseObject.put("folderResult", "Note Folder exist");
 			} else {
-				responseObject.put("Debug Log", "Note Folder did not exist but was created during the process");
+				responseObject.put("folderResult", "Note Folder did not exist but was created during the process");
 			}
 		
 			DiskFileItemFactory factory = new DiskFileItemFactory();
+			factory.setSizeThreshold(memorySize);
 			factory.setRepository(new File(System.getenv("OPENSHIFT_TMP_DIR")));
 
 			ServletFileUpload upload = new ServletFileUpload(factory);
-			upload.setSizeMax(1024*1024*10);
+			upload.setSizeMax(maxRequestSize);
 			
 			try {
-				
+
 				List<FileItem> items = upload.parseRequest(request);
 				
 				if(items != null && items.size() > 0) {
-					for (FileItem item : items) {
-						if(!item.isFormField()) {
-							responseObject.put("Phase 1", "1");
+
+					Iterator<FileItem> iter = items.iterator();
+					while (iter.hasNext()) {
+						FileItem item = iter.next();
+
+						if (!item.isFormField() && item.getSize() > 0) {
+
 							noteAttachmentURL = new File(item.getName()).getName();
-							responseObject.put("Phase 2", "1");
 							noteAttachmentID = noteAttachmentService.createNoteAttachment(noteAttachmentURL, noteID);
-							responseObject.put("Phase 3", "1");
 							noteAttachmentURL = noteAttachmentService.updateNoteAttachmentName(noteAttachmentID, noteAttachmentURL);
-							responseObject.put("Phase 4", "1");
+
 							File storeFile = new File(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
-							responseObject.put("Phase 5", "1");
 							item.write(storeFile);
-							responseObject.put("Phase 6", "1");
+							
+							responseObject.put("fileResult", "SUCCESS");
 							responseObject.put("noteAttachmentID", noteAttachmentID);
 							responseObject.put("noteAttachmentURL", noteAttachmentURL);
+							
 						} else {
-							responseObject.put("result", "FAILED");
-							responseObject.put("message", "No note file is uploaded");
-						} 
+							responseObject.put("fileResult", "No file is uploaded / 0 bytes");
+						}
 					}
+					
+				} else {
+					responseObject.put("uploadResult", "No item found");
 				}
 				
 			} catch (Exception e) {
@@ -120,11 +131,10 @@ public class SendNoteServlet extends HttpServlet {
 			responseObject.put("message", publishNoteResult.getDefaultMessage());
 
 		} else {
-			responseObject.put("result", "FAILED");
-			responseObject.put("message", "Note is not created");
+			responseObject.put("noteResult", "Note was not created");
 		}
 
-		PrintWriter out = response.getWriter();
+		
 		out.write(responseObject.toString());
 	}
 }
