@@ -86,23 +86,21 @@ public class SendNoteServlet extends HttpServlet {
 						noteAttachmentURL = new File(item.getName()).getName();
 
 					} else {
-						
-						String value = item.getString();
-						
-						if(item.getFieldName() == "staffID") {
-							staffID = Integer.parseInt(value);
+												
+						if(item.getFieldName().equalsIgnoreCase("staffID")) {
+							staffID = Integer.parseInt(item.getString());
 							responseObject.put("staffID", staffID);
-						} else if(item.getFieldName() == "groupID") {
-							groupID = Integer.parseInt(value);
+						} else if(item.getFieldName().equalsIgnoreCase("groupID")) {
+							groupID = Integer.parseInt(item.getString());
 							responseObject.put("groupID", groupID);
-						} else if(item.getFieldName() == "responseQuestionID") {
-							responseQuestionID = Integer.parseInt(value);
+						} else if(item.getFieldName().equalsIgnoreCase("responseQuestionID")) {
+							responseQuestionID = Integer.parseInt(item.getString());
 							responseObject.put("responseQuestion", responseQuestionID);
-						} else if(item.getFieldName() == "noteTitle") {
-							noteTitle = value;
+						} else if(item.getFieldName().equalsIgnoreCase("noteTitle")) {
+							noteTitle = item.getString();
 							responseObject.put("noteTitle", noteTitle);
-						} else if(item.getFieldName() == "noteDescription") {
-							noteDescription = value;
+						} else if(item.getFieldName().equalsIgnoreCase("noteDescription")) {
+							noteDescription = item.getString();
 							responseObject.put("noteDescription", noteDescription);
 						}
 					} 
