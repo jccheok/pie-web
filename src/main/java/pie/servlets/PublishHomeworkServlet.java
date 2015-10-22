@@ -11,30 +11,30 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import pie.constants.PublishHomeworkResult;
 import pie.services.GroupService;
 import pie.services.HomeworkService;
 import pie.services.StaffService;
 import pie.utilities.Utilities;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 @Singleton
 public class PublishHomeworkServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -6931499866512426095L;
 
+	/*
+	 * author: cheok jia chin test at: 22/10/2015
+	 */
+
 	HomeworkService homeworkService;
-	GroupService groupService;
-	StaffService staffService;
 
 	@Inject
 	public PublishHomeworkServlet(HomeworkService homeworkService, GroupService groupService,
 			StaffService staffService) {
 		this.homeworkService = homeworkService;
-		this.groupService = groupService;
-		this.staffService = staffService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -57,7 +57,8 @@ public class PublishHomeworkServlet extends HttpServlet {
 			homeworkLevel = requestParams.get("homeworkLevel");
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+			return;
 		}
 
 		int homeworkID = homeworkService.publishHomework(homeworkAuthor, homeworkTitle, homeworkSubject,
