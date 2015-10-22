@@ -2,6 +2,9 @@ package pie.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -36,9 +39,9 @@ public class GetAllUserHomeworkServlet extends HttpServlet{
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		int userID = 0;
-
+		String publishedDate = null;
 		try {
 
 			Map<String, String> requestParameters = Utilities.getParameters(request, "userID");
@@ -62,10 +65,14 @@ public class GetAllUserHomeworkServlet extends HttpServlet{
 				
 				Staff staff = userHomeworkService.getUserHomeworkPublisher(homework.getUserHomeworkID());
 				JSONObject homeworkObject = new JSONObject();
+				
+				Date publishDate = new Date(userHomeworkService.getGroupHomework(homework.getUserHomeworkID(), staff.getUserID()).getPublishDate().getTime());
+				publishedDate = dateFormat.format(publishDate);
 				homeworkObject.put("homeworkTitle", homework.getHomework().getHomeworkTitle());
 				homeworkObject.put("homeworkDescription", homework.getHomework().getHomeworkDescription());
 				homeworkObject.put("publisherName", staff.getUserFullName());
-				homeworkObject.put("publishedDate", userHomeworkService.getGroupHomework(homework.getUserHomeworkID(), staff.getUserID()).getPublishDate());
+				homeworkObject.put("publishedDate", publishedDate);
+				
 
 				homeworkList.put(homeworkObject);
 			}
