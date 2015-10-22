@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -15,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import pie.GroupHomework;
 import pie.Staff;
 import pie.UserHomework;
 import pie.services.GroupHomeworkService;
@@ -68,6 +68,8 @@ public class GetAllUserHomeworkServlet extends HttpServlet{
 				homeworkObject.put("homeworkTitle", homework.getHomework().getHomeworkTitle());
 				homeworkObject.put("homeworkDescription", homework.getHomework().getHomeworkDescription());
 				homeworkObject.put("publisherName", staff.getUserFullName());
+				GroupHomework groupHomework = userHomeworkService.getGroupHomework(homework.getUserHomeworkID(), homework.getHomework().getHomeworkID());
+				homeworkObject.put("publishedDate", dateFormat.format(groupHomework.getPublishDate()));
 				//homeworkObject.put("publishedDate", dateFormat.format(userHomeworkService.getGroupHomework(homework.getUserHomeworkID(), staff.getUserID()).getPublishDate()) );
 
 				homeworkList.put(homeworkObject);
