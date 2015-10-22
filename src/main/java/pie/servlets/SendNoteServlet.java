@@ -86,21 +86,23 @@ public class SendNoteServlet extends HttpServlet {
 						noteAttachmentURL = new File(item.getName()).getName();
 
 					} else {
-
+						
+						String value = item.getString();
+						
 						if(item.getFieldName() == "staffID") {
-							staffID = Integer.parseInt(item.getName());
+							staffID = Integer.parseInt(value);
 							responseObject.put("staffID", staffID);
 						} else if(item.getFieldName() == "groupID") {
-							groupID = Integer.parseInt(item.getName());
+							groupID = Integer.parseInt(value);
 							responseObject.put("groupID", groupID);
 						} else if(item.getFieldName() == "responseQuestionID") {
-							responseQuestionID = Integer.parseInt(item.getName());
+							responseQuestionID = Integer.parseInt(value);
 							responseObject.put("responseQuestion", responseQuestionID);
 						} else if(item.getFieldName() == "noteTitle") {
-							noteTitle = item.getName();
+							noteTitle = value;
 							responseObject.put("noteTitle", noteTitle);
 						} else if(item.getFieldName() == "noteDescription") {
-							noteDescription = item.getName();
+							noteDescription = value;
 							responseObject.put("noteDescription", noteDescription);
 						}
 					} 
