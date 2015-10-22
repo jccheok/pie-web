@@ -22,7 +22,9 @@ import pie.utilities.Utilities;
 
 @Singleton
 public class GetAllPublishedHomeworkServlet extends HttpServlet {
-
+	/*
+	 * author: cheok jia chin modified: 22/10/2015
+	 */
 	private static final long serialVersionUID = 5438895086826432496L;
 
 	private HomeworkService homeworkService;
@@ -33,19 +35,10 @@ public class GetAllPublishedHomeworkServlet extends HttpServlet {
 		this.homeworkService = homeworkService;
 	}
 
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		JSONObject responseObj = new JSONObject();
-		int staffID = 0;
-		try {
-			Map<String, String> requestParams = Utilities.getParameters(request, "staffID");
-			staffID = Integer.parseInt(requestParams.get("staffID"));
-		} catch (Exception e) {
 
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
-			return;
-		}
-
-		Homework[] publishedHomework = homeworkService.getAllPublishedHomework(staffID);
+		Homework[] publishedHomework = homeworkService.getAllPublishedHomework();
 
 		JSONArray listHomework = new JSONArray();
 
