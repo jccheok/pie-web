@@ -13,9 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import pie.Parent;
 import pie.Staff;
 import pie.StaffRole;
 import pie.Student;
+import pie.services.ParentStudentService;
 import pie.services.StaffGroupService;
 import pie.services.StudentGroupService;
 import pie.utilities.Utilities;
@@ -30,11 +32,13 @@ public class ViewGroupMembersServlet extends HttpServlet{
 
 	StudentGroupService studentGroupService;
 	StaffGroupService staffGroupService;
+	ParentStudentService parentStudentService;
 
 	@Inject
-	public ViewGroupMembersServlet(StudentGroupService studentGroupService, StaffGroupService staffGroupService) {
+	public ViewGroupMembersServlet(StudentGroupService studentGroupService, StaffGroupService staffGroupService, ParentStudentService parentStudentService) {
 		this.studentGroupService = studentGroupService;
 		this.staffGroupService = staffGroupService;
+		this.parentStudentService = parentStudentService;
 	}
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -60,8 +64,13 @@ public class ViewGroupMembersServlet extends HttpServlet{
 		JSONArray studentList = new JSONArray();
 		
 		for(Student student : studentMembers){
+			
+			Parent mainParent = parentStudentService.getMainParent(student.getUserID());
 			HashMap<String, String> students = new HashMap<String, String>();
 			students.put("studentFullName", student.getUserFullName());
+			students.put("studentMobile", student.getUserMobile());
+			students.put("studentID", Integer.toString(student.getUserID()));
+			students.put("mainParent" , mainParent.getUserFullName());
 			students.put("studentMobile", student.getUserMobile());
 			studentList.put(students);
 		}
