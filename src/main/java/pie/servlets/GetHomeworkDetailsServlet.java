@@ -2,6 +2,7 @@ package pie.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Map;
 
@@ -22,10 +23,8 @@ import pie.utilities.Utilities;
 @Singleton
 public class GetHomeworkDetailsServlet extends HttpServlet {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 8818437379452661718L;
+
 	private HomeworkService homeworkService;
 
 	@Inject
@@ -34,7 +33,7 @@ public class GetHomeworkDetailsServlet extends HttpServlet {
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		int homeworkID = 0;
 
 		try {
@@ -50,7 +49,7 @@ public class GetHomeworkDetailsServlet extends HttpServlet {
 
 		JSONObject responseObject = new JSONObject();
 
-		responseObject.put("dateCreated", df.format(homework.getHomeworkDateCreated()));
+		responseObject.put("dateCreated", dateFormat.format(homework.getHomeworkDateCreated()));
 		responseObject.put("authorBy", homework.getHomeworkAuthor().getUserFullName());
 		responseObject.put("description", homework.getHomeworkDescription());
 		responseObject.put("level", homework.getHomeworkLevel());
