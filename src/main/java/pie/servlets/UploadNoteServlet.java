@@ -61,34 +61,39 @@ public class UploadNoteServlet extends HttpServlet {
 		try {
 
 			List<FileItem> items = upload.parseRequest(request);
+			
+			if(items != null && items.size() > 0) {
+				responseObject.put("result", items + " is found");
+				Iterator<FileItem> iter = items.iterator();
+				while (iter.hasNext()) {
+					FileItem item = iter.next();
 
-			Iterator<FileItem> iter = items.iterator();
-			while (iter.hasNext()) {
-				FileItem item = iter.next();
+					if (!item.isFormField()) {
 
-				if (!item.isFormField()) {
+						noteAttachmentURL = new File(item.getName()).getName();
+						responseObject.put("AttachmentName", noteAttachmentURL);
 
-					noteAttachmentURL = new File(item.getName()).getName();
-					responseObject.put("AttachmentName", noteAttachmentURL);
+						noteAttachmentID = noteAttachmentService.createNoteAttachment(noteAttachmentURL, noteID);
+						responseObject.put("AttachmentID", noteAttachmentID);
 
-					noteAttachmentID = noteAttachmentService.createNoteAttachment(noteAttachmentURL, noteID);
-					responseObject.put("AttachmentID", noteAttachmentID);
+						noteAttachmentURL = noteAttachmentService.updateNoteAttachmentName(noteAttachmentID, noteAttachmentURL);
+						responseObject.put("UpdatedAttachmentName", noteAttachmentURL);
 
-					noteAttachmentURL = noteAttachmentService.updateNoteAttachmentName(noteAttachmentID, noteAttachmentURL);
-					responseObject.put("UpdatedAttachmentName", noteAttachmentURL);
+						File storeFile = new File(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
+						responseObject.put("FolderLocation", storeFile);
 
-					File storeFile = new File(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
-					responseObject.put("FolderLocation", storeFile);
-
-					item.write(storeFile);
-				} else {
-					responseObject.put("result", "FAILED");
+						item.write(storeFile);
+					} else {
+						responseObject.put("result", "FAILED");
+					}
 				}
+			} else {
+				responseObject.put("result", "No file");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		out.write(responseObject.toString());		
 	}
 
