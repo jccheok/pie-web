@@ -166,11 +166,11 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/group/deletegrouphomework").with(DeleteGroupHomeworkServlet.class);//tested
 
 				serve("*/servlets/secured/staff/group/homeworkrecipients").with(GetHomeworkRecipientsServlet.class);//tested
-				serve("*/servlets/secured/staff/group/markhomework").with(MarkHomeworkServlet.class);
-				serve("*/servlets/secured/staff/group/gradehomework").with(GradeHomeworkServlet.class);
-				serve("*/servlets/secured/staff/group/submithomework").with(SubmitHomeworkServlet.class);
-				serve("*/servlets/secured/student/deletehomework").with(DeleteUserHomeworkServlet.class);
-				serve("*/servlets/secured/student/archivehomework").with(ArchiveHomeworkServlet.class);
+				serve("*/servlets/secured/staff/group/markhomework").with(MarkHomeworkServlet.class); //tested
+				serve("*/servlets/secured/staff/group/gradehomework").with(GradeHomeworkServlet.class);//tested
+				serve("*/servlets/secured/staff/group/submithomework").with(SubmitHomeworkServlet.class);//tested
+				serve("*/servlets/secured/student/deletehomework").with(DeleteUserHomeworkServlet.class); //tested
+				serve("*/servlets/secured/student/archivehomework").with(ArchiveHomeworkServlet.class);//tested
 				serve("*/servlets/secured/student/readhomework").with(ReadHomeworkServlet.class);
 				serve("*/servlets/secured/student/allrecievedhomework").with(GetAllUserHomeworkServlet.class);
 
