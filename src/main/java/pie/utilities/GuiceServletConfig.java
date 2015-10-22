@@ -132,7 +132,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/group/owner/deactivategroup").with(DeactivateGroupServlet.class);
 				serve("*/servlets/secured/staff/group/member/allrecipients").with(GetAllRecipientsServlet.class);//tested			
 				
-				serve("*/servlets/secured/staff/group/sendnote").with(SendNoteServlet.class); //deprecated - not merged with attachment
+				serve("*/servlets/secured/staff/group/sendnote").with(SendNoteServlet.class); // tested
 				serve("*/servlets/secured/staff/group/savenoteasdraft").with(SaveNoteAsDraftServlet.class); //deprecated - not merged with attachment
 				serve("*/servlets/secured/staff/group/alldraftnote").with(GetAllDraftNoteServlet.class); // tested
 				serve("*/servlets/secured/staff/group/senddraftnote").with(SendDraftNoteServlet.class); // tested
