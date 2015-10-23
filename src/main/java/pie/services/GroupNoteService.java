@@ -50,6 +50,37 @@ public class GroupNoteService {
 		
 	}
 	
+	public GroupNote getGroupNote(int userNoteID, int noteID) {
+		
+		GroupNote groupNote = null;
+
+		try {
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT groupNoteID FROM `Note`, `GroupNote`, `UserNote` WHERE `Note`.noteID = `GroupNote`.noteID AND `UserNote`.noteID = `Note`.noteID "
+					+ "AND `UserNote`.userNoteID = ? AND `UserNote`.noteID = ? ";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, userNoteID);
+			pst.setInt(2, noteID);
+
+			resultSet = pst.executeQuery();
+
+			if (resultSet.next()) {
+				GroupNoteService groupNoteService = new GroupNoteService();
+				groupNote = groupNoteService.getGroupNote(resultSet.getInt("groupNoteID"));
+			}
+
+			conn.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return groupNote;
+	}
+	
 	public int createGroupNote(int noteID, int groupID, int publisherID) {
 		
 		int groupNoteID = -1;
