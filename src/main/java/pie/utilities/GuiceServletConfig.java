@@ -136,7 +136,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/group/member/allrecipients").with(GetAllRecipientsServlet.class);// tested
 
 				serve("*/servlets/secured/staff/group/sendnote").with(SendNoteServlet.class); // tested
-				serve("*/servlets/secured/staff/group/savenoteasdraft").with(SaveNoteAsDraftServlet.class); // deprecated - not merged with attachment
+				serve("*/servlets/secured/staff/group/savenoteasdraft").with(SaveNoteAsDraftServlet.class); // tested
 				serve("*/servlets/secured/staff/group/alldraftnote").with(GetAllDraftNoteServlet.class); // tested
 				serve("*/servlets/secured/staff/group/senddraftnote").with(SendDraftNoteServlet.class); // tested
 				serve("*/servlets/secured/staff/group/deletenote").with(DeleteNoteServlet.class); // tested
@@ -151,7 +151,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/group/noteisarchive").with(NoteIsArchiveServlet.class); // tested
 				serve("*/servlets/secured/staff/group/noteunarchive").with(NoteUnArchiveServlet.class); // tested
 				serve("*/servlets/secured/staff/group/sendnoteresponse").with(SendNoteResponseServlet.class); // tested
-				serve("*/servlets/secured/staff/group/allreceivednote").with(GetAllUserNoteServlet.class);
+				serve("*/servlets/secured/staff/group/allreceivednote").with(GetAllUserNoteServlet.class);//tested
 
 				serve("*/servlets/secured/staff/group/createhomework").with(PublishHomeworkServlet.class);
 				serve("*/servlets/secured/staff/group/createdrafthomework").with(PublishDraftHomeworkServlet.class);
@@ -184,7 +184,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/student/archivehomework").with(ArchiveHomeworkServlet.class);// tested
 				serve("*/servlets/secured/student/readhomework").with(ReadHomeworkServlet.class);// tested
 				serve("*/servlets/secured/parent/allparentrecievedhomework").with(GetAllParentHomeworkServlet.class);// tested
-				serve("*/servlets/secured/allreceivedhomework").with(GetAllUserHomeworkServlet.class);
+				serve("*/servlets/secured/allreceivedhomework").with(GetAllUserHomeworkServlet.class);//tested
 
 				
 				serve("*/servlets/secured/staff/group/downloadhomeworkattachment").with(
