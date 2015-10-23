@@ -78,7 +78,7 @@ public class RegisterParentServlet extends HttpServlet {
 			String verificationLink = "http://piedev-rpmaps.rhcloud.com/servlets/verify?userID=" + userService.getUserID(userEmail);
 			InputStream emailTemplateStream = this.getServletContext().getResourceAsStream("/resources/verificationTemplate.html");
 			
-			String emailSubject = "Confirm your Parent account on Partners in Education";
+			String emailSubject = "Confirm your Parent account on PETAL";
 			String emailTemplate = Utilities.convertStreamToString(emailTemplateStream);
 			
 			String emailContent = emailTemplate.replaceAll("\\$FIRST_NAME", userFirstName);
