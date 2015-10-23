@@ -268,10 +268,9 @@ public class UserNoteService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 			
-			String sql = "SELECT userNoteID FROM `UserNote` WHERE userID = ? AND isDeleted = ?";
+			String sql = "SELECT userNoteID FROM `UserNote` WHERE userID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, userID);
-			pst.setInt(2, 0);
 			
 			resultSet = pst.executeQuery();
 			
