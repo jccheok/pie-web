@@ -67,7 +67,6 @@ import pie.servlets.UpdateGroupServlet;
 import pie.servlets.UpdateNoteDraftServlet;
 import pie.servlets.UpdatePasswordServlet;
 import pie.servlets.UpdateUserAccountDetailsServlet;
-import pie.servlets.UploadHomeworkAttachmentServlet;
 import pie.servlets.VerifyUserPasswordServlet;
 import pie.servlets.VerifyUserServlet;
 import pie.servlets.ViewAllSchoolsServlet;
