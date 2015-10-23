@@ -80,6 +80,7 @@ public class GetAllParentHomeworkServlet extends HttpServlet{
 				homeworkObject.put("publishedDate", dateFormat.format(groupHomework.getPublishDate()));
 				
 				homeworkObject.put("isGraded", groupHomework.isGraded());
+				homeworkObject.put("isAcknowledged", homework.isAcknowledged());
 				
 				Student[] children = parentStudentService.getChildren(parentID);
 				
