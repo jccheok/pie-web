@@ -25,6 +25,7 @@ import pie.servlets.GetAllSentHomeworkServlet;
 import pie.servlets.GetAllSentNotesServlet;
 import pie.servlets.GetAllSubjectsServlet;
 import pie.servlets.GetAllUserHomeworkServlet;
+import pie.servlets.GetAllUserNoteServlet;
 import pie.servlets.GetHomeworkDetailsServlet;
 import pie.servlets.GetHomeworkRecipientsServlet;
 import pie.servlets.GetNoteDetailsServlet;
@@ -148,6 +149,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/group/noteisarchive").with(NoteIsArchiveServlet.class); //tested
 				serve("*/servlets/secured/staff/group/noteunarchive").with(NoteUnArchiveServlet.class); //tested
 				serve("*/servlets/secured/staff/group/sendnoteresponse").with(SendNoteResponseServlet.class); //tested
+				serve("*/servlets/secured/staff/group/allreceivednote").with(GetAllUserNoteServlet.class);
 							
 				serve("*/servlets/secured/staff/group/createhomework").with(PublishHomeworkServlet.class);
 				serve("*/servlets/secured/staff/group/createdrafthomework").with(PublishDraftHomeworkServlet.class);
