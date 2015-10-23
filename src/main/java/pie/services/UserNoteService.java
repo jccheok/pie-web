@@ -260,7 +260,7 @@ public class UserNoteService {
 	
 	public UserNote[] getAllUserNote(int userID) {
 		
-		UserNote[] allUserNote = null;
+		UserNote[] allUserNote = {};
 		
 		try {
 			
@@ -268,10 +268,9 @@ public class UserNoteService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 			
-			String sql = "SELECT userNoteID FROM `UserNote` WHERE userID = ? AND isDeleted = ?";
+			String sql = "SELECT userNoteID FROM `UserNote` WHERE userID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, userID);
-			pst.setInt(2, 0);
 			
 			resultSet = pst.executeQuery();
 			
@@ -281,6 +280,8 @@ public class UserNoteService {
 			}
 			
 			allUserNote = tempUserNoteList.toArray(allUserNote);
+			
+			conn.close();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
