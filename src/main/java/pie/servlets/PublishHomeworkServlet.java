@@ -79,11 +79,17 @@ public class PublishHomeworkServlet extends HttpServlet {
 		try {
 
 			List<FileItem> items = upload.parseRequest(request);
+			String[] fields = { "staffID", "homeworkTitle", "homeworkSubject", "homeworkDescription",
+					"homeworkMinutesReqStudent", "homeworkLevel" };
 			JSONArray notFoundParams = new JSONArray();
 
 			for (FileItem x : items) {
-				if (x.getString() == "") {
-					notFoundParams.put(x.getString());
+				for (String name : fields) {
+					if (x.getFieldName().equalsIgnoreCase(name)) {
+						if (x.getString() == null) {
+							notFoundParams.put(x.getFieldName());
+						}
+					}
 				}
 			}
 
