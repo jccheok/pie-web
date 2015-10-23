@@ -400,4 +400,34 @@ public class UserHomeworkService {
 
 		return groupHomework;
 	}
+	
+	public UserHomework getChildHomework(int homeworkID, int userID){
+		UserHomework userHomework = null;
+		
+		try{
+			
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+			
+			String sql = "SELECT userHomeworkID FROM `UserHomework` WHERE homeworkID = ? AND userID = ?";
+			
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, homeworkID);
+			pst.setInt(2, userID);
+
+			resultSet = pst.executeQuery();
+			
+			if(resultSet.next()){
+				userHomework = getUserHomework(resultSet.getInt("userHomeworkID"));
+			}
+			
+			conn.close();
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return userHomework;
+	}
 }
