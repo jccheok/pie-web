@@ -66,7 +66,6 @@ import pie.servlets.UpdateNoteDraftServlet;
 import pie.servlets.UpdatePasswordServlet;
 import pie.servlets.UpdateUserAccountDetailsServlet;
 import pie.servlets.UploadHomeworkAttachmentServlet;
-import pie.servlets.UploadNoteServlet;
 import pie.servlets.VerifyUserPasswordServlet;
 import pie.servlets.VerifyUserServlet;
 import pie.servlets.ViewAllSchoolsServlet;
@@ -149,7 +148,6 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/group/noteisarchive").with(NoteIsArchiveServlet.class); //tested
 				serve("*/servlets/secured/staff/group/noteunarchive").with(NoteUnArchiveServlet.class); //tested
 				serve("*/servlets/secured/staff/group/sendnoteresponse").with(SendNoteResponseServlet.class); //tested
-				serve("*/servlets/secured/staff/group/uploadatt").with(UploadNoteServlet.class);
 							
 				serve("*/servlets/secured/staff/group/createhomework").with(PublishHomeworkServlet.class);
 				serve("*/servlets/secured/staff/group/createdrafthomework").with(PublishDraftHomeworkServlet.class);
