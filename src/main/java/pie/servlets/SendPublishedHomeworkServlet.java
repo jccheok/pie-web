@@ -17,11 +17,13 @@ import org.json.JSONObject;
 import pie.Group;
 import pie.GroupHomework;
 import pie.Homework;
+import pie.Parent;
 import pie.Staff;
 import pie.Student;
 import pie.services.GroupHomeworkService;
 import pie.services.GroupService;
 import pie.services.HomeworkService;
+import pie.services.ParentStudentService;
 import pie.services.StaffGroupService;
 import pie.services.StaffService;
 import pie.services.StudentGroupService;
@@ -35,7 +37,7 @@ import com.google.inject.Singleton;
 public class SendPublishedHomeworkServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 7233493980305643997L;
-	
+
 	GroupHomeworkService groupHomeworkService;
 	UserHomeworkService userHomeworkService;
 	StaffService staffService;
@@ -43,11 +45,13 @@ public class SendPublishedHomeworkServlet extends HttpServlet {
 	HomeworkService homeworkService;
 	StudentGroupService studentGroupService;
 	StaffGroupService staffGroupService;
-	
-	
+	ParentStudentService parentStudentService;
+
 	@Inject
-	public SendPublishedHomeworkServlet(GroupHomeworkService groupHomeworkService, UserHomeworkService userHomeworkService, StaffService staffService,
-			GroupService groupService, HomeworkService homeworkService, StudentGroupService studentGroupService, StaffGroupService staffGroupService) {
+	public SendPublishedHomeworkServlet(GroupHomeworkService groupHomeworkService,
+			UserHomeworkService userHomeworkService, StaffService staffService,
+			GroupService groupService, HomeworkService homeworkService, StudentGroupService studentGroupService,
+			StaffGroupService staffGroupService, ParentStudentService parentStudentService) {
 		this.groupHomeworkService = groupHomeworkService;
 		this.userHomeworkService = userHomeworkService;
 		this.staffService = staffService;
@@ -55,12 +59,13 @@ public class SendPublishedHomeworkServlet extends HttpServlet {
 		this.homeworkService = homeworkService;
 		this.studentGroupService = studentGroupService;
 		this.staffGroupService = staffGroupService;
+		this.parentStudentService = parentStudentService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		
+
 		Group group = null;
 		Homework homework = null;
 		Staff publisher = null;
@@ -76,7 +81,8 @@ public class SendPublishedHomeworkServlet extends HttpServlet {
 
 		try {
 
-			Map<String, String> requestParameters = Utilities.getParameters(request, "groupID", "homeworkID", "staffID", 
+			Map<String, String> requestParameters = Utilities.getParameters(request, "groupID", "homeworkID",
+					"staffID",
 					"markingEffort", "targetMarkingCompletionDate", "dueDate", "isGraded");
 
 			publisher = staffService.getStaff(Integer.parseInt(requestParameters.get("staffID")));
@@ -86,34 +92,46 @@ public class SendPublishedHomeworkServlet extends HttpServlet {
 			actualMarkingCompletionDate = dateFormat.parse("1000-01-01");
 			targetMarkingCompletionDate = dateFormat.parse(requestParameters.get("targetMarkingCompletionDate"));
 			dueDate = dateFormat.parse(requestParameters.get("dueDate"));
-			isGraded = Integer.parseInt(requestParameters.get("isGraded")) == 1 ? true:false;
+			isGraded = Integer.parseInt(requestParameters.get("isGraded")) == 1 ? true : false;
 
 		} catch (Exception e) {
 
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 			return;
 		}
-		
-		GroupHomework groupHomework = new GroupHomework(groupHomeworkID, group, homework, publisher, markingEffort, actualMarkingCompletionDate, targetMarkingCompletionDate, dueDate, publishDate, isDraft, isGraded, isDeleted);
-		
+
+		GroupHomework groupHomework = new GroupHomework(groupHomeworkID, group, homework, publisher, markingEffort,
+				actualMarkingCompletionDate, targetMarkingCompletionDate, dueDate, publishDate, isDraft, isGraded,
+				isDeleted);
+
 		groupHomeworkID = groupHomeworkService.sendPublishedHomework(groupHomework);
-		
+
 		JSONObject responseObject = new JSONObject();
-		
-		if(groupHomeworkID != -1){
+
+		if (groupHomeworkID != -1) {
 			Student[] studentMembers = studentGroupService.getStudentMembers(group.getGroupID());
 			Staff[] staffMembers = staffGroupService.getStaffMembers(group.getGroupID());
-			
-			for(Student student : studentMembers){
-				if(!userHomeworkService.sendHomework(student.getUserID(), homework.getHomeworkID())){
+
+			for (Student student : studentMembers) {
+				if (!userHomeworkService.sendHomework(student.getUserID(), homework.getHomeworkID())) {
 					responseObject.put("result", "Failed to Send Homework to student");
 					responseObject.put("message", "Failed to Publish Homework to UserHomework");
 					break;
 				}
+				
+				Parent[] parents = parentStudentService.getParents(student.getUserID());
+
+				for (Parent parent : parents) {
+					if (!userHomeworkService.sendHomework(parent.getUserID(), homework.getHomeworkID())) {
+						responseObject.put("result", "Failed to Send Homework to parent");
+						responseObject.put("message", "Failed to Publish Homework to UserHomework");
+						break;
+					}
+				}
 			}
-			
-			for(Staff staff : staffMembers){
-				if(!userHomeworkService.sendHomework(staff.getUserID(), homework.getHomeworkID())){
+
+			for (Staff staff : staffMembers) {
+				if (!userHomeworkService.sendHomework(staff.getUserID(), homework.getHomeworkID())) {
 					responseObject.put("result", "Failed to Send Homework to staff");
 					responseObject.put("message", "Failed to Publish Homework to UserHomework");
 					break;
@@ -121,14 +139,14 @@ public class SendPublishedHomeworkServlet extends HttpServlet {
 			}
 			responseObject.put("result", "Success");
 			responseObject.put("message", "Sent Published Homework to all users");
-		}else{
+		} else {
 			responseObject.put("result", "Failed to Publish Homework");
 			responseObject.put("message", "Failed to Publish Homework to UserHomework");
-			
+
 		}
-		
+
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
 	}
-	
+
 }

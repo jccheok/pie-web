@@ -76,7 +76,7 @@ public class ResetPasswordServlet extends HttpServlet {
 				
 			InputStream emailTemplateStream = getServletContext().getResourceAsStream("/resources/resetPasswordTemplate.html");
 			
-			String emailSubject = "Password Reset on Partners in Education";
+			String emailSubject = "Password Reset on PETAL";
 			String emailTemplate = Utilities.convertStreamToString(emailTemplateStream);
 
 			String emailContent = emailTemplate.replaceAll("\\$FIRST_NAME", user.getUserFirstName());
