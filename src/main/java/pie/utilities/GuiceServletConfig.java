@@ -25,6 +25,7 @@ import pie.servlets.GetAllSentHomeworkServlet;
 import pie.servlets.GetAllSentNotesServlet;
 import pie.servlets.GetAllSubjectsServlet;
 import pie.servlets.GetAllParentHomeworkServlet;
+import pie.servlets.GetAllUserNoteServlet;
 import pie.servlets.GetHomeworkDetailsServlet;
 import pie.servlets.GetHomeworkRecipientsServlet;
 import pie.servlets.GetNoteDetailsServlet;
@@ -66,7 +67,6 @@ import pie.servlets.UpdateNoteDraftServlet;
 import pie.servlets.UpdatePasswordServlet;
 import pie.servlets.UpdateUserAccountDetailsServlet;
 import pie.servlets.UploadHomeworkAttachmentServlet;
-import pie.servlets.UploadNoteServlet;
 import pie.servlets.VerifyUserPasswordServlet;
 import pie.servlets.VerifyUserServlet;
 import pie.servlets.ViewAllSchoolsServlet;
@@ -88,14 +88,14 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 	@Override
 	protected Injector getInjector() {
 		return Guice.createInjector(new ServletModule() {
-			
+
 			@Override
 			protected void configureServlets() {
-				
+
 				// Filters
 				filter("/servlets/*").through(ResponseFilter.class);
 				filter("/servlets/secured/*").through(AuthFilter.class);
-				
+
 				// Servlets
 				serve("*/servlets/login").with(LoginServlet.class);
 				serve("*/servlets/registerparent").with(RegisterParentServlet.class);
@@ -112,45 +112,47 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/updatepassword").with(UpdatePasswordServlet.class);
 				serve("*/servlets/secured/updateaccountdetails").with(UpdateUserAccountDetailsServlet.class);
 				serve("*/servlets/secured/authenticate").with(VerifyUserPasswordServlet.class);
-			
+
 				serve("*/servlets/secured/student/leavegroup").with(StudentLeaveGroupServlet.class);
 				serve("*/servlets/secured/student/joingroup").with(StudentJoinGroupServlet.class);
 				serve("*/servlets/secured/student/joinedgroups").with(ViewStudentJoinedGroupsServlet.class);
-				
-				serve("*/servlets/secured/parent/children").with(ViewParentChildrenServlet.class);//tested
+
+				serve("*/servlets/secured/parent/children").with(ViewParentChildrenServlet.class);// tested
 				serve("*/servlets/secured/parent/addchild").with(AddChildServlet.class);
-				serve("*/servlets/secured/parent/relationships").with(ViewRelationshipsServlet.class);//tested
+				serve("*/servlets/secured/parent/relationships").with(ViewRelationshipsServlet.class);// tested
 				serve("*/servlets/secured/parent/setmainparent").with(SetAsMainParentServlet.class);
-				
-				serve("*/servlets/secured/staff/gencode").with(GenerateCodeServlet.class);//tested
+
+				serve("*/servlets/secured/staff/gencode").with(GenerateCodeServlet.class);// tested
 				serve("*/servlets/secured/staff/registergroup").with(RegisterGroupServlet.class);
 				serve("*/servlets/secured/staff/joingroup").with(StaffJoinGroupServlet.class);
 				serve("*/servlets/secured/staff/groupdetails").with(ViewGroupDetailsServlet.class);
-				
+
 				serve("*/servlets/secured/staff/group/member/groupmembers").with(ViewGroupMembersServlet.class);
 				serve("*/servlets/secured/staff/group/admin/updategroup").with(UpdateGroupServlet.class);
 				serve("*/servlets/secured/staff/group/owner/enliststudents").with(EnlistStudentsToGroupServlet.class);
-				serve("*/servlets/secured/staff/group/owner/transfergroupownership").with(TransferGroupOwnershipServlet.class);
+				serve("*/servlets/secured/staff/group/owner/transfergroupownership").with(
+						TransferGroupOwnershipServlet.class);
 				serve("*/servlets/secured/staff/group/owner/deactivategroup").with(DeactivateGroupServlet.class);
-				serve("*/servlets/secured/staff/group/member/allrecipients").with(GetAllRecipientsServlet.class);//tested			
-				
+				serve("*/servlets/secured/staff/group/member/allrecipients").with(GetAllRecipientsServlet.class);// tested
+
 				serve("*/servlets/secured/staff/group/sendnote").with(SendNoteServlet.class); // tested
-				serve("*/servlets/secured/staff/group/savenoteasdraft").with(SaveNoteAsDraftServlet.class); //deprecated - not merged with attachment
+				serve("*/servlets/secured/staff/group/savenoteasdraft").with(SaveNoteAsDraftServlet.class); // deprecated - not merged with attachment
 				serve("*/servlets/secured/staff/group/alldraftnote").with(GetAllDraftNoteServlet.class); // tested
 				serve("*/servlets/secured/staff/group/senddraftnote").with(SendDraftNoteServlet.class); // tested
 				serve("*/servlets/secured/staff/group/deletenote").with(DeleteNoteServlet.class); // tested
 				serve("*/servlets/secured/staff/group/notedetails").with(GetNoteDetailsServlet.class); // tested
 				serve("*/servlets/secured/staff/group/allsentnotes").with(GetAllSentNotesServlet.class); // tested
-				serve("*/servlets/secured/staff/group/updatedraftnote").with(UpdateNoteDraftServlet.class); //tested
-				
-				serve("*/servlets/secured/staff/group/downloadnoteattachment").with(DownloadNoteAttachmentServlet.class); //tested
-				serve("*/servlets/secured/staff/group/deletenoteattachment").with(DeleteNoteAttachmentServlet.class); //tested
-				serve("*/servlets/secured/staff/group/noteisread").with(NoteIsReadServlet.class); //tested
-				serve("*/servlets/secured/staff/group/noteisarchive").with(NoteIsArchiveServlet.class); //tested
-				serve("*/servlets/secured/staff/group/noteunarchive").with(NoteUnArchiveServlet.class); //tested
-				serve("*/servlets/secured/staff/group/sendnoteresponse").with(SendNoteResponseServlet.class); //tested
-				serve("*/servlets/secured/staff/group/uploadatt").with(UploadNoteServlet.class);
-							
+				serve("*/servlets/secured/staff/group/updatedraftnote").with(UpdateNoteDraftServlet.class); // tested
+
+				serve("*/servlets/secured/staff/group/downloadnoteattachment")
+						.with(DownloadNoteAttachmentServlet.class); // tested
+				serve("*/servlets/secured/staff/group/deletenoteattachment").with(DeleteNoteAttachmentServlet.class); // tested
+				serve("*/servlets/secured/staff/group/noteisread").with(NoteIsReadServlet.class); // tested
+				serve("*/servlets/secured/staff/group/noteisarchive").with(NoteIsArchiveServlet.class); // tested
+				serve("*/servlets/secured/staff/group/noteunarchive").with(NoteUnArchiveServlet.class); // tested
+				serve("*/servlets/secured/staff/group/sendnoteresponse").with(SendNoteResponseServlet.class); // tested
+				serve("*/servlets/secured/staff/group/allreceivednote").with(GetAllUserNoteServlet.class);
+
 				serve("*/servlets/secured/staff/group/createhomework").with(PublishHomeworkServlet.class);
 				serve("*/servlets/secured/staff/group/createdrafthomework").with(PublishDraftHomeworkServlet.class);
 				serve("*/servlets/secured/staff/group/savehomeworkasdraft").with(SaveHomeworkAsDraftServlet.class);
@@ -158,33 +160,41 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/group/allhomeworkdraft").with(GetAllDraftHomeworkServlet.class);
 				serve("*/servlets/secured/staff/group/allcreatedhomework").with(GetAllPublishedHomeworkServlet.class);
 				serve("*/servlets/secured/staff/group/homeworkdetails").with(GetHomeworkDetailsServlet.class);
-				serve("*/servlets/secured/staff/group/deletehomework").with(DeleteHomeworkServlet.class);				
+				serve("*/servlets/secured/staff/group/deletehomework").with(DeleteHomeworkServlet.class);
 
-				serve("*/servlets/secured/staff/group/sendpublishedhomework").with(SendPublishedHomeworkServlet.class);//tested
-				serve("*/servlets/secured/staff/group/senddraftpublishedhomework").with(SendDraftPublishedHomeworkServlet.class);//tested
-				serve("*/servlets/secured/staff/group/savepublishedhomeworkasdraft").with(SavePublishedHomeworkAsDraftServlet.class);//tested
-				serve("*/servlets/secured/staff/group/updatedraftpublishedhomework").with(UpdateDraftPublishedHomeworkServlet.class);//tested
-				serve("*/servlets/secured/staff/group/allsenthomework").with(GetAllSentHomeworkServlet.class);//tested
-				serve("*/servlets/secured/staff/group/alldraftpublishedhomework").with(GetAllDraftPublishedHomeworkServlet.class);//tested
-				serve("*/servlets/secured/staff/group/publishedhomeworkdetails").with(GetPublishedHomeworkDetailsServlet.class);//tested
-				serve("*/servlets/secured/staff/group/deletegrouphomework").with(DeleteGroupHomeworkServlet.class);//tested
+				serve("*/servlets/secured/staff/group/sendpublishedhomework").with(SendPublishedHomeworkServlet.class);// tested
+				serve("*/servlets/secured/staff/group/senddraftpublishedhomework").with(
+						SendDraftPublishedHomeworkServlet.class);// tested
+				serve("*/servlets/secured/staff/group/savepublishedhomeworkasdraft").with(
+						SavePublishedHomeworkAsDraftServlet.class);// tested
+				serve("*/servlets/secured/staff/group/updatedraftpublishedhomework").with(
+						UpdateDraftPublishedHomeworkServlet.class);// tested
+				serve("*/servlets/secured/staff/group/allsenthomework").with(GetAllSentHomeworkServlet.class);// tested
+				serve("*/servlets/secured/staff/group/alldraftpublishedhomework").with(
+						GetAllDraftPublishedHomeworkServlet.class);// tested
+				serve("*/servlets/secured/staff/group/publishedhomeworkdetails").with(
+						GetPublishedHomeworkDetailsServlet.class);// tested
+				serve("*/servlets/secured/staff/group/deletegrouphomework").with(DeleteGroupHomeworkServlet.class);// tested
 
-				serve("*/servlets/secured/staff/group/homeworkrecipients").with(GetHomeworkRecipientsServlet.class);//tested
-				serve("*/servlets/secured/staff/group/markhomework").with(MarkHomeworkServlet.class); //tested
-				serve("*/servlets/secured/staff/group/gradehomework").with(GradeHomeworkServlet.class);//tested
-				serve("*/servlets/secured/staff/group/submithomework").with(SubmitHomeworkServlet.class);//tested
-				serve("*/servlets/secured/student/deletehomework").with(DeleteUserHomeworkServlet.class); //tested
-				serve("*/servlets/secured/student/archivehomework").with(ArchiveHomeworkServlet.class);//tested
-				serve("*/servlets/secured/student/readhomework").with(ReadHomeworkServlet.class);//tested
-				serve("*/servlets/secured/parent/allparentrecievedhomework").with(GetAllParentHomeworkServlet.class);//tested
+				serve("*/servlets/secured/staff/group/homeworkrecipients").with(GetHomeworkRecipientsServlet.class);// tested
+				serve("*/servlets/secured/staff/group/markhomework").with(MarkHomeworkServlet.class); // tested
+				serve("*/servlets/secured/staff/group/gradehomework").with(GradeHomeworkServlet.class);// tested
+				serve("*/servlets/secured/staff/group/submithomework").with(SubmitHomeworkServlet.class);// tested
+				serve("*/servlets/secured/student/deletehomework").with(DeleteUserHomeworkServlet.class); // tested
+				serve("*/servlets/secured/student/archivehomework").with(ArchiveHomeworkServlet.class);// tested
+				serve("*/servlets/secured/student/readhomework").with(ReadHomeworkServlet.class);// tested
+				serve("*/servlets/secured/parent/allparentrecievedhomework").with(GetAllParentHomeworkServlet.class);// tested
 
-				serve("*/servlets/secured/staff/group/uploadhomeworkattachment").with(UploadHomeworkAttachmentServlet.class);
-				serve("*/servlets/secured/staff/group/downloadhomeworkattachment").with(DownloadHomeworkAttachmentServlet.class);
-				serve("*/servlets/secured/staff/group/deletehomeworkattachment").with(DeleteHomeworkAttachmentServlet.class);			
-				
+				serve("*/servlets/secured/staff/group/uploadhomeworkattachment").with(
+						UploadHomeworkAttachmentServlet.class);
+				serve("*/servlets/secured/staff/group/downloadhomeworkattachment").with(
+						DownloadHomeworkAttachmentServlet.class);
+				serve("*/servlets/secured/staff/group/deletehomeworkattachment").with(
+						DeleteHomeworkAttachmentServlet.class);
+
 				serve("*/servlets/secured/admin/registerschool").with(RegisterSchoolServlet.class);
 				serve("*/servlets/secured/admin/allschools").with(ViewAllSchoolsServlet.class);
-				
+
 			}
 		});
 	}

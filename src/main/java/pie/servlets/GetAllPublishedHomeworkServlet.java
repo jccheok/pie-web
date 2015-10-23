@@ -2,7 +2,6 @@ package pie.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,7 +17,6 @@ import pie.Homework;
 import pie.services.GroupService;
 import pie.services.HomeworkService;
 import pie.services.StaffService;
-import pie.utilities.Utilities;
 
 @Singleton
 public class GetAllPublishedHomeworkServlet extends HttpServlet {
