@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -33,7 +34,7 @@ public class GetAllPublishedHomeworkServlet extends HttpServlet {
 		this.homeworkService = homeworkService;
 	}
 
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		JSONObject responseObj = new JSONObject();
 
 		Homework[] publishedHomework = homeworkService.getAllPublishedHomework();
