@@ -118,10 +118,10 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				
 				serve("*/servlets/secured/parent/children").with(ViewParentChildrenServlet.class);//tested
 				serve("*/servlets/secured/parent/addchild").with(AddChildServlet.class);
-				serve("*/servlets/secured/parent/relationships").with(ViewRelationshipsServlet.class);
+				serve("*/servlets/secured/parent/relationships").with(ViewRelationshipsServlet.class);//tested
 				serve("*/servlets/secured/parent/setmainparent").with(SetAsMainParentServlet.class);
 				
-				serve("*/servlets/secured/staff/gencode").with(GenerateCodeServlet.class);
+				serve("*/servlets/secured/staff/gencode").with(GenerateCodeServlet.class);//tested
 				serve("*/servlets/secured/staff/registergroup").with(RegisterGroupServlet.class);
 				serve("*/servlets/secured/staff/joingroup").with(StaffJoinGroupServlet.class);
 				serve("*/servlets/secured/staff/groupdetails").with(ViewGroupDetailsServlet.class);

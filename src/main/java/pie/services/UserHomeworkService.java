@@ -47,10 +47,9 @@ public class UserHomeworkService {
 				boolean isRead = resultSet.getInt("isRead") == 1 ? true : false;
 				boolean isMarked = resultSet.getInt("isMarked") == 1 ? true : false;
 				String grade = resultSet.getString("grade");
-				Date receivedDate = new Date(resultSet.getDate("receivedDate").getTime());
 
 				userHomework = new UserHomework(userHomeworkID, homework, user, isRead, isSubmitted, submissionDate,
-						isArchived, dateArchived, dateRead, grade, isMarked, isDeleted, receivedDate);
+						isArchived, dateArchived, dateRead, grade, isMarked, isDeleted);
 			}
 
 			conn.close();

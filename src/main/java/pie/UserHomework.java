@@ -15,10 +15,9 @@ public class UserHomework {
 	private String grade;
 	private boolean isMarked;
 	private boolean isDeleted;
-	private Date receivedDate;
 
 	public UserHomework(int userHomeworkID, Homework homework, User user, boolean isRead, boolean isSubmitted,
-			Date submissionDate, boolean isArchived, Date dateArchived, Date dateRead, String grade, boolean isMarked, boolean isDeleted, Date receivedDate) {
+			Date submissionDate, boolean isArchived, Date dateArchived, Date dateRead, String grade, boolean isMarked, boolean isDeleted) {
 		// TODO Auto-generated constructor stub
 
 		setUserHomeworkID(userHomeworkID);
@@ -33,7 +32,6 @@ public class UserHomework {
 		setGrade(grade);
 		setMarked(isMarked);
 		setDeleted(isDeleted);
-		setReceivedDate(receivedDate);
 	}
 
 	public int getUserHomeworkID() {
@@ -132,14 +130,6 @@ public class UserHomework {
 
 	public void setDeleted(boolean isDeleted) {
 		this.isDeleted = isDeleted;
-	}
-
-	public Date getReceivedDate() {
-		return receivedDate;
-	}
-
-	public void setReceivedDate(Date receivedDate) {
-		this.receivedDate = receivedDate;
 	}
 
 }
