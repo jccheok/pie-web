@@ -17,11 +17,13 @@ import org.json.JSONObject;
 import pie.Group;
 import pie.GroupHomework;
 import pie.Homework;
+import pie.Parent;
 import pie.Staff;
 import pie.Student;
 import pie.services.GroupHomeworkService;
 import pie.services.GroupService;
 import pie.services.HomeworkService;
+import pie.services.ParentStudentService;
 import pie.services.StaffGroupService;
 import pie.services.StaffService;
 import pie.services.StudentGroupService;
@@ -43,12 +45,13 @@ public class SendDraftPublishedHomeworkServlet extends HttpServlet{
 	HomeworkService homeworkService;
 	StudentGroupService studentGroupService;
 	StaffGroupService staffGroupService;
+	ParentStudentService parentStudentService;
 
 	@Inject
 	public SendDraftPublishedHomeworkServlet(GroupHomeworkService groupHomeworkService,
 			UserHomeworkService userHomeworkService, StaffService staffService,
 			GroupService groupService, HomeworkService homeworkService, StudentGroupService studentGroupService,
-			StaffGroupService staffGroupService) {
+			StaffGroupService staffGroupService, ParentStudentService parentStudentService) {
 		this.groupHomeworkService = groupHomeworkService;
 		this.userHomeworkService = userHomeworkService;
 		this.staffService = staffService;
@@ -56,6 +59,7 @@ public class SendDraftPublishedHomeworkServlet extends HttpServlet{
 		this.homeworkService = homeworkService;
 		this.studentGroupService = studentGroupService;
 		this.staffGroupService = staffGroupService;
+		this.parentStudentService = parentStudentService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -123,6 +127,16 @@ public class SendDraftPublishedHomeworkServlet extends HttpServlet{
 					responseObject.put("message", "Failed to Publish Homework to UserHomework");
 					break;
 				}
+				Parent[] parents = parentStudentService.getParents(student.getUserID());
+				
+				for(Parent parent : parents){
+					if(!userHomeworkService.sendHomework(parent.getUserID(), homework.getHomeworkID())){
+						responseObject.put("result", "Failed to Send Homework to parent");
+						responseObject.put("message", "Failed to Publish Homework to UserHomework");
+						break;
+					}
+				}
+				
 			}
 
 			for (Staff staff : staffMembers) {
