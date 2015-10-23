@@ -39,7 +39,7 @@ public class UserNoteService {
 				boolean isRead = resultSet.getInt("isRead") == 1;
 				boolean isArchive = resultSet.getInt("isArchive") == 1;
 				Date dateRead = new Date(resultSet.getTimestamp("dateRead").getTime());
-				Date dateArchive = new Date(resultSet.getTimestamp("dateArchive").getTime());
+				Date dateArchive = new Date(resultSet.getTimestamp("dateArchived").getTime());
 				String responseText = resultSet.getString("responseText");
 				
 				userNote = new UserNote(userNoteID, responseOption, note, user, isRead, isArchive, dateRead, dateArchive, responseText);
