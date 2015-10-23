@@ -65,7 +65,7 @@ public class ViewGroupDetailsServlet extends HttpServlet {
 		responseObject.put("groupID", group.getGroupID());
 		responseObject.put("groupType", group.getGroupType().toString());
 		responseObject.put("groupName", group.getGroupName());
-		responseObject.put("codeProtected", group.getGroupCode());
+		responseObject.put("groupCode", group.getGroupCode());
 		responseObject.put("isCodeProtected", group.getGroupCode().equals("NONE") ? false: true);
 		responseObject.put("groupDescription", group.getGroupDescription());
 		responseObject.put("groupMaxDailyHomeworkMinutes", group.getGroupMaxDailyHomeworkMinutes());
