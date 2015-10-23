@@ -14,10 +14,9 @@ import pie.utilities.DatabaseConnector;
 
 public class HomeworkAttachmentService {
 
-	public int createHomeworkAttachment(String homeworkAttachmentURL) {
+	public int createHomeworkAttachment(String homeworkAttachmentURL, int homeworkID) {
 
 		int homeworkAttachmentID = -1;
-		int tempHomeworkID = 1;
 
 		try {
 
@@ -28,7 +27,7 @@ public class HomeworkAttachmentService {
 			String sql = "INSERT INTO `HomeworkAttachment` (attachmentURL, homeworkID) VALUES (?, ?)";
 			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			pst.setString(1, homeworkAttachmentURL);
-			pst.setInt(2, tempHomeworkID);
+			pst.setInt(2, homeworkID);
 			pst.executeUpdate();
 
 			resultSet = pst.getGeneratedKeys();
@@ -49,7 +48,7 @@ public class HomeworkAttachmentService {
 
 		HomeworkAttachment homeworkAttachment = null;
 		String attachmentURL = null;
-		Homework homework = null;	
+		Homework homework = null;
 
 		try {
 
@@ -62,7 +61,7 @@ public class HomeworkAttachmentService {
 			pst.setInt(1, homeworkAttachmentID);
 			resultSet = pst.executeQuery();
 
-			if(resultSet.next()) {
+			if (resultSet.next()) {
 				attachmentURL = resultSet.getString("attachmentURL");
 				homework = new HomeworkService().getHomework(resultSet.getInt("homeworkID"));
 
@@ -75,7 +74,7 @@ public class HomeworkAttachmentService {
 			e.printStackTrace();
 		}
 
-		return homeworkAttachment;	
+		return homeworkAttachment;
 	}
 
 	public boolean updateHomeworkAttachmentID(int homeworkAttachmentID, int homeworkID) {
@@ -103,13 +102,13 @@ public class HomeworkAttachmentService {
 
 		return isUpdated;
 	}
-	
+
 	public String updateHomeworkAttachmentName(int homeworkAttachmentID, String homeworkAttachmentURL) {
-		
+
 		String newHomeworkAttachmentURL = homeworkAttachmentID + "-" + homeworkAttachmentURL;
-		
+
 		try {
-			
+
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
@@ -121,47 +120,46 @@ public class HomeworkAttachmentService {
 			pst.executeUpdate();
 
 			conn.close();
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return newHomeworkAttachmentURL;
 	}
-	
 
 	public String getHomeworkFileName(Part part) {
 		String contentDisp = part.getHeader("content-disposition");
 		String[] items = contentDisp.split(";");
 		for (String s : items) {
 			if (s.trim().startsWith("filename")) {
-				return s.substring(s.indexOf("=") + 2, s.length()-1);
+				return s.substring(s.indexOf("=") + 2, s.length() - 1);
 			}
 		}
 		return null;
 	}
-	
+
 	public boolean deleteHomeworkAttachment(String homeworkAttachmentURL) {
 
 		boolean isDeleted = false;
-		
+
 		File homeworkAttachmentDIR = new File(getHomeworkAttachmentDIR(homeworkAttachmentURL));
-		if(homeworkAttachmentDIR.exists()) {
-			
+		if (homeworkAttachmentDIR.exists()) {
+
 			try {
-				
+
 				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
 
 				String sql = "DELETE FROM `HomeworkAttachment` WHERE attachmentURL = ?";
 				pst = conn.prepareStatement(sql);
 				pst.setString(1, homeworkAttachmentURL);
-				
+
 				pst.executeUpdate();
-				
+
 				homeworkAttachmentDIR.delete();
 				isDeleted = true;
-				
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -175,7 +173,7 @@ public class HomeworkAttachmentService {
 		boolean isExist = false;
 
 		File homeworkAttachmentDIR = new File(getHomeworkDIR());
-		if(homeworkAttachmentDIR.exists()) {
+		if (homeworkAttachmentDIR.exists()) {
 			homeworkAttachmentDIR.mkdir();
 
 			isExist = true;
@@ -189,15 +187,16 @@ public class HomeworkAttachmentService {
 		String uploadPath = System.getenv("OPENSHIFT_DATA_DIR");
 		String uploadedDir = uploadPath + File.separator + "uploadedHomeworkDIR";
 
-		return uploadedDir;	
+		return uploadedDir;
 	}
 
 	public String getHomeworkAttachmentDIR(String homeworkAttachmentURL) {
-		
+
 		String uploadPath = System.getenv("OPENSHIFT_DATA_DIR");
-		String uploadedDir = uploadPath + File.separator + "uploadedHomeworkDIR" + File.separator + homeworkAttachmentURL;
-		
+		String uploadedDir = uploadPath + File.separator + "uploadedHomeworkDIR" + File.separator
+				+ homeworkAttachmentURL;
+
 		return uploadedDir;
 	}
-	
+
 }
