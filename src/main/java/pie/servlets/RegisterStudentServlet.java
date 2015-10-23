@@ -80,7 +80,7 @@ public class RegisterStudentServlet extends HttpServlet {
 			String verificationLink = "http://piedev-rpmaps.rhcloud.com/servlets/verify?userID=" + userID;
 			InputStream emailTemplateStream = this.getServletContext().getResourceAsStream("/resources/verificationTemplate.html");
 
-			String emailSubject = "Confirm your Student account on Partners in Education";
+			String emailSubject = "Confirm your Student account on PETAL";
 			String emailTemplate = Utilities.convertStreamToString(emailTemplateStream);
 
 			String emailContent = emailTemplate.replaceAll("\\$FIRST_NAME", userService.getUser(userID).getUserFirstName());
