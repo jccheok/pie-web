@@ -16,8 +16,10 @@ import org.json.JSONObject;
 
 import pie.GroupHomework;
 import pie.Staff;
+import pie.Student;
 import pie.UserHomework;
 import pie.services.GroupHomeworkService;
+import pie.services.ParentStudentService;
 import pie.services.UserHomeworkService;
 import pie.utilities.Utilities;
 
@@ -25,35 +27,38 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class GetAllUserHomeworkServlet extends HttpServlet{
+public class GetAllParentHomeworkServlet extends HttpServlet{
 
 	private static final long serialVersionUID = -4832565000771009073L;
 	
 	UserHomeworkService userHomeworkService;
 	GroupHomeworkService groupHomeworkService;
+	ParentStudentService parentStudentService;
 
 	@Inject
-	public GetAllUserHomeworkServlet(UserHomeworkService userHomeworkService, GroupHomeworkService groupHomeworkService) {
+	public GetAllParentHomeworkServlet(UserHomeworkService userHomeworkService, GroupHomeworkService groupHomeworkService, ParentStudentService parentStudentService) {
 		this.userHomeworkService = userHomeworkService;
 		this.groupHomeworkService = groupHomeworkService;
+		this.parentStudentService = parentStudentService;
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		int userID = 0;
+		int parentID = 0;
+		
 		try {
 
-			Map<String, String> requestParameters = Utilities.getParameters(request, "userID");
-			userID = Integer.parseInt(requestParameters.get("userID"));
+			Map<String, String> requestParameters = Utilities.getParameters(request, "parentID");
+			parentID = Integer.parseInt(requestParameters.get("parentID"));
 
 		} catch (Exception e) {
 
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 			return;
 		}
-
-		UserHomework[] userHomework = userHomeworkService.getAllUserHomework(userID);
-
+		
+		UserHomework[] userHomework = userHomeworkService.getAllUserHomework(parentID);
+		
 		JSONObject responseObject = new JSONObject();
 		
 		if (userHomework != null) {
@@ -70,9 +75,33 @@ public class GetAllUserHomeworkServlet extends HttpServlet{
 				homeworkObject.put("homeworkTitle", homework.getHomework().getHomeworkTitle());
 				homeworkObject.put("homeworkDescription", homework.getHomework().getHomeworkDescription());
 				homeworkObject.put("publisherName", staff.getUserFullName());
+				
 				GroupHomework groupHomework = userHomeworkService.getGroupHomework(homework.getUserHomeworkID(), homework.getHomework().getHomeworkID());
 				homeworkObject.put("publishedDate", dateFormat.format(groupHomework.getPublishDate()));
-				//homeworkObject.put("publishedDate", dateFormat.format(userHomeworkService.getGroupHomework(homework.getUserHomeworkID(), staff.getUserID()).getPublishDate()) );
+				
+				homeworkObject.put("isGraded", groupHomework.isGraded());
+				
+				Student[] children = parentStudentService.getChildren(parentID);
+				
+				JSONArray childrenHomework = new JSONArray();
+				for(Student child : children){
+					UserHomework childHomework = userHomeworkService.getChildHomework(homework.getHomework().getHomeworkID(), child.getUserID());
+					
+					if(childHomework != null){
+						JSONObject childHomeworkObject = new JSONObject();
+						
+						childHomeworkObject.put("childName", child.getUserFullName());
+						childHomeworkObject.put("childID", child.getUserID());
+						childHomeworkObject.put("homeworkGrade", childHomework.getGrade());
+						childHomeworkObject.put("homeworkSubmitted", childHomework.isSubmitted());
+						childHomeworkObject.put("homeworkMarked", childHomework.isMarked());
+						
+						childrenHomework.put(childHomeworkObject);
+						
+					}
+					
+				}
+				homeworkObject.put("childrenHomework", childrenHomework);
 
 				homeworkList.put(homeworkObject);
 			}
