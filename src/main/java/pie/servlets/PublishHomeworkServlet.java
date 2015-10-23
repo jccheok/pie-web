@@ -83,7 +83,7 @@ public class PublishHomeworkServlet extends HttpServlet {
 
 			for (FileItem x : items) {
 				if (x.getString() == null) {
-					notFoundParams.put(x.getFieldName());
+					notFoundParams.put(x.getString());
 				}
 			}
 
@@ -135,28 +135,29 @@ public class PublishHomeworkServlet extends HttpServlet {
 					responseObject.put("message", PublishHomeworkResult.FAILED_TO_UPDATE_HOMEWORK.getDefaultMessage());
 				}
 
+				if (fileDetected && homeworkID != -1) {
+
+					homeworkAttachmentID = homeworkAttachmentService.createHomeworkAttachment(homeworkAttachmentURL,
+							homeworkID);
+					homeworkAttachmentURL = homeworkAttachmentService.updateHomeworkAttachmentName(homeworkAttachmentID,
+							homeworkAttachmentURL);
+
+					File storeFile = new File(
+							homeworkAttachmentService.getHomeworkAttachmentDIR(homeworkAttachmentURL));
+
+					fileUpload.write(storeFile);
+
+					responseObject.put("fileResult", "SUCCESS");
+					responseObject.put("homeworkAttachmentID", homeworkAttachmentID);
+					responseObject.put("homeworkAttachmentURL", homeworkAttachmentURL);
+
+				} else {
+					responseObject.put("fileResult", "NO FILE UPLOADED");
+				}
+
 			} else {
 				responseObject.put("result", "No value found");
 				responseObject.put("message", notFoundParams);
-			}
-
-			if (fileDetected && homeworkID != -1) {
-
-				homeworkAttachmentID = homeworkAttachmentService.createHomeworkAttachment(homeworkAttachmentURL,
-						homeworkID);
-				homeworkAttachmentURL = homeworkAttachmentService.updateHomeworkAttachmentName(homeworkAttachmentID,
-						homeworkAttachmentURL);
-
-				File storeFile = new File(homeworkAttachmentService.getHomeworkAttachmentDIR(homeworkAttachmentURL));
-
-				fileUpload.write(storeFile);
-
-				responseObject.put("fileResult", "SUCCESS");
-				responseObject.put("homeworkAttachmentID", homeworkAttachmentID);
-				responseObject.put("homeworkAttachmentURL", homeworkAttachmentURL);
-
-			} else {
-				responseObject.put("fileResult", "NO FILE UPLOADED");
 			}
 
 		} catch (Exception e) {
