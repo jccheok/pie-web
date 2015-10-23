@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Date;
 
 import pie.Note;
@@ -254,6 +255,38 @@ public class UserNoteService {
 		}
 
 		return sendResult;
+		
+	}
+	
+	public UserNote[] getAllUserNote(int userID) {
+		
+		UserNote[] allUserNote = null;
+		
+		try {
+			
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+			
+			String sql = "SELECT userNoteID FROM `UserNote` WHERE userID = ? AND isDeleted = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, userID);
+			pst.setInt(2, 0);
+			
+			resultSet = pst.executeQuery();
+			
+			ArrayList<UserNote> tempUserNoteList = new ArrayList<UserNote>();
+			while(resultSet.next()) {
+				tempUserNoteList.add(getUserNote(resultSet.getInt("userNoteID")));
+			}
+			
+			allUserNote = tempUserNoteList.toArray(allUserNote);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return allUserNote;
 		
 	}
 	
