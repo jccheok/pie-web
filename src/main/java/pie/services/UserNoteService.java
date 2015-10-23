@@ -260,7 +260,7 @@ public class UserNoteService {
 	
 	public UserNote[] getAllUserNote(int userID) {
 		
-		UserNote[] allUserNote = null;
+		UserNote[] allUserNote = {};
 		
 		try {
 			
@@ -280,6 +280,8 @@ public class UserNoteService {
 			}
 			
 			allUserNote = tempUserNoteList.toArray(allUserNote);
+			
+			conn.close();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
