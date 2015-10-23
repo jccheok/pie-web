@@ -59,7 +59,7 @@ public class GetStaffReportServlet extends HttpServlet {
 			JSONObject effortReport = new JSONObject();
 			int minutes = gh.getMarkingEffort();
 			long diff = gh.getTargetMarkingCompletionDate().getTime() - gh.getDueDate().getTime();
-			int daysTaken = (int) TimeUnit.DAYS.convert(diff, TimeUnit.DAYS);
+			int daysTaken = (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 			int effortPerDay = daysTaken / minutes;
 			effortReport.put("groupHomeworkID", gh.getGroupHomeworkID());
 			effortReport.put("EffortPerDay", effortPerDay);
