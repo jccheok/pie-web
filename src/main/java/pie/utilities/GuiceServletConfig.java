@@ -185,7 +185,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/student/archivehomework").with(ArchiveHomeworkServlet.class);// tested
 				serve("*/servlets/secured/student/readhomework").with(ReadHomeworkServlet.class);// tested
 				serve("*/servlets/secured/parent/allparentrecievedhomework").with(GetAllParentHomeworkServlet.class);// tested
-				serve("*/servlets/secured/parent/alluserhomework").with(GetAllUserHomeworkServlet.class);
+				serve("*/servlets/secured/alluserhomework").with(GetAllUserHomeworkServlet.class);
 
 				serve("*/servlets/secured/staff/group/uploadhomeworkattachment").with(
 						UploadHomeworkAttachmentServlet.class);
