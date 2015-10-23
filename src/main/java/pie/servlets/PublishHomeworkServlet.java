@@ -84,13 +84,10 @@ public class PublishHomeworkServlet extends HttpServlet {
 			JSONArray notFoundParams = new JSONArray();
 
 			for (FileItem x : items) {
-				for (String name : fields) {
-					if (x.getFieldName().equalsIgnoreCase(name)) {
-						if (x.getString() == null) {
-							notFoundParams.put(x.getFieldName());
-						}
-					}
+				if (x.getString().length() == 0) {
+					notFoundParams.put(x.getFieldName());
 				}
+
 			}
 
 			if (notFoundParams.length() == 0 && !items.isEmpty()) {
