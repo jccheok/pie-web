@@ -41,10 +41,10 @@ public class SaveHomeworkAsDraftServlet extends HttpServlet {
 
 		int result = 0;
 		try {
-			Map<String, String> requestParams = Utilities.getParameters(request, "authorID", "homeworkTitle",
+			Map<String, String> requestParams = Utilities.getParameters(request, "staffID", "homeworkTitle",
 					"homeworkSubject", "homeworkDescription", "homeworkMinutesReqStudent", "homeworkLevel");
 
-			Homework homework = new Homework(0, staffService.getStaff(Integer.parseInt(requestParams.get("authorID"))),
+			Homework homework = new Homework(0, staffService.getStaff(Integer.parseInt(requestParams.get("staffID"))),
 					requestParams.get("homeworkTitle"), requestParams.get("homeworkSubject"),
 					requestParams.get("homeworkDescription"),
 					Integer.parseInt(requestParams.get("homeworkMinutesReqStudent")), null, false, false, null,
@@ -53,7 +53,8 @@ public class SaveHomeworkAsDraftServlet extends HttpServlet {
 			result = homeworkService.saveHomeworkAsDraft(homework);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+			return;
 		}
 
 		JSONObject responseObject = new JSONObject();

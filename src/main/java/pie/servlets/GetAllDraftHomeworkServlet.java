@@ -41,9 +41,9 @@ public class GetAllDraftHomeworkServlet extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Homework[] listHomework = {};
 		try {
-			Map<String, String> requestParams = Utilities.getParameters(request, "authorID");
+			Map<String, String> requestParams = Utilities.getParameters(request, "staffID");
 
-			listHomework = homeworkService.getAllDraftHomework(Integer.parseInt(requestParams.get("authorID")));
+			listHomework = homeworkService.getAllDraftHomework(Integer.parseInt(requestParams.get("staffID")));
 
 		} catch (Exception e) {
 			e.printStackTrace();
