@@ -1,5 +1,10 @@
 package pie.utilities;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.servlet.GuiceServletContextListener;
+import com.google.inject.servlet.ServletModule;
+
 import pie.filters.AuthFilter;
 import pie.filters.ResponseFilter;
 import pie.servlets.AddChildServlet;
@@ -18,19 +23,20 @@ import pie.servlets.GenerateCodeServlet;
 import pie.servlets.GetAllDraftHomeworkServlet;
 import pie.servlets.GetAllDraftNoteServlet;
 import pie.servlets.GetAllDraftPublishedHomeworkServlet;
+import pie.servlets.GetAllParentHomeworkServlet;
 import pie.servlets.GetAllPublishedHomeworkServlet;
 import pie.servlets.GetAllRecipientsServlet;
 import pie.servlets.GetAllSecurityQuestionsServlet;
 import pie.servlets.GetAllSentHomeworkServlet;
 import pie.servlets.GetAllSentNotesServlet;
 import pie.servlets.GetAllSubjectsServlet;
-import pie.servlets.GetAllParentHomeworkServlet;
 import pie.servlets.GetAllUserHomeworkServlet;
 import pie.servlets.GetAllUserNoteServlet;
 import pie.servlets.GetHomeworkDetailsServlet;
 import pie.servlets.GetHomeworkRecipientsServlet;
 import pie.servlets.GetNoteDetailsServlet;
 import pie.servlets.GetPublishedHomeworkDetailsServlet;
+import pie.servlets.GetStaffReportServlet;
 import pie.servlets.GradeHomeworkServlet;
 import pie.servlets.LoginServlet;
 import pie.servlets.MarkHomeworkServlet;
@@ -78,11 +84,6 @@ import pie.servlets.ViewParentChildrenServlet;
 import pie.servlets.ViewRelationshipsServlet;
 import pie.servlets.ViewStudentJoinedGroupsServlet;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.servlet.GuiceServletContextListener;
-import com.google.inject.servlet.ServletModule;
-
 public class GuiceServletConfig extends GuiceServletContextListener {
 
 	@Override
@@ -126,7 +127,8 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/registergroup").with(RegisterGroupServlet.class);
 				serve("*/servlets/secured/staff/joingroup").with(StaffJoinGroupServlet.class);
 				serve("*/servlets/secured/staff/groupdetails").with(ViewGroupDetailsServlet.class);
-
+				serve("*/servlets/secured/staff/staffreport").with(GetStaffReportServlet.class);
+				
 				serve("*/servlets/secured/staff/group/member/groupmembers").with(ViewGroupMembersServlet.class);
 				serve("*/servlets/secured/staff/group/admin/updategroup").with(UpdateGroupServlet.class);
 				serve("*/servlets/secured/staff/group/owner/enliststudents").with(EnlistStudentsToGroupServlet.class);
@@ -134,6 +136,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 						TransferGroupOwnershipServlet.class);
 				serve("*/servlets/secured/staff/group/owner/deactivategroup").with(DeactivateGroupServlet.class);
 				serve("*/servlets/secured/staff/group/member/allrecipients").with(GetAllRecipientsServlet.class);// tested
+
 
 				serve("*/servlets/secured/staff/group/sendnote").with(SendNoteServlet.class); // tested
 				serve("*/servlets/secured/staff/group/savenoteasdraft").with(SaveNoteAsDraftServlet.class); // tested
