@@ -41,13 +41,13 @@ public class UserHomeworkService {
 				Date submissionDate = new Date(resultSet.getDate("submissionDate").getTime());
 				Date dateArchived = new Date(resultSet.getDate("dateArchived").getTime());
 				Date dateRead = new Date(resultSet.getDate("dateRead").getTime());
-				boolean isSubmitted = resultSet.getInt("isSubmitted") == 1 ? true : false;
-				boolean isArchived = resultSet.getInt("isArchived") == 1 ? true : false;
-				boolean isDeleted = resultSet.getInt("isDeleted") == 1 ? true : false;
-				boolean isRead = resultSet.getInt("isRead") == 1 ? true : false;
-				boolean isMarked = resultSet.getInt("isMarked") == 1 ? true : false;
+				boolean isSubmitted = resultSet.getInt("isSubmitted") == 1;
+				boolean isArchived = resultSet.getInt("isArchived") == 1;
+				boolean isDeleted = resultSet.getInt("isDeleted") == 1;
+				boolean isRead = resultSet.getInt("isRead") == 1;
+				boolean isMarked = resultSet.getInt("isMarked") == 1;
 				String grade = resultSet.getString("grade");
-				boolean isAcknowledged = resultSet.getInt("isAcknowledged") == 1 ? true : false;
+				boolean isAcknowledged = resultSet.getInt("isAcknowledged") == 1;
 
 				userHomework = new UserHomework(userHomeworkID, homework, user, isRead, isSubmitted, submissionDate,
 						isArchived, dateArchived, dateRead, grade, isMarked, isDeleted, isAcknowledged);
