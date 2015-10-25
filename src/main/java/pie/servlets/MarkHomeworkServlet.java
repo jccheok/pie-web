@@ -56,7 +56,7 @@ public class MarkHomeworkServlet extends HttpServlet{
 
 			int studentID = student.getInt("studentID");
 			int userHomeworkID = student.getInt("userHomeworkID");
-
+			
 			userHomeworkService.markHomework(userHomeworkID, studentID);
 		}
 

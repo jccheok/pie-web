@@ -19,7 +19,6 @@ public class UserHomework {
 	
 	public UserHomework(int userHomeworkID, Homework homework, User user, boolean isRead, boolean isSubmitted,
 			Date submissionDate, boolean isArchived, Date dateArchived, Date dateRead, String grade, boolean isMarked, boolean isDeleted, boolean isAcknowledged) {
-		// TODO Auto-generated constructor stub
 
 		setUserHomeworkID(userHomeworkID);
 		setHomework(homework);	
@@ -43,8 +42,6 @@ public class UserHomework {
 	public void setUserHomeworkID(int userHomeworkID) {
 		this.userHomeworkID = userHomeworkID;
 	}
-
-	
 
 	public boolean isRead() {
 		return isRead;
