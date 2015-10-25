@@ -10,15 +10,13 @@ public class UserHomework {
 	private boolean isSubmitted;
 	private Date submissionDate;
 	private boolean isArchived;
-	private Date dateArchived;
-	private Date dateRead;
 	private String grade;
 	private boolean isMarked;
 	private boolean isDeleted;
 	private boolean isAcknowledged;
 	
 	public UserHomework(int userHomeworkID, Homework homework, User user, boolean isRead, boolean isSubmitted,
-			Date submissionDate, boolean isArchived, Date dateArchived, Date dateRead, String grade, boolean isMarked, boolean isDeleted, boolean isAcknowledged) {
+			Date submissionDate, boolean isArchived, String grade, boolean isMarked, boolean isDeleted, boolean isAcknowledged) {
 
 		setUserHomeworkID(userHomeworkID);
 		setHomework(homework);	
@@ -27,8 +25,6 @@ public class UserHomework {
 		setSubmitted(isSubmitted);
 		setSubmissionDate(submissionDate);
 		setArchived(isArchived);
-		setDateArchived(dateArchived);
-		setDateRead(dateRead);
 		setGrade(grade);
 		setMarked(isMarked);
 		setDeleted(isDeleted);
@@ -73,22 +69,6 @@ public class UserHomework {
 
 	public void setArchived(boolean isArchived) {
 		this.isArchived = isArchived;
-	}
-
-	public Date getDateArchived() {
-		return dateArchived;
-	}
-
-	public void setDateArchived(Date dateArchived) {
-		this.dateArchived = dateArchived;
-	}
-
-	public Date getDateRead() {
-		return dateRead;
-	}
-
-	public void setDateRead(Date dateRead) {
-		this.dateRead = dateRead;
 	}
 
 	public Homework getHomework() {

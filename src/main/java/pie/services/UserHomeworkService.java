@@ -3,6 +3,7 @@ package pie.services;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -39,8 +40,6 @@ public class UserHomeworkService {
 				Homework homework = homeworkService.getHomework(resultSet.getInt("homeworkID"));
 
 				Date submissionDate = new Date(resultSet.getDate("submissionDate").getTime());
-				Date dateArchived = new Date(resultSet.getDate("dateArchived").getTime());
-				Date dateRead = new Date(resultSet.getDate("dateRead").getTime());
 				boolean isSubmitted = resultSet.getInt("isSubmitted") == 1;
 				boolean isArchived = resultSet.getInt("isArchived") == 1;
 				boolean isDeleted = resultSet.getInt("isDeleted") == 1;
@@ -50,7 +49,7 @@ public class UserHomeworkService {
 				boolean isAcknowledged = resultSet.getInt("isAcknowledged") == 1;
 
 				userHomework = new UserHomework(userHomeworkID, homework, user, isRead, isSubmitted, submissionDate,
-						isArchived, dateArchived, dateRead, grade, isMarked, isDeleted, isAcknowledged);
+						isArchived, grade, isMarked, isDeleted, isAcknowledged);
 			}
 
 			conn.close();
@@ -62,22 +61,25 @@ public class UserHomeworkService {
 		return userHomework;
 	}
 
-	public boolean sendHomework(int studentID, int homeworkID) {
+	public int createUserHomework(int studentID, int homeworkID) {
 
-		boolean sendResult = false;
+		int userHomeworkID = -1;
 
 		try {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
+			ResultSet resultSet = null;
 
 			String sql = "INSERT INTO `UserHomework` (homeworkID, userID) VALUES (?,?)";
-			pst = conn.prepareStatement(sql);
+			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			pst.setInt(1, homeworkID);
 			pst.setInt(2, studentID);
-
 			pst.executeUpdate();
-
-			sendResult = true;
+			
+			resultSet = pst.getGeneratedKeys();
+			if(resultSet.next()) {
+				userHomeworkID = resultSet.getInt(1);
+			}
 
 			conn.close();
 
@@ -85,7 +87,7 @@ public class UserHomeworkService {
 			e.printStackTrace();
 		}
 
-		return sendResult;
+		return userHomeworkID;
 	}
 
 	public boolean deleteHomework(int userHomeworkID) {

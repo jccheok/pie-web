@@ -1,88 +1,86 @@
 package pie.utilities;
 
+import pie.filters.AuthFilter;
+import pie.filters.ResponseFilter;
+import pie.servlets.GenerateCodeServlet;
+import pie.servlets.GetCitiesServlet;
+import pie.servlets.GetRelationshipsServlet;
+import pie.servlets.GetSecurityQuestionsServlet;
+import pie.servlets.GetSubjectsServlet;
+import pie.servlets.groups.DeactivateGroupServlet;
+import pie.servlets.groups.EnlistStudentServlet;
+import pie.servlets.groups.EnlistStudentsByBatchServlet;
+import pie.servlets.groups.GetGroupDetailsServlet;
+import pie.servlets.groups.RegisterGroupServlet;
+import pie.servlets.groups.StaffJoinGroupServlet;
+import pie.servlets.groups.StudentJoinGroupServlet;
+import pie.servlets.groups.StudentLeaveGroupServlet;
+import pie.servlets.groups.TransferGroupOwnershipServlet;
+import pie.servlets.groups.UpdateGroupServlet;
+import pie.servlets.groups.ViewGroupMembersServlet;
+import pie.servlets.groups.ViewOpenGroupsServlet;
+import pie.servlets.groups.ViewStudentJoinedGroupsServlet;
+import pie.servlets.homework.ArchiveHomeworkServlet;
+import pie.servlets.homework.DeleteGroupHomeworkServlet;
+import pie.servlets.homework.DeleteHomeworkAttachmentServlet;
+import pie.servlets.homework.DeleteHomeworkServlet;
+import pie.servlets.homework.DeleteUserHomeworkServlet;
+import pie.servlets.homework.DownloadHomeworkAttachmentServlet;
+import pie.servlets.homework.DownloadNoteAttachmentServlet;
+import pie.servlets.homework.GetAllDraftHomeworkServlet;
+import pie.servlets.homework.GetAllDraftPublishedHomeworkServlet;
+import pie.servlets.homework.GetAllParentHomeworkServlet;
+import pie.servlets.homework.GetAllPublishedHomeworkServlet;
+import pie.servlets.homework.GetAllSentHomeworkServlet;
+import pie.servlets.homework.GetAllUserHomeworkServlet;
+import pie.servlets.homework.GetHomeworkDetailsServlet;
+import pie.servlets.homework.GetHomeworkRecipientsServlet;
+import pie.servlets.homework.GetPublishedHomeworkDetailsServlet;
+import pie.servlets.homework.GradeHomeworkServlet;
+import pie.servlets.homework.MarkHomeworkServlet;
+import pie.servlets.homework.PublishDraftHomeworkServlet;
+import pie.servlets.homework.PublishHomeworkServlet;
+import pie.servlets.homework.ReadHomeworkServlet;
+import pie.servlets.homework.SaveHomeworkAsDraftServlet;
+import pie.servlets.homework.SavePublishedHomeworkAsDraftServlet;
+import pie.servlets.homework.SendDraftPublishedHomeworkServlet;
+import pie.servlets.homework.SendPublishedHomeworkServlet;
+import pie.servlets.homework.SubmitHomeworkServlet;
+import pie.servlets.homework.UpdateDraftHomeworkServlet;
+import pie.servlets.homework.UpdateDraftPublishedHomeworkServlet;
+import pie.servlets.notes.DeleteNoteAttachmentServlet;
+import pie.servlets.notes.DeleteNoteServlet;
+import pie.servlets.notes.GetAllDraftNoteServlet;
+import pie.servlets.notes.GetAllSentNotesServlet;
+import pie.servlets.notes.GetAllUserNoteServlet;
+import pie.servlets.notes.GetNoteDetailsServlet;
+import pie.servlets.notes.SaveNoteAsDraftServlet;
+import pie.servlets.notes.SendDraftNoteServlet;
+import pie.servlets.notes.SetNoteResponseServlet;
+import pie.servlets.notes.SendNoteServlet;
+import pie.servlets.notes.SetNoteIsArchivedServlet;
+import pie.servlets.notes.SetNoteIsReadServlet;
+import pie.servlets.notes.UpdateNoteDraftServlet;
+import pie.servlets.parent.AddChildServlet;
+import pie.servlets.parent.SetAsMainParentServlet;
+import pie.servlets.parent.ViewParentChildrenServlet;
+import pie.servlets.staff.GetAvailableRecipientsServlet;
+import pie.servlets.staff.GetStaffReportServlet;
+import pie.servlets.user.GetUserSecurityQuestionServlet;
+import pie.servlets.user.GetUserTokenServlet;
+import pie.servlets.user.LoginServlet;
+import pie.servlets.user.RegisterParentServlet;
+import pie.servlets.user.RegisterStaffServlet;
+import pie.servlets.user.RegisterStudentServlet;
+import pie.servlets.user.ResetPasswordServlet;
+import pie.servlets.user.UpdatePasswordServlet;
+import pie.servlets.user.UpdateUserAccountDetailsServlet;
+import pie.servlets.user.VerifyUserServlet;
+
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
-
-import pie.filters.AuthFilter;
-import pie.filters.ResponseFilter;
-import pie.servlets.AddChildServlet;
-import pie.servlets.ArchiveHomeworkServlet;
-import pie.servlets.DeactivateGroupServlet;
-import pie.servlets.DeleteGroupHomeworkServlet;
-import pie.servlets.DeleteHomeworkAttachmentServlet;
-import pie.servlets.DeleteHomeworkServlet;
-import pie.servlets.DeleteNoteAttachmentServlet;
-import pie.servlets.DeleteNoteServlet;
-import pie.servlets.DeleteUserHomeworkServlet;
-import pie.servlets.DownloadHomeworkAttachmentServlet;
-import pie.servlets.DownloadNoteAttachmentServlet;
-import pie.servlets.EnlistStudentsToGroupServlet;
-import pie.servlets.GenerateCodeServlet;
-import pie.servlets.GetAllDraftHomeworkServlet;
-import pie.servlets.GetAllDraftNoteServlet;
-import pie.servlets.GetAllDraftPublishedHomeworkServlet;
-import pie.servlets.GetAllParentHomeworkServlet;
-import pie.servlets.GetAllPublishedHomeworkServlet;
-import pie.servlets.GetAllRecipientsServlet;
-import pie.servlets.GetAllSecurityQuestionsServlet;
-import pie.servlets.GetAllSentHomeworkServlet;
-import pie.servlets.GetAllSentNotesServlet;
-import pie.servlets.GetAllSubjectsServlet;
-import pie.servlets.GetAllUserHomeworkServlet;
-import pie.servlets.GetAllUserNoteServlet;
-import pie.servlets.GetHomeworkDetailsServlet;
-import pie.servlets.GetHomeworkRecipientsServlet;
-import pie.servlets.GetNoteDetailsServlet;
-import pie.servlets.GetPublishedHomeworkDetailsServlet;
-import pie.servlets.GetStaffReportServlet;
-import pie.servlets.GradeHomeworkServlet;
-import pie.servlets.LoginServlet;
-import pie.servlets.MarkHomeworkServlet;
-import pie.servlets.NoteIsArchiveServlet;
-import pie.servlets.NoteIsReadServlet;
-import pie.servlets.NoteUnArchiveServlet;
-import pie.servlets.PublishDraftHomeworkServlet;
-import pie.servlets.PublishHomeworkServlet;
-import pie.servlets.ReadHomeworkServlet;
-import pie.servlets.RegisterGroupServlet;
-import pie.servlets.RegisterParentServlet;
-import pie.servlets.RegisterSchoolServlet;
-import pie.servlets.RegisterStaffServlet;
-import pie.servlets.RegisterStudentServlet;
-import pie.servlets.ResetPasswordServlet;
-import pie.servlets.RetrieveSecurityQuestionServlet;
-import pie.servlets.SaveHomeworkAsDraftServlet;
-import pie.servlets.SaveNoteAsDraftServlet;
-import pie.servlets.SavePublishedHomeworkAsDraftServlet;
-import pie.servlets.SendDraftNoteServlet;
-import pie.servlets.SendDraftPublishedHomeworkServlet;
-import pie.servlets.SendNoteResponseServlet;
-import pie.servlets.SendNoteServlet;
-import pie.servlets.SendPublishedHomeworkServlet;
-import pie.servlets.SetAsMainParentServlet;
-import pie.servlets.StaffJoinGroupServlet;
-import pie.servlets.StudentJoinGroupServlet;
-import pie.servlets.StudentLeaveGroupServlet;
-import pie.servlets.SubmitHomeworkServlet;
-import pie.servlets.TransferGroupOwnershipServlet;
-import pie.servlets.UpdateDraftHomeworkServlet;
-import pie.servlets.UpdateDraftPublishedHomeworkServlet;
-import pie.servlets.UpdateGroupServlet;
-import pie.servlets.UpdateNoteDraftServlet;
-import pie.servlets.UpdatePasswordServlet;
-import pie.servlets.UpdateUserAccountDetailsServlet;
-import pie.servlets.VerifyUserPasswordServlet;
-import pie.servlets.VerifyUserServlet;
-import pie.servlets.ViewAllSchoolsServlet;
-import pie.servlets.ViewCitiesServlet;
-import pie.servlets.ViewGroupDetailsServlet;
-import pie.servlets.ViewGroupMembersServlet;
-import pie.servlets.ViewOpenGroupsServlet;
-import pie.servlets.ViewParentChildrenServlet;
-import pie.servlets.ViewRelationshipsServlet;
-import pie.servlets.ViewStudentJoinedGroupsServlet;
 
 public class GuiceServletConfig extends GuiceServletContextListener {
 
@@ -103,16 +101,16 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/registerstudent").with(RegisterStudentServlet.class);
 				serve("*/servlets/registerstaff").with(RegisterStaffServlet.class);
 				serve("*/servlets/verify").with(VerifyUserServlet.class);
-				serve("*/servlets/cities").with(ViewCitiesServlet.class);
-				serve("*/servlets/forgetpassword").with(RetrieveSecurityQuestionServlet.class);
+				serve("*/servlets/cities").with(GetCitiesServlet.class);
+				serve("*/servlets/forgetpassword").with(GetUserSecurityQuestionServlet.class);
 				serve("*/servlets/resetpassword").with(ResetPasswordServlet.class);
-				serve("*/servlets/getsecurityquestions").with(GetAllSecurityQuestionsServlet.class);
-				serve("*/servlets/getsubjects").with(GetAllSubjectsServlet.class);
+				serve("*/servlets/getsecurityquestions").with(GetSecurityQuestionsServlet.class);
+				serve("*/servlets/getsubjects").with(GetSubjectsServlet.class);
 
 				serve("*/servlets/secured/opengroups").with(ViewOpenGroupsServlet.class);
 				serve("*/servlets/secured/updatepassword").with(UpdatePasswordServlet.class);
 				serve("*/servlets/secured/updateaccountdetails").with(UpdateUserAccountDetailsServlet.class);
-				serve("*/servlets/secured/authenticate").with(VerifyUserPasswordServlet.class);
+				serve("*/servlets/secured/authenticate").with(GetUserTokenServlet.class);
 
 				serve("*/servlets/secured/student/leavegroup").with(StudentLeaveGroupServlet.class);
 				serve("*/servlets/secured/student/joingroup").with(StudentJoinGroupServlet.class);
@@ -120,22 +118,22 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 
 				serve("*/servlets/secured/parent/children").with(ViewParentChildrenServlet.class);// tested
 				serve("*/servlets/secured/parent/addchild").with(AddChildServlet.class);
-				serve("*/servlets/secured/parent/relationships").with(ViewRelationshipsServlet.class);// tested
+				serve("*/servlets/secured/parent/relationships").with(GetRelationshipsServlet.class);// tested
 				serve("*/servlets/secured/parent/setmainparent").with(SetAsMainParentServlet.class);
 
 				serve("*/servlets/secured/staff/gencode").with(GenerateCodeServlet.class);// tested
 				serve("*/servlets/secured/staff/registergroup").with(RegisterGroupServlet.class);
 				serve("*/servlets/secured/staff/joingroup").with(StaffJoinGroupServlet.class);
-				serve("*/servlets/secured/staff/groupdetails").with(ViewGroupDetailsServlet.class);
+				serve("*/servlets/secured/staff/groupdetails").with(GetGroupDetailsServlet.class);
 				serve("*/servlets/secured/staff/staffreport").with(GetStaffReportServlet.class);
 				
 				serve("*/servlets/secured/staff/group/member/groupmembers").with(ViewGroupMembersServlet.class);
 				serve("*/servlets/secured/staff/group/admin/updategroup").with(UpdateGroupServlet.class);
-				serve("*/servlets/secured/staff/group/owner/enliststudents").with(EnlistStudentsToGroupServlet.class);
-				serve("*/servlets/secured/staff/group/owner/transfergroupownership").with(
-						TransferGroupOwnershipServlet.class);
+				serve("*/servlets/secured/staff/group/owner/enliststudentsbatch").with(EnlistStudentsByBatchServlet.class);
+				serve("*/servlets/secured/staff/group/owner/enliststudent").with(EnlistStudentServlet.class);
+				serve("*/servlets/secured/staff/group/owner/transfergroupownership").with(TransferGroupOwnershipServlet.class);
 				serve("*/servlets/secured/staff/group/owner/deactivategroup").with(DeactivateGroupServlet.class);
-				serve("*/servlets/secured/staff/group/member/allrecipients").with(GetAllRecipientsServlet.class);// tested
+				serve("*/servlets/secured/staff/group/member/allrecipients").with(GetAvailableRecipientsServlet.class);// tested
 
 
 				serve("*/servlets/secured/staff/group/sendnote").with(SendNoteServlet.class); // tested
@@ -147,13 +145,12 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/group/allsentnotes").with(GetAllSentNotesServlet.class); // tested
 				serve("*/servlets/secured/staff/group/updatedraftnote").with(UpdateNoteDraftServlet.class); // tested
 
-				serve("*/servlets/secured/staff/group/downloadnoteattachment")
-						.with(DownloadNoteAttachmentServlet.class); // tested
+				serve("*/servlets/secured/staff/group/downloadnoteattachment").with(DownloadNoteAttachmentServlet.class); // tested
 				serve("*/servlets/secured/staff/group/deletenoteattachment").with(DeleteNoteAttachmentServlet.class); // tested
-				serve("*/servlets/secured/staff/group/noteisread").with(NoteIsReadServlet.class); // tested
-				serve("*/servlets/secured/staff/group/noteisarchive").with(NoteIsArchiveServlet.class); // tested
-				serve("*/servlets/secured/staff/group/noteunarchive").with(NoteUnArchiveServlet.class); // tested
-				serve("*/servlets/secured/staff/group/sendnoteresponse").with(SendNoteResponseServlet.class); // tested
+				serve("*/servlets/secured/staff/group/noteisread").with(SetNoteIsReadServlet.class); // tested
+				serve("*/servlets/secured/staff/group/noteisarchive").with(SetNoteIsArchivedServlet.class); // tested
+				serve("*/servlets/secured/staff/group/setnotearchive").with(SetNoteIsArchivedServlet.class); // tested
+				serve("*/servlets/secured/staff/group/sendnoteresponse").with(SetNoteResponseServlet.class); // tested
 				serve("*/servlets/secured/staff/group/allreceivednote").with(GetAllUserNoteServlet.class);//tested
 
 				serve("*/servlets/secured/staff/group/createhomework").with(PublishHomeworkServlet.class);
@@ -166,17 +163,12 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/group/deletehomework").with(DeleteHomeworkServlet.class);
 
 				serve("*/servlets/secured/staff/group/sendpublishedhomework").with(SendPublishedHomeworkServlet.class);// tested
-				serve("*/servlets/secured/staff/group/senddraftpublishedhomework").with(
-						SendDraftPublishedHomeworkServlet.class);// tested
-				serve("*/servlets/secured/staff/group/savepublishedhomeworkasdraft").with(
-						SavePublishedHomeworkAsDraftServlet.class);// tested
-				serve("*/servlets/secured/staff/group/updatedraftpublishedhomework").with(
-						UpdateDraftPublishedHomeworkServlet.class);// tested
+				serve("*/servlets/secured/staff/group/senddraftpublishedhomework").with(SendDraftPublishedHomeworkServlet.class);// tested
+				serve("*/servlets/secured/staff/group/savepublishedhomeworkasdraft").with(SavePublishedHomeworkAsDraftServlet.class);// tested
+				serve("*/servlets/secured/staff/group/updatedraftpublishedhomework").with(UpdateDraftPublishedHomeworkServlet.class);// tested
 				serve("*/servlets/secured/staff/group/allsenthomework").with(GetAllSentHomeworkServlet.class);// tested
-				serve("*/servlets/secured/staff/group/alldraftpublishedhomework").with(
-						GetAllDraftPublishedHomeworkServlet.class);// tested
-				serve("*/servlets/secured/staff/group/publishedhomeworkdetails").with(
-						GetPublishedHomeworkDetailsServlet.class);// tested
+				serve("*/servlets/secured/staff/group/alldraftpublishedhomework").with(GetAllDraftPublishedHomeworkServlet.class);// tested
+				serve("*/servlets/secured/staff/group/publishedhomeworkdetails").with(GetPublishedHomeworkDetailsServlet.class);// tested
 				serve("*/servlets/secured/staff/group/deletegrouphomework").with(DeleteGroupHomeworkServlet.class);// tested
 
 				serve("*/servlets/secured/staff/group/homeworkrecipients").with(GetHomeworkRecipientsServlet.class);// tested
@@ -194,9 +186,6 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 						DownloadHomeworkAttachmentServlet.class);
 				serve("*/servlets/secured/staff/group/deletehomeworkattachment").with(
 						DeleteHomeworkAttachmentServlet.class);
-
-				serve("*/servlets/secured/admin/registerschool").with(RegisterSchoolServlet.class);
-				serve("*/servlets/secured/admin/allschools").with(ViewAllSchoolsServlet.class);
 
 			}
 		});

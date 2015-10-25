@@ -9,6 +9,7 @@ import java.util.Date;
 import pie.Group;
 import pie.Student;
 import pie.StudentGroup;
+import pie.constants.LeaveGroupResult;
 import pie.utilities.DatabaseConnector;
 
 public class StudentGroupService {
@@ -173,6 +174,44 @@ public class StudentGroupService {
 
 		return studentGroupJoinDate;
 	}
-
 	
+	public boolean removeStudentFromGroup(int groupID, int studentID) {
+		boolean removeResult = false;
+		
+		if (hasGroupMember(groupID, studentID)) {
+			try {
+				Connection conn = DatabaseConnector.getConnection();
+				PreparedStatement pst = null;
+
+				String sql = "UPDATE `StudentGroup` SET isValid = ? WHERE groupID = ? AND studentID = ?";
+				pst = conn.prepareStatement(sql);
+				pst.setInt(1, 0);
+				pst.setInt(2, groupID);
+				pst.setInt(3, studentID);
+
+				pst.executeUpdate();
+				
+				removeResult = true;
+				
+				conn.close();
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		return removeResult;
+	}
+	
+	public LeaveGroupResult leaveGroup(int groupID, int studentID) {
+		LeaveGroupResult leaveGroupResult = LeaveGroupResult.SUCCESS;
+
+		if (!hasGroupMember(studentID, groupID)) {
+			leaveGroupResult = LeaveGroupResult.NOT_MEMBER;
+		} else {
+			removeStudentFromGroup(groupID, studentID);
+		}
+
+		return leaveGroupResult;
+	}
 }

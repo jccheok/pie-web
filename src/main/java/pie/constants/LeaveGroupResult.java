@@ -3,7 +3,7 @@ package pie.constants;
 public enum LeaveGroupResult {
 	
 	SUCCESS("Successfully left group."), 
-	NOT_MEMBER("You are not a member of this group!");
+	NOT_MEMBER("You are not a member of this group.");
 
 	private String defaultMessage;
 

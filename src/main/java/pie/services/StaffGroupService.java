@@ -24,7 +24,7 @@ public class StaffGroupService {
 
 		boolean addResult = false;
 
-		if (!isMember(staffID, groupID)) {
+		if (!hasGroupMember(staffID, groupID)) {
 
 			try {
 
@@ -127,26 +127,29 @@ public class StaffGroupService {
 	public boolean removeStaffFromGroup(int groupID, int staffID) {
 		boolean removeResult = false;
 
-		try {
-			Connection conn = DatabaseConnector.getConnection();
-			PreparedStatement pst = null;
+		if (hasGroupMember(staffID, groupID)) {
+			
+			try {
+				Connection conn = DatabaseConnector.getConnection();
+				PreparedStatement pst = null;
 
-			String sql = "UPDATE `StaffGroup` SET isValid = ? WHERE groupID = ? AND staffID = ?";
-			pst = conn.prepareStatement(sql);
-			pst.setInt(1, 0);
-			pst.setInt(2, groupID);
-			pst.setInt(3, staffID);
+				String sql = "UPDATE `StaffGroup` SET isValid = ? WHERE groupID = ? AND staffID = ?";
+				pst = conn.prepareStatement(sql);
+				pst.setInt(1, 0);
+				pst.setInt(2, groupID);
+				pst.setInt(3, staffID);
 
-			pst.executeUpdate();
+				pst.executeUpdate();
 
-			removeResult = true;
+				removeResult = true;
+				
+				conn.close();
 
-			conn.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}	
+		
 		return removeResult;
 	}
 	
@@ -185,7 +188,7 @@ public class StaffGroupService {
 		}
 
 		StaffRole ownerTeacherRole = staffRoleService.getOwnerStaffRole();
-		if (isMember(staffID, groupID)) {
+		if (hasGroupMember(staffID, groupID)) {
 			setResult = setStaffRole(staffID, groupID, ownerTeacherRole);
 		} else {
 			setResult = addStaffToGroup(groupID, staffID, ownerTeacherRole);
@@ -228,7 +231,7 @@ public class StaffGroupService {
 		return joinedGroups;
 	}
 	
-	public boolean isMember(int staffID, int groupID) {
+	public boolean hasGroupMember(int staffID, int groupID) {
 
 		boolean isMember = false;
 
@@ -259,7 +262,7 @@ public class StaffGroupService {
 
 		boolean setResult = false;
 		
-		if (isMember(staffID, groupID)) {
+		if (hasGroupMember(staffID, groupID)) {
 			if (!getStaffRole(staffID, groupID).equals(staffRole)) {
 
 				try {
@@ -322,7 +325,7 @@ public class StaffGroupService {
 	public LeaveGroupResult leaveGroup(int groupID, int staffID) {
 		LeaveGroupResult leaveGroupResult = LeaveGroupResult.SUCCESS;
 
-		if (!isMember(staffID, groupID)) {
+		if (!hasGroupMember(staffID, groupID)) {
 			leaveGroupResult = LeaveGroupResult.NOT_MEMBER;
 		} else {
 			removeStaffFromGroup(groupID, staffID);
@@ -376,7 +379,7 @@ public class StaffGroupService {
 			joinGroupResult = JoinGroupResult.MISSING_GROUP_CODE;
 		} else if (!group.getGroupCode().equals(groupCode)) {
 			joinGroupResult = JoinGroupResult.INVALID_GROUP_CODE;
-		} else if (groupService.hasGroupMember(groupID, staffID)) {
+		} else if (groupService.hasGroupMember(staffID, groupID)) {
 			joinGroupResult = JoinGroupResult.ALREADY_MEMBER;
 		} else {
 			addStaffToGroup(groupID, staffID, staffRole);

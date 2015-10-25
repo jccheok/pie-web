@@ -91,7 +91,7 @@ public class GroupNoteService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 			
-			String sql = "INSERT INTO `GroupNote` (noteID, groupID, publisherID) VALUES (?, ?, ?)";
+			String sql = "INSERT INTO `GroupNote` (noteID, groupID, publisherID, publishDate) VALUES (?, ?, ?, NOW())";
 			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			pst.setInt(1, noteID);
 			pst.setInt(2, groupID);
@@ -114,32 +114,5 @@ public class GroupNoteService {
 		return groupNoteID;
 		
 	}
-	
-	public boolean publishGroupNote(int groupNoteID) {
-		
-		boolean isPublished = false;
-		
-		try {
-			
-			Connection conn = DatabaseConnector.getConnection();
-			PreparedStatement pst = null;
-			
-			String sql = "UPDATE `GroupNote` SET publishDate = NOW() WHERE groupNoteID = ?";
-			pst = conn.prepareStatement(sql);
-			pst.setInt(1, groupNoteID);
-			
-			pst.executeUpdate();
-			isPublished = true;
-			
-			conn.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return isPublished;
-		
-	}
-	
 	
 }

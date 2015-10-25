@@ -184,24 +184,24 @@ public class UserService {
 					String sql = "UPDATE `User` SET lastLogin = CURRENT_TIMESTAMP() WHERE emailAddress = ?";
 					pst = conn.prepareStatement(sql);
 					pst.setString(1, userEmail);
-					
-					if(pst.executeUpdate() != 0){
-						
+
+					if (pst.executeUpdate() != 0) {
+
 						ResultSet resultSet = null;
-						
+
 						sql = "SELECT DATEDIFF(NOW(), ?)";
 						pst = conn.prepareStatement(sql);
 						pst.setDate(1, new java.sql.Date(user.getUserLastUpdate().getTime()));
-						
+
 						resultSet = pst.executeQuery();
-						
-						if(resultSet.next()){
-							if(resultSet.getInt(1) >= 90){
+
+						if (resultSet.next()) {
+							if (resultSet.getInt(1) >= 90) {
 								loginResult = LoginResult.PASSWORD_EXPIRED;
 							}
 						}
 					}
-					
+
 					conn.close();
 
 				} catch (Exception e) {
@@ -297,11 +297,11 @@ public class UserService {
 
 		return user;
 	}
-	
+
 	private void setNewPassword(int userID, String newUserPassword) {
-		
+
 		User user = getUser(userID);
-		
+
 		try {
 
 			Connection conn = DatabaseConnector.getConnection();
@@ -309,14 +309,14 @@ public class UserService {
 
 			String sql = "UPDATE `User` SET password = ?, passwordLastUpdate = NOW(), passwordLast1 = ?, passwordLast2 = ?, lastUpdate = NOW() WHERE userID = ?";
 			pst = conn.prepareStatement(sql);
-			
+
 			pst.setString(1, newUserPassword);
 			pst.setString(2, user.getUserPassword());
 			pst.setString(3, user.getUserLastPassword1());
 			pst.setInt(4, userID);
-			
+
 			pst.executeUpdate();
-			
+
 			conn.close();
 
 		} catch (Exception e) {
@@ -325,15 +325,15 @@ public class UserService {
 	}
 
 	public ResetPasswordResult resetPassword(int userID, String securityQuestionAnswer, String newPassword) {
-		
+
 		ResetPasswordResult resetPasswordResult = ResetPasswordResult.SUCCESS;
-		
+
 		User user = getUser(userID);
 
 		if (!user.getUserSecurityAnswer().equals(securityQuestionAnswer)) {
 			resetPasswordResult = ResetPasswordResult.INVALID_ANSWER;
 		} else {
-			
+
 			setNewPassword(userID, newPassword);
 		}
 
@@ -341,11 +341,11 @@ public class UserService {
 	}
 
 	public UpdatePasswordResult updatePassword(int userID, String newUserPassword, String oldUserPassword) {
-		
+
 		UpdatePasswordResult updatePasswordResult = UpdatePasswordResult.SUCCESS;
 
 		User user = getUser(userID);
-		
+
 		if (!user.getUserPassword().equals(oldUserPassword)) {
 			updatePasswordResult = UpdatePasswordResult.OLD_PASSWORD_DOES_NOT_MATCH;
 		} else if (user.getUserLastPassword1().equals(newUserPassword)) {
@@ -360,7 +360,7 @@ public class UserService {
 	}
 
 	public UpdateAccountResult updateUserAccountDetails(int userID, String userMobile, int securityQuestionID,
-			String securityQuestionAnswer, String addressStreet, String addressPostalCode, int cityID, String authToken){
+			String securityQuestionAnswer, String addressStreet, String addressPostalCode, int cityID, String authToken) {
 
 		UpdateAccountResult updateAccountResult = UpdateAccountResult.SUCCESS;
 		AuthService authService = new AuthService();
@@ -369,7 +369,7 @@ public class UserService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 			String sql = null;
-			if(authToken.equals(authService.getAuthToken(userID))){
+			if (authToken.equals(authService.getAuthToken(userID))) {
 				if (addressPostalCode == null) {
 					sql = "UPDATE `User` SET mobile = ?, securityQuestionID = ?, securityQuestionAnswer = ?, lastUpdate = NOW() WHERE userID = ?";
 					pst = conn.prepareStatement(sql);
@@ -377,10 +377,8 @@ public class UserService {
 					pst.setInt(2, securityQuestionID);
 					pst.setString(3, securityQuestionAnswer);
 					pst.setInt(4, userID);
+					pst.executeUpdate();
 
-					if (pst.executeUpdate() == 0) {
-						updateAccountResult = UpdateAccountResult.ACCOUNT_UPDATE_FAILED;
-					}
 				} else {
 					AddressService addressService = new AddressService();
 					int addressID = addressService.getAddressID(addressPostalCode);
@@ -393,13 +391,11 @@ public class UserService {
 						pst.setString(3, securityQuestionAnswer);
 						pst.setInt(4, addressID);
 						pst.setInt(5, userID);
+						pst.executeUpdate();
 
-						if (pst.executeUpdate() == 0) {
-							updateAccountResult = UpdateAccountResult.ACCOUNT_UPDATE_FAILED;
-						}
 					} else {
 						addressID = addressService.registerAddress(addressPostalCode, addressStreet, cityID);
-						
+
 						sql = "UPDATE `User` SET mobile = ?, securityQuestionID = ?, securityQuestionAnswer = ?, addressID = ?, lastUpdate = NOW() WHERE userID = ?";
 						pst = conn.prepareStatement(sql);
 						pst.setString(1, userMobile);
@@ -407,17 +403,14 @@ public class UserService {
 						pst.setString(3, securityQuestionAnswer);
 						pst.setInt(4, addressID);
 						pst.setInt(5, userID);
-
-						if (pst.executeUpdate() == 0) {
-							updateAccountResult = UpdateAccountResult.ACCOUNT_UPDATE_FAILED;
-						}
+						pst.executeUpdate();
 					}
 
 				}
-			}else{
+			} else {
 				updateAccountResult = UpdateAccountResult.AUTH_TOKEN_FAIL;
 			}
-		
+
 			conn.close();
 
 		} catch (Exception e) {
@@ -427,4 +420,3 @@ public class UserService {
 		return updateAccountResult;
 	}
 }
-

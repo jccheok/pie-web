@@ -14,7 +14,6 @@ import pie.Student;
 import pie.User;
 import pie.UserType;
 import pie.constants.JoinGroupResult;
-import pie.constants.LeaveGroupResult;
 import pie.constants.UserRegistrationResult;
 import pie.utilities.DatabaseConnector;
 import pie.utilities.Utilities;
@@ -101,11 +100,12 @@ public class StudentService {
 
 	}
 
-	public boolean enlistStudent(String userFirstName, String userLastName, String studentCode, int schoolID,
-			int groupID, int studentGroupIndexNumber) {
-
-		StudentGroupService studentGroupService = new StudentGroupService();
+	public boolean enlistStudent(String userFirstName, String userLastName, String studentCode, int groupID, int studentGroupIndexNumber) {
+		
 		boolean enlistResult = false;
+		
+		StudentGroupService studentGroupService = new StudentGroupService();
+		GroupService groupService = new GroupService();
 
 		if (isAvailableStudentCode(studentCode)) {
 
@@ -131,7 +131,7 @@ public class StudentService {
 					sql = "INSERT INTO `Student` (studentID, schoolID, code) VALUES (?, ?, ?)";
 					pst = conn.prepareStatement(sql);
 					pst.setInt(1, newStudentID);
-					pst.setInt(2, schoolID);
+					pst.setInt(2, groupService.getGroup(groupID).getSchool().getSchoolID());
 					pst.setString(3, studentCode);
 					pst.executeUpdate();
 
@@ -353,19 +353,4 @@ public class StudentService {
 
 		return studentID;
 	}
-
-	public LeaveGroupResult leaveGroup(int studentID, int groupID) {
-		GroupService groupService = new GroupService();
-		LeaveGroupResult leaveGroupResult = LeaveGroupResult.SUCCESS;
-
-		if (!isMember(studentID, groupID)) {
-			leaveGroupResult = LeaveGroupResult.NOT_MEMBER;
-		} else {
-			groupService.removeStudentFromGroup(groupID, studentID);
-		}
-
-		return leaveGroupResult;
-
-	}
-
 }

@@ -3,6 +3,9 @@ package pie.utilities;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,7 +21,12 @@ import org.apache.commons.io.IOUtils;
 public class Utilities {
 
 	static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
+	static final DateFormat clientDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	
+	public static Date parseDate(String date) throws ParseException {
+		return clientDateFormat.parse(date);
+	}
+	
 	public static String generateString(int length) {
 
 		Random random = new Random();

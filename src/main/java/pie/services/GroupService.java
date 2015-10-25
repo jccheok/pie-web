@@ -45,23 +45,23 @@ public class GroupService {
 	public boolean isAvailableGroupCode(String groupCode) {
 
 		boolean isAvailable = false;
-		if(groupCode.equals("NONE")){
+		if (groupCode.equals("NONE")) {
 			isAvailable = true;
-		}else{
-			
+		} else {
+
 			try {
-	
+
 				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
-	
+
 				String sql = "SELECT * FROM `Group` WHERE code = ?";
 				pst = conn.prepareStatement(sql);
 				pst.setString(1, groupCode);
-	
+
 				isAvailable = !pst.executeQuery().next();
-	
+
 				conn.close();
-	
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -140,11 +140,11 @@ public class GroupService {
 
 		return group;
 	}
-	
+
 	public boolean hasGroupMember(int groupID, int groupMemberID) {
-		
+
 		boolean hasMember = false;
-		
+
 		try {
 
 			Connection conn = DatabaseConnector.getConnection();
@@ -160,7 +160,7 @@ public class GroupService {
 			pst.setInt(5, groupID);
 			pst.setInt(6, 1);
 			resultSet = pst.executeQuery();
-					
+
 			if (resultSet.next()) {
 				hasMember = resultSet.getInt(1) == 1;
 			}
@@ -174,13 +174,11 @@ public class GroupService {
 		return hasMember;
 	}
 
-
-
 	public GroupRegistrationResult registerGroup(Staff groupOwner, String groupName, String groupDescription,
 			int groupMaxDailyHomeworkMinutes, GroupType groupType, String groupCode, Date expiryDate, int subjectID) {
 
 		GroupRegistrationResult registrationResult = GroupRegistrationResult.SUCCESS;
-		
+
 		StaffGroupService staffGroupService = new StaffGroupService();
 
 		if (isRegisteredGroup(groupName)) {
@@ -302,7 +300,7 @@ public class GroupService {
 		int memberCount = 0;
 		StudentGroupService studentGroupService = new StudentGroupService();
 		StaffGroupService staffGroupService = new StaffGroupService();
-		
+
 		Student[] groupStudents = studentGroupService.getStudentMembers(groupID);
 		Staff[] groupStaffs = staffGroupService.getStaffMembers(groupID);
 
@@ -311,68 +309,29 @@ public class GroupService {
 
 		return memberCount;
 	}
-	
-	
-	public boolean removeStudentFromGroup(int groupID, int studentID) {
-		boolean removeResult = true;
 
-		try {
-			Connection conn = DatabaseConnector.getConnection();
-			PreparedStatement pst = null;
-
-			String sql = "UPDATE `StudentGroup` SET isValid = ? WHERE groupID = ? AND studentID = ?";
-			pst = conn.prepareStatement(sql);
-			pst.setInt(1, 0);
-			pst.setInt(2, groupID);
-			pst.setInt(3, studentID);
-
-			pst.executeUpdate();
-
-			removeResult = true;
-
-			conn.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return removeResult;
-	}
-
-	public DeactivateGroupResult deactivateGroup(int groupID, int staffID, String userPassword) {
+	public DeactivateGroupResult deactivateGroup(int groupID, int staffID, String authToken) {
+		
 		DeactivateGroupResult deactivateGroupResult = DeactivateGroupResult.SUCCESS;
 		
-		StaffService staffService = new StaffService();
+		AuthService authService = new AuthService();
 		StudentGroupService studentGroupService = new StudentGroupService();
 		StaffGroupService staffGroupService = new StaffGroupService();
-		
-		Group group = getGroup(groupID);
-		
-		Staff staffUser = staffService.getStaff(staffID);
-		Staff groupOwner = staffGroupService.getGroupOwner(groupID);
-		
-		if(!group.groupIsValid()){
-			deactivateGroupResult = DeactivateGroupResult.GROUP_IS_NOT_VALID;
-		}else if(staffID != groupOwner.getUserID()){
-			deactivateGroupResult = DeactivateGroupResult.INVALID_USER;
-		}else if(!staffUser.getUserPassword().equals(userPassword)){
-			deactivateGroupResult = DeactivateGroupResult.WRONG_PASSWORD;
-		}else{
-			Student[] students = studentGroupService.getStudentMembers(groupID);
-			Staff[] staffs = staffGroupService.getStaffMembers(groupID);
 
-			for (Student student : students) {
-				if (!removeStudentFromGroup(groupID, student.getUserID())) {
-					deactivateGroupResult = DeactivateGroupResult.GENERAL_FAILURE;
-					return deactivateGroupResult;
-				}
+		Staff groupOwner = staffGroupService.getGroupOwner(groupID);
+
+		if (!(authToken.equals(authService.getAuthToken(staffID)))) {
+			deactivateGroupResult = DeactivateGroupResult.AUTH_TOKEN_FAIL;
+		} else if (staffID != groupOwner.getUserID()){
+			deactivateGroupResult = DeactivateGroupResult.UNAUTHORIZED;
+		} else {
+
+			for (Student student : studentGroupService.getStudentMembers(groupID)) {
+				studentGroupService.removeStudentFromGroup(groupID, student.getUserID());
 			}
 
-			for (Staff staff : staffs) {
-				if (!staffGroupService.removeStaffFromGroup(groupID, staff.getUserID())) {
-					deactivateGroupResult = DeactivateGroupResult.GENERAL_FAILURE;
-					return deactivateGroupResult;
-				}
+			for (Staff staff : staffGroupService.getStaffMembers(groupID)) {
+				staffGroupService.removeStaffFromGroup(groupID, staff.getUserID());
 			}
 
 			try {
@@ -386,7 +345,7 @@ public class GroupService {
 				pst.setInt(3, groupID);
 
 				pst.executeUpdate();
-				
+
 				conn.close();
 
 			} catch (Exception e) {
@@ -396,5 +355,5 @@ public class GroupService {
 
 		return deactivateGroupResult;
 	}
-	
+
 }

@@ -10,16 +10,17 @@ import java.util.Date;
 import pie.Note;
 import pie.ResponseQuestion;
 import pie.Staff;
-import pie.Student;
 import pie.constants.DeleteNoteResult;
-import pie.constants.PublishNoteResult;
 import pie.utilities.DatabaseConnector;
 
 public class NoteService {
 
 	public Note getNote(int noteID) {
-
+		
 		Note note = null;
+		
+		StaffService staffService = new StaffService();
+		ResponseService responseService = new ResponseService();
 
 		try {
 
@@ -35,16 +36,16 @@ public class NoteService {
 
 			if (resultSet.next()) {
 
-				Staff staff = new StaffService().getStaff(resultSet.getInt("authorID"));
-				String title = resultSet.getString("title");
-				String description = resultSet.getString("description");
-				boolean isDraft = resultSet.getInt("isDraft") == 1;
-				boolean isDeleted = resultSet.getInt("isDeleted") == 1;
-				Date dateCreated = new Date(resultSet.getTimestamp("dateCreated").getTime());
-				Date dateDeleted = new Date(resultSet.getTimestamp("dateDeleted").getTime());
-				ResponseQuestion responseQuestion = new ResponseQuestionService().getResponseQuestion(resultSet.getInt("responseQuestionID"));
+				Staff noteAuthor = staffService.getStaff(resultSet.getInt("authorID"));
+				String noteTitle = resultSet.getString("title");
+				String noteDescription = resultSet.getString("description");
+				boolean noteIsDraft = resultSet.getInt("isDraft") == 1;
+				boolean noteIsDeleted = resultSet.getInt("isDeleted") == 1;
+				Date noteDateCreated = new Date(resultSet.getTimestamp("dateCreated").getTime());
+				Date noteDateDeleted = new Date(resultSet.getTimestamp("dateDeleted").getTime());
+				ResponseQuestion noteResponseQuestion = responseService.getResponseQuestion(resultSet.getInt("responseQuestionID"));
 
-				note = new Note(noteID, staff, title, description, isDraft, isDeleted, dateCreated, dateDeleted, responseQuestion);
+				note = new Note(noteID, noteAuthor, noteTitle, noteDescription, noteIsDraft, noteIsDeleted, noteDateCreated, noteDateDeleted, noteResponseQuestion);
 			}
 
 			conn.close();
@@ -90,64 +91,61 @@ public class NoteService {
 	}
 
 
-	public PublishNoteResult publishNote(int noteID, int groupID, int publisherID) {
-
-		PublishNoteResult publishResult = PublishNoteResult.SUCCESS;
-		StaffGroupService staffGroupService = new StaffGroupService();
-		StudentGroupService studentGroupService = new StudentGroupService();
-		GroupNoteService groupNoteService = new GroupNoteService();
-		UserNoteService userNoteService = new UserNoteService();
-
-		try {
-
-			Connection conn = DatabaseConnector.getConnection();
-			PreparedStatement pst = null;
-
-			String sql = "UPDATE `Note` SET isDraft = ? WHERE noteID = ?";
-			pst = conn.prepareStatement(sql);
-			pst.setInt(1, 0);
-			pst.setInt(2, noteID);
-
-			pst.executeUpdate();
-			if (pst.executeUpdate() == 0) {
-				publishResult = PublishNoteResult.FAILED_DRAFT;
-			} else {
-
-				int groupNoteID = groupNoteService.createGroupNote(noteID, groupID, publisherID);
-				groupNoteService.publishGroupNote(groupNoteID);
-
-				if (groupNoteID == -1) {
-
-					publishResult = PublishNoteResult.FAILED_TO_UPDATE_GROUP;
-
-				} else {
-
-					Student[] groupStudents = studentGroupService.getStudentMembers(groupID);
-
-					for (Student student : groupStudents) {
-						if (!userNoteService.sendNote(noteID, student.getUserID())) {
-							publishResult = PublishNoteResult.FAILED_TO_SEND_TO_MEMBERS;
-						}
-					}
-
-					Staff[] groupStaffs = staffGroupService.getStaffMembers(groupID);
-
-					for (Staff staff : groupStaffs) {
-						if (!userNoteService.sendNote(noteID, staff.getUserID())) {
-							publishResult = PublishNoteResult.FAILED_TO_SEND_TO_MEMBERS;
-						}
-					}
-				}
-			}
-
-			conn.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return publishResult;
-	}
+//	public PublishNoteResult publishNote(int noteID, int groupID, int publisherID) {
+//
+//		PublishNoteResult publishResult = PublishNoteResult.SUCCESS;
+//		
+//		StaffGroupService staffGroupService = new StaffGroupService();
+//		StudentGroupService studentGroupService = new StudentGroupService();
+//		GroupNoteService groupNoteService = new GroupNoteService();
+//		UserNoteService userNoteService = new UserNoteService();
+//
+//		try {
+//
+//			Connection conn = DatabaseConnector.getConnection();
+//			PreparedStatement pst = null;
+//
+//			String sql = "UPDATE `Note` SET isDraft = ? WHERE noteID = ?";
+//			pst = conn.prepareStatement(sql);
+//			pst.setInt(1, 0);
+//			pst.setInt(2, noteID);
+//
+//			pst.executeUpdate();
+//			
+//			int groupNoteID = groupNoteService.createGroupNote(noteID, groupID, publisherID);
+//			groupNoteService.publishGroupNote(groupNoteID);
+//
+//			if (groupNoteID == -1) {
+//
+//				publishResult = PublishNoteResult.FAILED_TO_UPDATE_GROUP;
+//
+//			} else {
+//
+//				Student[] groupStudents = studentGroupService.getStudentMembers(groupID);
+//
+//				for (Student student : groupStudents) {
+//					if (!userNoteService.sendNote(noteID, student.getUserID())) {
+//						publishResult = PublishNoteResult.FAILED_TO_SEND_TO_MEMBERS;
+//					}
+//				}
+//
+//				Staff[] groupStaffs = staffGroupService.getStaffMembers(groupID);
+//
+//				for (Staff staff : groupStaffs) {
+//					if (!userNoteService.sendNote(noteID, staff.getUserID())) {
+//						publishResult = PublishNoteResult.FAILED_TO_SEND_TO_MEMBERS;
+//					}
+//				}
+//			}
+//
+//			conn.close();
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//
+//		return publishResult;
+//	}
 
 	public DeleteNoteResult deleteNote(int noteID) {
 

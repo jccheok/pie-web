@@ -1,6 +1,5 @@
 package pie;
 
-import java.util.Date;
 
 public class UserNote {
 
@@ -10,13 +9,11 @@ public class UserNote {
 	private User user;
 	private boolean isRead;
 	private boolean isArchive;
-	private Date dateRead;
-	private Date dateArchived;
 	private String responseText;
 	
 	
 	public UserNote(int userNoteID, ResponseOption responseOption, Note note, User user, boolean isRead,
-			boolean isArchive, Date dateRead, Date dateArchived, String responseText) {
+			boolean isArchive, String responseText) {
 		
 		setUserNoteID(userNoteID);
 		setNote(note);
@@ -25,8 +22,6 @@ public class UserNote {
 		setResponseText(responseText);
 		setArchive(isArchive);
 		setRead(isRead);
-		setDateArchived(dateArchived);
-		setDateRead(dateRead);
 		
 	}
 	
@@ -66,18 +61,6 @@ public class UserNote {
 	}
 	public void setArchive(boolean isArchive) {
 		this.isArchive = isArchive;
-	}
-	public Date getDateRead() {
-		return dateRead;
-	}
-	public void setDateRead(Date dateRead) {
-		this.dateRead = dateRead;
-	}
-	public Date getDateArchived() {
-		return dateArchived;
-	}
-	public void setDateArchived(Date dateArchived) {
-		this.dateArchived = dateArchived;
 	}
 	public String getResponseText() {
 		return responseText;
