@@ -57,7 +57,7 @@ public class RegisterGroupServlet extends HttpServlet {
 			groupTypeID = Integer.parseInt(requestParameters.get("groupTypeID"));
 			groupCode = requestParameters.get("groupCode");
 			groupOwnerID = Integer.parseInt(requestParameters.get("staffID"));
-			expiryDate = Utilities.parseDate(requestParameters.get("expiryDate"));
+			expiryDate = Utilities.parseClientDate(requestParameters.get("expiryDate"));
 			subjectID = Integer.parseInt(requestParameters.get("subjectID"));
 
 		} catch (Exception e) {
