@@ -11,9 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
+import pie.User;
 import pie.constants.TransferGroupOwnershipResult;
 import pie.services.GroupService;
 import pie.services.StaffGroupService;
+import pie.services.UserService;
 import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
@@ -25,12 +27,13 @@ public class TransferGroupOwnershipServlet extends HttpServlet {
 	private static final long serialVersionUID = 8345217294139531580L;
 	
 	GroupService groupService;
-	StaffGroupService staffGroupService = new StaffGroupService();
-	
+	StaffGroupService staffGroupService;
+	UserService userService;
 	@Inject
-	public TransferGroupOwnershipServlet(GroupService groupService, StaffGroupService staffGroupService){
+	public TransferGroupOwnershipServlet(GroupService groupService, StaffGroupService staffGroupService, UserService userService){
 		this.groupService = groupService;
 		this.staffGroupService = staffGroupService;
+		this.userService = userService;
 	}
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -54,12 +57,17 @@ public class TransferGroupOwnershipServlet extends HttpServlet {
 			return;
 		}
 		
-		TransferGroupOwnershipResult transferGroupOwnershipResult = staffGroupService.transferGroupOwnership(ownerID, groupID, transfereeEmail, ownerPassword);
-		
+		User owner = userService.getUser(ownerID);
 		JSONObject responseObject = new JSONObject();
-		responseObject.put("result", transferGroupOwnershipResult.toString());
-		responseObject.put("message", transferGroupOwnershipResult.getDefaultMessage());
-
+		if(owner.getUserEmail() != transfereeEmail){
+			TransferGroupOwnershipResult transferGroupOwnershipResult = staffGroupService.transferGroupOwnership(ownerID, groupID, transfereeEmail, ownerPassword);
+			responseObject.put("result", transferGroupOwnershipResult.toString());
+			responseObject.put("message", transferGroupOwnershipResult.getDefaultMessage());
+		}else{
+			responseObject.put("result", "Same Email address");
+			responseObject.put("message", "Do not use the same email address.");
+		}
+		
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
 	}
