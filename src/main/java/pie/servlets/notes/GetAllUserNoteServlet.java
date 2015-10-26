@@ -86,7 +86,9 @@ public class GetAllUserNoteServlet extends HttpServlet{
 				
 				String noteAttachmentURL = noteAttachmentService.getNoteAttachmentURL(userNote.getNote().getNoteID());
 				if(noteAttachmentURL != null) {
-					noteObject.put("noteAttachmentURL", noteAttachmentURL);
+					noteObject.put("hasAttachment", true);
+				} else {
+					noteObject.put("hasAttachment", false);
 				}
 				
 				noteList.put(noteObject);
