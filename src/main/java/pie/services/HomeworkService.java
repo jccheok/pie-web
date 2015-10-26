@@ -44,11 +44,10 @@ public class HomeworkService {
 				int minutesReqStudent = resultSet.getInt("minutesReqPerStudent");
 				boolean isDraft = resultSet.getInt("isDraft") == 1 ? true : false;
 				boolean isDeleted = resultSet.getInt("isDeleted") == 1 ? true : false;
-				Date dateDeleted = new Date(resultSet.getDate("dateDeleted").getTime());
 				String level = resultSet.getString("level");
 
 				homework = new Homework(homeworkID, author, title, subject, description, minutesReqStudent, dateCreated,
-						isDraft, isDeleted, dateDeleted, level);
+						isDraft, isDeleted, level);
 			}
 
 			conn.close();
@@ -226,37 +225,6 @@ public class HomeworkService {
 		return homework;
 	}
 
-	// public Homework[] getSentHomework(int staffID) {
-	// Homework[] homework = {};
-	// try {
-	// Connection conn = DatabaseConnector.getConnection();
-	// PreparedStatement pst = null;
-	// ResultSet resultSet = null;
-	//
-	// String sql = "SELECT homeworkID FROM `Homework` WHERE publisherID = ? AND
-	// IsDraft = ?";
-	// pst = conn.prepareStatement(sql);
-	// pst.setInt(1, staffID);
-	// pst.setInt(2, 0);
-	//
-	// resultSet = pst.executeQuery();
-	//
-	// ArrayList<Homework> tempSentHomework = new ArrayList<Homework>();
-	// while (resultSet.next()) {
-	// tempSentHomework.add(getHomework(resultSet.getInt(1)));
-	// }
-	//
-	// homework = tempSentHomework.toArray(homework);
-	//
-	// conn.close();
-	//
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	//
-	// return homework;
-	// }
-
 	public DeleteHomeworkResult deleteHomework(Homework homework) {
 		DeleteHomeworkResult result = DeleteHomeworkResult.SUCCESS;
 
@@ -333,61 +301,4 @@ public class HomeworkService {
 
 		return updateHomeworkDraftResult;
 	}
-
-	// public boolean sendHomework(int studentID, int homeworkID) {
-	//
-	// boolean sendResult = false;
-	//
-	// try {
-	// Connection conn = DatabaseConnector.getConnection();
-	// PreparedStatement pst = null;
-	//
-	// String sql = "INSERT INTO `UserHomework` (homeworkID, userID) VALUES
-	// (?,?)";
-	// pst = conn.prepareStatement(sql);
-	// pst.setInt(1, homeworkID);
-	// pst.setInt(2, studentID);
-	//
-	// pst.executeUpdate();
-	//
-	// sendResult = true;
-	//
-	// conn.close();
-	//
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	//
-	// return sendResult;
-	// }
-
-	// public Homework[] getAllHomework(int groupID) {
-	//
-	// Homework[] listHomeworks = {};
-	//
-	// try {
-	// Connection conn = DatabaseConnector.getConnection();
-	// PreparedStatement pst = null;
-	// ResultSet resultSet = null;
-	//
-	// String sql = "SELECT `Homework`.homeworkID FROM `GroupHomework` WHERE
-	// groupID = ?";
-	// pst = conn.prepareStatement(sql);
-	// pst.setInt(1, groupID);
-	// resultSet = pst.executeQuery();
-	//
-	// ArrayList<Homework> tempHwList = new ArrayList<Homework>();
-	//
-	// while (resultSet.next()) {
-	// tempHwList.add(getHomework(resultSet.getInt(1)));
-	// }
-	//
-	// tempHwList.toArray(listHomeworks);
-	//
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	//
-	// return listHomeworks;
-	// }
 }
