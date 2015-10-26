@@ -85,6 +85,8 @@ public class GetAllUserHomeworkServlet extends HttpServlet {
 				homeworkObject.put("homeworkIsAcknowledged", homework.isAcknowledged());
 				homeworkObject.put("homeworkIsRead", homework.isRead());
 				homeworkObject.put("groupID", groupHomework.getGroup().getGroupID());
+				homeworkObject.put("groupName", groupHomework.getGroup().getGroupName());
+				
 				if(userService.getUser(userID).getUserType() == UserType.PARENT){
 					
 					homeworkObject.put("isAcknowledged", homework.isAcknowledged());
