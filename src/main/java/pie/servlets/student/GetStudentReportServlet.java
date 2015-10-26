@@ -23,7 +23,7 @@ import pie.utilities.Utilities;
 @Singleton
 public class GetStudentReportServlet extends HttpServlet {
 
-	private static final long serialVersionUID = 8871417025837577243L;
+	private static final long serialVersionUID = -3787718762646773038L;
 	GroupHomeworkService groupHomeworkService;
 
 	@Inject
@@ -47,9 +47,9 @@ public class GetStudentReportServlet extends HttpServlet {
 		for (GroupHomework gh : listGh) {
 			JSONObject groupHomework = new JSONObject();
 			long diff = gh.getDueDate().getTime() - gh.getPublishDate().getTime();
-			int effortByStudent = gh.getHomework().gethomeworkMinutesReqStudent();
-			int daysTaken = (int) TimeUnit.DAYS.convert(diff, TimeUnit.DAYS);
-			int effortPerDay = daysTaken / effortByStudent;
+			double effortByStudent = gh.getHomework().gethomeworkMinutesReqStudent();
+			int daysTaken = (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+			double effortPerDay = Math.round((effortByStudent / daysTaken)*100.0)/100.0;
 			groupHomework.put("groupHomeworkID", gh.getGroupHomeworkID());
 			groupHomework.put("EffortsPerDay", effortPerDay);
 			groupHomework.put("DaysTaken", daysTaken);
