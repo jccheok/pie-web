@@ -32,7 +32,6 @@ public class GetPublishedHomeworkDetailsServlet extends HttpServlet {
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		int groupHomeworkID = 0;
 
 		try {
@@ -59,13 +58,13 @@ public class GetPublishedHomeworkDetailsServlet extends HttpServlet {
 			homeworkObject.put("homeworkDescription", groupHomework.getHomework().getHomeworkDescription());
 			homeworkObject.put("subject", groupHomework.getHomework().getHomeworkSubject());
 			homeworkObject.put("minutesRequired", groupHomework.getHomework().gethomeworkMinutesReqStudent());
-			homeworkObject.put("dueDate", dateFormat.format(groupHomework.getDueDate()));
+			homeworkObject.put("dueDate", Utilities.parseServletDateFormat(groupHomework.getDueDate()));
 			homeworkObject.put("publisherID", groupHomework.getPublisher().getUserID());
 			homeworkObject.put("publisherName", groupHomework.getPublisher().getUserFullName());
-			homeworkObject.put("publishedDate", dateFormat.format(groupHomework.getPublishDate()));
+			homeworkObject.put("publishedDate", Utilities.parseServletDateFormat(groupHomework.getPublishDate()));
 			homeworkObject.put("markingEffort", groupHomework.getMarkingEffort());
-			homeworkObject.put("actualMarkingCompletionDate", dateFormat.format(groupHomework.getActualMarkingCompletionDate()));
-			homeworkObject.put("targetMarkingCompletionDate", dateFormat.format(groupHomework.getTargetMarkingCompletionDate()));
+			homeworkObject.put("actualMarkingCompletionDate", Utilities.parseServletDateFormat(groupHomework.getActualMarkingCompletionDate()));
+			homeworkObject.put("targetMarkingCompletionDate", Utilities.parseServletDateFormat(groupHomework.getTargetMarkingCompletionDate()));
 			homeworkObject.put("isGraded", groupHomework.isGraded());
 			homeworkObject.put("group", groupHomework.getGroup().getGroupName());
 			
