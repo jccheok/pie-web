@@ -76,8 +76,9 @@ public class ViewStudentJoinedGroupsServlet extends HttpServlet {
 			groupDetails.put("groupDescription", group.getGroupDescription());
 			groupDetails.put("groupMemberCount", groupService.getMemberCount(group.getGroupID()));
 			groupDetails.put("groupTypeName", group.getGroupType().toString());
-			groupDetails.put("studentGroupJoinDateUnix", Utilities.toUnixSeconds(studentGroupService.getStudentGroupJoinDate(groupID, studentID)));
-
+			//groupDetails.put("studentGroupJoinDateUnix", Utilities.toUnixSeconds(studentGroupService.getStudentGroupJoinDate(groupID, studentID)));
+			groupDetails.put("studentGroupJoinDateUnix", Utilities.parseServletDateFormat(studentGroupService.getStudentGroupJoinDate(groupID, studentID)));
+			
 			JSONArray groupAdministrators = new JSONArray();
 			for(Staff adminStaff : staffGroupService.getGroupAdministrators(groupID)){
 				
