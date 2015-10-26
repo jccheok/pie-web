@@ -68,7 +68,6 @@ public class GetAllUserNoteServlet extends HttpServlet{
 				noteObject.put("noteID", userNote.getNote().getNoteID());
 				noteObject.put("userNoteID", userNote.getUserNoteID());
 				noteObject.put("noteTitle", userNote.getNote().getTitle());
-				noteObject.put("noteDescription", userNote.getNote().getDescription());
 				
 				int noteDescriptionLength = userNote.getNote().getDescription().length();
 				if(noteDescriptionLength > 15) {
@@ -76,8 +75,11 @@ public class GetAllUserNoteServlet extends HttpServlet{
 					noteShortDescription = Jsoup.parse(noteShortDescription).text();
 					noteShortDescription = noteShortDescription.substring(0, 15);
 					noteShortDescription = noteShortDescription.concat("...");
-					noteObject.put("noteShortDescription", noteShortDescription);
+					noteObject.put("noteDescription", noteShortDescription);
+				} else {
+					noteObject.put("noteDescription", userNote.getNote().getDescription());
 				}
+				
 				noteObject.put("publisherName", userNote.getNote().getStaff().getUserFullName());
 				GroupNote groupNote = groupNoteService.getGroupNote(userNote.getUserNoteID(), userNote.getNote().getNoteID());
 				noteObject.put("publishedDate", Utilities.parseServletDateFormat(groupNote.getPublishDate()));
