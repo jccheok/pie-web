@@ -57,7 +57,6 @@ public class GetAllUserNoteServlet extends HttpServlet{
 		UserNote[] allUserNote = userNoteService.getAllUserNote(userID);
 		
 		JSONObject responseObject = new JSONObject();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		
 		if(allUserNote != null) {
 			
@@ -81,7 +80,7 @@ public class GetAllUserNoteServlet extends HttpServlet{
 				}
 				noteObject.put("publisherName", userNote.getNote().getStaff().getUserFullName());
 				GroupNote groupNote = groupNoteService.getGroupNote(userNote.getUserNoteID(), userNote.getNote().getNoteID());
-				noteObject.put("publishedDate", dateFormat.format(groupNote.getPublishDate()));
+				noteObject.put("publishedDate", Utilities.parseServletDateFormat(groupNote.getPublishDate()));
 				
 				String noteAttachmentURL = noteAttachmentService.getNoteAttachmentURL(userNote.getNote().getNoteID());
 				if(noteAttachmentURL != null) {

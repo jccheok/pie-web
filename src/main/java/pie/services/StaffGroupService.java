@@ -156,6 +156,7 @@ public class StaffGroupService {
 	public TransferGroupOwnershipResult transferGroupOwnership(int ownerID, int groupID, String transfereeEmail, String ownerPassword) {
 		
 		UserService userService = new UserService();
+		StaffRoleService staffRoleService = new StaffRoleService();
 		TransferGroupOwnershipResult transferResult = TransferGroupOwnershipResult.SUCCESS;
 		
 		if (!userService.credentialsMatch(userService.getUser(ownerID).getUserEmail(), ownerPassword)) {
@@ -169,7 +170,8 @@ public class StaffGroupService {
 				transferResult = TransferGroupOwnershipResult.INVALID_TRANSFEREE;
 			} else {
 				setGroupOwner(groupID, transfereeUser.getUserID());
-				removeStaffFromGroup(groupID, ownerID);
+				StaffRole staffRole = staffRoleService.getDefaultStaffRole();
+				setStaffRole(ownerID, groupID, staffRole);
 			}
 		}
 		
