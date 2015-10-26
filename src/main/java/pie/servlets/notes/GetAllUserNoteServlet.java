@@ -2,8 +2,6 @@ package pie.servlets.notes;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -13,10 +11,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
 
 import pie.GroupNote;
 import pie.UserNote;
 import pie.services.GroupNoteService;
+import pie.services.NoteAttachmentService;
 import pie.services.UserNoteService;
 import pie.utilities.Utilities;
 
@@ -30,11 +30,13 @@ public class GetAllUserNoteServlet extends HttpServlet{
 
 	UserNoteService userNoteService;
 	GroupNoteService groupNoteService;
+	NoteAttachmentService noteAttachmentService;
 	
 	@Inject
-	public GetAllUserNoteServlet(UserNoteService userNoteService, GroupNoteService groupNoteService) {
+	public GetAllUserNoteServlet(UserNoteService userNoteService, GroupNoteService groupNoteService, NoteAttachmentService noteAttachmentService) {
 		this.userNoteService = userNoteService;
 		this.groupNoteService = groupNoteService;
+		this.noteAttachmentService = noteAttachmentService;
 	}
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -67,9 +69,23 @@ public class GetAllUserNoteServlet extends HttpServlet{
 				noteObject.put("userNoteID", userNote.getUserNoteID());
 				noteObject.put("noteTitle", userNote.getNote().getTitle());
 				noteObject.put("noteDescription", userNote.getNote().getDescription());
+				
+				int noteDescriptionLength = userNote.getNote().getDescription().length();
+				if(noteDescriptionLength > 15) {
+					String noteShortDescription = new String(userNote.getNote().getDescription());
+					noteShortDescription = Jsoup.parse(noteShortDescription).text();
+					noteShortDescription = noteShortDescription.substring(0, 15);
+					noteShortDescription = noteShortDescription.concat("...");
+					noteObject.put("noteShortDescription", noteShortDescription);
+				}
 				noteObject.put("publisherName", userNote.getNote().getStaff().getUserFullName());
 				GroupNote groupNote = groupNoteService.getGroupNote(userNote.getUserNoteID(), userNote.getNote().getNoteID());
 				noteObject.put("publishedDate", Utilities.parseServletDateFormat(groupNote.getPublishDate()));
+				
+				String noteAttachmentURL = noteAttachmentService.getNoteAttachmentURL(userNote.getNote().getNoteID());
+				if(noteAttachmentURL != null) {
+					noteObject.put("noteAttachmentURL", noteAttachmentURL);
+				}
 				
 				noteList.put(noteObject);
 				
