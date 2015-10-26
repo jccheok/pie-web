@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
 
 import pie.Note;
+import pie.services.NoteAttachmentService;
 import pie.services.NoteService;
 import pie.utilities.Utilities;
 
@@ -24,10 +25,12 @@ public class GetNoteDetailsServlet extends HttpServlet {
 	private static final long serialVersionUID = -1339342818451284421L;
 	
 	NoteService noteService;
+	NoteAttachmentService noteAttachmentService;
 	
 	@Inject
-	public GetNoteDetailsServlet(NoteService noteService) {
+	public GetNoteDetailsServlet(NoteService noteService, NoteAttachmentService noteAttachmentService) {
 		this.noteService = noteService;
+		this.noteAttachmentService = noteAttachmentService;
 	}
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -57,6 +60,11 @@ public class GetNoteDetailsServlet extends HttpServlet {
 			responseObject.put("noteAuthor", note.getStaff().getUserFullName());
 			responseObject.put("noteResponseQuestionID", note.getResponseQuestion().getResponseQuestionID());
 			responseObject.put("noteDateCreated", Utilities.parseServletDateFormat(note.getDateCreated()));
+			
+			String noteAttachmentURL = noteAttachmentService.getNoteAttachmentURL(note.getNoteID());
+			if(noteAttachmentURL != null) {
+				responseObject.put("noteAttachmentURL", noteAttachmentURL);
+			}
 						
 		} else {
 			
