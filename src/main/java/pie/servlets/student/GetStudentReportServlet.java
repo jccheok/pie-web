@@ -48,7 +48,7 @@ public class GetStudentReportServlet extends HttpServlet {
 			JSONObject groupHomework = new JSONObject();
 			long diff = gh.getDueDate().getTime() - gh.getPublishDate().getTime();
 			int effortByStudent = gh.getHomework().gethomeworkMinutesReqStudent();
-			int daysTaken = (int) TimeUnit.DAYS.convert(diff, TimeUnit.DAYS);
+			int daysTaken = (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 			int effortPerDay = daysTaken / effortByStudent;
 			groupHomework.put("groupHomeworkID", gh.getGroupHomeworkID());
 			groupHomework.put("EffortsPerDay", effortPerDay);
