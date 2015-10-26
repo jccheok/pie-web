@@ -23,7 +23,7 @@ import pie.utilities.Utilities;
 @Singleton
 public class GetStudentReportServlet extends HttpServlet {
 
-	private static final long serialVersionUID = 8871417025837577243L;
+	private static final long serialVersionUID = -3787718762646773038L;
 	GroupHomeworkService groupHomeworkService;
 
 	@Inject
