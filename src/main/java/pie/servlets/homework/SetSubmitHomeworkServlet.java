@@ -20,14 +20,14 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class SubmitHomeworkServlet extends HttpServlet{
+public class SetSubmitHomeworkServlet extends HttpServlet{
 	
 	private static final long serialVersionUID = 4508078113666411089L;
 	
 	UserHomeworkService userHomeworkService;
 	
 	@Inject
-	public SubmitHomeworkServlet(UserHomeworkService userHomeworkService){
+	public SetSubmitHomeworkServlet(UserHomeworkService userHomeworkService){
 		this.userHomeworkService = userHomeworkService;
 	}
 	
@@ -55,8 +55,9 @@ public class SubmitHomeworkServlet extends HttpServlet{
 			JSONObject student = studentList.getJSONObject(index);
 
 			int userHomeworkID = student.getInt("userHomeworkID");
+			boolean isSubmitted = student.getBoolean("isSubmitted");
 
-			if(!userHomeworkService.submitHomework(userHomeworkID)){
+			if(!userHomeworkService.submitHomework(userHomeworkID, isSubmitted)){
 				result = GenericResult.FAILED;
 				break;
 			}

@@ -18,33 +18,35 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class ArchiveHomeworkServlet extends HttpServlet{
+public class SetArchiveHomeworkServlet extends HttpServlet{
 
 	private static final long serialVersionUID = -8069236231768601771L;
 	
 	UserHomeworkService userHomeworkService;
 	
 	@Inject
-	public ArchiveHomeworkServlet(UserHomeworkService userHomeworkService) {
+	public SetArchiveHomeworkServlet(UserHomeworkService userHomeworkService) {
 		this.userHomeworkService = userHomeworkService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		int userHomeworkID = 0;
+		boolean isArchived = false;
 		
 		try {
 
-			Map<String, String> requestParameters = Utilities.getParameters(request, "userHomeworkID");
+			Map<String, String> requestParameters = Utilities.getParameters(request, "userHomeworkID", "isArchived");
 
 			userHomeworkID = Integer.parseInt(requestParameters.get("userHomeworkID"));
+			isArchived = Integer.parseInt(requestParameters.get("isArchived")) == 1;
 
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 			return;
 		}
 
-		boolean archiveResult = userHomeworkService.archiveHomework(userHomeworkID);
+		boolean archiveResult = userHomeworkService.archiveHomework(userHomeworkID, isArchived);
 		JSONObject responseObject = new JSONObject();
 		
 		if(archiveResult){
