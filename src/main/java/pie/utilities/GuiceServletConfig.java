@@ -29,7 +29,6 @@ import pie.servlets.homework.DownloadHomeworkAttachmentServlet;
 import pie.servlets.homework.DownloadNoteAttachmentServlet;
 import pie.servlets.homework.GetAllDraftHomeworkServlet;
 import pie.servlets.homework.GetAllDraftPublishedHomeworkServlet;
-import pie.servlets.homework.GetAllParentHomeworkServlet;
 import pie.servlets.homework.GetAllPublishedHomeworkServlet;
 import pie.servlets.homework.GetAllSentHomeworkServlet;
 import pie.servlets.homework.GetAllUserHomeworkServlet;
@@ -178,7 +177,6 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/student/deletehomework").with(DeleteUserHomeworkServlet.class); // tested
 				serve("*/servlets/secured/student/archivehomework").with(ArchiveHomeworkServlet.class);// tested
 				serve("*/servlets/secured/student/readhomework").with(ReadHomeworkServlet.class);// tested
-				serve("*/servlets/secured/parent/allparentrecievedhomework").with(GetAllParentHomeworkServlet.class);// tested
 				serve("*/servlets/secured/allreceivedhomework").with(GetAllUserHomeworkServlet.class);//tested
 
 				
