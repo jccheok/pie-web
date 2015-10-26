@@ -65,15 +65,19 @@ public class ViewGroupMembersServlet extends HttpServlet{
 		
 		for(Student student : studentMembers){
 			
-			Parent mainParent = parentStudentService.getMainParent(student.getUserID());
+			
 			HashMap<String, String> students = new HashMap<String, String>();
 			students.put("studentFullName", student.getUserFullName());
 			students.put("studentMobile", student.getUserMobile());
 			students.put("studentID", Integer.toString(student.getUserID()));
 			students.put("studentMobile", student.getUserMobile());
 			
-			if(mainParent != null){
-				students.put("mainParent" , mainParent.getUserFullName());
+			Parent[] parents = parentStudentService.getParents(student.getUserID());
+			if(parents != null){
+				Parent mainParent = parentStudentService.getMainParent(student.getUserID());
+				if(mainParent != null){
+					students.put("mainParent" , mainParent.getUserFullName());
+				}
 			}
 			studentList.put(students);
 		}
