@@ -2,7 +2,6 @@ package pie.servlets.notes;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -52,7 +51,6 @@ public class GetNoteDetailsServlet extends HttpServlet {
 		
 		if(note != null) {
 
-			
 			responseObject.put("noteID", note.getNoteID());
 			responseObject.put("noteTitle", note.getTitle());
 			responseObject.put("noteDescription", note.getDescription());

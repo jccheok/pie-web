@@ -79,8 +79,6 @@ public class PublishHomeworkServlet extends HttpServlet {
 		try {
 
 			List<FileItem> items = upload.parseRequest(request);
-			String[] fields = { "staffID", "homeworkTitle", "homeworkSubject", "homeworkDescription",
-					"homeworkMinutesReqStudent", "homeworkLevel" };
 			JSONArray notFoundParams = new JSONArray();
 
 			for (FileItem x : items) {
