@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import pie.GroupNote;
 import pie.UserNote;
 import pie.services.GroupNoteService;
+import pie.services.NoteAttachmentService;
 import pie.services.UserNoteService;
 import pie.utilities.Utilities;
 
@@ -30,11 +31,13 @@ public class GetAllUserNoteServlet extends HttpServlet{
 
 	UserNoteService userNoteService;
 	GroupNoteService groupNoteService;
+	NoteAttachmentService noteAttachmentService;
 	
 	@Inject
-	public GetAllUserNoteServlet(UserNoteService userNoteService, GroupNoteService groupNoteService) {
+	public GetAllUserNoteServlet(UserNoteService userNoteService, GroupNoteService groupNoteService, NoteAttachmentService noteAttachmentService) {
 		this.userNoteService = userNoteService;
 		this.groupNoteService = groupNoteService;
+		this.noteAttachmentService = noteAttachmentService;
 	}
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -68,9 +71,21 @@ public class GetAllUserNoteServlet extends HttpServlet{
 				noteObject.put("userNoteID", userNote.getUserNoteID());
 				noteObject.put("noteTitle", userNote.getNote().getTitle());
 				noteObject.put("noteDescription", userNote.getNote().getDescription());
+				
+				int noteDescriptionLength = userNote.getNote().getDescription().length();
+				if(noteDescriptionLength > 10) {
+					String noteShortDescription = new String(userNote.getNote().getDescription());
+					noteShortDescription = noteShortDescription.substring(0, 100);
+					noteShortDescription = noteShortDescription.concat("...");
+				}
 				noteObject.put("publisherName", userNote.getNote().getStaff().getUserFullName());
 				GroupNote groupNote = groupNoteService.getGroupNote(userNote.getUserNoteID(), userNote.getNote().getNoteID());
 				noteObject.put("publishedDate", dateFormat.format(groupNote.getPublishDate()));
+				
+				String noteAttachmentURL = noteAttachmentService.getNoteAttachmentURL(userNote.getNote().getNoteID());
+				if(noteAttachmentURL != null) {
+					noteObject.put("noteAttachmentURL", "noteAttachmentURL");
+				}
 				
 				noteList.put(noteObject);
 				
