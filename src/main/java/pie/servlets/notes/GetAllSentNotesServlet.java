@@ -53,10 +53,8 @@ public class GetAllSentNotesServlet extends HttpServlet {
 		
 		if(notes != null) {
 			
-			for (Note noteID : notes) {
-				
-				Note note = noteService.getNote(noteID.getNoteID());
-				
+			for (Note note : notes) {
+								
 				JSONObject noteObject = new JSONObject();
 				noteObject.put("noteID", note.getNoteID());
 				noteObject.put("noteTitle", note.getTitle());
