@@ -13,12 +13,11 @@ public class Homework {
 	private Date homeworkDateCreated;
 	private boolean homeworkIsDraft;
 	private boolean homeworkIsDeleted;
-	private Date homeworkDateDeleted;
 	private String homeworkLevel;
 
 	public Homework(int homeworkID, Staff homeworkAuthor, String homeworkTitle, String homeworkSubject,
 			String homeworkDescription, int homeworkMinutesReqStudent, Date homeworkDateCreated,
-			boolean homeworkIsDraft, boolean homeworkIsDeleted, Date homeworkDateDeleted, String homeworkLevel) {
+			boolean homeworkIsDraft, boolean homeworkIsDeleted, String homeworkLevel) {
 		setHomeworkID(homeworkID);
 		setHomeworkAuthor(homeworkAuthor);
 		setHomeworkTitle(homeworkTitle);
@@ -28,7 +27,6 @@ public class Homework {
 		setHomeworkDateCreated(homeworkDateCreated);
 		setHomeworkIsDraft(homeworkIsDraft);
 		setHomeworkIsDeleted(homeworkIsDeleted);
-		setHomeworkDateDeleted(homeworkDateDeleted);
 		setHomeworkLevel(homeworkLevel);
 	}
 
@@ -94,14 +92,6 @@ public class Homework {
 
 	public void setHomeworkIsDeleted(boolean homeworkIsDeleted) {
 		this.homeworkIsDeleted = homeworkIsDeleted;
-	}
-
-	public Date getHomeworkDateDeleted() {
-		return homeworkDateDeleted;
-	}
-
-	public void setHomeworkDateDeleted(Date homeworkDateDeleted) {
-		this.homeworkDateDeleted = homeworkDateDeleted;
 	}
 
 	public Staff getHomeworkAuthor() {
