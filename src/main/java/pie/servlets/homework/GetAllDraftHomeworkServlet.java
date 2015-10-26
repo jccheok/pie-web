@@ -39,26 +39,34 @@ public class GetAllDraftHomeworkServlet extends HttpServlet {
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Homework[] listHomework = {};
+		
+		int staffID = 0;
+		
 		try {
 			Map<String, String> requestParams = Utilities.getParameters(request, "staffID");
 
-			listHomework = homeworkService.getAllDraftHomework(Integer.parseInt(requestParams.get("staffID")));
+			staffID = Integer.parseInt(requestParams.get("staffID"));
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		Homework[] listHomework = homeworkService.getAllDraftHomework(staffID);
+		
 		JSONObject responseObject = new JSONObject();
 		JSONArray jsonArrayHomework = new JSONArray();
-		for (Homework homework : listHomework) {
-			JSONObject jsonHomework = new JSONObject();
-			jsonHomework.put("id", homework.getHomeworkID());
-			jsonHomework.put("title", homework.getHomeworkTitle());
-			jsonHomework.put("subject", homework.getHomeworkSubject());
-			jsonHomework.put("description", homework.getHomeworkDescription());
-			jsonArrayHomework.put(jsonHomework);
+		
+		if(listHomework != null){
+			for (Homework homework : listHomework) {
+				JSONObject jsonHomework = new JSONObject();
+				jsonHomework.put("id", homework.getHomeworkID());
+				jsonHomework.put("title", homework.getHomeworkTitle());
+				jsonHomework.put("subject", homework.getHomeworkSubject());
+				jsonHomework.put("description", homework.getHomeworkDescription());
+				jsonArrayHomework.put(jsonHomework);
+			}
 		}
-
+		
 		responseObject.put("listHomeworks", jsonArrayHomework);
 
 		PrintWriter out = response.getWriter();
