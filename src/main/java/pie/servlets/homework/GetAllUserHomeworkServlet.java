@@ -131,7 +131,7 @@ public class GetAllUserHomeworkServlet extends HttpServlet {
 			}
 		}
 
-		responseObject.put("sentHomework", homeworkList);
+		responseObject.put("allHomework", homeworkList);
 
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
