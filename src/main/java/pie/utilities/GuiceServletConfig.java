@@ -1,5 +1,10 @@
 package pie.utilities;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.servlet.GuiceServletContextListener;
+import com.google.inject.servlet.ServletModule;
+
 import pie.filters.AuthFilter;
 import pie.filters.ResponseFilter;
 import pie.servlets.GenerateCodeServlet;
@@ -56,16 +61,17 @@ import pie.servlets.notes.GetAllUserNoteServlet;
 import pie.servlets.notes.GetNoteDetailsServlet;
 import pie.servlets.notes.SaveNoteAsDraftServlet;
 import pie.servlets.notes.SendDraftNoteServlet;
-import pie.servlets.notes.SetNoteResponseServlet;
 import pie.servlets.notes.SendNoteServlet;
 import pie.servlets.notes.SetNoteIsArchivedServlet;
 import pie.servlets.notes.SetNoteIsReadServlet;
+import pie.servlets.notes.SetNoteResponseServlet;
 import pie.servlets.notes.UpdateNoteDraftServlet;
 import pie.servlets.parent.AddChildServlet;
 import pie.servlets.parent.SetAsMainParentServlet;
 import pie.servlets.parent.ViewParentChildrenServlet;
 import pie.servlets.staff.GetAvailableRecipientsServlet;
 import pie.servlets.staff.GetStaffReportServlet;
+import pie.servlets.student.GetStudentReportServlet;
 import pie.servlets.user.GetUserSecurityQuestionServlet;
 import pie.servlets.user.GetUserTokenServlet;
 import pie.servlets.user.LoginServlet;
@@ -76,11 +82,6 @@ import pie.servlets.user.ResetPasswordServlet;
 import pie.servlets.user.UpdatePasswordServlet;
 import pie.servlets.user.UpdateUserAccountDetailsServlet;
 import pie.servlets.user.VerifyUserServlet;
-
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.servlet.GuiceServletContextListener;
-import com.google.inject.servlet.ServletModule;
 
 public class GuiceServletConfig extends GuiceServletContextListener {
 
@@ -115,6 +116,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/student/leavegroup").with(StudentLeaveGroupServlet.class);
 				serve("*/servlets/secured/student/joingroup").with(StudentJoinGroupServlet.class);
 				serve("*/servlets/secured/student/joinedgroups").with(ViewStudentJoinedGroupsServlet.class);
+				serve("*/servlets/secured/student/studentreport").with(GetStudentReportServlet.class);
 
 				serve("*/servlets/secured/parent/children").with(ViewParentChildrenServlet.class);// tested
 				serve("*/servlets/secured/parent/addchild").with(AddChildServlet.class);
