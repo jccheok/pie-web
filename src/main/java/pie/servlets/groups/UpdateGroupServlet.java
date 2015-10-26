@@ -2,6 +2,7 @@ package pie.servlets.groups;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -38,17 +39,19 @@ public class UpdateGroupServlet extends HttpServlet{
 		int groupMaxDailyHomeworkMinutes = 0;
 		boolean groupIsOpen = false;
 		String groupCode = null;
+		Date expiryDate = null;
 
 		try {
 
 			Map<String, String> requestParameters = Utilities.getParameters(request, "groupID", "groupName",
-					"groupDescription", "groupMaxDailyHomeworkMinutes", "groupIsOpen", "groupCode");
+					"groupDescription", "groupMaxDailyHomeworkMinutes", "groupIsOpen", "groupCode", "expiryDate");
 			groupID = Integer.parseInt(requestParameters.get("groupID"));
 			groupName = requestParameters.get("groupName");
 			groupDescription = requestParameters.get("groupDescription");
 			groupMaxDailyHomeworkMinutes = Integer.parseInt(requestParameters.get("groupMaxDailyHomeworkMinutes"));
 			groupIsOpen = Integer.parseInt(requestParameters.get("groupIsOpen")) == 1;
 			groupCode = requestParameters.get("groupCode");
+			expiryDate = Utilities.parseClientDate(requestParameters.get("expiryDate"));
 
 		} catch (Exception e) {
 
@@ -57,7 +60,7 @@ public class UpdateGroupServlet extends HttpServlet{
 		}
 
 		boolean updateResult = groupService.updateGroup(groupID, groupName, groupDescription,
-				groupMaxDailyHomeworkMinutes, groupIsOpen, groupCode);
+				groupMaxDailyHomeworkMinutes, groupIsOpen, groupCode, expiryDate);
 
 		JSONObject responseObject = new JSONObject();
 		if (updateResult) {

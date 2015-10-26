@@ -267,21 +267,22 @@ public class GroupService {
 	}
 
 	public boolean updateGroup(int groupID, String groupName, String groupDescription,
-			int groupMaxDailyHomeworkMinutes, boolean groupIsOpen, String groupCode) {
+			int groupMaxDailyHomeworkMinutes, boolean groupIsOpen, String groupCode, Date expiryDate) {
 		boolean updateResult = false;
 
 		try {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "UPDATE `Group` SET name = ?, description = ?, maxDailyHomeworkMin = ?, lastUpdate = NOW(), isOpen = ?, code = ? WHERE groupID = ?";
+			String sql = "UPDATE `Group` SET name = ?, description = ?, maxDailyHomeworkMin = ?, lastUpdate = NOW(), isOpen = ?, code = ?, expiryDate = ? WHERE groupID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setString(1, groupName);
 			pst.setString(2, groupDescription);
 			pst.setInt(3, groupMaxDailyHomeworkMinutes);
-			pst.setInt(4, groupID);
+			pst.setInt(4, groupIsOpen ? 1 : 0);
 			pst.setString(5, groupCode);
-			pst.setInt(6, groupIsOpen ? 1 : 0);
+			pst.setDate(6, new java.sql.Date(expiryDate.getTime()));
+			pst.setInt(7, groupID);
 
 			pst.executeUpdate();
 

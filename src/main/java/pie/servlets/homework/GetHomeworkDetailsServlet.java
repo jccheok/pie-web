@@ -33,7 +33,7 @@ public class GetHomeworkDetailsServlet extends HttpServlet {
 		this.homeworkService = homeworkService;
 	}
 
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int homeworkID = 0;
 
 		try {
