@@ -22,9 +22,14 @@ public class Utilities {
 
 	static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	static final DateFormat clientDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	static final DateFormat servletDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	
-	public static Date parseDate(String date) throws ParseException {
+	public static Date parseClientDate(String date) throws ParseException {
 		return clientDateFormat.parse(date);
+	}
+	
+	public static String parseServletDateFormat(Date date){
+		return servletDateFormat.format(date); 
 	}
 	
 	public static String generateString(int length) {

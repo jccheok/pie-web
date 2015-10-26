@@ -2,8 +2,6 @@ package pie.servlets.homework;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -64,8 +62,6 @@ public class SendDraftPublishedHomeworkServlet extends HttpServlet{
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
 		Group group = null;
 		Homework homework = null;
 		Staff publisher = null;
@@ -90,9 +86,9 @@ public class SendDraftPublishedHomeworkServlet extends HttpServlet{
 			group = groupService.getGroup(Integer.parseInt(requestParameters.get("groupID")));
 			homework = homeworkService.getHomework(Integer.parseInt(requestParameters.get("homeworkID")));
 			markingEffort = Integer.parseInt(requestParameters.get("markingEffort"));
-			actualMarkingCompletionDate = dateFormat.parse("1000-01-01");
-			targetMarkingCompletionDate = dateFormat.parse(requestParameters.get("targetMarkingCompletionDate"));
-			dueDate = dateFormat.parse(requestParameters.get("dueDate"));
+			actualMarkingCompletionDate = Utilities.parseClientDate("1000-01-01");
+			targetMarkingCompletionDate = Utilities.parseClientDate(requestParameters.get("targetMarkingCompletionDate"));
+			dueDate = Utilities.parseClientDate(requestParameters.get("dueDate"));
 			isGraded = Integer.parseInt(requestParameters.get("isGraded")) == 1 ? true : false;
 
 		} catch (Exception e) {

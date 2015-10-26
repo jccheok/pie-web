@@ -16,9 +16,13 @@ import org.json.JSONObject;
 
 import pie.GroupHomework;
 import pie.Staff;
+import pie.Student;
 import pie.UserHomework;
+import pie.UserType;
 import pie.services.GroupHomeworkService;
+import pie.services.ParentStudentService;
 import pie.services.UserHomeworkService;
+import pie.services.UserService;
 import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
@@ -32,15 +36,18 @@ public class GetAllUserHomeworkServlet extends HttpServlet {
 	
 	UserHomeworkService userHomeworkService;
 	GroupHomeworkService groupHomeworkService;
+	UserService userService;
+	ParentStudentService parentStudentService;
 
 	@Inject
-	public GetAllUserHomeworkServlet(UserHomeworkService userHomeworkService, GroupHomeworkService groupHomeworkService) {
+	public GetAllUserHomeworkServlet(UserHomeworkService userHomeworkService, GroupHomeworkService groupHomeworkService, UserService userService, ParentStudentService parentStudentService) {
 		this.userHomeworkService = userHomeworkService;
 		this.groupHomeworkService = groupHomeworkService;
+		this.userService = userService;
+		this.parentStudentService = parentStudentService;
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		int userID = 0;
 		try {
 
@@ -56,11 +63,10 @@ public class GetAllUserHomeworkServlet extends HttpServlet {
 		UserHomework[] userHomework = userHomeworkService.getAllUserHomework(userID);
 
 		JSONObject responseObject = new JSONObject();
+		JSONArray homeworkList = new JSONArray();
 
 		if (userHomework != null) {
-
-			JSONArray homeworkList = new JSONArray();
-
+			
 			for (UserHomework homework : userHomework) {
 
 				Staff staff = userHomeworkService.getUserHomeworkPublisher(homework.getUserHomeworkID());
@@ -73,22 +79,49 @@ public class GetAllUserHomeworkServlet extends HttpServlet {
 				homeworkObject.put("publisherName", staff.getUserFullName());
 				GroupHomework groupHomework = userHomeworkService.getGroupHomework(homework.getUserHomeworkID(),
 						homework.getHomework().getHomeworkID());
-				homeworkObject.put("publishedDate", dateFormat.format(groupHomework.getPublishDate()));
-				homeworkObject.put("homeworkGrade", homework.getGrade());
+				homeworkObject.put("publishedDate", Utilities.parseServletDateFormat(groupHomework.getPublishDate()));
 				homeworkObject.put("homeworkIsGraded", groupHomework.isGraded());
-				homeworkObject.put("homeworkIsMarked", homework.isMarked());
-				homeworkObject.put("homeworkIsSubmitted", homework.isSubmitted());
 				homeworkObject.put("homeworkIsAcknowledged", homework.isAcknowledged());
+				homeworkObject.put("homeworkIsRead", homework.isRead());
+
+				if(userService.getUser(userID).getUserType() == UserType.PARENT){
+					
+					homeworkObject.put("isAcknowledged", homework.isAcknowledged());
+					
+					Student[] children = parentStudentService.getChildren(userID);
+					
+					JSONArray childrenHomework = new JSONArray();
+					for(Student child : children){
+						UserHomework childHomework = userHomeworkService.getChildHomework(homework.getHomework().getHomeworkID(), child.getUserID());
+						
+						if(childHomework != null){
+							JSONObject childHomeworkObject = new JSONObject();
+							
+							childHomeworkObject.put("childName", child.getUserFullName());
+							childHomeworkObject.put("childID", child.getUserID());
+							childHomeworkObject.put("homeworkGrade", childHomework.getGrade());
+							childHomeworkObject.put("homeworkSubmitted", childHomework.isSubmitted());
+							childHomeworkObject.put("homeworkMarked", childHomework.isMarked());
+							
+							childrenHomework.put(childHomeworkObject);
+						}
+					}
+					homeworkObject.put("childrenHomework", childrenHomework);
+					homeworkList.put(homeworkObject);
 				
-				
+				}else{
+					
+					homeworkObject.put("homeworkGrade", homework.getGrade());
+					homeworkObject.put("homeworkIsMarked", homework.isMarked());
+					homeworkObject.put("homeworkIsSubmitted", homework.isSubmitted());
+					
+				}
 				homeworkList.put(homeworkObject);
 			}
+		} 
+		
+		responseObject.put("sentHomework", homeworkList);
 
-			responseObject.put("sentHomework", homeworkList);
-		} else {
-			responseObject.put("result", "No Sent Homework");
-			responseObject.put("message", "No Homework was sent by this user");
-		}
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
 	}

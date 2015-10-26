@@ -60,7 +60,7 @@ public class SaveHomeworkAsDraftServlet extends HttpServlet {
 		int homeworkAttachmentID = 1;
 
 		JSONObject responseObject = new JSONObject();
-		PrintWriter out = response.getWriter();
+		
 
 		if (homeworkAttachmentService.checkIfHomeworkFolderExist()) {
 			responseObject.put("folderResult", "Homework Folder exist");
@@ -117,7 +117,7 @@ public class SaveHomeworkAsDraftServlet extends HttpServlet {
 				}
 
 				Homework homework = new Homework(0, staffService.getStaff(staffID), homeworkTitle, homeworkSubject,
-						homeworkDescription, homeworkMinutesReqStudent, null, false, false, null, homeworkLevel);
+						homeworkDescription, homeworkMinutesReqStudent, null, false, false, null);
 				homeworkID = homeworkService.saveHomeworkAsDraft(homework);
 
 				if (homeworkID != -1) {
@@ -156,7 +156,8 @@ public class SaveHomeworkAsDraftServlet extends HttpServlet {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 			return;
 		}
-
+		
+		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
 	}
 

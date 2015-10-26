@@ -64,10 +64,10 @@ public class GetHomeworkRecipientsServlet extends HttpServlet {
 
 		JSONObject responseObject = new JSONObject();
 		
+		JSONArray homeworkList = new JSONArray();
 		
 		if (userHomework != null) {
 			
-			JSONArray homeworkList = new JSONArray();
 			
 			for(UserHomework homework : userHomework){
 
@@ -88,16 +88,10 @@ public class GetHomeworkRecipientsServlet extends HttpServlet {
 					
 					homeworkList.put(homeworkObject);
 				}
-				
-				
 			}
 		
-			responseObject.put("publishedHomeworkDetails", homeworkList);
-			
-		} else {
-			responseObject.put("result", "No users recieved");
-			responseObject.put("message", "Homework was published to no one.");
-		}
+		} 
+		responseObject.put("publishedHomeworkDetails", homeworkList);
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
 	}

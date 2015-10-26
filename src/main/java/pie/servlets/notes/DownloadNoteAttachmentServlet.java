@@ -1,4 +1,4 @@
-package pie.servlets.homework;
+package pie.servlets.notes;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,7 +29,7 @@ public class DownloadNoteAttachmentServlet extends HttpServlet {
 		this.noteAttachmentService = noteAttachmentService;
 	}
 
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		String noteAttachmentURL = null;
 

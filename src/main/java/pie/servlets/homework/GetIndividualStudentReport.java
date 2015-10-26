@@ -1,6 +1,7 @@
 package pie.servlets.homework;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -60,10 +61,11 @@ public class GetIndividualStudentReport extends HttpServlet {
 			Date startDate = groupHomework.getPublishDate();
 			Date endDate = groupHomework.getTargetMarkingCompletionDate();
 			long diff = endDate.getTime() - startDate.getTime();
-			int daysTaken = (int) TimeUnit.DAYS.convert(diff, TimeUnit.DAYS);
+			int daysTaken = (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 			String grade = uh.getGrade();
 
 			jsonUH.put("startDate", startDate.getTime());
+			jsonUH.put("author", staff.getUserFullName());
 			jsonUH.put("endDate", endDate.getTime());
 			jsonUH.put("daysTaken", daysTaken);
 			jsonUH.put("grade", grade);
@@ -71,6 +73,7 @@ public class GetIndividualStudentReport extends HttpServlet {
 		}
 
 		responseObject.put("studentGrades", listGradedHomework);
-
+		PrintWriter out = response.getWriter();
+		out.write(responseObject.toString());
 	}
 }

@@ -50,11 +50,10 @@ public class GetAllDraftPublishedHomeworkServlet extends HttpServlet{
 		GroupHomework[] groupHomework = groupHomeworkService.getAllPublishedDraftHomework(publisherID);
 		
 		JSONObject responseObject = new JSONObject();
+		JSONArray sentHomeworkList = new JSONArray();	
 		
 		if(groupHomework != null){
 			
-			JSONArray sentHomeworkList = new JSONArray();		
-
 			for(GroupHomework homework : groupHomework){
 				
 				JSONObject homeworkObject = new JSONObject();
@@ -65,12 +64,10 @@ public class GetAllDraftPublishedHomeworkServlet extends HttpServlet{
 				
 				sentHomeworkList.put(homeworkObject);
 			}
-			
-			responseObject.put("draftPublishedHomework", sentHomeworkList);
-		}else{
-			responseObject.put("result", "No Drafted Homework");
-			responseObject.put("message", "No homework was saved as Draft by this publisher");
 		}
+		
+		responseObject.put("draftPublishedHomework", sentHomeworkList);
+		
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
 	}
