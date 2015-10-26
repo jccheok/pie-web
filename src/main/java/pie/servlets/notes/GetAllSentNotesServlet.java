@@ -52,10 +52,11 @@ public class GetAllSentNotesServlet extends HttpServlet {
 		JSONArray sentNoteList = new JSONArray();
 		
 		if(notes != null) {
-			responseObject.put("result","SUCCESS");
-			responseObject.put("message","Sent Notes retrieved");
 			
-			for (Note note : notes) {
+			for (Note noteID : notes) {
+				
+				Note note = noteService.getNote(noteID.getNoteID());
+				
 				JSONObject noteObject = new JSONObject();
 				noteObject.put("noteID", note.getNoteID());
 				noteObject.put("noteTitle", note.getTitle());
