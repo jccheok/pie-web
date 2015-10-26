@@ -168,36 +168,6 @@ public class NoteAttachmentService {
 		return isDeleted;
 	}
 	
-	public String getNoteAttachmentURL(int noteID) {
-		
-		String attachmentURL = null;
-		
-		try {
-			
-			Connection conn = DatabaseConnector.getConnection();
-			PreparedStatement pst = null;
-			ResultSet resultSet = null;
-
-			String sql = "SELECT * FROM `NoteAttachment` WHERE noteID = ?";
-			pst = conn.prepareStatement(sql);
-			pst.setInt(1, noteID);
-			resultSet = pst.executeQuery();
-
-			if(resultSet.next()) {
-				attachmentURL = resultSet.getString("attachmentURL");
-			}
-
-			conn.close();
-			
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return attachmentURL;
-		
-	}
-	
 	public boolean checkIfNoteFolderExist() {
 		
 		boolean isExist = false;
