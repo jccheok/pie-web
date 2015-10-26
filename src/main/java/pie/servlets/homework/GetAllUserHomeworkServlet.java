@@ -83,7 +83,7 @@ public class GetAllUserHomeworkServlet extends HttpServlet {
 				homeworkObject.put("homeworkIsGraded", groupHomework.isGraded());
 				homeworkObject.put("homeworkIsAcknowledged", homework.isAcknowledged());
 				homeworkObject.put("homeworkIsRead", homework.isRead());
-
+				homeworkObject.put("groupID", groupHomework.getGroup().getGroupID());
 				if(userService.getUser(userID).getUserType() == UserType.PARENT){
 					
 					homeworkObject.put("isAcknowledged", homework.isAcknowledged());
@@ -99,9 +99,17 @@ public class GetAllUserHomeworkServlet extends HttpServlet {
 							
 							childHomeworkObject.put("childName", child.getUserFullName());
 							childHomeworkObject.put("childID", child.getUserID());
-							childHomeworkObject.put("homeworkGrade", childHomework.getGrade());
-							childHomeworkObject.put("homeworkSubmitted", childHomework.isSubmitted());
-							childHomeworkObject.put("homeworkMarked", childHomework.isMarked());
+							childHomeworkObject.put("childHomeworkID", childHomework.getUserHomeworkID());
+							
+							if(!childHomework.isSubmitted()){
+								childHomeworkObject.put("status", "Not submitted");
+							}else if(!childHomework.isMarked()){
+								childHomeworkObject.put("status", "Submitted");
+							}else if (!childHomework.getGrade().equals("-")){
+								childHomeworkObject.put("status", "Marked");
+							}else{
+								childHomeworkObject.put("status", "Graded");	
+							}
 							
 							childrenHomework.put(childHomeworkObject);
 						}
