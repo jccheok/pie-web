@@ -42,20 +42,24 @@ public class GetHomeworkDetailsServlet extends HttpServlet {
 			homeworkID = Integer.parseInt(requestParams.get("homeworkID"));
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+			return;
 		}
 
 		Homework homework = homeworkService.getHomework(homeworkID);
 
 		JSONObject responseObject = new JSONObject();
+		
+		if(homework != null){
+			responseObject.put("dateCreated", Utilities.parseServletDateFormat(homework.getHomeworkDateCreated()));
+			responseObject.put("authorBy", homework.getHomeworkAuthor().getUserFullName());
+			responseObject.put("description", homework.getHomeworkDescription());
+			responseObject.put("level", homework.getHomeworkLevel());
+			responseObject.put("title", homework.getHomeworkTitle());
+			responseObject.put("subject", homework.getHomeworkSubject());
 
-		responseObject.put("dateCreated", Utilities.parseServletDateFormat(homework.getHomeworkDateCreated()));
-		responseObject.put("authorBy", homework.getHomeworkAuthor().getUserFullName());
-		responseObject.put("description", homework.getHomeworkDescription());
-		responseObject.put("level", homework.getHomeworkLevel());
-		responseObject.put("title", homework.getHomeworkTitle());
-		responseObject.put("subject", homework.getHomeworkSubject());
-
+		}
+		
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
 	}
