@@ -36,26 +36,28 @@ public class PublishDraftHomeworkServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		PublishHomeworkResult result = PublishHomeworkResult.FAILED_TO_UPDATE_HOMEWORK;
+		Homework homework = null;
 
 		try {
 			Map<String, String> requestParams = Utilities.getParameters(request, "homeworkID", "staffID",
 					"homeworkTitle", "homeworkSubject", "homeworkDescription", "homeworkMinutesReqStudent",
 					"homeworkLevel");
 
-			Homework homework = homeworkService.getHomework(Integer.parseInt(requestParams.get("homeworkID")));
+			homework = homeworkService.getHomework(Integer.parseInt(requestParams.get("homeworkID")));
 			homework.setHomeworkSubject(requestParams.get("homeworkSubject"));
 			homework.setHomeworkDescription(requestParams.get("homeworkDescription"));
 			homework.setHomeworkTitle(requestParams.get("homeworkTitle"));
 			homework.sethomeworkMinutesReqStudent(Integer.parseInt(requestParams.get("homeworkMinutesReqStudent")));
 			homework.setHomeworkLevel(requestParams.get("homeworkLevel"));
 
-			result = homeworkService.publishDraftHomework(homework);
+			
 
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 			return;
 		}
+		
+		PublishHomeworkResult result = homeworkService.publishDraftHomework(homework);
 
 		JSONObject responseObject = new JSONObject();
 
