@@ -116,7 +116,7 @@ public class UserHomeworkService {
 		return deleteResult;
 	}
 
-	public boolean markHomework(int userHomeworkID, int userID) {
+	public boolean markHomework(int userHomeworkID, int userID, boolean isMarked) {
 		boolean markedResult = false;
 
 		try {
@@ -126,7 +126,7 @@ public class UserHomeworkService {
 
 			String sql = "UPDATE `UserHomework` SET isMarked = ? WHERE userID = ? AND userHomeworkID = ?";
 			pst = conn.prepareStatement(sql);
-			pst.setInt(1, 1);
+			pst.setInt(1, isMarked ? 1 : 0);
 			pst.setInt(2, userID);
 			pst.setInt(3, userHomeworkID);
 
@@ -204,7 +204,7 @@ public class UserHomeworkService {
 		return userHomeworkRecipients;
 	}
 
-	public boolean readHomework(int userHomeworkID) {
+	public boolean readHomework(int userHomeworkID, boolean isRead) {
 		boolean readResult = false;
 
 		try {
@@ -212,9 +212,9 @@ public class UserHomeworkService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "UPDATE `UserHomework` SET isRead = ?, dateRead = NOW() WHERE userHomeworkID = ?";
+			String sql = "UPDATE `UserHomework` SET isRead = ? WHERE userHomeworkID = ?";
 			pst = conn.prepareStatement(sql);
-			pst.setInt(1, 1);
+			pst.setInt(1, isRead ? 1 : 0);
 			pst.setInt(2, userHomeworkID);
 
 			pst.executeUpdate();
@@ -230,7 +230,7 @@ public class UserHomeworkService {
 		return readResult;
 	}
 
-	public boolean archiveHomework(int userHomeworkID) {
+	public boolean archiveHomework(int userHomeworkID, boolean isArchived) {
 		boolean archiveResult = false;
 
 		try {
@@ -238,9 +238,9 @@ public class UserHomeworkService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "UPDATE `UserHomework` SET isArchived = ?, dateArchived = NOW() WHERE userHomeworkID = ?";
+			String sql = "UPDATE `UserHomework` SET isArchived = ? WHERE userHomeworkID = ?";
 			pst = conn.prepareStatement(sql);
-			pst.setInt(1, 1);
+			pst.setInt(1, isArchived ? 1 : 0);
 			pst.setInt(2, userHomeworkID);
 
 			pst.executeUpdate();
@@ -256,7 +256,7 @@ public class UserHomeworkService {
 		return archiveResult;
 	}
 
-	public boolean submitHomework(int userHomeworkID) {
+	public boolean submitHomework(int userHomeworkID, boolean isSubmitted) {
 		boolean submitResult = false;
 
 		try {
