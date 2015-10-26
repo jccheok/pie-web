@@ -75,7 +75,6 @@ public class GetAllUserHomeworkServlet extends HttpServlet {
 					homeworkDescription = homeworkDescription.substring(0, 15).concat("...");
 				}
 
-				homeworkObject.put("homeworkID", homework.getHomework().getHomeworkID());
 				homeworkObject.put("userHomeworkID", homework.getUserHomeworkID());
 				homeworkObject.put("homeworkTitle", homework.getHomework().getHomeworkTitle());
 				homeworkObject.put("homeworkDescription", homeworkDescription);
@@ -84,7 +83,6 @@ public class GetAllUserHomeworkServlet extends HttpServlet {
 						homework.getHomework().getHomeworkID());
 				homeworkObject.put("publishedDate", Utilities.parseServletDateFormat(groupHomework.getPublishDate()));
 				homeworkObject.put("homeworkIsGraded", groupHomework.isGraded());
-				homeworkObject.put("homeworkIsAcknowledged", homework.isAcknowledged());
 				homeworkObject.put("homeworkIsRead", homework.isRead());
 				homeworkObject.put("groupID", groupHomework.getGroup().getGroupID());
 				homeworkObject.put("groupName", groupHomework.getGroup().getGroupName());
@@ -97,18 +95,17 @@ public class GetAllUserHomeworkServlet extends HttpServlet {
 
 					JSONArray childrenHomework = new JSONArray();
 					for (Student child : children) {
-						UserHomework childHomework = userHomeworkService
-								.getChildHomework(homework.getHomework().getHomeworkID(), child.getUserID());
+						UserHomework childHomework = userHomeworkService.getChildHomework(homework.getHomework().getHomeworkID(), child.getUserID());
 
 						if (childHomework != null) {
 							JSONObject childHomeworkObject = new JSONObject();
 
 							childHomeworkObject.put("childName", child.getUserFullName());
 							childHomeworkObject.put("childID", child.getUserID());
-							childHomeworkObject.put("childHomeworkID", childHomework.getUserHomeworkID());
+							childHomeworkObject.put("childUserHomeworkID", childHomework.getUserHomeworkID());
 
 							if (!childHomework.isSubmitted()) {
-								childHomeworkObject.put("status", "Not submitted");
+								childHomeworkObject.put("status", "Not Submitted");
 							} else if (!childHomework.isMarked()) {
 								childHomeworkObject.put("status", "Submitted");
 							} else if (!childHomework.getGrade().equals("-")) {
