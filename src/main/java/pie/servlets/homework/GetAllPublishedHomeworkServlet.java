@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -45,7 +46,8 @@ public class GetAllPublishedHomeworkServlet extends HttpServlet {
 			JSONObject jsonHomework = new JSONObject();
 			jsonHomework.put("title", homework.getHomeworkTitle());
 			jsonHomework.put("subject", homework.getHomeworkSubject());
-			jsonHomework.put("description", homework.getHomeworkDescription());
+			jsonHomework.put("description",
+					Jsoup.parse(homework.getHomeworkDescription()).text().substring(0, 15).concat("..."));
 			listHomework.put(jsonHomework);
 		}
 

@@ -2,8 +2,6 @@ package pie.servlets.homework;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -13,6 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import pie.GroupHomework;
 import pie.Staff;
@@ -24,9 +26,6 @@ import pie.services.ParentStudentService;
 import pie.services.UserHomeworkService;
 import pie.services.UserService;
 import pie.utilities.Utilities;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 @Singleton
 public class GetAllUserHomeworkServlet extends HttpServlet {
@@ -71,11 +70,13 @@ public class GetAllUserHomeworkServlet extends HttpServlet {
 
 				Staff staff = userHomeworkService.getUserHomeworkPublisher(homework.getUserHomeworkID());
 				JSONObject homeworkObject = new JSONObject();
+				String homeworkDescription = Jsoup.parse(homework.getHomework().getHomeworkDescription()).text().substring(0,15);
+				homeworkDescription = homeworkDescription.concat("...");
 
 				homeworkObject.put("homeworkID", homework.getHomework().getHomeworkID());
 				homeworkObject.put("userHomeworkID", homework.getUserHomeworkID());
 				homeworkObject.put("homeworkTitle", homework.getHomework().getHomeworkTitle());
-				homeworkObject.put("homeworkDescription", homework.getHomework().getHomeworkDescription());
+				homeworkObject.put("homeworkDescription", homeworkDescription);
 				homeworkObject.put("publisherName", staff.getUserFullName());
 				GroupHomework groupHomework = userHomeworkService.getGroupHomework(homework.getUserHomeworkID(),
 						homework.getHomework().getHomeworkID());

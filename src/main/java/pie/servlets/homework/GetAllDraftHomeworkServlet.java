@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -39,9 +40,9 @@ public class GetAllDraftHomeworkServlet extends HttpServlet {
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+
 		int staffID = 0;
-		
+
 		try {
 			Map<String, String> requestParams = Utilities.getParameters(request, "staffID");
 
@@ -50,23 +51,25 @@ public class GetAllDraftHomeworkServlet extends HttpServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		Homework[] listHomework = homeworkService.getAllDraftHomework(staffID);
-		
+
 		JSONObject responseObject = new JSONObject();
 		JSONArray jsonArrayHomework = new JSONArray();
-		
-		if(listHomework != null){
+
+		if (listHomework != null) {
 			for (Homework homework : listHomework) {
 				JSONObject jsonHomework = new JSONObject();
+				String description = Jsoup.parse(homework.getHomeworkDescription()).text().substring(0, 15)
+						.concat("...");
 				jsonHomework.put("id", homework.getHomeworkID());
 				jsonHomework.put("title", homework.getHomeworkTitle());
 				jsonHomework.put("subject", homework.getHomeworkSubject());
-				jsonHomework.put("description", homework.getHomeworkDescription());
+				jsonHomework.put("description", description);
 				jsonArrayHomework.put(jsonHomework);
 			}
 		}
-		
+
 		responseObject.put("listHomeworks", jsonArrayHomework);
 
 		PrintWriter out = response.getWriter();

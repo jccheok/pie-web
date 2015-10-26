@@ -11,30 +11,31 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import pie.GroupHomework;
 import pie.services.GroupHomeworkService;
 import pie.utilities.Utilities;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 @Singleton
-public class GetAllSentHomeworkServlet extends HttpServlet{
+public class GetAllSentHomeworkServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -8358466550092241188L;
-	
+
 	GroupHomeworkService groupHomeworkService;
-	
+
 	@Inject
-	public GetAllSentHomeworkServlet(GroupHomeworkService groupHomeworkService){
+	public GetAllSentHomeworkServlet(GroupHomeworkService groupHomeworkService) {
 		this.groupHomeworkService = groupHomeworkService;
 	}
-	
+
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+
 		int publisherID = 0;
-		
+
 		try {
 
 			Map<String, String> requestParameters = Utilities.getParameters(request, "publisherID");
@@ -45,27 +46,28 @@ public class GetAllSentHomeworkServlet extends HttpServlet{
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 			return;
 		}
-		
-		GroupHomework[] groupHomework = groupHomeworkService.getAllSentHomework(publisherID);
-		
-		JSONObject responseObject = new JSONObject();
-		if(groupHomework != null){
-			
-			JSONArray sentHomeworkList = new JSONArray();		
 
-			for(GroupHomework homework : groupHomework){
-				
+		GroupHomework[] groupHomework = groupHomeworkService.getAllSentHomework(publisherID);
+
+		JSONObject responseObject = new JSONObject();
+		if (groupHomework != null) {
+
+			JSONArray sentHomeworkList = new JSONArray();
+
+			for (GroupHomework homework : groupHomework) {
+
 				JSONObject homeworkObject = new JSONObject();
 				homeworkObject.put("homeworkTitle", homework.getHomework().getHomeworkTitle());
-				homeworkObject.put("homeworkDescription", homework.getHomework().getHomeworkDescription());
+				homeworkObject.put("homeworkDescription", Jsoup.parse(homework.getHomework().getHomeworkDescription())
+						.text().substring(0, 15).concat("..."));
 				homeworkObject.put("publisherName", homework.getPublisher().getUserFullName());
 				homeworkObject.put("publishedDate", homework.getPublishDate());
-				
+
 				sentHomeworkList.put(homeworkObject);
 			}
-			
+
 			responseObject.put("sentHomework", sentHomeworkList);
-		}else{
+		} else {
 			responseObject.put("result", "No Sent Homework");
 			responseObject.put("message", "No Homework was sent by this user");
 		}
