@@ -20,14 +20,14 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class MarkHomeworkServlet extends HttpServlet{
+public class SetMarkHomeworkServlet extends HttpServlet{
 	
 	private static final long serialVersionUID = -2578705910597182904L;
 	
 	UserHomeworkService userHomeworkService;
 	
 	@Inject
-	public MarkHomeworkServlet(UserHomeworkService userHomeworkService){
+	public SetMarkHomeworkServlet(UserHomeworkService userHomeworkService){
 		this.userHomeworkService = userHomeworkService;
 	}
 	
@@ -56,8 +56,9 @@ public class MarkHomeworkServlet extends HttpServlet{
 
 			int studentID = student.getInt("studentID");
 			int userHomeworkID = student.getInt("userHomeworkID");
+			boolean isMarked = student.getBoolean("isMarked");
 			
-			userHomeworkService.markHomework(userHomeworkID, studentID);
+			userHomeworkService.markHomework(userHomeworkID, studentID, isMarked);
 		}
 
 		JSONObject responseObject = new JSONObject();
