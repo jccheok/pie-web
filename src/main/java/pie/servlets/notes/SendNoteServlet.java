@@ -16,6 +16,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.json.JSONObject;
 
+import pie.constants.PublishNoteResult;
 import pie.services.NoteAttachmentService;
 import pie.services.NoteService;
 
@@ -55,9 +56,7 @@ public class SendNoteServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		if(noteAttachmentService.checkIfNoteFolderExist()) {
-			responseObject.put("folderResult", "Note Folder exist");
-		} else {
-			responseObject.put("folderResult", "Note Folder did not exist but was created during the process");
+			responseObject.put("folderResult", "Note folder did not exist and was created during the process");
 		}
 
 		DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -88,26 +87,18 @@ public class SendNoteServlet extends HttpServlet {
 
 						if(item.getFieldName().equalsIgnoreCase("staffID")) {
 							staffID = Integer.parseInt(item.getString());
-							responseObject.put("staffID", staffID);
 						} else if(item.getFieldName().equalsIgnoreCase("groupID")) {
 							groupID = Integer.parseInt(item.getString());
-							responseObject.put("groupID", groupID);
 						} else if(item.getFieldName().equalsIgnoreCase("responseQuestionID")) {
 							responseQuestionID = Integer.parseInt(item.getString());
-							responseObject.put("responseQuestion", responseQuestionID);
 						} else if(item.getFieldName().equalsIgnoreCase("noteTitle")) {
 							noteTitle = item.getString();
-							responseObject.put("noteTitle", noteTitle);
 						} else if(item.getFieldName().equalsIgnoreCase("noteDescription")) {
 							noteDescription = item.getString();
-							responseObject.put("noteDescription", noteDescription);
 						}
 					} 
 				}
-
-			} else {
-				responseObject.put("uploadResult", "No item found");
-			}
+			} 
 			
 			if(staffID != 0 && responseQuestionID != 0) {
 
@@ -122,21 +113,13 @@ public class SendNoteServlet extends HttpServlet {
 
 					fileUpload.write(storeFile);
 
-					responseObject.put("fileResult", "SUCCESS");
-					responseObject.put("noteAttachmentID", noteAttachmentID);
-					responseObject.put("noteAttachmentURL", noteAttachmentURL);
+				} 
 
-				} else {
-					responseObject.put("fileResult", "FAILED - NO FILE UPLOADED");
-				}
+				PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID, staffID);
+				responseObject.put("result", publishNoteResult.toString());
+				responseObject.put("message", publishNoteResult.getDefaultMessage());
 
-				//PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID, staffID);
-				//responseObject.put("result", publishNoteResult.toString());
-				//responseObject.put("message", publishNoteResult.getDefaultMessage());
-
-			} else {
-				responseObject.put("noteResult", "Creation of note failed");
-			}
+			} 
 
 		} catch (Exception e) {
 			e.printStackTrace();
