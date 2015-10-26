@@ -70,8 +70,11 @@ public class ViewGroupMembersServlet extends HttpServlet{
 			students.put("studentFullName", student.getUserFullName());
 			students.put("studentMobile", student.getUserMobile());
 			students.put("studentID", Integer.toString(student.getUserID()));
-			students.put("mainParent" , mainParent.getUserFullName());
 			students.put("studentMobile", student.getUserMobile());
+			
+			if(mainParent != null){
+				students.put("mainParent" , mainParent.getUserFullName());
+			}
 			studentList.put(students);
 		}
 				
