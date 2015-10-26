@@ -54,8 +54,8 @@ public class GetStudentReportServlet extends HttpServlet {
 			groupHomework.put("EffortsPerDay", effortPerDay);
 			groupHomework.put("DaysTaken", daysTaken);
 			groupHomework.put("subject", gh.getHomework().getHomeworkSubject());
-			groupHomework.put("startDate", gh.getPublishDate().getTime());
-			groupHomework.put("endDate", gh.getDueDate().getTime());
+			groupHomework.put("startDate", Utilities.parseServletDateFormat(gh.getPublishDate()));
+			groupHomework.put("endDate", Utilities.parseServletDateFormat(gh.getDueDate()));
 			listHomeworkEfforts.put(groupHomework);
 		}
 
