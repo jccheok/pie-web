@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
+import pie.constants.GenericResult;
 import pie.services.UserHomeworkService;
 import pie.utilities.Utilities;
 
@@ -47,11 +48,11 @@ public class DeleteUserHomeworkServlet extends HttpServlet {
 		boolean deleteResult = userHomeworkService.deleteHomework(userHomeworkID);
 		JSONObject responseObject = new JSONObject();
 		if(deleteResult){
-			responseObject.put("result", "Success");
-			responseObject.put("message", "Successfully deleted the homework");
+			responseObject.put("result", GenericResult.SUCCESS);
+			responseObject.put("message", "Successfully deleted the homework.");
 		}else{
-			responseObject.put("result","Failure");
-			responseObject.put("message", "Failed to delete homework");
+			responseObject.put("result",GenericResult.FAILED);
+			responseObject.put("message", "Failed to delete homework.");
 		}
 		
 		PrintWriter out = response.getWriter();
