@@ -60,8 +60,10 @@ public class GetAllDraftHomeworkServlet extends HttpServlet {
 		if (listHomework != null) {
 			for (Homework homework : listHomework) {
 				JSONObject jsonHomework = new JSONObject();
-				String description = Jsoup.parse(homework.getHomeworkDescription()).text().substring(0, 15)
-						.concat("...");
+				String description = Jsoup.parse(homework.getHomeworkDescription()).text();
+				if(description.length()>15){
+					description=description.substring(0,15).concat("...");
+				}
 				jsonHomework.put("id", homework.getHomeworkID());
 				jsonHomework.put("title", homework.getHomeworkTitle());
 				jsonHomework.put("subject", homework.getHomeworkSubject());
