@@ -174,7 +174,7 @@ public class NoteAttachmentService {
 		
 		File noteAttachmentDIR = new File(getNoteDIR());
 		if(noteAttachmentDIR.exists()) {
-			noteAttachmentDIR.mkdir();
+			noteAttachmentDIR.mkdirs();
 			
 			isExist = true;
 		}
