@@ -10,7 +10,9 @@ import java.util.Date;
 import pie.Note;
 import pie.ResponseQuestion;
 import pie.Staff;
+import pie.Student;
 import pie.constants.DeleteNoteResult;
+import pie.constants.PublishNoteResult;
 import pie.utilities.DatabaseConnector;
 
 public class NoteService {
@@ -90,62 +92,60 @@ public class NoteService {
 		return noteID;
 	}
 
+	public PublishNoteResult publishNote(int noteID, int groupID, int publisherID) {
 
-//	public PublishNoteResult publishNote(int noteID, int groupID, int publisherID) {
-//
-//		PublishNoteResult publishResult = PublishNoteResult.SUCCESS;
-//		
-//		StaffGroupService staffGroupService = new StaffGroupService();
-//		StudentGroupService studentGroupService = new StudentGroupService();
-//		GroupNoteService groupNoteService = new GroupNoteService();
-//		UserNoteService userNoteService = new UserNoteService();
-//
-//		try {
-//
-//			Connection conn = DatabaseConnector.getConnection();
-//			PreparedStatement pst = null;
-//
-//			String sql = "UPDATE `Note` SET isDraft = ? WHERE noteID = ?";
-//			pst = conn.prepareStatement(sql);
-//			pst.setInt(1, 0);
-//			pst.setInt(2, noteID);
-//
-//			pst.executeUpdate();
-//			
-//			int groupNoteID = groupNoteService.createGroupNote(noteID, groupID, publisherID);
-//			groupNoteService.publishGroupNote(groupNoteID);
-//
-//			if (groupNoteID == -1) {
-//
-//				publishResult = PublishNoteResult.FAILED_TO_UPDATE_GROUP;
-//
-//			} else {
-//
-//				Student[] groupStudents = studentGroupService.getStudentMembers(groupID);
-//
-//				for (Student student : groupStudents) {
-//					if (!userNoteService.sendNote(noteID, student.getUserID())) {
-//						publishResult = PublishNoteResult.FAILED_TO_SEND_TO_MEMBERS;
-//					}
-//				}
-//
-//				Staff[] groupStaffs = staffGroupService.getStaffMembers(groupID);
-//
-//				for (Staff staff : groupStaffs) {
-//					if (!userNoteService.sendNote(noteID, staff.getUserID())) {
-//						publishResult = PublishNoteResult.FAILED_TO_SEND_TO_MEMBERS;
-//					}
-//				}
-//			}
-//
-//			conn.close();
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//
-//		return publishResult;
-//	}
+		PublishNoteResult publishResult = PublishNoteResult.SUCCESS;
+		
+		StaffGroupService staffGroupService = new StaffGroupService();
+		StudentGroupService studentGroupService = new StudentGroupService();
+		GroupNoteService groupNoteService = new GroupNoteService();
+		UserNoteService userNoteService = new UserNoteService();
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+
+			String sql = "UPDATE `Note` SET isDraft = ? WHERE noteID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, 0);
+			pst.setInt(2, noteID);
+
+			pst.executeUpdate();
+			
+			int groupNoteID = groupNoteService.createGroupNote(noteID, groupID, publisherID);
+
+			if (groupNoteID == -1) {
+
+				publishResult = PublishNoteResult.FAILED_TO_UPDATE_GROUP;
+
+			} else {
+
+				Student[] groupStudents = studentGroupService.getStudentMembers(groupID);
+
+				for (Student student : groupStudents) {
+					if (userNoteService.createUserNote(noteID, student.getUserID()) == -1) {
+						publishResult = PublishNoteResult.FAILED_TO_SEND_TO_MEMBERS;
+					}
+				}
+
+				Staff[] groupStaffs = staffGroupService.getStaffMembers(groupID);
+
+				for (Staff staff : groupStaffs) {
+					if (userNoteService.createUserNote(noteID, staff.getUserID()) == -1) {
+						publishResult = PublishNoteResult.FAILED_TO_SEND_TO_MEMBERS;
+					}
+				}
+			}
+
+			conn.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return publishResult;
+	}
 
 	public DeleteNoteResult deleteNote(int noteID) {
 
