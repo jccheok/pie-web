@@ -58,9 +58,12 @@ public class GetAllDraftPublishedHomeworkServlet extends HttpServlet {
 			for (GroupHomework homework : groupHomework) {
 
 				JSONObject homeworkObject = new JSONObject();
+				String description = Jsoup.parse(homework.getHomework().getHomeworkDescription()).text();
+				if (description.length() > 15) {
+					description = description.substring(0, 15).concat("...");
+				}
 				homeworkObject.put("homeworkTitle", homework.getHomework().getHomeworkTitle());
-				homeworkObject.put("homeworkDescription", Jsoup.parse(homework.getHomework().getHomeworkDescription())
-						.text().substring(0, 15).concat("..."));
+				homeworkObject.put("homeworkDescription", description);
 				homeworkObject.put("publisherName", homework.getPublisher().getUserFullName());
 				homeworkObject.put("publishedDate", homework.getPublishDate());
 
