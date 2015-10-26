@@ -25,7 +25,7 @@ import pie.servlets.groups.UpdateGroupServlet;
 import pie.servlets.groups.ViewGroupMembersServlet;
 import pie.servlets.groups.ViewOpenGroupsServlet;
 import pie.servlets.groups.ViewStudentJoinedGroupsServlet;
-import pie.servlets.homework.ArchiveHomeworkServlet;
+import pie.servlets.homework.SetArchiveHomeworkServlet;
 import pie.servlets.homework.DeleteGroupHomeworkServlet;
 import pie.servlets.homework.DeleteHomeworkAttachmentServlet;
 import pie.servlets.homework.DeleteHomeworkServlet;
@@ -41,15 +41,15 @@ import pie.servlets.homework.GetHomeworkRecipientsServlet;
 import pie.servlets.homework.GetIndividualStudentReport;
 import pie.servlets.homework.GetPublishedHomeworkDetailsServlet;
 import pie.servlets.homework.GradeHomeworkServlet;
-import pie.servlets.homework.MarkHomeworkServlet;
+import pie.servlets.homework.SetMarkHomeworkServlet;
 import pie.servlets.homework.PublishDraftHomeworkServlet;
 import pie.servlets.homework.PublishHomeworkServlet;
-import pie.servlets.homework.ReadHomeworkServlet;
+import pie.servlets.homework.SetReadHomeworkServlet;
 import pie.servlets.homework.SaveHomeworkAsDraftServlet;
 import pie.servlets.homework.SavePublishedHomeworkAsDraftServlet;
 import pie.servlets.homework.SendDraftPublishedHomeworkServlet;
 import pie.servlets.homework.SendPublishedHomeworkServlet;
-import pie.servlets.homework.SubmitHomeworkServlet;
+import pie.servlets.homework.SetSubmitHomeworkServlet;
 import pie.servlets.homework.UpdateDraftHomeworkServlet;
 import pie.servlets.homework.UpdateDraftPublishedHomeworkServlet;
 import pie.servlets.notes.DeleteNoteAttachmentServlet;
@@ -181,12 +181,12 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/group/deletegrouphomework").with(DeleteGroupHomeworkServlet.class);// tested
 
 				serve("*/servlets/secured/staff/group/homeworkrecipients").with(GetHomeworkRecipientsServlet.class);// tested
-				serve("*/servlets/secured/staff/group/markhomework").with(MarkHomeworkServlet.class); // tested
+				serve("*/servlets/secured/staff/group/markhomework").with(SetMarkHomeworkServlet.class); // tested
 				serve("*/servlets/secured/staff/group/gradehomework").with(GradeHomeworkServlet.class);// tested
-				serve("*/servlets/secured/staff/group/submithomework").with(SubmitHomeworkServlet.class);// tested
+				serve("*/servlets/secured/staff/group/submithomework").with(SetSubmitHomeworkServlet.class);// tested
 				serve("*/servlets/secured/student/deletehomework").with(DeleteUserHomeworkServlet.class); // tested
-				serve("*/servlets/secured/student/archivehomework").with(ArchiveHomeworkServlet.class);// tested
-				serve("*/servlets/secured/student/readhomework").with(ReadHomeworkServlet.class);// tested
+				serve("*/servlets/secured/student/archivehomework").with(SetArchiveHomeworkServlet.class);// tested
+				serve("*/servlets/secured/student/readhomework").with(SetReadHomeworkServlet.class);// tested
 
 				serve("*/servlets/secured/allreceivedhomework").with(GetAllUserHomeworkServlet.class);//tested
 
