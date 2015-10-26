@@ -65,8 +65,8 @@ public class GetStaffReportServlet extends HttpServlet {
 			effortReport.put("EffortPerDay", effortPerDay);
 			effortReport.put("DaysTaken", daysTaken);
 			effortReport.put("subject", gh.getHomework().getHomeworkSubject());
-			effortReport.put("startDate", gh.getDueDate().getTime());
-			effortReport.put("endDate", gh.getTargetMarkingCompletionDate().getTime());
+			effortReport.put("startDate", Utilities.parseServletDateFormat(gh.getDueDate()));
+			effortReport.put("endDate",Utilities.parseServletDateFormat(gh.getTargetMarkingCompletionDate()));
 			listHomeworkEfforts.put(effortReport);
 		}
 
