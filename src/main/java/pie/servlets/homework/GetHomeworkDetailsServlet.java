@@ -34,7 +34,6 @@ public class GetHomeworkDetailsServlet extends HttpServlet {
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		int homeworkID = 0;
 
 		try {
@@ -50,7 +49,7 @@ public class GetHomeworkDetailsServlet extends HttpServlet {
 
 		JSONObject responseObject = new JSONObject();
 
-		responseObject.put("dateCreated", df.format(homework.getHomeworkDateCreated()));
+		responseObject.put("dateCreated", Utilities.parseServletDateFormat(homework.getHomeworkDateCreated()));
 		responseObject.put("authorBy", homework.getHomeworkAuthor().getUserFullName());
 		responseObject.put("description", homework.getHomeworkDescription());
 		responseObject.put("level", homework.getHomeworkLevel());
