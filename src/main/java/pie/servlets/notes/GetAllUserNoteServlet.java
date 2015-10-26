@@ -2,8 +2,6 @@ package pie.servlets.notes;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -84,7 +82,7 @@ public class GetAllUserNoteServlet extends HttpServlet{
 				
 				String noteAttachmentURL = noteAttachmentService.getNoteAttachmentURL(userNote.getNote().getNoteID());
 				if(noteAttachmentURL != null) {
-					noteObject.put("noteAttachmentURL", "noteAttachmentURL");
+					noteObject.put("noteAttachmentURL", noteAttachmentURL);
 				}
 				
 				noteList.put(noteObject);
