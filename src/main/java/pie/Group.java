@@ -37,7 +37,7 @@ public class Group {
 		this.groupIsValid = groupIsValid;
 		this.groupLastUpdate = groupLastUpdate;
 		this.groupDateCreated = groupDateCreated;
-		this.setExpiryDate(expiryDate);
+		this.expiryDate = expiryDate;
 	}
 
 	public int getGroupID() {
