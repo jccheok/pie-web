@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.jsoup.Jsoup;
 
 import pie.GroupNote;
 import pie.UserNote;
@@ -71,10 +70,7 @@ public class GetAllUserNoteServlet extends HttpServlet{
 				
 				int noteDescriptionLength = userNote.getNote().getDescription().length();
 				if(noteDescriptionLength > 15) {
-					String noteShortDescription = new String(userNote.getNote().getDescription());
-					noteShortDescription = Jsoup.parse(noteShortDescription).text();
-					noteShortDescription = noteShortDescription.substring(0, 15);
-					noteShortDescription = noteShortDescription.concat("...");
+					String noteShortDescription = Utilities.parseHtml(userNote.getNote().getDescription());
 					noteObject.put("noteDescription", noteShortDescription);
 				} else {
 					noteObject.put("noteDescription", userNote.getNote().getDescription());
