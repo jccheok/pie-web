@@ -68,7 +68,7 @@ public class GetAllUserNoteServlet extends HttpServlet{
 				noteObject.put("noteTitle", userNote.getNote().getTitle());
 				
 				int noteDescriptionLength = userNote.getNote().getDescription().length();
-				if(noteDescriptionLength > 15) {
+				if(noteDescriptionLength > 100) {
 					String noteShortDescription = Utilities.parseHtml(userNote.getNote().getDescription());
 					noteObject.put("noteDescription", noteShortDescription);
 				} else {
