@@ -91,6 +91,7 @@ public class SendNoteServlet extends HttpServlet {
 							staffID = Integer.parseInt(item.getString());
 						} else if(item.getFieldName().equalsIgnoreCase("groupID")) {
 							groupIDList = item.getString();
+							responseObject.put("groupList", groupIDList);
 						} else if(item.getFieldName().equalsIgnoreCase("responseQuestionID")) {
 							responseQuestionID = Integer.parseInt(item.getString());
 						} else if(item.getFieldName().equalsIgnoreCase("noteTitle")) {
