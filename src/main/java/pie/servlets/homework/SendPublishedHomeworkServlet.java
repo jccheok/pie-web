@@ -2,6 +2,7 @@ package pie.servlets.homework;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
@@ -103,6 +104,7 @@ public class SendPublishedHomeworkServlet extends HttpServlet {
 		groupHomeworkID = groupHomeworkService.sendPublishedHomework(groupHomework);
 
 		JSONObject responseObject = new JSONObject();
+		ArrayList<Parent> parentList = new ArrayList<Parent>();
 
 		if (groupHomeworkID != -1) {
 			Student[] studentMembers = studentGroupService.getStudentMembers(group.getGroupID());
@@ -116,13 +118,26 @@ public class SendPublishedHomeworkServlet extends HttpServlet {
 				}
 				
 				Parent[] parents = parentStudentService.getParents(student.getUserID());
-
-				for (Parent parent : parents) {
-					if (userHomeworkService.createUserHomework(parent.getUserID(), homework.getHomeworkID()) == -1) {
-						responseObject.put("result", "Failed to Send Homework to parent");
-						responseObject.put("message", "Failed to Publish Homework to UserHomework");
+				
+				boolean hasSent = false;
+				
+				for(Parent currParent : parents){
+					if(parentList.contains(currParent)){
+						hasSent = true;
 						break;
 					}
+				}
+				
+				if(!hasSent){
+					for (Parent parent : parents) {
+						if (userHomeworkService.createUserHomework(parent.getUserID(), homework.getHomeworkID()) == -1) {
+							responseObject.put("result", "Failed to Send Homework to parent");
+							responseObject.put("message", "Failed to Publish Homework to UserHomework");
+							break;
+						}						
+						parentList.add(parent);
+					}
+					
 				}
 			}
 
