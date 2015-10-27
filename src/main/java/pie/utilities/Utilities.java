@@ -24,15 +24,15 @@ public class Utilities {
 	static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	static final DateFormat clientDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	static final DateFormat servletDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-	
+
 	public static Date parseClientDate(String date) throws ParseException {
 		return clientDateFormat.parse(date);
 	}
-	
+
 	public static String parseServletDateFormat(Date date){
 		return servletDateFormat.format(date); 
 	}
-	
+
 	public static String generateString(int length) {
 
 		Random random = new Random();
@@ -46,9 +46,9 @@ public class Utilities {
 	}
 
 	public static String hash256(String base) {
-		
+
 		String hashedString = null;
-		
+
 		try {
 			MessageDigest digest = MessageDigest.getInstance("SHA-256");
 			byte[] hash = digest.digest(base.getBytes("UTF-8"));
@@ -96,13 +96,17 @@ public class Utilities {
 	public static String convertStreamToString(InputStream inputStream) throws IOException {
 		return IOUtils.toString(inputStream, "UTF-8");
 	}
-	
+
 	public static String parseHtml(String description) {
-		String shortDescription = Jsoup.parse(description).text();
-		shortDescription = shortDescription.substring(0, 100);
-		shortDescription = shortDescription.concat("...");
 		
+		String shortDescription = Jsoup.parse(description).text();
+		
+		if(shortDescription.length() > 100) {
+			shortDescription = shortDescription.substring(0, 100);
+			shortDescription = shortDescription.concat("...");
+		}
+
 		return shortDescription;
 	}
-	
+
 }
