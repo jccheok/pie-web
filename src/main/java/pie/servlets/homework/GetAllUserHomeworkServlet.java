@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.jsoup.Jsoup;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -70,11 +69,8 @@ public class GetAllUserHomeworkServlet extends HttpServlet {
 
 				Staff staff = userHomeworkService.getUserHomeworkPublisher(homework.getUserHomeworkID());
 				JSONObject homeworkObject = new JSONObject();
-				String homeworkDescription = Jsoup.parse(homework.getHomework().getHomeworkDescription()).text();
-				if (homeworkDescription.length() > 15) {
-					homeworkDescription = homeworkDescription.substring(0, 15).concat("...");
-				}
-
+				String homeworkDescription = Utilities.parseHtml(homework.getHomework().getHomeworkDescription());
+				
 				homeworkObject.put("userHomeworkID", homework.getUserHomeworkID());
 				homeworkObject.put("homeworkTitle", homework.getHomework().getHomeworkTitle());
 				homeworkObject.put("homeworkDescription", homeworkDescription);
