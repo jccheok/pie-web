@@ -127,13 +127,16 @@ public class SendNoteServlet extends HttpServlet {
 
 				JSONObject requestObject = new JSONObject(groupIDList);
 				JSONArray groupList = requestObject.getJSONArray("groupIDArray");
+				responseObject.put("List", groupList);
 				
 				for (int index = 0; index < groupList.length(); index++) {
 
 					JSONObject group = groupList.getJSONObject(index);
+					responseObject.put("group", group);
 
 					noteID = noteService.createNote(staffID, responseQuestionID, noteTitle, noteDescription);
 					int groupID = group.getInt("groupID");
+					responseObject.put("noteID", noteID);
 					responseObject.put("groupID", groupID);
 					PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID, staffID);
 					responseObject.put("result", publishNoteResult.toString());
