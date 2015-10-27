@@ -344,36 +344,6 @@ public class UserHomeworkService {
 		return allUserHomework;
 	}
 
-	public Staff getUserHomeworkPublisher(int userHomeworkID) {
-
-		Staff publisher = null;
-
-		try {
-			Connection conn = DatabaseConnector.getConnection();
-			PreparedStatement pst = null;
-			ResultSet resultSet = null;
-
-			String sql = "SELECT DISTINCT publisherID FROM `Homework`, `GroupHomework`, `UserHomework` WHERE `Homework`.homeworkID = `GroupHomework`.homeworkID AND `UserHomework`.homeworkID = `Homework`.homeworkID "
-					+ "AND `UserHomework`.userHomeworkID = ?";
-			pst = conn.prepareStatement(sql);
-			pst.setInt(1, userHomeworkID);
-
-			resultSet = pst.executeQuery();
-
-			if (resultSet.next()) {
-				StaffService staffService = new StaffService();
-				publisher = staffService.getStaff(resultSet.getInt("publisherID"));
-			}
-
-			conn.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return publisher;
-	}
-
 	public GroupHomework getGroupHomework(int userHomeworkID, int homeworkID) {
 		GroupHomework groupHomework = null;
 
