@@ -47,9 +47,10 @@ public class UserHomeworkService {
 				boolean isMarked = resultSet.getInt("isMarked") == 1;
 				String grade = resultSet.getString("grade");
 				boolean isAcknowledged = resultSet.getInt("isAcknowledged") == 1;
+				int groupHomeworkID = resultSet.getInt("groupHomeworkID");
 
 				userHomework = new UserHomework(userHomeworkID, homework, user, isRead, isSubmitted, submissionDate,
-						isArchived, grade, isMarked, isDeleted, isAcknowledged);
+						isArchived, grade, isMarked, isDeleted, isAcknowledged, groupHomeworkID);
 			}
 
 			conn.close();
