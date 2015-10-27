@@ -64,66 +64,77 @@ public class GetAllUserHomeworkServlet extends HttpServlet {
 		JSONArray homeworkList = new JSONArray();
 
 		if (userHomework != null) {
-
+			
+			Staff tempPublisher = null;
+			int tempHomeworkID = 0;
+			
 			for (UserHomework homework : userHomework) {
-
+				
 				Staff staff = userHomeworkService.getUserHomeworkPublisher(homework.getUserHomeworkID());
-				JSONObject homeworkObject = new JSONObject();
-				String homeworkDescription = Utilities.parseHtml(homework.getHomework().getHomeworkDescription());
+				int homeworkID = homework.getHomework().getHomeworkID();
 				
-				homeworkObject.put("userHomeworkID", homework.getUserHomeworkID());
-				homeworkObject.put("homeworkTitle", homework.getHomework().getHomeworkTitle());
-				homeworkObject.put("homeworkDescription", homeworkDescription);
-				homeworkObject.put("publisherName", staff.getUserFullName());
-				GroupHomework groupHomework = userHomeworkService.getGroupHomework(homework.getUserHomeworkID(),
-						homework.getHomework().getHomeworkID());
-				homeworkObject.put("publishedDate", Utilities.parseServletDateFormat(groupHomework.getPublishDate()));
-				homeworkObject.put("homeworkIsGraded", groupHomework.isGraded());
-				homeworkObject.put("homeworkIsRead", homework.isRead());
-				homeworkObject.put("groupID", groupHomework.getGroup().getGroupID());
-				homeworkObject.put("groupName", groupHomework.getGroup().getGroupName());
-				
-				if(userService.getUser(userID).getUserType() == UserType.PARENT){
-
-					homeworkObject.put("isAcknowledged", homework.isAcknowledged());
-
-					Student[] children = parentStudentService.getChildren(userID);
-
-					JSONArray childrenHomework = new JSONArray();
-					for (Student child : children) {
-						UserHomework childHomework = userHomeworkService.getChildHomework(homework.getHomework().getHomeworkID(), child.getUserID());
-
-						if (childHomework != null) {
-							JSONObject childHomeworkObject = new JSONObject();
-
-							childHomeworkObject.put("childName", child.getUserFullName());
-							childHomeworkObject.put("childID", child.getUserID());
-							childHomeworkObject.put("childUserHomeworkID", childHomework.getUserHomeworkID());
-
-							if (!childHomework.isSubmitted()) {
-								childHomeworkObject.put("status", "Not Submitted");
-							} else if (!childHomework.isMarked()) {
-								childHomeworkObject.put("status", "Submitted");
-							} else if (!childHomework.getGrade().equals("-")) {
-								childHomeworkObject.put("status", "Marked");
-							} else {
-								childHomeworkObject.put("status", "Graded");
+				if(staff == tempPublisher && tempHomeworkID == homeworkID){
+					
+					JSONObject homeworkObject = new JSONObject();
+					String homeworkDescription = Utilities.parseHtml(homework.getHomework().getHomeworkDescription());
+					
+					homeworkObject.put("userHomeworkID", homework.getUserHomeworkID());
+					homeworkObject.put("homeworkTitle", homework.getHomework().getHomeworkTitle());
+					homeworkObject.put("homeworkDescription", homeworkDescription);
+					homeworkObject.put("publisherName", staff.getUserFullName());
+					GroupHomework groupHomework = userHomeworkService.getGroupHomework(homework.getUserHomeworkID(),
+							homework.getHomework().getHomeworkID());
+					homeworkObject.put("publishedDate", Utilities.parseServletDateFormat(groupHomework.getPublishDate()));
+					homeworkObject.put("homeworkIsGraded", groupHomework.isGraded());
+					homeworkObject.put("homeworkIsRead", homework.isRead());
+					homeworkObject.put("groupID", groupHomework.getGroup().getGroupID());
+					homeworkObject.put("groupName", groupHomework.getGroup().getGroupName());
+					
+					if(userService.getUser(userID).getUserType() == UserType.PARENT){
+	
+						homeworkObject.put("isAcknowledged", homework.isAcknowledged());
+	
+						Student[] children = parentStudentService.getChildren(userID);
+	
+						JSONArray childrenHomework = new JSONArray();
+						for (Student child : children) {
+							UserHomework childHomework = userHomeworkService.getChildHomework(homework.getHomework().getHomeworkID(), child.getUserID());
+	
+							if (childHomework != null) {
+								JSONObject childHomeworkObject = new JSONObject();
+	
+								childHomeworkObject.put("childName", child.getUserFullName());
+								childHomeworkObject.put("childID", child.getUserID());
+								childHomeworkObject.put("childUserHomeworkID", childHomework.getUserHomeworkID());
+	
+								if (!childHomework.isSubmitted()) {
+									childHomeworkObject.put("status", "Not Submitted");
+								} else if (!childHomework.isMarked()) {
+									childHomeworkObject.put("status", "Submitted");
+								} else if (!childHomework.getGrade().equals("-")) {
+									childHomeworkObject.put("status", "Marked");
+								} else {
+									childHomeworkObject.put("status", "Graded");
+								}
+	
+								childrenHomework.put(childHomeworkObject);
 							}
-
-							childrenHomework.put(childHomeworkObject);
 						}
+						homeworkObject.put("childrenHomework", childrenHomework);
+						homeworkList.put(homeworkObject);
+	
+					} else {
+	
+						homeworkObject.put("homeworkGrade", homework.getGrade());
+						homeworkObject.put("homeworkIsMarked", homework.isMarked());
+						homeworkObject.put("homeworkIsSubmitted", homework.isSubmitted());
+	
 					}
-					homeworkObject.put("childrenHomework", childrenHomework);
+					
 					homeworkList.put(homeworkObject);
-
-				} else {
-
-					homeworkObject.put("homeworkGrade", homework.getGrade());
-					homeworkObject.put("homeworkIsMarked", homework.isMarked());
-					homeworkObject.put("homeworkIsSubmitted", homework.isSubmitted());
-
+					tempHomeworkID = homeworkID;
+					tempPublisher = staff;
 				}
-				homeworkList.put(homeworkObject);
 			}
 		}
 
