@@ -73,7 +73,7 @@ public class GetAllUserHomeworkServlet extends HttpServlet {
 				Staff staff = userHomeworkService.getUserHomeworkPublisher(homework.getUserHomeworkID());
 				int homeworkID = homework.getHomework().getHomeworkID();
 				
-				if(staff == tempPublisher && tempHomeworkID == homeworkID){
+				if(staff != tempPublisher && tempHomeworkID != homeworkID){
 					
 					JSONObject homeworkObject = new JSONObject();
 					String homeworkDescription = Utilities.parseHtml(homework.getHomework().getHomeworkDescription());
