@@ -14,9 +14,10 @@ public class UserHomework {
 	private boolean isMarked;
 	private boolean isDeleted;
 	private boolean isAcknowledged;
+	private int groupHomeworkID;
 	
 	public UserHomework(int userHomeworkID, Homework homework, User user, boolean isRead, boolean isSubmitted,
-			Date submissionDate, boolean isArchived, String grade, boolean isMarked, boolean isDeleted, boolean isAcknowledged) {
+			Date submissionDate, boolean isArchived, String grade, boolean isMarked, boolean isDeleted, boolean isAcknowledged, int groupHomeworkID) {
 
 		setUserHomeworkID(userHomeworkID);
 		setHomework(homework);	
@@ -29,6 +30,7 @@ public class UserHomework {
 		setMarked(isMarked);
 		setDeleted(isDeleted);
 		setAcknowledged(isAcknowledged);
+		setGroupHomeworkID(groupHomeworkID);
 	}
 
 	public int getUserHomeworkID() {
@@ -117,6 +119,14 @@ public class UserHomework {
 
 	public void setAcknowledged(boolean isAcknowledged) {
 		this.isAcknowledged = isAcknowledged;
+	}
+
+	public int getGroupHomeworkID() {
+		return groupHomeworkID;
+	}
+
+	public void setGroupHomeworkID(int groupHomeworkID) {
+		this.groupHomeworkID = groupHomeworkID;
 	}
 
 }
