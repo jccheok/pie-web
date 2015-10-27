@@ -27,7 +27,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class GetHomeworkDetailsServlet extends HttpServlet {
+public class GetUserHomeworkDetailsServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 8818437379452661718L;
 	
@@ -35,7 +35,7 @@ public class GetHomeworkDetailsServlet extends HttpServlet {
 	private ParentStudentService parentStudentService;
 
 	@Inject
-	public GetHomeworkDetailsServlet(UserHomeworkService userHomeworkService, ParentStudentService parentStudentService) {
+	public GetUserHomeworkDetailsServlet(UserHomeworkService userHomeworkService, ParentStudentService parentStudentService) {
 		this.userHomeworkService = userHomeworkService;
 		this.parentStudentService = parentStudentService;
 	}
