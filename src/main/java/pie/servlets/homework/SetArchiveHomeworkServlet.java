@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
+import pie.constants.GenericResult;
 import pie.services.UserHomeworkService;
 import pie.utilities.Utilities;
 
@@ -45,17 +46,11 @@ public class SetArchiveHomeworkServlet extends HttpServlet{
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 			return;
 		}
-
-		boolean archiveResult = userHomeworkService.archiveHomework(userHomeworkID, isArchived);
-		JSONObject responseObject = new JSONObject();
 		
-		if(archiveResult){
-			responseObject.put("result", "Success");
-			responseObject.put("message", "Successfully archived the homework");
-		}else{
-			responseObject.put("result","Failure");
-			responseObject.put("message", "Failed to archive homework");
-		}
+		GenericResult result = userHomeworkService.archiveHomework(userHomeworkID, isArchived) ? GenericResult.SUCCESS : GenericResult.FAILED;
+		
+		JSONObject responseObject = new JSONObject();
+		responseObject.put("result", result.toString());
 		
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
