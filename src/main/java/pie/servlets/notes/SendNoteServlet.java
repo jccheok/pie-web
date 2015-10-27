@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import pie.constants.PublishNoteResult;
@@ -44,7 +45,7 @@ public class SendNoteServlet extends HttpServlet {
 
 		int noteID = 0;
 		int staffID = 0;
-		int groupID = 0;
+		String groupIDList = null;
 		int responseQuestionID = 0;
 		int noteAttachmentID = 1;
 		boolean fileDetected = false;
@@ -89,7 +90,8 @@ public class SendNoteServlet extends HttpServlet {
 						if(item.getFieldName().equalsIgnoreCase("staffID")) {
 							staffID = Integer.parseInt(item.getString());
 						} else if(item.getFieldName().equalsIgnoreCase("groupID")) {
-							groupID = Integer.parseInt(item.getString());
+							groupIDList = item.getString();
+							responseObject.put("groupList", groupIDList);
 						} else if(item.getFieldName().equalsIgnoreCase("responseQuestionID")) {
 							responseQuestionID = Integer.parseInt(item.getString());
 						} else if(item.getFieldName().equalsIgnoreCase("noteTitle")) {
@@ -99,11 +101,13 @@ public class SendNoteServlet extends HttpServlet {
 						}
 					} 
 				}
-			} 
+			} else {
+				responseObject.put("result", "FAILED");
+				responseObject.put("message", "No/certain form is filled");
+			}
 			
 			if(staffID != 0 && responseQuestionID != 0) {
 
-				noteID = noteService.createNote(staffID, responseQuestionID, noteTitle, noteDescription);
 
 				if(fileDetected) {
 
@@ -113,13 +117,30 @@ public class SendNoteServlet extends HttpServlet {
 					File storeFile = new File(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
 
 					fileUpload.write(storeFile);
+					responseObject.put("result", "SUCCESS");
+					responseObject.put("message", "There is file uploaded.");
 
-				} 
+				} else {
+					responseObject.put("result", "FAILED");
+					responseObject.put("message", "There is no file uploaded.");
+				}
 
-				PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID, staffID);
-				responseObject.put("result", publishNoteResult.toString());
-				responseObject.put("message", publishNoteResult.getDefaultMessage());
+				JSONObject requestObject = new JSONObject(groupIDList);
+				JSONArray groupList = requestObject.getJSONArray("groupIDArray");
+				
+				for (int index = 0; index < groupList.length(); index++) {
 
+					JSONObject group = groupList.getJSONObject(index);
+
+					noteID = noteService.createNote(staffID, responseQuestionID, noteTitle, noteDescription);
+					int groupID = group.getInt("groupID");
+					responseObject.put("groupID", groupID);
+					PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID, staffID);
+					responseObject.put("result", publishNoteResult.toString());
+					responseObject.put("message", publishNoteResult.getDefaultMessage());
+					
+				}
+				
 			} 
 
 		} catch (Exception e) {
