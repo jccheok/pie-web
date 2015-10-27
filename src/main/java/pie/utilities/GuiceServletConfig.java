@@ -32,7 +32,7 @@ import pie.servlets.homework.GetAllSentHomeworkServlet;
 import pie.servlets.homework.GetAllUserHomeworkServlet;
 import pie.servlets.homework.GetHomeworkDetailsServlet;
 import pie.servlets.homework.GetHomeworkRecipientsServlet;
-import pie.servlets.homework.GetIndividualStudentReport;
+import pie.servlets.homework.GetIndividualStudentReportServlet;
 import pie.servlets.homework.GetGroupHomeworkDetailsServlet;
 import pie.servlets.homework.GetUserHomeworkDetailsServlet;
 import pie.servlets.homework.GradeHomeworkServlet;
@@ -194,7 +194,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 						.with(DownloadHomeworkAttachmentServlet.class);
 				serve("*/servlets/secured/staff/group/deletehomeworkattachment")
 						.with(DeleteHomeworkAttachmentServlet.class);
-				serve("*/servlets/secured/homeworkreport").with(GetIndividualStudentReport.class);
+				serve("*/servlets/secured/homeworkreport").with(GetIndividualStudentReportServlet.class);
 
 			}
 		});
