@@ -2,8 +2,6 @@ package pie.servlets.homework;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -21,13 +19,13 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class GetPublishedHomeworkDetailsServlet extends HttpServlet {
+public class GetGroupHomeworkDetailsServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 2290803580035753863L;
 	GroupHomeworkService groupHomeworkService;
 
 	@Inject
-	public GetPublishedHomeworkDetailsServlet(GroupHomeworkService groupHomeworkService) {
+	public GetGroupHomeworkDetailsServlet(GroupHomeworkService groupHomeworkService) {
 		this.groupHomeworkService = groupHomeworkService;
 	}
 
