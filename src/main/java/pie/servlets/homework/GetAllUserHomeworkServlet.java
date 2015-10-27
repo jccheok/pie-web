@@ -64,7 +64,6 @@ public class GetAllUserHomeworkServlet extends HttpServlet {
 		JSONObject responseObject = new JSONObject();
 		JSONArray homeworkList = new JSONArray();
 		
-		int count = 0;
 		if (allUserHomework != null) {
 
 			for (UserHomework userHomework : allUserHomework) {
@@ -118,7 +117,6 @@ public class GetAllUserHomeworkServlet extends HttpServlet {
 						}
 					}
 					homeworkObject.put("childrenHomework", childrenHomework);
-					homeworkList.put(homeworkObject);
 
 				} else {
 
@@ -129,8 +127,6 @@ public class GetAllUserHomeworkServlet extends HttpServlet {
 				}
 
 				homeworkList.put(homeworkObject);
-				count++;
-				homeworkObject.put("count", count);
 
 			}
 		}
