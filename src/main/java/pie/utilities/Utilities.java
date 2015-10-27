@@ -98,8 +98,8 @@ public class Utilities {
 	}
 	
 	public static String parseHtml(String description) {
-		
-		String shortDescription = Jsoup.parse(description).text();
+		String shortDescription = new String(description);
+		shortDescription = Jsoup.parse(description).text();
 		shortDescription = shortDescription.substring(0, 15);
 		shortDescription = shortDescription.concat("...");
 		
