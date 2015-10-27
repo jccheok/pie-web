@@ -432,4 +432,30 @@ public class UserHomeworkService {
 		
 		return userHomework;
 	}
+	
+	public boolean setAcknowledged(int userHomeworkID, boolean isAcknowledged){
+		boolean acknowledgeResult = false;
+		
+		try{
+			
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			String sql = "UPDATE `UserHomework` SET isAcknowledged = ? WHERE userHomeworkID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, isAcknowledged ? 1 : 0);
+			pst.setInt(2, userHomeworkID);
+
+			pst.executeUpdate();
+
+			acknowledgeResult = true;
+
+			conn.close();
+
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return acknowledgeResult;
+
+	}
 }
