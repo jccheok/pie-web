@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import pie.constants.PublishNoteResult;
 import pie.services.NoteAttachmentService;
 import pie.services.NoteService;
+import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -94,7 +95,7 @@ public class SendNoteServlet extends HttpServlet {
 						} else if(item.getFieldName().equalsIgnoreCase("noteTitle")) {
 							noteTitle = item.getString();
 						} else if(item.getFieldName().equalsIgnoreCase("noteDescription")) {
-							noteDescription = item.getString();
+							noteDescription = Utilities.cleanHtml(item.getString());
 						}
 					} 
 				}
