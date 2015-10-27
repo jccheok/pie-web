@@ -107,7 +107,6 @@ public class SendNoteServlet extends HttpServlet {
 			
 			if(staffID != 0 && responseQuestionID != 0) {
 
-				noteID = noteService.createNote(staffID, responseQuestionID, noteTitle, noteDescription);
 
 				if(fileDetected) {
 
@@ -132,11 +131,13 @@ public class SendNoteServlet extends HttpServlet {
 
 					JSONObject group = groupList.getJSONObject(index);
 
+					noteID = noteService.createNote(staffID, responseQuestionID, noteTitle, noteDescription);
 					int groupID = group.getInt("groupID");
-					
+					responseObject.put("groupID", groupID);
 					PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID, staffID);
 					responseObject.put("result", publishNoteResult.toString());
 					responseObject.put("message", publishNoteResult.getDefaultMessage());
+					
 				}
 				
 			} 
