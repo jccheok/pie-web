@@ -31,10 +31,10 @@ public class GetAllUserHomeworkServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 962612459025279323L;
 
-	UserHomeworkService userHomeworkService;
-	GroupHomeworkService groupHomeworkService;
-	UserService userService;
-	ParentStudentService parentStudentService;
+	private UserHomeworkService userHomeworkService;
+	private GroupHomeworkService groupHomeworkService;
+	private UserService userService;
+	private ParentStudentService parentStudentService;
 
 	@Inject
 	public GetAllUserHomeworkServlet(UserHomeworkService userHomeworkService,
@@ -63,20 +63,20 @@ public class GetAllUserHomeworkServlet extends HttpServlet {
 
 		JSONObject responseObject = new JSONObject();
 		JSONArray homeworkList = new JSONArray();
-
+		
 		if (allUserHomework != null) {
 
 			for (UserHomework userHomework : allUserHomework) {
 				JSONObject homeworkObject = new JSONObject();
 				String homeworkDescription = Utilities.parseHtml(userHomework.getHomework().getHomeworkDescription());
-				Staff staff = userHomeworkService.getUserHomeworkPublisher(userHomework.getUserHomeworkID());
+				
+				GroupHomework groupHomework = groupHomeworkService.getGroupHomework(userHomework.getGroupHomeworkID());
+				Staff staff = groupHomework.getPublisher();
 				
 				homeworkObject.put("userHomeworkID", userHomework.getUserHomeworkID());
 				homeworkObject.put("homeworkTitle", userHomework.getHomework().getHomeworkTitle());
 				homeworkObject.put("homeworkDescription", homeworkDescription);
-				homeworkObject.put("publisherName", staff.getUserFullName());
-
-				GroupHomework groupHomework = groupHomeworkService.getGroupHomework(userHomework.getGroupHomeworkID());
+				homeworkObject.put("publisherName", staff.getUserFullName());	
 
 				homeworkObject.put("publishedDate", Utilities.parseServletDateFormat(groupHomework.getPublishDate()));
 				homeworkObject.put("homeworkIsGraded", groupHomework.isGraded());
@@ -117,7 +117,6 @@ public class GetAllUserHomeworkServlet extends HttpServlet {
 						}
 					}
 					homeworkObject.put("childrenHomework", childrenHomework);
-					homeworkList.put(homeworkObject);
 
 				} else {
 
