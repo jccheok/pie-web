@@ -104,7 +104,7 @@ public class SendPublishedHomeworkServlet extends HttpServlet {
 		groupHomeworkID = groupHomeworkService.sendPublishedHomework(groupHomework);
 
 		JSONObject responseObject = new JSONObject();
-		ArrayList<Parent> parentList = new ArrayList<Parent>();
+		ArrayList<Integer> parentList = new ArrayList<Integer>();
 
 		if (groupHomeworkID != -1) {
 			Student[] studentMembers = studentGroupService.getStudentMembers(group.getGroupID());
@@ -121,13 +121,13 @@ public class SendPublishedHomeworkServlet extends HttpServlet {
 				
 				
 				for(Parent currParent : parents){
-					if(!parentList.contains(currParent)){
+					if(!parentList.contains(currParent.getUserID())){
 						if (userHomeworkService.createUserHomework(currParent.getUserID(), homework.getHomeworkID()) == -1) {
 							responseObject.put("result", "Failed to Send Homework to parent");
 							responseObject.put("message", "Failed to Publish Homework to UserHomework");
 							break;
 						}
-						parentList.add(currParent);
+						parentList.add(currParent.getUserID());
 					}
 				}
 			}
