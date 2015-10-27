@@ -102,6 +102,7 @@ public class ViewParentChildrenServlet extends HttpServlet {
 				homeworkDetails.put("dueDate", Utilities.parseServletDateFormat(groupHomework.getDueDate()));
 				homeworkDetails.put("grade", userHomework.getGrade());
 				homeworkDetails.put("userHomeworkID", userHomeworkID);
+				homeworkDetails.put("homeworkID", userHomework.getHomework().getHomeworkID());
 				
 				if (!userHomework.isSubmitted()) {
 					homeworkDetails.put("status", "Not Submitted");
