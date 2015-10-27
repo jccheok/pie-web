@@ -13,11 +13,14 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import pie.Group;
+import pie.GroupHomework;
 import pie.Parent;
 import pie.Student;
+import pie.UserHomework;
 import pie.services.ParentStudentService;
 import pie.services.StudentGroupService;
 import pie.services.StudentService;
+import pie.services.UserHomeworkService;
 import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
@@ -31,12 +34,14 @@ public class ViewParentChildrenServlet extends HttpServlet {
 	ParentStudentService parentStudentService;
 	StudentService studentService;
 	StudentGroupService studentGroupService;
+	UserHomeworkService userHomeworkService;
 	
 	@Inject
-	public ViewParentChildrenServlet(ParentStudentService parentStudentService, StudentService studentService, StudentGroupService studentGroupService) {
+	public ViewParentChildrenServlet(ParentStudentService parentStudentService, StudentService studentService, StudentGroupService studentGroupService, UserHomeworkService userHomeworkService) {
 		this.parentStudentService = parentStudentService;
 		this.studentService = studentService;
 		this.studentGroupService = studentGroupService;
+		this.userHomeworkService = userHomeworkService;
 	}
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -84,7 +89,35 @@ public class ViewParentChildrenServlet extends HttpServlet {
 				groupDetails.put("studentGroupJoinDateUnix", Utilities.toUnixSeconds(studentGroupService.getStudentGroupJoinDate(joinedGroupID, studentID)));
 				studentGroupsList.put(groupDetails);
 			}
+			
+			JSONArray studentHomeworkList = new JSONArray();
+			for(UserHomework userHomework : userHomeworkService.getAllUserHomework(studentID)){
+				
+				JSONObject homeworkDetails = new JSONObject();
+				
+				int userHomeworkID = userHomework.getUserHomeworkID();
+				GroupHomework groupHomework = userHomeworkService.getGroupHomework(userHomeworkID, userHomework.getHomework().getHomeworkID());
+				
+				homeworkDetails.put("homeworkTitle", userHomework.getHomework().getHomeworkTitle());
+				homeworkDetails.put("dueDate", Utilities.parseServletDateFormat(groupHomework.getDueDate()));
+				homeworkDetails.put("grade", userHomework.getGrade());
+				homeworkDetails.put("userHomeworkID", userHomeworkID);
+				
+				if (!userHomework.isSubmitted()) {
+					homeworkDetails.put("status", "Not Submitted");
+				} else if (!userHomework.isMarked()) {
+					homeworkDetails.put("status", "Submitted");
+				} else if (!userHomework.getGrade().equals("-")) {
+					homeworkDetails.put("status", "Marked");
+				} else {
+					homeworkDetails.put("status", "Graded");
+				}
+				
+				studentHomeworkList.put(homeworkDetails);
+				
+			}
 			studentDetails.put("studentJoinedGroups", studentGroupsList);
+			studentDetails.put("studentHomework", studentHomeworkList);
 			childrenList.put(studentDetails);
 		}
 		responseObject.put("parentChildren", childrenList);
