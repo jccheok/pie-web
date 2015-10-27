@@ -57,9 +57,7 @@ public class SendNoteServlet extends HttpServlet {
 		JSONObject responseObject = new JSONObject();
 		PrintWriter out = response.getWriter();
 
-		if(noteAttachmentService.checkIfNoteFolderExist()) {
-			responseObject.put("folderResult", "Note folder did not exist and was created during the process");
-		}
+		noteAttachmentService.checkIfNoteFolderExist();
 
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 		factory.setSizeThreshold(memorySize);
@@ -91,59 +89,62 @@ public class SendNoteServlet extends HttpServlet {
 							staffID = Integer.parseInt(item.getString());
 						} else if(item.getFieldName().equalsIgnoreCase("groupID")) {
 							groupIDList = item.getString();
-							responseObject.put("groupList", groupIDList);
 						} else if(item.getFieldName().equalsIgnoreCase("responseQuestionID")) {
 							responseQuestionID = Integer.parseInt(item.getString());
 						} else if(item.getFieldName().equalsIgnoreCase("noteTitle")) {
-							noteTitle = item.getString();
+							noteTitle = Utilities.cleanHtml(item.getString());
 						} else if(item.getFieldName().equalsIgnoreCase("noteDescription")) {
 							noteDescription = Utilities.cleanHtml(item.getString());
 						}
 					} 
 				}
 			} else {
-				responseObject.put("result", "FAILED");
-				responseObject.put("message", "No/certain form is filled");
+				responseObject.put("Field-Result", "FAILED");
+				responseObject.put("Field-Message", "No/certain form is not filled");
 			}
-			
+
 			if(staffID != 0 && responseQuestionID != 0) {
-
-
-				if(fileDetected) {
-
-					noteAttachmentID = noteAttachmentService.createNoteAttachment(noteAttachmentURL, noteID);
-					noteAttachmentURL = noteAttachmentService.updateNoteAttachmentName(noteAttachmentID, noteAttachmentURL);
-
-					File storeFile = new File(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
-
-					fileUpload.write(storeFile);
-					responseObject.put("result", "SUCCESS");
-					responseObject.put("message", "There is file uploaded.");
-
-				} else {
-					responseObject.put("result", "FAILED");
-					responseObject.put("message", "There is no file uploaded.");
-				}
 
 				JSONObject requestObject = new JSONObject(groupIDList);
 				JSONArray groupList = requestObject.getJSONArray("groupIDArray");
-				responseObject.put("List", groupList);
-				
+
 				for (int index = 0; index < groupList.length(); index++) {
 
 					JSONObject group = groupList.getJSONObject(index);
-					responseObject.put("group", group);
 
 					noteID = noteService.createNote(staffID, responseQuestionID, noteTitle, noteDescription);
 					int groupID = group.getInt("groupID");
-					responseObject.put("noteID", noteID);
-					responseObject.put("groupID", groupID);
+
+					if(fileDetected) {
+
+						int count = 0;
+
+						noteAttachmentID = noteAttachmentService.createNoteAttachment(noteAttachmentURL, noteID);
+						
+						if(count == 0){
+							noteAttachmentURL = noteAttachmentService.updateNoteAttachmentName(noteAttachmentID, noteAttachmentURL);
+
+							File storeFile = new File(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
+
+							fileUpload.write(storeFile);
+							responseObject.put("File-Result", "SUCCESS");
+							responseObject.put("File-Message", "There is file uploaded.");
+							count++;
+						} else {
+							noteAttachmentService.updateNoteAttachmentName(noteAttachmentID, noteAttachmentURL);
+						}
+
+					} else {
+						responseObject.put("File-Result", "FAILED");
+						responseObject.put("File-Ressage", "There is no file uploaded.");
+					}
+
 					PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID, staffID);
 					responseObject.put("result", publishNoteResult.toString());
 					responseObject.put("message", publishNoteResult.getDefaultMessage());
-					
+
 				}
-				
+
 			} 
 
 		} catch (Exception e) {
