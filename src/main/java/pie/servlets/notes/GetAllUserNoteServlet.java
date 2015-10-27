@@ -55,11 +55,10 @@ public class GetAllUserNoteServlet extends HttpServlet{
 		UserNote[] allUserNote = userNoteService.getAllUserNote(userID);
 		
 		JSONObject responseObject = new JSONObject();
-		
+		JSONArray noteList = new JSONArray();
+
 		if(allUserNote != null) {
-			
-			JSONArray noteList = new JSONArray();
-			
+
 			for(UserNote userNote : allUserNote) {
 				
 				JSONObject noteObject = new JSONObject();
@@ -90,13 +89,9 @@ public class GetAllUserNoteServlet extends HttpServlet{
 				noteList.put(noteObject);
 				
 			}
-			
-			responseObject.put("allUserNote", noteList);
-			
-		} else {
-			responseObject.put("result", "No Sent Note");
-			responseObject.put("message", "No Note was sent to this user");
 		}
+		
+		responseObject.put("allUserNote", noteList);
 		
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
