@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.jsoup.Jsoup;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -19,6 +18,7 @@ import pie.Homework;
 import pie.services.GroupService;
 import pie.services.HomeworkService;
 import pie.services.StaffService;
+import pie.utilities.Utilities;
 
 @Singleton
 public class GetAllPublishedHomeworkServlet extends HttpServlet {
@@ -44,10 +44,7 @@ public class GetAllPublishedHomeworkServlet extends HttpServlet {
 
 		for (Homework homework : publishedHomework) {
 			JSONObject jsonHomework = new JSONObject();
-			String description = Jsoup.parse(homework.getHomeworkDescription()).text();
-			if (description.length() > 15) {
-				description = description.substring(0, 15).concat("...");
-			}
+			String description = Utilities.parseHtml(homework.getHomeworkDescription());
 			jsonHomework.put("title", homework.getHomeworkTitle());
 			jsonHomework.put("subject", homework.getHomeworkSubject());
 			jsonHomework.put("description", description);
