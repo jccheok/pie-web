@@ -17,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.IOUtils;
+import org.jsoup.Jsoup;
 
 public class Utilities {
 
@@ -95,4 +96,14 @@ public class Utilities {
 	public static String convertStreamToString(InputStream inputStream) throws IOException {
 		return IOUtils.toString(inputStream, "UTF-8");
 	}
+	
+	public static String parseHtml(String description) {
+		
+		String shortDescription = Jsoup.parse(description).text();
+		shortDescription = shortDescription.substring(0, 15);
+		shortDescription = shortDescription.concat("...");
+		
+		return shortDescription;
+	}
+	
 }
