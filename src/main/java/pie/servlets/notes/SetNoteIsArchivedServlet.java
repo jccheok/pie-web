@@ -1,6 +1,7 @@
 package pie.servlets.notes;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -8,6 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONObject;
+
+import pie.constants.GenericResult;
 import pie.services.UserNoteService;
 import pie.utilities.Utilities;
 
@@ -43,7 +47,13 @@ public class SetNoteIsArchivedServlet extends HttpServlet {
 			return;
 		}
 		
-		userNoteService.setUserNoteArchived(userNoteID, isArchived);
+		GenericResult result = userNoteService.setUserNoteArchived(userNoteID, isArchived) ? GenericResult.SUCCESS : GenericResult.FAILED;
+		
+		JSONObject responseObject = new JSONObject();
+		responseObject.put("result", result.toString());
+		
+		PrintWriter out = response.getWriter();
+		out.write(responseObject.toString());
 	}
 	
 }

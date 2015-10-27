@@ -67,8 +67,8 @@ public class GetAllUserNoteServlet extends HttpServlet{
 				noteObject.put("userNoteID", userNote.getUserNoteID());
 				noteObject.put("noteTitle", userNote.getNote().getTitle());
 				
-				String noteShortDescription = Utilities.parseHtml(userNote.getNote().getDescription());
-				noteObject.put("noteDescription", noteShortDescription);
+				String noteDescription = Utilities.parseHtml(userNote.getNote().getDescription());
+				noteObject.put("noteDescription", noteDescription);
 				
 				noteObject.put("publisherName", userNote.getNote().getStaff().getUserFullName());
 				GroupNote groupNote = groupNoteService.getGroupNote(userNote.getUserNoteID(), userNote.getNote().getNoteID());

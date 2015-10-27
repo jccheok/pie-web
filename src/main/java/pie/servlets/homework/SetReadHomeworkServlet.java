@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
+import pie.constants.GenericResult;
 import pie.services.UserHomeworkService;
 import pie.utilities.Utilities;
 
@@ -45,17 +46,11 @@ public class SetReadHomeworkServlet extends HttpServlet{
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 			return;
 		}
-
-		boolean readResult = userHomeworkService.readHomework(userHomeworkID, isRead);
-		JSONObject responseObject = new JSONObject();
 		
-		if(readResult){
-			responseObject.put("result", "Success");
-			responseObject.put("message", "Successfully set homework to read");
-		}else{
-			responseObject.put("result","Failure");
-			responseObject.put("message", "Failed to set the homework to read");
-		}
+		GenericResult result = userHomeworkService.readHomework(userHomeworkID, isRead) ? GenericResult.SUCCESS : GenericResult.FAILED;
+		
+		JSONObject responseObject = new JSONObject();
+		responseObject.put("result", result.toString());
 		
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());

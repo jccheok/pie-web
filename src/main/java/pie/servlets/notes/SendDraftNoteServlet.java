@@ -61,10 +61,10 @@ public class SendDraftNoteServlet extends HttpServlet {
 		JSONObject responseObject = new JSONObject();
 
 		if(isUpdated) {
-			//PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID, staffID);
+			PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID, staffID);
 			
-			//responseObject.put("result", publishNoteResult.toString());
-			//responseObject.put("message", publishNoteResult.getDefaultMessage());
+			responseObject.put("result", publishNoteResult.toString());
+			responseObject.put("message", publishNoteResult.getDefaultMessage());
 			
 			
 		} else {

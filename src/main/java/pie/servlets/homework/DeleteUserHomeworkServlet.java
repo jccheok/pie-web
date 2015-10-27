@@ -45,15 +45,10 @@ public class DeleteUserHomeworkServlet extends HttpServlet {
 			return;
 		}
 
-		boolean deleteResult = userHomeworkService.deleteHomework(userHomeworkID);
+		GenericResult result = userHomeworkService.deleteHomework(userHomeworkID) ? GenericResult.SUCCESS : GenericResult.FAILED;
+		
 		JSONObject responseObject = new JSONObject();
-		if(deleteResult){
-			responseObject.put("result", GenericResult.SUCCESS);
-			responseObject.put("message", "Successfully deleted the homework.");
-		}else{
-			responseObject.put("result",GenericResult.FAILED);
-			responseObject.put("message", "Failed to delete homework.");
-		}
+		responseObject.put("result", result.toString());
 		
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
