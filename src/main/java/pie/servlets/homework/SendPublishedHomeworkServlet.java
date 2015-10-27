@@ -119,25 +119,16 @@ public class SendPublishedHomeworkServlet extends HttpServlet {
 				
 				Parent[] parents = parentStudentService.getParents(student.getUserID());
 				
-				boolean hasSent = false;
 				
 				for(Parent currParent : parents){
-					if(parentList.contains(currParent)){
-						hasSent = true;
-						break;
-					}
-				}
-				
-				if(!hasSent){
-					for (Parent parent : parents) {
-						if (userHomeworkService.createUserHomework(parent.getUserID(), homework.getHomeworkID()) == -1) {
+					if(!parentList.contains(currParent)){
+						if (userHomeworkService.createUserHomework(currParent.getUserID(), homework.getHomeworkID()) == -1) {
 							responseObject.put("result", "Failed to Send Homework to parent");
 							responseObject.put("message", "Failed to Publish Homework to UserHomework");
 							break;
-						}						
-						parentList.add(parent);
+						}
+						parentList.add(currParent);
 					}
-					
 				}
 			}
 
