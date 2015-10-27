@@ -344,35 +344,6 @@ public class UserHomeworkService {
 		return allUserHomework;
 	}
 
-	public GroupHomework getGroupHomework(int userHomeworkID, int homeworkID) {
-		GroupHomework groupHomework = null;
-
-		try {
-			Connection conn = DatabaseConnector.getConnection();
-			PreparedStatement pst = null;
-			ResultSet resultSet = null;
-
-			String sql = "SELECT groupHomeworkID FROM `Homework`, `GroupHomework`, `UserHomework` WHERE `Homework`.homeworkID = `GroupHomework`.homeworkID AND `UserHomework`.homeworkID = `Homework`.homeworkID "
-					+ "AND `UserHomework`.userHomeworkID = ? AND `UserHomework`.homeworkID = ? ";
-			pst = conn.prepareStatement(sql);
-			pst.setInt(1, userHomeworkID);
-			pst.setInt(2, homeworkID);
-
-			resultSet = pst.executeQuery();
-
-			if (resultSet.next()) {
-				GroupHomeworkService groupHomeworkService = new GroupHomeworkService();
-				groupHomework = groupHomeworkService.getGroupHomework(resultSet.getInt("groupHomeworkID"));
-			}
-
-			conn.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return groupHomework;
-	}
 	
 	public UserHomework getChildHomework(int homeworkID, int userID){
 		UserHomework userHomework = null;
