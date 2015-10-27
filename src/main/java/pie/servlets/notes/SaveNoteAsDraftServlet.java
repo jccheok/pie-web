@@ -42,7 +42,6 @@ public class SaveNoteAsDraftServlet extends HttpServlet {
 
 		int noteID = 0;
 		int staffID = 0;
-		int groupID = 0;
 		int responseQuestionID = 0;
 		int noteAttachmentID = 1;
 		boolean fileDetected = false;
@@ -55,9 +54,7 @@ public class SaveNoteAsDraftServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		if(noteAttachmentService.checkIfNoteFolderExist()) {
-			responseObject.put("folderResult", "Note Folder exist");
-		} else {
-			responseObject.put("folderResult", "Note Folder did not exist but was created during the process");
+			responseObject.put("folderResult", "Note folder did not exist and was created during the process");
 		}
 
 		DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -88,26 +85,16 @@ public class SaveNoteAsDraftServlet extends HttpServlet {
 
 						if(item.getFieldName().equalsIgnoreCase("staffID")) {
 							staffID = Integer.parseInt(item.getString());
-							responseObject.put("staffID", staffID);
-						} else if(item.getFieldName().equalsIgnoreCase("groupID")) {
-							groupID = Integer.parseInt(item.getString());
-							responseObject.put("groupID", groupID);
 						} else if(item.getFieldName().equalsIgnoreCase("responseQuestionID")) {
 							responseQuestionID = Integer.parseInt(item.getString());
-							responseObject.put("responseQuestion", responseQuestionID);
 						} else if(item.getFieldName().equalsIgnoreCase("noteTitle")) {
 							noteTitle = item.getString();
-							responseObject.put("noteTitle", noteTitle);
 						} else if(item.getFieldName().equalsIgnoreCase("noteDescription")) {
 							noteDescription = item.getString();
-							responseObject.put("noteDescription", noteDescription);
 						}
 					} 
 				}
-
-			} else {
-				responseObject.put("uploadResult", "No item found");
-			}
+			} 
 			
 			if(staffID != 0 && responseQuestionID != 0) {
 
@@ -122,17 +109,9 @@ public class SaveNoteAsDraftServlet extends HttpServlet {
 
 					fileUpload.write(storeFile);
 
-					responseObject.put("fileResult", "SUCCESS");
-					responseObject.put("noteAttachmentID", noteAttachmentID);
-					responseObject.put("noteAttachmentURL", noteAttachmentURL);
+				} 
 
-				} else {
-					responseObject.put("fileResult", "FAILED - NO FILE UPLOADED");
-				}
-
-			} else {
-				responseObject.put("noteResult", "Creation of note failed");
-			}
+			} 
 
 		} catch (Exception e) {
 			e.printStackTrace();
