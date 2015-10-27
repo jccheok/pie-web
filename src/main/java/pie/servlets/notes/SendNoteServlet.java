@@ -131,7 +131,7 @@ public class SendNoteServlet extends HttpServlet {
 							responseObject.put("File-Message", "There is file uploaded.");
 							count++;
 						} else {
-							noteAttachmentService.updateNoteAttachmentName(noteAttachmentID, noteAttachmentURL);
+							noteAttachmentService.updateNoteAttachmentNameShare(noteAttachmentID, noteAttachmentURL);
 						}
 
 					} else {

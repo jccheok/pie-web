@@ -128,6 +128,33 @@ public class NoteAttachmentService {
 		return newNoteAttachmentURL;
 	}
 	
+	public boolean updateNoteAttachmentNameShare(int noteAttachmentID, String noteAttachmentURL) {
+		
+		boolean isUpdated = false;
+		
+		try {
+			
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+
+			String sql = "UPDATE `NoteAttachment` SET attachmentURL = ? WHERE noteAttachmentID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setString(1, noteAttachmentURL);
+			pst.setInt(2, noteAttachmentID);
+
+			pst.executeUpdate();
+
+			conn.close();
+			
+			isUpdated = true;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return isUpdated;
+	}
+	
 	public String getNoteFileName(Part part) {
 		String contentDisp = part.getHeader("content-disposition");
 		String[] items = contentDisp.split(";");
