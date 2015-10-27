@@ -69,14 +69,14 @@ public class GetAllUserHomeworkServlet extends HttpServlet {
 			for (UserHomework userHomework : allUserHomework) {
 				JSONObject homeworkObject = new JSONObject();
 				String homeworkDescription = Utilities.parseHtml(userHomework.getHomework().getHomeworkDescription());
-				Staff staff = userHomeworkService.getUserHomeworkPublisher(userHomework.getUserHomeworkID());
+				
+				GroupHomework groupHomework = groupHomeworkService.getGroupHomework(userHomework.getGroupHomeworkID());
+				Staff staff = groupHomework.getPublisher();
 				
 				homeworkObject.put("userHomeworkID", userHomework.getUserHomeworkID());
 				homeworkObject.put("homeworkTitle", userHomework.getHomework().getHomeworkTitle());
 				homeworkObject.put("homeworkDescription", homeworkDescription);
 				homeworkObject.put("publisherName", staff.getUserFullName());
-
-				GroupHomework groupHomework = groupHomeworkService.getGroupHomework(userHomework.getGroupHomeworkID());
 
 				homeworkObject.put("publishedDate", Utilities.parseServletDateFormat(groupHomework.getPublishDate()));
 				homeworkObject.put("homeworkIsGraded", groupHomework.isGraded());
