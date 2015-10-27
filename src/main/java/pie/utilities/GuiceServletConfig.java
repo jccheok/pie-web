@@ -42,6 +42,7 @@ import pie.servlets.homework.SaveHomeworkAsDraftServlet;
 import pie.servlets.homework.SavePublishedHomeworkAsDraftServlet;
 import pie.servlets.homework.SendDraftPublishedHomeworkServlet;
 import pie.servlets.homework.SendPublishedHomeworkServlet;
+import pie.servlets.homework.SetAcknowledgeHomeworkServlet;
 import pie.servlets.homework.SetArchiveHomeworkServlet;
 import pie.servlets.homework.SetMarkHomeworkServlet;
 import pie.servlets.homework.SetReadHomeworkServlet;
@@ -184,6 +185,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/deletehomework").with(DeleteUserHomeworkServlet.class); // tested
 				serve("*/servlets/secured/archivehomework").with(SetArchiveHomeworkServlet.class);// tested
 				serve("*/servlets/secured/readhomework").with(SetReadHomeworkServlet.class);// tested
+				serve("*/servlets/secured//parent/acknowledgehomework").with(SetAcknowledgeHomeworkServlet.class);// tested
 				serve("*/servlets/secured/userhomeworkdetails").with(GetUserHomeworkDetailsServlet.class);
 
 				serve("*/servlets/secured/allreceivedhomework").with(GetAllUserHomeworkServlet.class);//tested
