@@ -31,10 +31,10 @@ public class GetAllUserHomeworkServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 962612459025279323L;
 
-	UserHomeworkService userHomeworkService;
-	GroupHomeworkService groupHomeworkService;
-	UserService userService;
-	ParentStudentService parentStudentService;
+	private UserHomeworkService userHomeworkService;
+	private GroupHomeworkService groupHomeworkService;
+	private UserService userService;
+	private ParentStudentService parentStudentService;
 
 	@Inject
 	public GetAllUserHomeworkServlet(UserHomeworkService userHomeworkService,
@@ -63,7 +63,8 @@ public class GetAllUserHomeworkServlet extends HttpServlet {
 
 		JSONObject responseObject = new JSONObject();
 		JSONArray homeworkList = new JSONArray();
-
+		
+		int count = 0;
 		if (allUserHomework != null) {
 
 			for (UserHomework userHomework : allUserHomework) {
@@ -76,7 +77,7 @@ public class GetAllUserHomeworkServlet extends HttpServlet {
 				homeworkObject.put("userHomeworkID", userHomework.getUserHomeworkID());
 				homeworkObject.put("homeworkTitle", userHomework.getHomework().getHomeworkTitle());
 				homeworkObject.put("homeworkDescription", homeworkDescription);
-				homeworkObject.put("publisherName", staff.getUserFullName());
+				homeworkObject.put("publisherName", staff.getUserFullName());	
 
 				homeworkObject.put("publishedDate", Utilities.parseServletDateFormat(groupHomework.getPublishDate()));
 				homeworkObject.put("homeworkIsGraded", groupHomework.isGraded());
@@ -128,6 +129,8 @@ public class GetAllUserHomeworkServlet extends HttpServlet {
 				}
 
 				homeworkList.put(homeworkObject);
+				count++;
+				homeworkObject.put("count", count);
 
 			}
 		}
