@@ -42,8 +42,6 @@ public class SaveNoteAsDraftServlet extends HttpServlet {
 
 		int noteID = 0;
 		int staffID = 0;
-		@SuppressWarnings("unused")
-		int groupID = 0;
 		int responseQuestionID = 0;
 		int noteAttachmentID = 1;
 		boolean fileDetected = false;
@@ -87,8 +85,6 @@ public class SaveNoteAsDraftServlet extends HttpServlet {
 
 						if(item.getFieldName().equalsIgnoreCase("staffID")) {
 							staffID = Integer.parseInt(item.getString());
-						} else if(item.getFieldName().equalsIgnoreCase("groupID")) {
-							groupID = Integer.parseInt(item.getString());
 						} else if(item.getFieldName().equalsIgnoreCase("responseQuestionID")) {
 							responseQuestionID = Integer.parseInt(item.getString());
 						} else if(item.getFieldName().equalsIgnoreCase("noteTitle")) {
