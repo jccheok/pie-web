@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.IOUtils;
 import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;;
 
 public class Utilities {
 
@@ -107,6 +108,13 @@ public class Utilities {
 		}
 
 		return shortDescription;
+	}
+	
+	public static String cleanHtml(String description) {
+		
+		String cleanDescription = Jsoup.clean(description, Whitelist.basic());
+		
+		return cleanDescription;
 	}
 
 }
