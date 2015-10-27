@@ -67,13 +67,8 @@ public class GetAllUserNoteServlet extends HttpServlet{
 				noteObject.put("userNoteID", userNote.getUserNoteID());
 				noteObject.put("noteTitle", userNote.getNote().getTitle());
 				
-				int noteDescriptionLength = userNote.getNote().getDescription().length();
-				if(noteDescriptionLength > 100) {
-					String noteShortDescription = Utilities.parseHtml(userNote.getNote().getDescription());
-					noteObject.put("noteDescription", noteShortDescription);
-				} else {
-					noteObject.put("noteDescription", userNote.getNote().getDescription());
-				}
+				String noteShortDescription = Utilities.parseHtml(userNote.getNote().getDescription());
+				noteObject.put("noteDescription", noteShortDescription);
 				
 				noteObject.put("publisherName", userNote.getNote().getStaff().getUserFullName());
 				GroupNote groupNote = groupNoteService.getGroupNote(userNote.getUserNoteID(), userNote.getNote().getNoteID());
