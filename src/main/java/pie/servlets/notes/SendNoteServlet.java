@@ -58,9 +58,7 @@ public class SendNoteServlet extends HttpServlet {
 		JSONObject responseObject = new JSONObject();
 		PrintWriter out = response.getWriter();
 
-		if(noteAttachmentService.checkIfNoteFolderExist() != false) {
-			responseObject.put("Folder-Message", "uploadedNoteDIR did not exist and was created during the process.");
-		}
+		noteAttachmentService.checkIfNoteFolderExist();
 
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 		factory.setSizeThreshold(memorySize);
@@ -101,10 +99,7 @@ public class SendNoteServlet extends HttpServlet {
 						}
 					} 
 				}
-			} else {
-				responseObject.put("Field-Result", "FAILED");
-				responseObject.put("Field-Message", "No/certain form is not filled");
-			}
+			} 
 
 			if(staffID != 0 && responseQuestionID != 0) {
 
@@ -121,27 +116,22 @@ public class SendNoteServlet extends HttpServlet {
 					if(fileDetected) {
 
 						noteAttachmentID = noteAttachmentService.createNoteAttachment(noteAttachmentURL, noteID);
-						
+
 						if(isDuplicate == false){
-							
+
 							isDuplicate = true;
-							
+
 							noteAttachmentURL = noteAttachmentService.updateNoteAttachmentName(noteAttachmentID, noteAttachmentURL);
 
 							File storeFile = new File(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
 
 							fileUpload.write(storeFile);
-							responseObject.put("File-Result", "SUCCESS");
-							responseObject.put("File-Message", "There is file uploaded.");
-				
+
 						} else {
 							noteAttachmentService.updateNoteAttachmentNameShare(noteAttachmentID, noteAttachmentURL);
 						}
 
-					} else {
-						responseObject.put("File-Result", "FAILED");
-						responseObject.put("File-Ressage", "There is no file uploaded.");
-					}
+					} 
 
 					PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID, staffID);
 					responseObject.put("result[" + index + "]", publishNoteResult.toString());
