@@ -7,9 +7,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 
-import pie.GroupHomework;
 import pie.Homework;
-import pie.Staff;
 import pie.User;
 import pie.UserHomework;
 import pie.utilities.DatabaseConnector;
