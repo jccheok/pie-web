@@ -120,7 +120,7 @@ public class SendNoteServlet extends HttpServlet {
 
 						noteAttachmentID = noteAttachmentService.createNoteAttachment(noteAttachmentURL, noteID);
 						
-						if(isDuplicate){
+						if(isDuplicate == false){
 							
 							isDuplicate = true;
 							
