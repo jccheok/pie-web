@@ -2,6 +2,7 @@ package pie.servlets.parent;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -65,6 +66,13 @@ public class ViewParentChildrenServlet extends HttpServlet {
 
 		JSONObject responseObject = new JSONObject();
 		
+		ArrayList<Integer> groupHomeworkIDList = new ArrayList<Integer>();
+		UserHomework[] parentHomeworkList = userHomeworkService.getAllUserHomework(parentID);
+		
+		for(UserHomework parentHomework : parentHomeworkList){
+			groupHomeworkIDList.add(parentHomework.getGroupHomeworkID());
+		}
+		
 		JSONArray childrenList = new JSONArray();
 		for (Student student : parentStudentService.getChildren(parentID)) {
 			
@@ -102,10 +110,16 @@ public class ViewParentChildrenServlet extends HttpServlet {
 				int userHomeworkID = userHomework.getUserHomeworkID();
 				GroupHomework groupHomework = groupHomeworkService.getGroupHomework(userHomework.getGroupHomeworkID());
 				
+				for(int parentGroupHomeworkID : groupHomeworkIDList){
+					if(groupHomework.getGroupHomeworkID() == parentGroupHomeworkID){
+						homeworkDetails.put("parentHomeworkID", groupHomework.getGroupHomeworkID());
+						break;
+					}
+				}
+				
 				homeworkDetails.put("homeworkTitle", userHomework.getHomework().getHomeworkTitle());
 				homeworkDetails.put("dueDate", Utilities.parseServletDateFormat(groupHomework.getDueDate()));
 				homeworkDetails.put("grade", userHomework.getGrade());
-				homeworkDetails.put("userHomeworkID", userHomeworkID);
 				homeworkDetails.put("homeworkID", userHomework.getHomework().getHomeworkID());
 				
 				if (!userHomework.isSubmitted()) {
