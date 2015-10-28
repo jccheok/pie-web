@@ -23,6 +23,7 @@ import com.google.inject.Singleton;
 import pie.constants.PublishHomeworkResult;
 import pie.services.HomeworkAttachmentService;
 import pie.services.HomeworkService;
+import pie.utilities.Utilities;
 
 @Singleton
 public class PublishHomeworkServlet extends HttpServlet {
@@ -93,6 +94,7 @@ public class PublishHomeworkServlet extends HttpServlet {
 				Iterator<FileItem> iter = items.iterator();
 				while (iter.hasNext()) {
 					FileItem item = iter.next();
+					String fieldString = Utilities.cleanHtml(item.getString());
 
 					if (!item.isFormField() && item.getSize() > 0) {
 
@@ -104,22 +106,22 @@ public class PublishHomeworkServlet extends HttpServlet {
 					} else {
 
 						if (item.getFieldName().equalsIgnoreCase("staffID")) {
-							staffID = Integer.parseInt(item.getString());
+							staffID = Integer.parseInt(fieldString);
 							responseObject.put("staffID", staffID);
 						} else if (item.getFieldName().equalsIgnoreCase("homeworkTitle")) {
-							homeworkTitle = item.getString();
+							homeworkTitle = fieldString;
 							responseObject.put("homeworkTitle", homeworkTitle);
 						} else if (item.getFieldName().equalsIgnoreCase("homeworkSubject")) {
-							homeworkSubject = item.getString();
+							homeworkSubject = fieldString;
 							responseObject.put("homeworkSubject", homeworkSubject);
 						} else if (item.getFieldName().equalsIgnoreCase("homeworkDescription")) {
-							homeworkDescription = item.getString();
+							homeworkDescription = fieldString;
 							responseObject.put("homeworkDescription", homeworkDescription);
 						} else if (item.getFieldName().equalsIgnoreCase("homeworkMinutesReqStudent")) {
-							homeworkMinutesReqStudent = Integer.parseInt(item.getString());
+							homeworkMinutesReqStudent = Integer.parseInt(fieldString);
 							responseObject.put("homeworkMinutesReqStudent", homeworkMinutesReqStudent);
 						} else if (item.getFieldName().equalsIgnoreCase("homeworkLevel")) {
-							homeworkLevel = item.getString();
+							homeworkLevel = fieldString;
 							responseObject.put("homeworkLevel", homeworkLevel);
 						}
 					}

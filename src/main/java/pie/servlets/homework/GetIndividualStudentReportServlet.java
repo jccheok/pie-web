@@ -20,7 +20,6 @@ import com.google.inject.Singleton;
 import pie.GroupHomework;
 import pie.Staff;
 import pie.UserHomework;
-import pie.services.GroupHomeworkService;
 import pie.services.UserHomeworkService;
 import pie.utilities.Utilities;
 
@@ -33,12 +32,10 @@ public class GetIndividualStudentReportServlet extends HttpServlet {
 	private static final long serialVersionUID = -5786385179931407941L;
 
 	UserHomeworkService userHomeworkService;
-	GroupHomeworkService groupHomeworkService;
 
 	@Inject
-	public GetIndividualStudentReportServlet(UserHomeworkService userHomeworkService, GroupHomeworkService groupHomeworkService) {
+	public GetIndividualStudentReportServlet(UserHomeworkService userHomeworkService) {
 		this.userHomeworkService = userHomeworkService;
-		this.groupHomeworkService = groupHomeworkService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -55,18 +52,19 @@ public class GetIndividualStudentReportServlet extends HttpServlet {
 		UserHomework[] listHomework = userHomeworkService.getAllMarkedUserHomework(studentID);
 		JSONObject responseObject = new JSONObject();
 		JSONArray listGradedHomework = new JSONArray();
-		for (UserHomework userHomework : listHomework) {
+		for (UserHomework uh : listHomework) {
 			JSONObject jsonUH = new JSONObject();
-			
-			GroupHomework groupHomework = groupHomeworkService.getGroupHomework(userHomework.getGroupHomeworkID());
-			Staff staff = groupHomework.getPublisher();
-			
+			Staff staff = userHomeworkService.getUserHomeworkPublisher(uh.getUserHomeworkID());
+			GroupHomework groupHomework = userHomeworkService.getGroupHomework(uh.getUserHomeworkID(),
+					uh.getHomework().getHomeworkID());
+
 			Date startDate = groupHomework.getPublishDate();
 			Date endDate = groupHomework.getTargetMarkingCompletionDate();
 			long diff = endDate.getTime() - startDate.getTime();
 			int daysTaken = (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-			String grade = userHomework.getGrade();
-
+			String grade = uh.getGrade();
+			
+			jsonUH.put("userHomeworkID", uh.getUserHomeworkID());
 			jsonUH.put("startDate", startDate.getTime());
 			jsonUH.put("author", staff.getUserFullName());
 			jsonUH.put("endDate", endDate.getTime());

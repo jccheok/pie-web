@@ -45,6 +45,8 @@ public class GetAllPublishedHomeworkServlet extends HttpServlet {
 		for (Homework homework : publishedHomework) {
 			JSONObject jsonHomework = new JSONObject();
 			String description = Utilities.parseHtml(homework.getHomeworkDescription());
+			jsonHomework.put("staffID", homework.getHomeworkAuthor().getUserID());
+			jsonHomework.put("homeworkID", homework.getHomeworkID());
 			jsonHomework.put("title", homework.getHomeworkTitle());
 			jsonHomework.put("subject", homework.getHomeworkSubject());
 			jsonHomework.put("description", description);

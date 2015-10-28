@@ -11,22 +11,25 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import pie.Homework;
 import pie.services.HomeworkService;
 import pie.utilities.Utilities;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 @Singleton
-public class GetHomeworkDetailsServlet extends HttpServlet {
+public class GetDraftHomeworkDetailsServlet extends HttpServlet {
 
-	private static final long serialVersionUID = -3922470004464322114L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8568928777488513274L;
 
 	private HomeworkService homeworkService;
 
 	@Inject
-	public GetHomeworkDetailsServlet(HomeworkService homeworkService) {
+	public GetDraftHomeworkDetailsServlet(HomeworkService homeworkService) {
 		this.homeworkService = homeworkService;
 	}
 
@@ -43,13 +46,12 @@ public class GetHomeworkDetailsServlet extends HttpServlet {
 			return;
 		}
 
-		Homework homework = homeworkService.getHomework(homeworkID);
+		Homework homework = homeworkService.getDraftHomework(homeworkID);
 
 		JSONObject responseObject = new JSONObject();
 
 		if (homework != null) {
 
-			responseObject.put("homeworkID", homework.getHomeworkID());
 			responseObject.put("dateCreated", Utilities.parseServletDateFormat(homework.getHomeworkDateCreated()));
 			responseObject.put("authorName", homework.getHomeworkAuthor().getUserFullName());
 			responseObject.put("homeworkDescription", homework.getHomeworkDescription());

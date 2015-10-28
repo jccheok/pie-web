@@ -99,7 +99,7 @@ public class SendNoteServlet extends HttpServlet {
 						}
 					} 
 				}
-			} 
+			}
 
 			if(staffID != 0 && responseQuestionID != 0) {
 
@@ -131,7 +131,7 @@ public class SendNoteServlet extends HttpServlet {
 							noteAttachmentService.updateNoteAttachmentNameShare(noteAttachmentID, noteAttachmentURL);
 						}
 
-					} 
+					}
 
 					PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID, staffID);
 					responseObject.put("result[" + index + "]", publishNoteResult.toString());
