@@ -78,6 +78,7 @@ public class GetUserHomeworkDetailsServlet extends HttpServlet {
 		responseObject.put("publishedDate", Utilities.parseServletDateFormat(groupHomework.getPublishDate()));
 		responseObject.put("groupID", groupHomework.getGroup().getGroupID());
 		responseObject.put("groupName", groupHomework.getGroup().getGroupName());
+		responseObject.put("userHomeworkID", userHomework.getUserHomeworkID());
 		
 		if (recipientUser.getUserType() == UserType.PARENT) {
 
