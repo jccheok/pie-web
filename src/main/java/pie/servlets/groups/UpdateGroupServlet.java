@@ -37,19 +37,19 @@ public class UpdateGroupServlet extends HttpServlet{
 		String groupName = null;
 		String groupDescription = null;
 		int groupMaxDailyHomeworkMinutes = 0;
-		boolean groupIsOpen = false;
+		boolean groupIsOpen = true;
 		String groupCode = null;
 		Date expiryDate = null;
 
 		try {
 
 			Map<String, String> requestParameters = Utilities.getParameters(request, "groupID", "groupName",
-					"groupDescription", "groupMaxDailyHomeworkMinutes", "groupIsOpen", "groupCode", "expiryDate");
+					"groupDescription", "groupMaxDailyHomeworkMinutes", "groupCode", "expiryDate");
 			groupID = Integer.parseInt(requestParameters.get("groupID"));
 			groupName = requestParameters.get("groupName");
 			groupDescription = requestParameters.get("groupDescription");
 			groupMaxDailyHomeworkMinutes = Integer.parseInt(requestParameters.get("groupMaxDailyHomeworkMinutes"));
-			groupIsOpen = Integer.parseInt(requestParameters.get("groupIsOpen")) == 1;
+			//groupIsOpen = Integer.parseInt(requestParameters.get("groupIsOpen")) == 1;
 			groupCode = requestParameters.get("groupCode");
 			expiryDate = Utilities.parseClientDate(requestParameters.get("expiryDate"));
 
