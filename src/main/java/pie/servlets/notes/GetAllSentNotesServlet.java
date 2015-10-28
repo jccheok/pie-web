@@ -12,7 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import pie.GroupNote;
 import pie.Note;
+import pie.services.GroupNoteService;
 import pie.services.NoteService;
 import pie.utilities.Utilities;
 
@@ -25,10 +27,12 @@ public class GetAllSentNotesServlet extends HttpServlet {
 	private static final long serialVersionUID = 5429185538296554566L;
 
 	NoteService noteService;
+	GroupNoteService groupNoteService;
 	
 	@Inject
-	public GetAllSentNotesServlet(NoteService noteService) {
+	public GetAllSentNotesServlet(NoteService noteService, GroupNoteService groupNoteService) {
 		this.noteService = noteService;
+		this.groupNoteService = groupNoteService;
 	}
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -61,6 +65,10 @@ public class GetAllSentNotesServlet extends HttpServlet {
 				noteObject.put("noteDescription", note.getDescription());
 				noteObject.put("noteAuthor", note.getStaff().getUserFullName());
 				noteObject.put("noteResponseQuestionID", note.getResponseQuestion().getResponseQuestionID());
+				noteObject.put("notePublishDate", note.getDateCreated());
+				int groupNoteID = groupNoteService.getGroupNotes(note.getNoteID());
+				GroupNote groupNote = groupNoteService.getGroupNote(groupNoteID);
+				noteObject.put("groupName", groupNote.getGroup().getGroupName());
 				sentNoteList.put(noteObject);
 			}
 			
