@@ -102,13 +102,13 @@ public class GetUserHomeworkDetailsServlet extends HttpServlet {
 						childHomeworkObject.put("status", "Not Submitted");
 					} else if (!childHomework.isMarked()) {
 						childHomeworkObject.put("status", "Submitted");
-						childHomeworkObject.put("submissionDate", childHomework.getSubmissionDate());
+						childHomeworkObject.put("submissionDate", Utilities.parseServletDateFormat(childHomework.getSubmissionDate()));
 					} else if (!childHomework.getGrade().equals("-")) {
 						childHomeworkObject.put("status", "Marked");
-						childHomeworkObject.put("submissionDate", childHomework.getSubmissionDate());
+						childHomeworkObject.put("submissionDate", Utilities.parseServletDateFormat(childHomework.getSubmissionDate()));
 					} else {
 						childHomeworkObject.put("status", "Graded");
-						childHomeworkObject.put("submissionDate", childHomework.getSubmissionDate());
+						childHomeworkObject.put("submissionDate", Utilities.parseServletDateFormat(childHomework.getSubmissionDate()));
 					}
 					childrenHomework.put(childHomeworkObject);
 				}
@@ -121,13 +121,13 @@ public class GetUserHomeworkDetailsServlet extends HttpServlet {
 				responseObject.put("status", "Not Submitted");
 			} else if (!userHomework.isMarked()) {
 				responseObject.put("status", "Submitted");
-				responseObject.put("submissionDate", userHomework.getSubmissionDate());
+				responseObject.put("submissionDate", Utilities.parseServletDateFormat(userHomework.getSubmissionDate()));
 			} else if (!userHomework.getGrade().equals("-")) {
 				responseObject.put("status", "Marked");
-				responseObject.put("submissionDate", userHomework.getSubmissionDate());
+				responseObject.put("submissionDate", Utilities.parseServletDateFormat(userHomework.getSubmissionDate()));
 			} else {
 				responseObject.put("status", "Graded");
-				responseObject.put("submissionDate", userHomework.getSubmissionDate());
+				responseObject.put("submissionDate", Utilities.parseServletDateFormat(userHomework.getSubmissionDate()));
 			}
 		}
 		
