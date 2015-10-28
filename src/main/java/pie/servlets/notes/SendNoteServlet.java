@@ -49,6 +49,7 @@ public class SendNoteServlet extends HttpServlet {
 		int responseQuestionID = 0;
 		int noteAttachmentID = 1;
 		boolean fileDetected = false;
+		boolean isDuplicate = false;
 		String noteTitle = null;
 		String noteDescription = null;
 		String noteAttachmentURL = null;
@@ -117,11 +118,12 @@ public class SendNoteServlet extends HttpServlet {
 
 					if(fileDetected) {
 
-						int count = 0;
-
 						noteAttachmentID = noteAttachmentService.createNoteAttachment(noteAttachmentURL, noteID);
 						
-						if(count == 0){
+						if(isDuplicate){
+							
+							isDuplicate = true;
+							
 							noteAttachmentURL = noteAttachmentService.updateNoteAttachmentName(noteAttachmentID, noteAttachmentURL);
 
 							File storeFile = new File(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
@@ -129,7 +131,7 @@ public class SendNoteServlet extends HttpServlet {
 							fileUpload.write(storeFile);
 							responseObject.put("File-Result", "SUCCESS");
 							responseObject.put("File-Message", "There is file uploaded.");
-							count++;
+				
 						} else {
 							noteAttachmentService.updateNoteAttachmentNameShare(noteAttachmentID, noteAttachmentURL);
 						}
