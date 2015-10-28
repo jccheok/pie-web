@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
+import pie.GroupNote;
 import pie.Note;
+import pie.services.GroupNoteService;
 import pie.services.NoteAttachmentService;
 import pie.services.NoteService;
 import pie.utilities.Utilities;
@@ -26,11 +28,13 @@ public class GetNoteDetailsServlet extends HttpServlet {
 	
 	NoteService noteService;
 	NoteAttachmentService noteAttachmentService;
+	GroupNoteService groupNoteService;
 	
 	@Inject
-	public GetNoteDetailsServlet(NoteService noteService, NoteAttachmentService noteAttachmentService) {
+	public GetNoteDetailsServlet(NoteService noteService, NoteAttachmentService noteAttachmentService, GroupNoteService groupNoteService) {
 		this.noteService = noteService;
 		this.noteAttachmentService = noteAttachmentService;
+		this.groupNoteService = groupNoteService;
 	}
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -65,7 +69,11 @@ public class GetNoteDetailsServlet extends HttpServlet {
 			if(noteAttachmentURL != null) {
 				responseObject.put("noteAttachmentURL", noteAttachmentURL);
 			}
-						
+			
+			int groupNoteID = groupNoteService.getGroupNotes(note.getNoteID());
+			GroupNote groupNote = groupNoteService.getGroupNote(groupNoteID);
+			responseObject.put("groupName", groupNote.getGroup().getGroupName());
+			
 		} else {
 			
 			responseObject.put("result", "FAILED");
