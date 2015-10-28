@@ -103,7 +103,7 @@ public class ViewParentChildrenServlet extends HttpServlet {
 			}
 			
 			JSONArray studentHomeworkList = new JSONArray();
-			for(UserHomework userHomework : userHomeworkService.getAllUserHomework(studentID)){
+			for(UserHomework userHomework : userHomeworkService.getAllChildHomework(studentID)){
 				
 				JSONObject homeworkDetails = new JSONObject();
 				
