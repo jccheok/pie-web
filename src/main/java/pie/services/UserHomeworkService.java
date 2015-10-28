@@ -311,6 +311,36 @@ public class UserHomeworkService {
 
 		return allUserHomework;
 	}
+	
+	public UserHomework[] getAllChildHomework(int userID) {
+		UserHomework[] allUserHomework = {};
+
+		try {
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT userHomeworkID FROM `UserHomework` WHERE userID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, userID);
+
+			resultSet = pst.executeQuery();
+
+			ArrayList<UserHomework> tempUserHomeworkList = new ArrayList<UserHomework>();
+			while (resultSet.next()) {
+				tempUserHomeworkList.add(getUserHomework(resultSet.getInt("userHomeworkID")));
+			}
+
+			allUserHomework = tempUserHomeworkList.toArray(allUserHomework);
+
+			conn.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return allUserHomework;
+	}
 
 	public UserHomework[] getAllMarkedUserHomework(int userID) {
 		UserHomework[] allUserHomework = {};
