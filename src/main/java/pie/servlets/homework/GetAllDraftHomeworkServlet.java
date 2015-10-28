@@ -59,6 +59,7 @@ public class GetAllDraftHomeworkServlet extends HttpServlet {
 		if (listHomework != null) {
 			for (Homework homework : listHomework) {
 				JSONObject jsonHomework = new JSONObject();
+				jsonHomework.put("homeworkID", homework.getHomeworkID());
 				jsonHomework.put("staffID", homework.getHomeworkAuthor().getUserID());
 				jsonHomework.put("title", homework.getHomeworkTitle());
 				jsonHomework.put("subject", homework.getHomeworkSubject());
