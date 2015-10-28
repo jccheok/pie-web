@@ -58,7 +58,9 @@ public class SendNoteServlet extends HttpServlet {
 		JSONObject responseObject = new JSONObject();
 		PrintWriter out = response.getWriter();
 
-		noteAttachmentService.checkIfNoteFolderExist();
+		if(noteAttachmentService.checkIfNoteFolderExist() != false) {
+			responseObject.put("Folder-Message", "uploadedNoteDIR did not exist and was created during the process.");
+		}
 
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 		factory.setSizeThreshold(memorySize);
@@ -142,8 +144,8 @@ public class SendNoteServlet extends HttpServlet {
 					}
 
 					PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID, staffID);
-					responseObject.put("result", publishNoteResult.toString());
-					responseObject.put("message", publishNoteResult.getDefaultMessage());
+					responseObject.put("result[" + index + "]", publishNoteResult.toString());
+					responseObject.put("message[" + index + "]", publishNoteResult.getDefaultMessage());
 
 				}
 

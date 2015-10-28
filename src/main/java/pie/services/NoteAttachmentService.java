@@ -230,7 +230,7 @@ public class NoteAttachmentService {
 		boolean isExist = false;
 		
 		File noteAttachmentDIR = new File(getNoteDIR());
-		if(noteAttachmentDIR.exists()) {
+		if(noteAttachmentDIR.exists() != true) {
 			noteAttachmentDIR.mkdirs();
 			
 			isExist = true;
