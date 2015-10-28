@@ -82,7 +82,6 @@ public class GetUserHomeworkDetailsServlet extends HttpServlet {
 		
 		if (recipientUser.getUserType() == UserType.PARENT) {
 
-			responseObject.put("isAcknowledged", userHomework.isAcknowledged());
 
 			Student[] children = parentStudentService.getChildren(recipientUser.getUserID());
 
@@ -97,8 +96,16 @@ public class GetUserHomeworkDetailsServlet extends HttpServlet {
 					childHomeworkObject.put("childID", child.getUserID());
 					childHomeworkObject.put("childUserHomeworkID", childHomework.getUserHomeworkID());
 					childHomeworkObject.put("childHomeworkGrade", childHomework.getGrade());
-					childHomeworkObject.put("childHomeworkIsMarked", childHomework.isMarked());
-					childHomeworkObject.put("childHomeworkIsSubmitted", childHomework.isSubmitted());
+					childHomeworkObject.put("isAcknowledged", childHomework.isAcknowledged());
+					if (!childHomework.isSubmitted()) {
+						childHomeworkObject.put("status", "Not Submitted");
+					} else if (!childHomework.isMarked()) {
+						childHomeworkObject.put("status", "Submitted");
+					} else if (!childHomework.getGrade().equals("-")) {
+						childHomeworkObject.put("status", "Marked");
+					} else {
+						childHomeworkObject.put("status", "Graded");
+					}
 					childrenHomework.put(childHomeworkObject);
 				}
 			}
@@ -106,8 +113,15 @@ public class GetUserHomeworkDetailsServlet extends HttpServlet {
 
 		} else if (recipientUser.getUserType() == UserType.STUDENT) {
 			responseObject.put("homeworkGrade", userHomework.getGrade());
-			responseObject.put("homeworkIsMarked", userHomework.isMarked());
-			responseObject.put("homeworkIsSubmitted", userHomework.isSubmitted());
+			if (!userHomework.isSubmitted()) {
+				responseObject.put("status", "Not Submitted");
+			} else if (!userHomework.isMarked()) {
+				responseObject.put("status", "Submitted");
+			} else if (!userHomework.getGrade().equals("-")) {
+				responseObject.put("status", "Marked");
+			} else {
+				responseObject.put("status", "Graded");
+			}
 		}
 		
 		PrintWriter out = response.getWriter();
