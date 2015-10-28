@@ -70,7 +70,7 @@ public class GroupNoteService {
 			if (resultSet.next()) {
 				GroupNoteService groupNoteService = new GroupNoteService();
 				groupNote = groupNoteService.getGroupNote(resultSet.getInt("groupNoteID"));
-			}
+			}	
 
 			conn.close();
 
@@ -79,6 +79,35 @@ public class GroupNoteService {
 		}
 
 		return groupNote;
+	}
+	
+	public int getGroupNotes(int noteID) {
+	
+		int groupNoteID = -1;
+
+		try {
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT groupNoteID FROM `GroupNote` WHERE noteID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, noteID);
+
+			resultSet = pst.executeQuery();
+
+			if (resultSet.next()) {
+				groupNoteID = resultSet.getInt("groupNoteID");
+			}	
+
+			conn.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return groupNoteID;
+		
 	}
 	
 	public int createGroupNote(int noteID, int groupID, int publisherID) {
