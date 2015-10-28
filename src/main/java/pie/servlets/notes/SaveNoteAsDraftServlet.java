@@ -54,9 +54,7 @@ public class SaveNoteAsDraftServlet extends HttpServlet {
 		JSONObject responseObject = new JSONObject();
 		PrintWriter out = response.getWriter();
 
-		if(noteAttachmentService.checkIfNoteFolderExist()) {
-			responseObject.put("Folder-Result", "uploadedNoteDIR did not exist and was created during the process");
-		}
+		noteAttachmentService.checkIfNoteFolderExist();
 
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 		factory.setSizeThreshold(memorySize);
@@ -110,7 +108,15 @@ public class SaveNoteAsDraftServlet extends HttpServlet {
 
 					fileUpload.write(storeFile);
 
-				} 
+				}
+			
+				if(noteID != -1) {
+					responseObject.put("result", "SUCCESS");
+					responseObject.put("message", "Note is successfully created");
+				} else {
+					responseObject.put("result", "FAILED");
+					responseObject.put("message", "Note is not created");
+				}
 
 			} 
 
