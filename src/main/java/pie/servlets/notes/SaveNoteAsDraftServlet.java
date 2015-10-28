@@ -18,6 +18,7 @@ import org.json.JSONObject;
 
 import pie.services.NoteAttachmentService;
 import pie.services.NoteService;
+import pie.utilities.Utilities;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -54,7 +55,7 @@ public class SaveNoteAsDraftServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		if(noteAttachmentService.checkIfNoteFolderExist()) {
-			responseObject.put("folderResult", "Note folder did not exist and was created during the process");
+			responseObject.put("Folder-Result", "uploadedNoteDIR did not exist and was created during the process");
 		}
 
 		DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -88,9 +89,9 @@ public class SaveNoteAsDraftServlet extends HttpServlet {
 						} else if(item.getFieldName().equalsIgnoreCase("responseQuestionID")) {
 							responseQuestionID = Integer.parseInt(item.getString());
 						} else if(item.getFieldName().equalsIgnoreCase("noteTitle")) {
-							noteTitle = item.getString();
+							noteTitle = Utilities.cleanHtml(item.getString());
 						} else if(item.getFieldName().equalsIgnoreCase("noteDescription")) {
-							noteDescription = item.getString();
+							noteDescription = Utilities.cleanHtml(item.getString());
 						}
 					} 
 				}
