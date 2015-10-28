@@ -72,7 +72,7 @@ public class StaffService {
 				PreparedStatement pst = null;
 				ResultSet resultSet = null;
 
-				String sql = "INSERT INTO `User` (userTypeID, userFirstName, userLastName, userEmail, userPassword, userMobile, securityQuestionID, securityQuestionAnswer, passwordLastUpdate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())";
+				String sql = "INSERT INTO `User` (userTypeID, userFirstName, userLastName, userEmail, userPassword, userMobile, securityQuestionID, securityQuestionAnswer) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 				pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 				pst.setInt(1, UserType.STAFF.getUserTypeID());
 				pst.setString(2, userFirstName);

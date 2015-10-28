@@ -267,7 +267,7 @@ public class StudentService {
 				Connection conn = DatabaseConnector.getConnection();
 				PreparedStatement pst = null;
 
-				String sql = "UPDATE `User`,`Student` SET registrationDate = NOW(), lastUpdate = NOW(), emailAddress = ?, password = ?, mobile = ?, securityQuestionID = ?, securityQuestionAnswer = ?, passwordLastUpdate = NOW() WHERE `User`.userID = `Student`.studentID AND code = ?";
+				String sql = "UPDATE `User`,`Student` SET registrationDate = NOW(), lastUpdate = NOW(), emailAddress = ?, password = ?, mobile = ?, securityQuestionID = ?, securityQuestionAnswer = ? WHERE `User`.userID = `Student`.studentID AND code = ?";
 				pst = conn.prepareStatement(sql);
 				pst.setString(1, userEmail);
 				pst.setString(2, userPassword);

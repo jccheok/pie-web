@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import pie.constants.PublishNoteResult;
@@ -45,11 +44,10 @@ public class SendNoteServlet extends HttpServlet {
 
 		int noteID = 0;
 		int staffID = 0;
-		String groupIDList = null;
+		int groupID = 0;
 		int responseQuestionID = 0;
 		int noteAttachmentID = 1;
 		boolean fileDetected = false;
-		boolean isDuplicate = false;
 		String noteTitle = null;
 		String noteDescription = null;
 		String noteAttachmentURL = null;
@@ -58,8 +56,8 @@ public class SendNoteServlet extends HttpServlet {
 		JSONObject responseObject = new JSONObject();
 		PrintWriter out = response.getWriter();
 
-		if(noteAttachmentService.checkIfNoteFolderExist() != false) {
-			responseObject.put("Folder-Message", "uploadedNoteDIR did not exist and was created during the process.");
+		if(noteAttachmentService.checkIfNoteFolderExist()) {
+			responseObject.put("folderResult", "Note folder did not exist and was created during the process");
 		}
 
 		DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -91,63 +89,36 @@ public class SendNoteServlet extends HttpServlet {
 						if(item.getFieldName().equalsIgnoreCase("staffID")) {
 							staffID = Integer.parseInt(item.getString());
 						} else if(item.getFieldName().equalsIgnoreCase("groupID")) {
-							groupIDList = item.getString();
+							groupID = Integer.parseInt(item.getString());
 						} else if(item.getFieldName().equalsIgnoreCase("responseQuestionID")) {
 							responseQuestionID = Integer.parseInt(item.getString());
 						} else if(item.getFieldName().equalsIgnoreCase("noteTitle")) {
-							noteTitle = Utilities.cleanHtml(item.getString());
+							noteTitle = item.getString();
 						} else if(item.getFieldName().equalsIgnoreCase("noteDescription")) {
 							noteDescription = Utilities.cleanHtml(item.getString());
 						}
 					} 
 				}
-			} else {
-				responseObject.put("Field-Result", "FAILED");
-				responseObject.put("Field-Message", "No/certain form is not filled");
-			}
-
+			} 
+			
 			if(staffID != 0 && responseQuestionID != 0) {
 
-				JSONObject requestObject = new JSONObject(groupIDList);
-				JSONArray groupList = requestObject.getJSONArray("groupIDArray");
+				noteID = noteService.createNote(staffID, responseQuestionID, noteTitle, noteDescription);
 
-				for (int index = 0; index < groupList.length(); index++) {
+				if(fileDetected) {
 
-					JSONObject group = groupList.getJSONObject(index);
+					noteAttachmentID = noteAttachmentService.createNoteAttachment(noteAttachmentURL, noteID);
+					noteAttachmentURL = noteAttachmentService.updateNoteAttachmentName(noteAttachmentID, noteAttachmentURL);
 
-					noteID = noteService.createNote(staffID, responseQuestionID, noteTitle, noteDescription);
-					int groupID = group.getInt("groupID");
+					File storeFile = new File(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
 
-					if(fileDetected) {
+					fileUpload.write(storeFile);
 
-						noteAttachmentID = noteAttachmentService.createNoteAttachment(noteAttachmentURL, noteID);
-						
-						if(isDuplicate == false){
-							
-							isDuplicate = true;
-							
-							noteAttachmentURL = noteAttachmentService.updateNoteAttachmentName(noteAttachmentID, noteAttachmentURL);
+				} 
 
-							File storeFile = new File(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
-
-							fileUpload.write(storeFile);
-							responseObject.put("File-Result", "SUCCESS");
-							responseObject.put("File-Message", "There is file uploaded.");
-				
-						} else {
-							noteAttachmentService.updateNoteAttachmentNameShare(noteAttachmentID, noteAttachmentURL);
-						}
-
-					} else {
-						responseObject.put("File-Result", "FAILED");
-						responseObject.put("File-Ressage", "There is no file uploaded.");
-					}
-
-					PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID, staffID);
-					responseObject.put("result[" + index + "]", publishNoteResult.toString());
-					responseObject.put("message[" + index + "]", publishNoteResult.getDefaultMessage());
-
-				}
+				PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID, staffID);
+				responseObject.put("result", publishNoteResult.toString());
+				responseObject.put("message", publishNoteResult.getDefaultMessage());
 
 			} 
 

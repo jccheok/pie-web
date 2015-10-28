@@ -31,14 +31,13 @@ public class GetAllUserHomeworkServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 962612459025279323L;
 
-	private UserHomeworkService userHomeworkService;
-	private GroupHomeworkService groupHomeworkService;
-	private UserService userService;
-	private ParentStudentService parentStudentService;
+	UserHomeworkService userHomeworkService;
+	GroupHomeworkService groupHomeworkService;
+	UserService userService;
+	ParentStudentService parentStudentService;
 
 	@Inject
-	public GetAllUserHomeworkServlet(UserHomeworkService userHomeworkService,
-			GroupHomeworkService groupHomeworkService,
+	public GetAllUserHomeworkServlet(UserHomeworkService userHomeworkService, GroupHomeworkService groupHomeworkService,
 			UserService userService, ParentStudentService parentStudentService) {
 		this.userHomeworkService = userHomeworkService;
 		this.groupHomeworkService = groupHomeworkService;
@@ -59,42 +58,39 @@ public class GetAllUserHomeworkServlet extends HttpServlet {
 			return;
 		}
 
-		UserHomework[] allUserHomework = userHomeworkService.getAllUserHomework(userID);
+		UserHomework[] userHomework = userHomeworkService.getAllUserHomework(userID);
 
 		JSONObject responseObject = new JSONObject();
 		JSONArray homeworkList = new JSONArray();
-		
-		if (allUserHomework != null) {
 
-			for (UserHomework userHomework : allUserHomework) {
+		if (userHomework != null) {
+
+			for (UserHomework homework : userHomework) {
 				JSONObject homeworkObject = new JSONObject();
-				String homeworkDescription = Utilities.parseHtml(userHomework.getHomework().getHomeworkDescription());
-				
-				GroupHomework groupHomework = groupHomeworkService.getGroupHomework(userHomework.getGroupHomeworkID());
-				Staff staff = groupHomework.getPublisher();
-				
-				homeworkObject.put("userHomeworkID", userHomework.getUserHomeworkID());
-				homeworkObject.put("homeworkTitle", userHomework.getHomework().getHomeworkTitle());
+				String homeworkDescription = Utilities.parseHtml(homework.getHomework().getHomeworkDescription());
+				Staff staff = userHomeworkService.getUserHomeworkPublisher(homework.getUserHomeworkID());
+				homeworkObject.put("userHomeworkID", homework.getUserHomeworkID());
+				homeworkObject.put("homeworkTitle", homework.getHomework().getHomeworkTitle());
 				homeworkObject.put("homeworkDescription", homeworkDescription);
-				homeworkObject.put("publisherName", staff.getUserFullName());	
-
+				homeworkObject.put("publisherName", staff.getUserFullName());
+				GroupHomework groupHomework = userHomeworkService.getGroupHomework(homework.getUserHomeworkID(),
+						homework.getHomework().getHomeworkID());
 				homeworkObject.put("publishedDate", Utilities.parseServletDateFormat(groupHomework.getPublishDate()));
 				homeworkObject.put("homeworkIsGraded", groupHomework.isGraded());
-				homeworkObject.put("homeworkIsRead", userHomework.isRead());
-				homeworkObject.put("homeworkIsArchived", userHomework.isArchived());
+				homeworkObject.put("homeworkIsRead", homework.isRead());
 				homeworkObject.put("groupID", groupHomework.getGroup().getGroupID());
 				homeworkObject.put("groupName", groupHomework.getGroup().getGroupName());
 
 				if (userService.getUser(userID).getUserType() == UserType.PARENT) {
 
-					homeworkObject.put("isAcknowledged", userHomework.isAcknowledged());
+					homeworkObject.put("isAcknowledged", homework.isAcknowledged());
 
 					Student[] children = parentStudentService.getChildren(userID);
 
 					JSONArray childrenHomework = new JSONArray();
 					for (Student child : children) {
-						UserHomework childHomework = userHomeworkService.getChildHomework(userHomework.getHomework()
-								.getHomeworkID(), child.getUserID());
+						UserHomework childHomework = userHomeworkService
+								.getChildHomework(homework.getHomework().getHomeworkID(), child.getUserID());
 
 						if (childHomework != null) {
 							JSONObject childHomeworkObject = new JSONObject();
@@ -117,12 +113,13 @@ public class GetAllUserHomeworkServlet extends HttpServlet {
 						}
 					}
 					homeworkObject.put("childrenHomework", childrenHomework);
+					homeworkList.put(homeworkObject);
 
 				} else {
 
-					homeworkObject.put("homeworkGrade", userHomework.getGrade());
-					homeworkObject.put("homeworkIsMarked", userHomework.isMarked());
-					homeworkObject.put("homeworkIsSubmitted", userHomework.isSubmitted());
+					homeworkObject.put("homeworkGrade", homework.getGrade());
+					homeworkObject.put("homeworkIsMarked", homework.isMarked());
+					homeworkObject.put("homeworkIsSubmitted", homework.isSubmitted());
 
 				}
 

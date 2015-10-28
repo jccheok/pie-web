@@ -19,7 +19,6 @@ import pie.Student;
 import pie.User;
 import pie.UserHomework;
 import pie.UserType;
-import pie.services.GroupHomeworkService;
 import pie.services.ParentStudentService;
 import pie.services.UserHomeworkService;
 import pie.utilities.Utilities;
@@ -34,13 +33,11 @@ public class GetUserHomeworkDetailsServlet extends HttpServlet {
 	
 	private UserHomeworkService userHomeworkService;
 	private ParentStudentService parentStudentService;
-	private GroupHomeworkService groupHomeworkService;
 
 	@Inject
-	public GetUserHomeworkDetailsServlet(UserHomeworkService userHomeworkService, ParentStudentService parentStudentService, GroupHomeworkService groupHomeworkService) {
+	public GetUserHomeworkDetailsServlet(UserHomeworkService userHomeworkService, ParentStudentService parentStudentService) {
 		this.userHomeworkService = userHomeworkService;
 		this.parentStudentService = parentStudentService;
-		this.groupHomeworkService = groupHomeworkService;
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -59,8 +56,7 @@ public class GetUserHomeworkDetailsServlet extends HttpServlet {
 		UserHomework userHomework = userHomeworkService.getUserHomework(userHomeworkID);
 		User recipientUser = userHomework.getUser();
 		Homework homework = userHomework.getHomework();
-		GroupHomework groupHomework = groupHomeworkService.getGroupHomework(userHomework.getGroupHomeworkID());
-		Staff homeworkPublisher = groupHomework.getPublisher();
+		Staff homeworkPublisher = userHomeworkService.getUserHomeworkPublisher(userHomeworkID);
 		
 		JSONObject responseObject = new JSONObject();
 		
@@ -73,7 +69,7 @@ public class GetUserHomeworkDetailsServlet extends HttpServlet {
 		responseObject.put("homeworkTitle", homework.getHomeworkTitle());
 		responseObject.put("subject", homework.getHomeworkSubject());
 		
-		
+		GroupHomework groupHomework = userHomeworkService.getGroupHomework(userHomeworkID, homework.getHomeworkID());
 		responseObject.put("homeworkIsGraded", groupHomework.isGraded());
 		responseObject.put("publishedDate", Utilities.parseServletDateFormat(groupHomework.getPublishDate()));
 		responseObject.put("groupID", groupHomework.getGroup().getGroupID());

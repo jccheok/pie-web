@@ -17,7 +17,6 @@ import pie.GroupHomework;
 import pie.Parent;
 import pie.Student;
 import pie.UserHomework;
-import pie.services.GroupHomeworkService;
 import pie.services.ParentStudentService;
 import pie.services.StudentGroupService;
 import pie.services.StudentService;
@@ -36,16 +35,13 @@ public class ViewParentChildrenServlet extends HttpServlet {
 	StudentService studentService;
 	StudentGroupService studentGroupService;
 	UserHomeworkService userHomeworkService;
-	GroupHomeworkService groupHomeworkService;
 	
 	@Inject
-	public ViewParentChildrenServlet(ParentStudentService parentStudentService, StudentService studentService, 
-			StudentGroupService studentGroupService, UserHomeworkService userHomeworkService, GroupHomeworkService groupHomeworkService) {
+	public ViewParentChildrenServlet(ParentStudentService parentStudentService, StudentService studentService, StudentGroupService studentGroupService, UserHomeworkService userHomeworkService) {
 		this.parentStudentService = parentStudentService;
 		this.studentService = studentService;
 		this.studentGroupService = studentGroupService;
 		this.userHomeworkService = userHomeworkService;
-		this.groupHomeworkService = groupHomeworkService;
 	}
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -100,7 +96,7 @@ public class ViewParentChildrenServlet extends HttpServlet {
 				JSONObject homeworkDetails = new JSONObject();
 				
 				int userHomeworkID = userHomework.getUserHomeworkID();
-				GroupHomework groupHomework = groupHomeworkService.getGroupHomework(userHomework.getGroupHomeworkID());
+				GroupHomework groupHomework = userHomeworkService.getGroupHomework(userHomeworkID, userHomework.getHomework().getHomeworkID());
 				
 				homeworkDetails.put("homeworkTitle", userHomework.getHomework().getHomeworkTitle());
 				homeworkDetails.put("dueDate", Utilities.parseServletDateFormat(groupHomework.getDueDate()));
