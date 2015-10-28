@@ -79,7 +79,7 @@ public class GetUserHomeworkDetailsServlet extends HttpServlet {
 		responseObject.put("groupID", groupHomework.getGroup().getGroupID());
 		responseObject.put("groupName", groupHomework.getGroup().getGroupName());
 		responseObject.put("userHomeworkID", userHomework.getUserHomeworkID());
-		responseObject.put("dueDate", groupHomework.getDueDate());
+		responseObject.put("dueDate", Utilities.parseServletDateFormat(groupHomework.getDueDate()));
 		
 		if (recipientUser.getUserType() == UserType.PARENT) {
 
