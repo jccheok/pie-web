@@ -13,8 +13,10 @@ import org.json.JSONObject;
 
 import pie.Group;
 import pie.GroupType;
+import pie.Student;
 import pie.constants.GenericResult;
 import pie.services.GroupService;
+import pie.services.StudentGroupService;
 import pie.services.StudentService;
 import pie.utilities.Utilities;
 
@@ -28,11 +30,13 @@ public class EnlistStudentServlet extends HttpServlet {
 	
 	StudentService studentService;
 	GroupService groupService;
+	StudentGroupService studentGroupService;
 	
 	@Inject
-	public EnlistStudentServlet(StudentService studentService, GroupService groupService){
+	public EnlistStudentServlet(StudentService studentService, GroupService groupService, StudentGroupService studentGroupService){
 		this.studentService = studentService;
 		this.groupService = groupService;
+		this.studentGroupService = studentGroupService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -59,20 +63,23 @@ public class EnlistStudentServlet extends HttpServlet {
 		}
 		Group group = groupService.getGroup(groupID);
 		GroupType groupType = group.getGroupType();
-		if(groupType == GroupType.HOME){
+		Student student = studentService.studentExists(SUID);
+		JSONObject responseObject = new JSONObject();
+
+		responseObject.put("result", GenericResult.SUCCESS.toString());
+		responseObject.put("message", "Successfully added student to group.");
+		
+		if(student == null && groupType == GroupType.HOME){
 			String studentCode = studentService.generateStudentCode();
 			studentService.enlistStudent(studentFirstName, studentLastName, studentCode, groupID, studentIndexNumber);
-		}else{
-			//check if student in database then add to the group
+		}else if(student != null){
+			studentGroupService.addStudentToGroup(groupID, student.getUserID(), studentIndexNumber);
 			
+		}else{
+			responseObject.put("result", GenericResult.FAILED.toString());
+			responseObject.put("message", "Failed to student to group.");
 		}
 		
-		
-		
-		JSONObject responseObject = new JSONObject();
-		responseObject.put("result", GenericResult.SUCCESS.toString());
-		responseObject.put("message", "Successfully enlisted new student!");
-
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
 	}
