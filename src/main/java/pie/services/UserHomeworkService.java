@@ -179,7 +179,7 @@ public class UserHomeworkService {
 			ResultSet resultSet = null;
 
 			String sql = "SELECT userHomeworkID FROM `Homework`, `GroupHomework`, `UserHomework` WHERE `Homework`.homeworkID = `GroupHomework`.homeworkID AND `UserHomework`.homeworkID = `Homework`.homeworkID "
-					+ "AND `GroupHomework`.groupHomeworkID = ? AND `GroupHomework`.publisherID = ? AND `UserHomework`.homeworkID = ?";
+					+ "AND `UserHomework`.groupHomeworkID = ? AND `GroupHomework`.publisherID = ? AND `UserHomework`.homeworkID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, groupHomeworkID);
 			pst.setInt(2, publisherID);
