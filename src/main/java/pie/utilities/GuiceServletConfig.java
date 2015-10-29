@@ -131,7 +131,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/groupdetails").with(GetGroupDetailsServlet.class);
 				serve("*/servlets/secured/staff/staffreport").with(GetStaffReportServlet.class);
 				serve("*/servlets/secured/staff/studentreport").with(GetStudentReportServlet.class);
-				serve("*/servlets/secured/staff/joingroup").with(StaffLeaveGroupServlet.class);
+				serve("*/servlets/secured/staff/leavegroup").with(StaffLeaveGroupServlet.class);
 
 				serve("*/servlets/secured/staff/group/member/groupmembers").with(ViewGroupMembersServlet.class);
 				serve("*/servlets/secured/staff/group/admin/updategroup").with(UpdateGroupServlet.class);
