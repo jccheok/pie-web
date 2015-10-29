@@ -1,0 +1,45 @@
+<school id="1">
+	<!-- school information -->
+	<name>Admiralty Secondary School</name>
+	<abb>ADSS</abb>
+	<logo></logo>
+	<address>31 Woodlands Cres, Singapore 737916</address>
+	<school_admin_contact></school_admin_contact>
+	<school_admin_email></school_admin_email>
+	<school_website>www.admiraltysec.moe.edu.sg</school_website>
+
+	<!-- subscription durate -->
+	<subs_start></subs_start>
+	<subs_end></subs_end>
+
+	<!-- download link -->
+	<android_download_url></android_download_url>
+	<ios_download_url></ios_download_url>
+	<android_download_qr></android_download_qr>
+	<ios_download_qr></ios_download_qr>
+
+	<!-- Parent letter -->
+	<parent_letter_content></parent_letter_content>
+
+	<!-- attachments -->
+	<attachment_download_url></attachment_download_url>
+	<attachment_upload_url></attachment_upload_url>
+
+	<!-- database lookup -->
+	<database_context_lookup></database_context_lookup>
+	<database_source_lookup></database_source_lookup>
+
+	<!-- Ionic -->
+	<ionic_app_id></ionic_app_id>
+	<ionic_app_private_key></ionic_app_private_key>
+
+	<!-- general -->
+	<token_secret_key>adss410</token_secret_key>
+
+	<!-- domain to read all servlet -->
+	<servlet_domain></servlet_domain>
+
+	<!-- mail server -->
+	<outgoing_mail_server_name>mailgun</outgoing_mail_server_name>
+	<outgoing_mail_server_port_number></outgoing_mail_server_port_number>
+</school>

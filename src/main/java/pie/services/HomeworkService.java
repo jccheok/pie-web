@@ -269,42 +269,45 @@ public class HomeworkService {
 		return homework;
 	}
 
-	public DeleteHomeworkResult deleteHomework(Homework homework) {
+	public DeleteHomeworkResult deleteHomework(Homework homework, int staffID) {
 		DeleteHomeworkResult result = DeleteHomeworkResult.SUCCESS;
+		if (staffID == homework.getHomeworkAuthor().getUserID()) {
+			if (!homework.isHomeworkIsDraft()) {
+				try {
+					Connection conn = DatabaseConnector.getConnection();
+					PreparedStatement pst = null;
 
-		if (!homework.isHomeworkIsDraft()) {
-			try {
-				Connection conn = DatabaseConnector.getConnection();
-				PreparedStatement pst = null;
+					String sql = "UPDATE `Homework` SET isDeleted = ?,dateDeleted = NOW() WHERE homeworkID = ?";
+					pst = conn.prepareStatement(sql);
+					pst.setInt(1, 1);
+					pst.setInt(2, homework.getHomeworkID());
 
-				String sql = "UPDATE `Homework` SET isDeleted = ?,dateDeleted = NOW() WHERE homeworkID = ?";
-				pst = conn.prepareStatement(sql);
-				pst.setInt(1, 1);
-				pst.setInt(2, homework.getHomeworkID());
+					pst.executeUpdate();
 
-				pst.executeUpdate();
+					conn.close();
 
-				conn.close();
+				} catch (Exception e) {
+					result = DeleteHomeworkResult.FAILED_TO_SET_TO_DELETE;
+				}
+			} else if (homework.isHomeworkIsDraft()) {
+				try {
+					Connection conn = DatabaseConnector.getConnection();
+					PreparedStatement pst = null;
 
-			} catch (Exception e) {
-				result = DeleteHomeworkResult.FAILED_TO_SET_TO_DELETE;
+					String sql = "DELETE FROM `Homework` WHERE homeworkID = ?";
+					pst = conn.prepareStatement(sql);
+					pst.setInt(1, homework.getHomeworkID());
+
+					pst.executeUpdate();
+
+					conn.close();
+
+				} catch (Exception e) {
+					result = DeleteHomeworkResult.FAILED_TO_SET_TO_DELETE;
+				}
 			}
-		} else if (homework.isHomeworkIsDraft()) {
-			try {
-				Connection conn = DatabaseConnector.getConnection();
-				PreparedStatement pst = null;
-
-				String sql = "DELETE FROM `Homework` WHERE homeworkID = ?";
-				pst = conn.prepareStatement(sql);
-				pst.setInt(1, homework.getHomeworkID());
-
-				pst.executeUpdate();
-
-				conn.close();
-
-			} catch (Exception e) {
-				result = DeleteHomeworkResult.FAILED_TO_SET_TO_DELETE;
-			}
+		}else{
+			result = DeleteHomeworkResult.UNAUTHORIZE;
 		}
 
 		return result;
