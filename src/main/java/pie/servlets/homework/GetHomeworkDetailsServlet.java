@@ -52,6 +52,7 @@ public class GetHomeworkDetailsServlet extends HttpServlet {
 			responseObject.put("homeworkID", homework.getHomeworkID());
 			responseObject.put("dateCreated", Utilities.parseServletDateFormat(homework.getHomeworkDateCreated()));
 			responseObject.put("authorName", homework.getHomeworkAuthor().getUserFullName());
+			responseObject.put("authorID",homework.getHomeworkAuthor().getUserID());
 			responseObject.put("homeworkDescription", homework.getHomeworkDescription());
 			responseObject.put("level", homework.getHomeworkLevel());
 			responseObject.put("homeworkTitle", homework.getHomeworkTitle());
