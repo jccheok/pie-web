@@ -96,7 +96,7 @@ public class GetAllUserHomeworkServlet extends HttpServlet {
 						UserHomework childHomework = userHomeworkService.getChildHomework(userHomework.getHomework()
 								.getHomeworkID(), child.getUserID());
 
-						if (childHomework != null) {
+						if (childHomework.getGroupHomeworkID() == groupHomework.getGroupHomeworkID()) {
 							JSONObject childHomeworkObject = new JSONObject();
 
 							childHomeworkObject.put("childName", child.getUserFullName());
