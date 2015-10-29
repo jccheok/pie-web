@@ -7,17 +7,19 @@ public class Student extends User {
 	private School school;
 	private String studentCode;
 	private Date studentEnlistmentDate;
+	private String SUID;
 	
 	public Student() {
 
 	}
 
 	public Student(User user, School studentSchool, String studentCode,
-			Date studentEnlistmentDate) {
+			Date studentEnlistmentDate, String SUID) {
 		super(user);
 		setStudentCode(studentCode);
 		setSchool(studentSchool);
 		setStudentEnlistmentDate(studentEnlistmentDate);
+		setSUID(SUID);
 	}
 
 	public School getSchool() {
@@ -42,6 +44,14 @@ public class Student extends User {
 
 	public void setStudentEnlistmentDate(Date studentEnlistmentDate) {
 		this.studentEnlistmentDate = studentEnlistmentDate;
+	}
+
+	public String getSUID() {
+		return SUID;
+	}
+
+	public void setSUID(String SUID) {
+		SUID = SUID;
 	}
 
 }
