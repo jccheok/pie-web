@@ -20,6 +20,7 @@ import pie.servlets.groups.UpdateGroupServlet;
 import pie.servlets.groups.ViewGroupMembersServlet;
 import pie.servlets.groups.ViewOpenGroupsServlet;
 import pie.servlets.groups.ViewStudentJoinedGroupsServlet;
+import pie.servlets.homework.DeleteDraftHomeworkServlet;
 import pie.servlets.homework.DeleteGroupHomeworkServlet;
 import pie.servlets.homework.DeleteHomeworkAttachmentServlet;
 import pie.servlets.homework.DeleteHomeworkServlet;
@@ -166,6 +167,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/group/allhomeworkdraft").with(GetAllDraftHomeworkServlet.class);
 				serve("*/servlets/secured/staff/group/allcreatedhomework").with(GetAllPublishedHomeworkServlet.class);
 				serve("*/servlets/secured/staff/group/deletehomework").with(DeleteHomeworkServlet.class);
+				serve("*/servlets/secured/staff/group/deletehomeworkdraft").with(DeleteDraftHomeworkServlet.class);
 				serve("*/servlets/secured/staff/group/homeworkdetails").with(GetHomeworkDetailsServlet.class);
 
 
@@ -185,7 +187,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/deletehomework").with(DeleteUserHomeworkServlet.class); // tested
 				serve("*/servlets/secured/archivehomework").with(SetArchiveHomeworkServlet.class);// tested
 				serve("*/servlets/secured/readhomework").with(SetReadHomeworkServlet.class);// tested
-				serve("*/servlets/secured//parent/acknowledgehomework").with(SetAcknowledgeHomeworkServlet.class);// tested
+				serve("*/servlets/secured/parent/acknowledgehomework").with(SetAcknowledgeHomeworkServlet.class);// tested
 				serve("*/servlets/secured/userhomeworkdetails").with(GetUserHomeworkDetailsServlet.class);
 
 				serve("*/servlets/secured/allreceivedhomework").with(GetAllUserHomeworkServlet.class);//tested

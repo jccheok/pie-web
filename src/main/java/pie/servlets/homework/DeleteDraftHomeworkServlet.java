@@ -20,34 +20,33 @@ import pie.services.HomeworkService;
 import pie.utilities.Utilities;
 
 @Singleton
-public class DeleteHomeworkServlet extends HttpServlet {
+public class DeleteDraftHomeworkServlet extends HttpServlet {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -4984801775289538426L;
+	private static final long serialVersionUID = 141654997636955079L;
 	private HomeworkService homeworkService;
 
 	@Inject
-	public DeleteHomeworkServlet(HomeworkService homeworkService) {
+	public DeleteDraftHomeworkServlet(HomeworkService homeworkService) {
 		this.homeworkService = homeworkService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		int homeworkID = 0;
-
 		try {
 
-			Map<String, String> requestParams = Utilities.getParameters(request, "homeworkID");
+			Map<String, String> requestParams = Utilities.getParameters(request, "homeworkID", "staffID");
 			homeworkID = Integer.parseInt(requestParams.get("homeworkID"));
+
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 			return;
 		}
 
-		Homework homework = homeworkService.getHomework(homeworkID);
-
+		Homework homework = homeworkService.getDraftHomework(homeworkID);
 		DeleteHomeworkResult result = homeworkService.deleteHomework(homework);
 		JSONObject responseObject = new JSONObject();
 		responseObject.put("result", result.toString());
@@ -56,5 +55,4 @@ public class DeleteHomeworkServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
 	}
-
 }
