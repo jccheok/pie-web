@@ -353,4 +353,34 @@ public class StudentService {
 
 		return studentID;
 	}
+	
+	public Student studentExists (String SUID){
+		Student student = null;
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT studentID FROM `Student` WHERE SUID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setString(1, SUID);
+
+			resultSet = pst.executeQuery();
+
+			if (resultSet.next()) {
+
+				student = getStudent(resultSet.getInt("studentID"));
+
+			}
+
+			conn.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return student;
+	}
 }
