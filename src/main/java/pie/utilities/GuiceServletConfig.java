@@ -13,6 +13,7 @@ import pie.servlets.groups.EnlistStudentsByBatchServlet;
 import pie.servlets.groups.GetGroupDetailsServlet;
 import pie.servlets.groups.RegisterGroupServlet;
 import pie.servlets.groups.StaffJoinGroupServlet;
+import pie.servlets.groups.StaffLeaveGroupServlet;
 import pie.servlets.groups.StudentJoinGroupServlet;
 import pie.servlets.groups.StudentLeaveGroupServlet;
 import pie.servlets.groups.TransferGroupOwnershipServlet;
@@ -131,6 +132,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/groupdetails").with(GetGroupDetailsServlet.class);
 				serve("*/servlets/secured/staff/staffreport").with(GetStaffReportServlet.class);
 				serve("*/servlets/secured/staff/studentreport").with(GetStudentReportServlet.class);
+				serve("*/servlets/secured/staff/joingroup").with(StaffLeaveGroupServlet.class);
 
 				serve("*/servlets/secured/staff/group/member/groupmembers").with(ViewGroupMembersServlet.class);
 				serve("*/servlets/secured/staff/group/admin/updategroup").with(UpdateGroupServlet.class);
