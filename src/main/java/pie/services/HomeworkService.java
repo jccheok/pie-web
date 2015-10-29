@@ -26,54 +26,9 @@ public class HomeworkService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT * FROM `Homework` WHERE homeworkID = ? AND isDraft = ? AND isDeleted = ?";
+			String sql = "SELECT * FROM `Homework` WHERE homeworkID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, homeworkID);
-			pst.setInt(2, 0);
-			pst.setInt(3, 0);
-
-			resultSet = pst.executeQuery();
-
-			if (resultSet.next()) {
-				StaffService staffService = new StaffService();
-
-				Staff author = staffService.getStaff(resultSet.getInt("authorID"));
-				String title = resultSet.getString("title");
-				String subject = resultSet.getString("subject");
-				String description = resultSet.getString("description");
-				Date dateCreated = new Date(resultSet.getDate("dateCreated").getTime());
-				int minutesReqStudent = resultSet.getInt("minutesReqPerStudent");
-				boolean isDraft = resultSet.getInt("isDraft") == 1 ? true : false;
-				boolean isDeleted = resultSet.getInt("isDeleted") == 1 ? true : false;
-				String level = resultSet.getString("level");
-
-				homework = new Homework(homeworkID, author, title, subject, description, minutesReqStudent, dateCreated,
-						isDraft, isDeleted, level);
-			}
-
-			conn.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return homework;
-	}
-
-	public Homework getDraftHomework(int homeworkID) {
-		Homework homework = null;
-
-		try {
-
-			Connection conn = DatabaseConnector.getConnection();
-			PreparedStatement pst = null;
-			ResultSet resultSet = null;
-
-			String sql = "SELECT * FROM `Homework` WHERE homeworkID = ? AND isDraft = ? AND isDeleted = ?";
-			pst = conn.prepareStatement(sql);
-			pst.setInt(1, homeworkID);
-			pst.setInt(2, 1);
-			pst.setInt(3, 0);
 
 			resultSet = pst.executeQuery();
 
@@ -174,7 +129,7 @@ public class HomeworkService {
 	public int saveHomeworkAsDraft(Homework homework) {
 
 		int homeworkID = -1;
-		if(homework.getHomeworkDescription() == null || homework.getHomeworkDescription().length() == 0){
+		if (homework.getHomeworkDescription() == null || homework.getHomeworkDescription().length() == 0) {
 			homework.setHomeworkDescription("No Description");
 		}
 
@@ -227,7 +182,7 @@ public class HomeworkService {
 
 			ArrayList<Homework> tempDraftHomework = new ArrayList<Homework>();
 			while (resultSet.next()) {
-				tempDraftHomework.add(getDraftHomework(resultSet.getInt("homeworkID")));
+				tempDraftHomework.add(getHomework(resultSet.getInt("homeworkID")));
 			}
 
 			homework = tempDraftHomework.toArray(homework);
