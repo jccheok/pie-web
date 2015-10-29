@@ -71,7 +71,7 @@ public class EnlistStudentServlet extends HttpServlet {
 		
 		if(student == null && groupType == GroupType.HOME){
 			String studentCode = studentService.generateStudentCode();
-			studentService.enlistStudent(studentFirstName, studentLastName, studentCode, groupID, studentIndexNumber);
+			studentService.enlistStudent(studentFirstName, studentLastName, studentCode, groupID, studentIndexNumber, SUID);
 		}else if(student != null){
 			studentGroupService.addStudentToGroup(groupID, student.getUserID(), studentIndexNumber);
 			
