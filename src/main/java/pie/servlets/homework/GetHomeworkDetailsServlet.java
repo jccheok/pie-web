@@ -34,10 +34,8 @@ public class GetHomeworkDetailsServlet extends HttpServlet {
 		int homeworkID = -1;
 
 		try {
-
 			Map<String, String> requestParams = Utilities.getParameters(request, "homeworkID");
 			homeworkID = Integer.parseInt(requestParams.get("homeworkID"));
-
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 			return;
