@@ -36,12 +36,10 @@ public class DeleteDraftHomeworkServlet extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		int homeworkID = 0;
-		int staffID = 0;
 		try {
 
 			Map<String, String> requestParams = Utilities.getParameters(request, "homeworkID", "staffID");
 			homeworkID = Integer.parseInt(requestParams.get("homeworkID"));
-			staffID = Integer.parseInt(requestParams.get("staffID"));
 
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
@@ -49,7 +47,7 @@ public class DeleteDraftHomeworkServlet extends HttpServlet {
 		}
 
 		Homework homework = homeworkService.getDraftHomework(homeworkID);
-		DeleteHomeworkResult result = homeworkService.deleteHomework(homework, staffID);
+		DeleteHomeworkResult result = homeworkService.deleteHomework(homework);
 		JSONObject responseObject = new JSONObject();
 		responseObject.put("result", result.toString());
 		responseObject.put("message", result.getDefaultMessage());
