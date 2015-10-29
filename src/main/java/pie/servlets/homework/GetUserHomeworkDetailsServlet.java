@@ -97,7 +97,7 @@ public class GetUserHomeworkDetailsServlet extends HttpServlet {
 					childHomeworkObject.put("childID", child.getUserID());
 					childHomeworkObject.put("childUserHomeworkID", childHomework.getUserHomeworkID());
 					childHomeworkObject.put("childHomeworkGrade", childHomework.getGrade());
-					childHomeworkObject.put("isAcknowledged", childHomework.isAcknowledged());
+					childHomeworkObject.put("homeworkIsAcknowledged", childHomework.isAcknowledged());
 					if (!childHomework.isSubmitted()) {
 						childHomeworkObject.put("status", "Not Submitted");
 					} else if (!childHomework.isMarked()) {
