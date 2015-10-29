@@ -174,6 +174,9 @@ public class HomeworkService {
 	public int saveHomeworkAsDraft(Homework homework) {
 
 		int homeworkID = -1;
+		if(homework.getHomeworkDescription() == null || homework.getHomeworkDescription().length() == 0){
+			homework.setHomeworkDescription("No Description");
+		}
 
 		try {
 			Connection conn = DatabaseConnector.getConnection();

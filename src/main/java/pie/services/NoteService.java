@@ -62,6 +62,10 @@ public class NoteService {
 	public int createNote(int authorID, int responseQuestionID, String title, String description) {
 
 		int noteID = -1;
+		
+		if(description == null || description.length() == 0){
+			description = "No Description";
+		}
 
 		try {
 
