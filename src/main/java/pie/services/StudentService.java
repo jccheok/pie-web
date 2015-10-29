@@ -82,7 +82,7 @@ public class StudentService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "SELECT * FROM `StudentGroup` WHERE studentID = ? AND groupID = ? AND studentGroupIsValid = ?";
+			String sql = "SELECT * FROM `StudentGroup` WHERE studentID = ? AND groupID = ? AND isValid = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, studentID);
 			pst.setInt(2, groupID);
