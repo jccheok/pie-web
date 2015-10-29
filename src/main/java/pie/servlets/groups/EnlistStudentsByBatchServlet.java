@@ -59,6 +59,7 @@ public class EnlistStudentsByBatchServlet extends HttpServlet {
 			String studentLastName = student.getString("studentLastName");
 			String studentCode = studentService.generateStudentCode();
 			int studentIndexNumber = student.getInt("studentGroupIndexNumber");
+			String SUID = student.getString("SUID");
 			
 			studentService.enlistStudent(studentFirstName, studentLastName, studentCode, groupID, studentIndexNumber);
 		}
