@@ -38,7 +38,6 @@ public class DeleteHomeworkServlet extends HttpServlet {
 		int homeworkID = 0;
 
 		try {
-
 			Map<String, String> requestParams = Utilities.getParameters(request, "homeworkID");
 			homeworkID = Integer.parseInt(requestParams.get("homeworkID"));
 		} catch (Exception e) {
