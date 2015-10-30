@@ -55,10 +55,30 @@ public class GetUserResponseServlet extends HttpServlet {
 			for (UserNote note : allUserResponse) {
 								
 				JSONObject userNoteObject = new JSONObject();
-				userNoteObject.put("userID", note.getUserNoteID());
+				userNoteObject.put("userNoteID", note.getUserNoteID());
+				userNoteObject.put("userName", note.getUser().getUserFullName());
 				userNoteObject.put("noteIsRead", note.isRead() ? true : false);
 				userNoteObject.put("userResponse", note.getResponseText());
-				userNoteObject.put("responseOptionID", note.getResponseOption().getResponseOptionID());
+				
+				int responseOptionID = note.getResponseOption().getResponseOptionID();
+				
+				switch(responseOptionID) {
+				case 1: userNoteObject.put("responseOptionID", "Approve");
+				break;
+				case 2: userNoteObject.put("responseOptionID", "Reject");
+				break;
+				case 3: userNoteObject.put("responseOptionID", "Acknowledged");
+				break;
+				case 4: userNoteObject.put("responseOptionID", "Not Acknowledged");
+				break;
+				case 5: userNoteObject.put("responseOptionID", "Yes");
+				break;
+				case 6: userNoteObject.put("responseOptionID", "No");
+				break;
+				case 7: userNoteObject.put("responseOptionID", "No Response");
+				break;
+				
+				}
 				
 				userResponseList.put(userNoteObject);
 			}
