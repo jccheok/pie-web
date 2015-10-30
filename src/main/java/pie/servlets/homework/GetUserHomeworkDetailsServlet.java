@@ -80,6 +80,7 @@ public class GetUserHomeworkDetailsServlet extends HttpServlet {
 		responseObject.put("groupName", groupHomework.getGroup().getGroupName());
 		responseObject.put("userHomeworkID", userHomework.getUserHomeworkID());
 		responseObject.put("dueDate", Utilities.parseServletDateFormat(groupHomework.getDueDate()));
+		responseObject.put("additionalInstructions", groupHomework.getInstructions());
 		
 		if (recipientUser.getUserType() == UserType.PARENT) {
 
@@ -117,18 +118,7 @@ public class GetUserHomeworkDetailsServlet extends HttpServlet {
 
 		} else if (recipientUser.getUserType() == UserType.STUDENT) {
 			responseObject.put("homeworkGrade", userHomework.getGrade());
-			if (!userHomework.isSubmitted()) {
-				responseObject.put("status", "Not Submitted");
-			} else if (!userHomework.isMarked()) {
-				responseObject.put("status", "Submitted");
-				responseObject.put("submissionDate", Utilities.parseServletDateFormat(userHomework.getSubmissionDate()));
-			} else if (!userHomework.getGrade().equals("-")) {
-				responseObject.put("status", "Marked");
-				responseObject.put("submissionDate", Utilities.parseServletDateFormat(userHomework.getSubmissionDate()));
-			} else {
-				responseObject.put("status", "Graded");
-				responseObject.put("submissionDate", Utilities.parseServletDateFormat(userHomework.getSubmissionDate()));
-			}
+			responseObject.put("status", userHomeworkID);
 		}
 		
 		PrintWriter out = response.getWriter();
