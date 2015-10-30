@@ -12,7 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import pie.Parent;
 import pie.UserNote;
+import pie.services.ParentStudentService;
 import pie.services.UserNoteService;
 import pie.utilities.Utilities;
 
@@ -25,10 +27,12 @@ public class GetUserResponseServlet extends HttpServlet {
 	private static final long serialVersionUID = 3902948437108392541L;
 
 	UserNoteService userNoteService;
+	ParentStudentService parentStudentService;
 	
 	@Inject
-	public GetUserResponseServlet(UserNoteService userNoteService) {
+	public GetUserResponseServlet(UserNoteService userNoteService, ParentStudentService parentStudentService) {
 		this.userNoteService = userNoteService;
+		this.parentStudentService = parentStudentService;
 	}
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -81,13 +85,17 @@ public class GetUserResponseServlet extends HttpServlet {
 				}
 				
 				String mobile = note.getUser().getUserMobile();
-				if(mobile != null) {
-					userNoteObject.put("parentMobile", mobile);
+				userNoteObject.put("parentMobile", mobile);
+				
+				Parent parent = parentStudentService.getMainParent(note.getUserNoteID());
+				if(parent != null) {
+					userNoteObject.put("parentName", parent.getUserFullName());
 				} else {
-					userNoteObject.put("parentMobile", "-");
+					userNoteObject.put("parentName", "-");
 				}
 				
 				userResponseList.put(userNoteObject);
+				
 			}
 			
 		} else {
