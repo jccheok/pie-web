@@ -12,12 +12,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import pie.Note;
 import pie.services.NoteService;
 import pie.utilities.Utilities;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 @Singleton
 public class GetAllDraftNoteServlet extends HttpServlet {
@@ -55,9 +55,6 @@ public class GetAllDraftNoteServlet extends HttpServlet {
 				JSONObject noteObject = new JSONObject();
 				noteObject.put("noteID", note.getNoteID());
 				noteObject.put("noteTitle", note.getTitle());
-				noteObject.put("noteDescription", note.getDescription());
-				noteObject.put("noteAuthor", note.getStaff().getUserFirstName());
-				noteObject.put("noteResponseQuestionID", note.getResponseQuestion().getResponseQuestionID());
 				noteList.put(noteObject);
 			}
 		}
