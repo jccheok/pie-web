@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Savepoint;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -93,12 +94,14 @@ public class StudentGroupService {
 		int studentGroupIndexNumber = 0;
 
 		Connection conn = DatabaseConnector.getConnection();
-
+		Savepoint dbSavepoint = null;
+		
 		try {
+			
 			PreparedStatement pst = null;
 			String sql = "INSERT INTO `StudentGroup` (groupID, studentID, indexNumber) VALUES (?, ?, ?)";
 			pst = conn.prepareStatement(sql);
-			
+			dbSavepoint = conn.setSavepoint("dbSavepoint");
 			for(int index = 0; index < studentList.length(); index ++){
 				JSONObject student = studentList.getJSONObject(index);
 				studentID = student.getInt("studentID");
@@ -118,7 +121,7 @@ public class StudentGroupService {
 
 		} catch (SQLException e) {
 			try {
-				conn.rollback();
+				conn.rollback(dbSavepoint);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
