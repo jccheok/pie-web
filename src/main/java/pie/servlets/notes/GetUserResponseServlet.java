@@ -38,7 +38,7 @@ public class GetUserResponseServlet extends HttpServlet {
 		try {
 			
 			Map<String, String> requestParameters = Utilities.getParameters(request, "noteID");
-			noteID = Integer.parseInt(requestParameters.get("staffID"));
+			noteID = Integer.parseInt(requestParameters.get("noteID"));
 			
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
