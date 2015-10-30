@@ -74,13 +74,14 @@ public class SendDraftPublishedHomeworkServlet extends HttpServlet{
 		boolean isGraded = false;
 		boolean isDeleted = false;
 		int groupHomeworkID = 0;
+		String instructions = null;
 
 		try {
 
 			Map<String, String> requestParameters = Utilities.getParameters(request, "groupID", "homeworkID",
 					"staffID",
 					"markingEffort", "targetMarkingCompletionDate", "dueDate",
-					"isGraded", "groupHomeworkID");
+					"isGraded", "groupHomeworkID", "instructions");
 			groupHomeworkID = Integer.parseInt(requestParameters.get("groupHomeworkID"));
 			publisher = staffService.getStaff(Integer.parseInt(requestParameters.get("staffID")));
 			group = groupService.getGroup(Integer.parseInt(requestParameters.get("groupID")));
@@ -90,6 +91,7 @@ public class SendDraftPublishedHomeworkServlet extends HttpServlet{
 			targetMarkingCompletionDate = Utilities.parseClientDate(requestParameters.get("targetMarkingCompletionDate"));
 			dueDate = Utilities.parseClientDate(requestParameters.get("dueDate"));
 			isGraded = Integer.parseInt(requestParameters.get("isGraded")) == 1 ? true : false;
+			instructions = requestParameters.get("instuctions");
 
 		} catch (Exception e) {
 
@@ -99,7 +101,7 @@ public class SendDraftPublishedHomeworkServlet extends HttpServlet{
 
 		GroupHomework groupHomework = new GroupHomework(groupHomeworkID, group, homework, publisher, markingEffort,
 				actualMarkingCompletionDate, targetMarkingCompletionDate, dueDate, publishDate, isDraft, isGraded,
-				isDeleted);
+				isDeleted, instructions);
 
 		JSONObject responseObject = new JSONObject();
 
