@@ -58,6 +58,7 @@ import pie.servlets.notes.GetAllDraftNoteServlet;
 import pie.servlets.notes.GetAllSentNotesServlet;
 import pie.servlets.notes.GetAllUserNoteServlet;
 import pie.servlets.notes.GetNoteDetailsServlet;
+import pie.servlets.notes.GetUserResponseServlet;
 import pie.servlets.notes.SaveNoteAsDraftServlet;
 import pie.servlets.notes.SendDraftNoteServlet;
 import pie.servlets.notes.SendNoteServlet;
@@ -153,6 +154,7 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/group/allsentnotes").with(GetAllSentNotesServlet.class); // tested
 				serve("*/servlets/secured/staff/group/updatedraftnote").with(UpdateDraftNoteServlet.class); // tested
 				serve("*/servlets/secured/staff/group/deletedraftnote").with(DeleteDraftNoteServlet.class);
+				serve("*/servlets/secured/staff/group/getnoteresponse").with(GetUserResponseServlet.class);
 
 				serve("*/servlets/secured/staff/group/downloadnoteattachment")
 						.with(DownloadNoteAttachmentServlet.class); // tested
