@@ -13,10 +13,12 @@ import org.json.JSONObject;
 
 import pie.Group;
 import pie.StaffRole;
+import pie.StudentGroup;
 import pie.User;
 import pie.UserType;
 import pie.services.GroupService;
 import pie.services.StaffGroupService;
+import pie.services.StudentGroupService;
 import pie.services.UserService;
 import pie.utilities.Utilities;
 
@@ -30,13 +32,15 @@ public class GetGroupDetailsServlet extends HttpServlet {
 	
 	GroupService groupService;
 	UserService userService;
-	StaffGroupService staffGroupService;	
+	StaffGroupService staffGroupService;
+	StudentGroupService studentGroupService;
 	
 	@Inject
-	public GetGroupDetailsServlet(GroupService groupService, UserService userService, StaffGroupService staffGroupService) {
+	public GetGroupDetailsServlet(GroupService groupService, UserService userService, StaffGroupService staffGroupService, StudentGroupService studentGroupService) {
 		this.groupService = groupService;
 		this.userService = userService;
 		this.staffGroupService = staffGroupService;
+		this.studentGroupService = studentGroupService;
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -79,6 +83,13 @@ public class GetGroupDetailsServlet extends HttpServlet {
 				responseObject.put("isMember", staffGroupService.hasGroupMember(userID, groupID));
 			}
 			
+		}else if(user.getUserType() == UserType.STUDENT){
+			StudentGroup studentGroup = studentGroupService.getStudentGroup(groupID, userID);
+			if(studentGroup != null){
+				responseObject.put("studentJoinDate", Utilities.parseServletDateFormat(studentGroup.getJoinDate()));
+				responseObject.put("indexNumber", studentGroup.getIndexNumber());
+				responseObject.put("studentGroupID", studentGroup.getStudentGroupID());
+			}
 		}
 		
 		PrintWriter out = response.getWriter();
