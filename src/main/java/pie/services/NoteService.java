@@ -7,6 +7,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import pie.Note;
 import pie.ResponseQuestion;
 import pie.Staff;
@@ -360,6 +363,67 @@ public class NoteService {
 		}
 
 		return deleteNoteResult;
+	}
+	
+	public PublishNoteResult publishNote(int noteID, String groupIDList, int publisherID) {
+
+		PublishNoteResult publishResult = PublishNoteResult.SUCCESS;
+		
+		StaffGroupService staffGroupService = new StaffGroupService();
+		StudentGroupService studentGroupService = new StudentGroupService();
+		GroupNoteService groupNoteService = new GroupNoteService();
+		UserNoteService userNoteService = new UserNoteService();
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+
+			String sql = "UPDATE `Note` SET isDraft = ? WHERE noteID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, 0);
+			pst.setInt(2, noteID);
+
+			pst.executeUpdate();
+			
+			boolean groupNoteSuccess = groupNoteService.createGroupNote(noteID, groupIDList, publisherID);
+
+			if (groupNoteSuccess == false) {
+
+				publishResult = PublishNoteResult.FAILED_TO_UPDATE_GROUP;
+
+			} else {
+				
+				JSONObject requestObject = new JSONObject(groupIDList);
+				JSONArray groupList = requestObject.getJSONArray("groupIDArray");
+
+				for (int index = 0; index < groupList.length(); index++) {
+					JSONObject group = groupList.getJSONObject(index);
+					int groupID = group.getInt("groupID");
+					
+					Student[] groupStudents = studentGroupService.getStudentMembers(groupID);
+
+					if (userNoteService.createUserNoteStudent(noteID, groupStudents) == false) {
+						publishResult = PublishNoteResult.FAILED_TO_SEND_TO_MEMBERS;
+					}
+					
+					Staff[] groupStaffs = staffGroupService.getStaffMembers(groupID);
+					
+					if (userNoteService.createUserNoteStaff(noteID, groupStaffs) == false) {
+						publishResult = PublishNoteResult.FAILED_TO_SEND_TO_MEMBERS;
+					}
+						
+				}
+				
+			}
+
+			conn.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return publishResult;
 	}
 
 }
