@@ -107,47 +107,24 @@ public class SendDraftPublishedHomeworkServlet extends HttpServlet{
 
 		if(!groupHomeworkService.updateDraftPublishedHomework(groupHomework)){
 			
-			responseObject.put("result", "Failed to Update Published Homework");
+			responseObject.put("result", "FAILED");
 			responseObject.put("message", "Failed to Update PublishedHomework");
 			
 		}else if(!groupHomeworkService.setDraftPublishedHomework(groupHomeworkID)){
 			
-			responseObject.put("result", "Failed to set to Not Draft");
+			responseObject.put("result", "FAILED");
 			responseObject.put("message", "Failed to set Published Homework to not Draft");
 			
 		}else{
-			Student[] studentMembers = studentGroupService.getStudentMembers(group.getGroupID());
-			Staff[] staffMembers = staffGroupService.getStaffMembers(group.getGroupID());
-
-			for (Student student : studentMembers) {
-				if (userHomeworkService.createUserHomework(student.getUserID(), homework.getHomeworkID()) == -1) {
-					responseObject.put("result", "Failed to Send Homework to student");
-					responseObject.put("message", "Failed to Publish Homework to UserHomework");
-					break;
-				}
-				Parent[] parents = parentStudentService.getParents(student.getUserID());
-				
-				for(Parent parent : parents){
-					if(userHomeworkService.createUserHomework(parent.getUserID(), homework.getHomeworkID()) == -1){
-						responseObject.put("result", "Failed to Send Homework to parent");
-						responseObject.put("message", "Failed to Publish Homework to UserHomework");
-						break;
-					}
-				}
-				
+			boolean createResult = userHomeworkService.createUserHomework(homework.getHomeworkID(), group.getGroupID());
+			if(createResult){
+				responseObject.put("result", "Success");
+				responseObject.put("message", "Sent Published Homework to all users");
+			}else{
+				responseObject.put("result", "FAILED");
+				responseObject.put("message", "Failed to send homework to all users");
 			}
-
-			for (Staff staff : staffMembers) {
-				if (userHomeworkService.createUserHomework(staff.getUserID(), homework.getHomeworkID()) == -1) {
-					responseObject.put("result", "Failed to Send Homework to staff");
-					responseObject.put("message", "Failed to Publish Homework to UserHomework");
-					break;
-				}
-			}
-			responseObject.put("result", "Success");
-			responseObject.put("message", "Sent Published Homework to all users");
 		}
-
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
 	}
