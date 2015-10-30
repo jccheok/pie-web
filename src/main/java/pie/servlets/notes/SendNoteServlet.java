@@ -101,7 +101,7 @@ public class SendNoteServlet extends HttpServlet {
 				}
 			}
 
-			if(staffID != 0 && responseQuestionID != 0) {
+/*			if(staffID != 0 && responseQuestionID != 0) {
 
 				JSONObject requestObject = new JSONObject(groupIDList);
 				JSONArray groupList = requestObject.getJSONArray("groupIDArray");
@@ -134,12 +134,19 @@ public class SendNoteServlet extends HttpServlet {
 					}
 
 					PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID, staffID);
-					responseObject.put("result[" + index + "]", publishNoteResult.toString());
-					responseObject.put("message[" + index + "]", publishNoteResult.getDefaultMessage());
+					responseObject.put("result", publishNoteResult.toString());
+					responseObject.put("message", publishNoteResult.getDefaultMessage());
 
 				}
 
-			} 
+			} */
+			
+			noteID = noteService.createNote(staffID, responseQuestionID, noteTitle, noteDescription);
+			
+			PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupIDList, staffID);
+			responseObject.put("result", publishNoteResult.toString());
+			responseObject.put("message", publishNoteResult.getDefaultMessage());
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();
