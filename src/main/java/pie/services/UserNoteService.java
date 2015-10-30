@@ -289,5 +289,39 @@ public class UserNoteService {
 
 	}
 	
+	public UserNote[] getUserNoteResponse(int noteID) {
+		
+		UserNote[] allUserNoteResponse = {};
+		
+		try {
+			
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT userNoteID FROM `UserNote` WHERE noteID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, noteID);
+
+			resultSet = pst.executeQuery();
+
+			ArrayList<UserNote> tempUserNoteList = new ArrayList<UserNote>();
+			while(resultSet.next()) {
+				tempUserNoteList.add(getUserNote(resultSet.getInt("userNoteID")));
+			}
+
+			allUserNoteResponse = tempUserNoteList.toArray(allUserNoteResponse);
+
+			conn.close();
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return allUserNoteResponse;
+		
+	}
+	
 
 }
