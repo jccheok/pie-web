@@ -102,7 +102,9 @@ public class ViewParentChildrenServlet extends HttpServlet {
 						studentService.getStudentGroupIndexNumber(joinedGroupID, studentID));
 				groupDetails.put("studentGroupJoinDateUnix",
 						Utilities.toUnixSeconds(studentGroupService.getStudentGroupJoinDate(joinedGroupID, studentID)));
+				groupDetails.put("studentGroupID", studentGroupService.getStudentGroup(joinedGroupID, studentID).getStudentGroupID());
 				studentGroupsList.put(groupDetails);
+				
 			}
 
 			JSONArray studentHomeworkList = new JSONArray();

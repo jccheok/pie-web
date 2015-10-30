@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import pie.Group;
@@ -69,15 +70,22 @@ public class EnlistStudentServlet extends HttpServlet {
 		responseObject.put("result", GenericResult.SUCCESS.toString());
 		responseObject.put("message", "Successfully added student to group.");
 		
+		JSONArray newStudent = new JSONArray();
+		JSONObject studentObject = new JSONObject();
+		
+		
+		studentObject.put("studentFirstName", studentFirstName);
+		studentObject.put("studentLastName", studentLastName);
+		studentObject.put("studentGroupIndexNumber", studentIndexNumber);
+		newStudent.put(studentObject);
+		
 		if(student == null && groupType == GroupType.HOME){
-			String studentCode = studentService.generateStudentCode();
-			studentService.enlistStudent(studentFirstName, studentLastName, studentCode, groupID, studentIndexNumber, SUID);
+			studentService.enlistStudent(newStudent, groupID);
 		}else if(student != null){
-			studentGroupService.addStudentToGroup(groupID, student.getUserID(), studentIndexNumber);
-			
+			studentGroupService.addStudentToGroup(groupID, newStudent);
 		}else{
 			responseObject.put("result", GenericResult.FAILED.toString());
-			responseObject.put("message", "Failed to student to group.");
+			responseObject.put("message", "Register user first");
 		}
 		
 		PrintWriter out = response.getWriter();

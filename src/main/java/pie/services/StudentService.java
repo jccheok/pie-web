@@ -3,10 +3,15 @@ package pie.services;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Savepoint;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import pie.Group;
 import pie.School;
@@ -100,48 +105,125 @@ public class StudentService {
 
 	}
 
-	public boolean enlistStudent(String userFirstName, String userLastName, String studentCode, int groupID, int studentGroupIndexNumber, String SUID) {
+	public boolean enlistStudent(JSONArray studentList, int groupID) {
 		
 		boolean enlistResult = false;
-		
 		StudentGroupService studentGroupService = new StudentGroupService();
 		GroupService groupService = new GroupService();
+		
+		String userFirstName = null;
+		String userLastName = null;
+		String studentCode = null;
+		int studentGroupIndexNumber = 0;
+		String SUID = null;
+		int schoolID = groupService.getGroup(groupID).getSchool().getSchoolID();
+		
+		Connection conn = DatabaseConnector.getConnection();
+		Savepoint dbSavepoint = null;
+		try {
+			
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+			conn.setAutoCommit(false);
+			dbSavepoint = conn.setSavepoint("dbSavepoint");
+			JSONArray tempArray = new JSONArray();
+			JSONArray newStudents = new JSONArray();
 
-		if (isAvailableStudentCode(studentCode)) {
-
-			try {
-
-				Connection conn = DatabaseConnector.getConnection();
-				PreparedStatement pst = null;
-				ResultSet resultSet = null;
-
-				String sql = "INSERT INTO `User` (userTypeID, firstName, lastName) VALUES (?, ?, ?)";
-				pst = conn.prepareStatement(sql,
-						Statement.RETURN_GENERATED_KEYS);
-				pst.setInt(1, UserType.STUDENT.getUserTypeID());
-				pst.setString(2, userFirstName);
-				pst.setString(3, userLastName);
-				pst.executeUpdate();
-
-				resultSet = pst.getGeneratedKeys();
-
-				if (resultSet.next()) {
-
-					int newStudentID = resultSet.getInt(1);
-					sql = "INSERT INTO `Student` (studentID, schoolID, code, SUID) VALUES (?, ?, ?, ?)";
-					pst = conn.prepareStatement(sql);
-					pst.setInt(1, newStudentID);
-					pst.setInt(2, groupService.getGroup(groupID).getSchool().getSchoolID());
-					pst.setString(3, studentCode);
-					pst.setString(4, SUID);
-					pst.executeUpdate();
-
-					enlistResult = studentGroupService.addStudentToGroup(groupID, newStudentID, studentGroupIndexNumber);
-
+			String sql = "INSERT INTO `User` (userTypeID, firstName, lastName) VALUES (?, ?, ?)";
+			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			
+			for (int index = 0; index < studentList.length(); index++) {
+				
+				JSONObject studentObject = studentList.getJSONObject(index);
+				userFirstName = studentObject.getString("studentFirstName");
+				userLastName = studentObject.getString("studentLastName");
+				studentGroupIndexNumber = studentObject.getInt("studentGroupIndexNumber");
+				SUID = studentObject.getString("SUID");
+				studentCode = generateStudentCode();
+				
+				if(studentExists(SUID) == null){
+					pst.setInt(1, UserType.STUDENT.getUserTypeID());
+					pst.setString(2, userFirstName);
+					pst.setString(3, userLastName);
+					pst.addBatch();
+				}else{
+					tempArray.put(studentObject);
+					studentList.remove(index);
 				}
+			
+			}
+			
+			pst.executeBatch();
+			resultSet = pst.getGeneratedKeys();
+			
+			pst.clearBatch();
+			
+			sql = "INSERT INTO `Student` (studentID, schoolID, code, SUID) VALUES (?, ?, ?, ?)";
+			pst = conn.prepareStatement(sql);
+			
+			while(resultSet.next()){
+				
+				int newStudentID = resultSet.getInt(1);
+				studentCode = generateStudentCode();
 
-			} catch (Exception e) {
-				e.printStackTrace();
+				pst.setInt(1, newStudentID);
+				pst.setInt(2, schoolID);
+				pst.setString(3, studentCode);
+				pst.setString(4, SUID);
+				pst.addBatch();
+				
+			}
+			
+			pst.executeBatch();
+			pst.clearBatch();
+			dbSavepoint = conn.setSavepoint("dbSavepoint2");
+			for(int i = 0; i < tempArray.length(); i++){
+				JSONObject tempObject = tempArray.getJSONObject(i);
+				Student student = studentExists(tempObject.getString("SUID"));
+				
+				if(student != null){
+					JSONObject studentItem = new JSONObject();
+					studentItem.put("studentID", student.getUserID());
+					studentItem.put("studentGroupIndexNumber", tempObject.getInt("studentGroupIndexNumber"));
+					newStudents.put(studentItem);
+				}
+				
+			}
+			
+			while(resultSet.next()){
+				
+				int newStudentID = resultSet.getInt(1);
+				Student student = getStudent(newStudentID);
+				
+				for(int i = 0; i < studentList.length(); i++){
+					
+					JSONObject studentObject = studentList.getJSONObject(i);
+
+					if(student.getSUID().equals(studentObject.getString("SUID"))){
+						studentGroupIndexNumber = studentObject.getInt("studentGroupIndexNumber");
+						break;
+					}
+				}
+				
+				JSONObject studentItem = new JSONObject();
+				studentItem.put("studentID", newStudentID);
+				studentItem.put("studentGroupIndexNumber", studentGroupIndexNumber);
+				newStudents.put(studentItem);
+				
+			}
+			if(studentGroupService.addStudentToGroup(groupID, newStudents)){
+				conn.commit();
+				enlistResult = true;
+				conn.close();
+			}else{
+				conn.rollback(dbSavepoint);
+			}
+
+		} catch (SQLException e) {
+			try {
+				conn.rollback(dbSavepoint);
+			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 		}
 
@@ -310,7 +392,12 @@ public class StudentService {
 			joinGroupResult = JoinGroupResult.ALREADY_MEMBER;
 		} else {
 			int nextStudentIndexNumber = groupService.getNextStudentIndexNumber(groupID);
-			studentGroupService.addStudentToGroup(groupID, studentID, nextStudentIndexNumber);
+			JSONArray studentList = new JSONArray();
+			JSONObject student = new JSONObject();
+			student.put("studentID", studentID);
+			student.put("studentGroupIndexNumber", nextStudentIndexNumber);
+			studentList.put(student);
+			studentGroupService.addStudentToGroup(groupID, studentList);
 		}
 
 		return joinGroupResult;

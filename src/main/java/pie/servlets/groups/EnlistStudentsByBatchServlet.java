@@ -61,27 +61,39 @@ public class EnlistStudentsByBatchServlet extends HttpServlet {
 		
 		GroupType groupType = groupService.getGroup(groupID).getGroupType();
 		
-		for (int index = 0; index < studentList.length(); index++) {
-			
-			JSONObject studentObject = studentList.getJSONObject(index);
-			
-			String studentFirstName = studentObject.getString("studentFirstName");
-			String studentLastName = studentObject.getString("studentLastName");
-			int studentIndexNumber = studentObject.getInt("studentGroupIndexNumber");
-			String SUID = studentObject.getString("SUID");
-			
-			Student student = studentService.studentExists(SUID);
-			if(student == null && groupType == GroupType.HOME){
-				String studentCode = studentService.generateStudentCode();
-				studentService.enlistStudent(studentFirstName, studentLastName, studentCode, groupID, studentIndexNumber, SUID);
-			}else if(student != null){
-				studentGroupService.addStudentToGroup(groupID, student.getUserID(), studentIndexNumber);	
-			}
+		boolean enlistResult = false;
+		if(groupType == GroupType.HOME ){
+			enlistResult = studentService.enlistStudent(studentList, groupID);
 		}
 		
+//		for (int index = 0; index < studentList.length(); index++) {
+//			
+//			JSONObject studentObject = studentList.getJSONObject(index);
+//			
+//			String studentFirstName = studentObject.getString("studentFirstName");
+//			String studentLastName = studentObject.getString("studentLastName");
+//			int studentIndexNumber = studentObject.getInt("studentGroupIndexNumber");
+//			String SUID = studentObject.getString("SUID");
+//			
+//			Student student = studentService.studentExists(SUID);
+//			if(student == null && groupType == GroupType.HOME){
+//				String studentCode = studentService.generateStudentCode();
+//				studentService.enlistStudent(studentFirstName, studentLastName, studentCode, groupID, studentIndexNumber, SUID);
+//			}else if(student != null){
+//				studentGroupService.addStudentToGroup(groupID, student.getUserID(), studentIndexNumber);	
+//			}
+//		}
+//		
 		JSONObject responseObject = new JSONObject();
-		responseObject.put("result", GenericResult.SUCCESS.toString());
-		responseObject.put("message", "Students successfuly enlisted.");
+		
+		if(enlistResult){
+			responseObject.put("result", GenericResult.SUCCESS.toString());
+			responseObject.put("message", "Students successfuly enlisted.");
+		}else{
+			responseObject.put("result", GenericResult.FAILED.toString());
+			responseObject.put("message", "Students failed to be enlisted.");
+		}
+		
 
 		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
