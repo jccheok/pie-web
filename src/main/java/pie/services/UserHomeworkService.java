@@ -3,11 +3,16 @@ package pie.services;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Savepoint;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 
 import pie.Homework;
+import pie.Parent;
+import pie.Staff;
+import pie.Student;
 import pie.User;
 import pie.UserHomework;
 import pie.utilities.DatabaseConnector;
@@ -60,33 +65,71 @@ public class UserHomeworkService {
 		return userHomework;
 	}
 
-	public int createUserHomework(int studentID, int homeworkID) {
+	public boolean createUserHomework(int homeworkID, int groupID) {
 
-		int userHomeworkID = -1;
+		boolean createUserHomeworkResult = false;
+		
+		Connection conn = DatabaseConnector.getConnection();
+		Savepoint dbSavepoint = null;
 
+		StaffGroupService staffGroupService = new StaffGroupService();
+		StudentGroupService studentGroupService = new StudentGroupService();
+		ParentStudentService parentStudentService = new ParentStudentService();
+		
+		Student[] studentMembers = studentGroupService.getStudentMembers(groupID);
+		Staff[] staffMembers = staffGroupService.getStaffMembers(groupID);
+		ArrayList<Integer> parentList = new ArrayList<Integer>();
+		
 		try {
-			Connection conn = DatabaseConnector.getConnection();
+			
 			PreparedStatement pst = null;
-			ResultSet resultSet = null;
-
+			dbSavepoint = conn.setSavepoint("dbSavepoint");
+			
 			String sql = "INSERT INTO `UserHomework` (homeworkID, userID) VALUES (?,?)";
 			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-			pst.setInt(1, homeworkID);
-			pst.setInt(2, studentID);
-			pst.executeUpdate();
 			
-			resultSet = pst.getGeneratedKeys();
-			if(resultSet.next()) {
-				userHomeworkID = resultSet.getInt(1);
+			for(Student student : studentMembers){
+				
+				int studentID = student.getUserID();
+				
+				pst.setInt(1, homeworkID);
+				pst.setInt(2, studentID);
+				pst.addBatch();
+				
+				Parent[] parents = parentStudentService.getParents(studentID);
+				for(Parent currParent : parents){
+					if(!parentList.contains(currParent.getUserID())){
+						pst.setInt(1, homeworkID);
+						pst.setInt(2, currParent.getUserID());
+						pst.addBatch();
+						parentList.add(currParent.getUserID());
+					}
+				}	
 			}
-
+			
+			for(Staff staff : staffMembers){
+				int staffID = staff.getUserID();
+				
+				pst.setInt(1, homeworkID);
+				pst.setInt(2, staffID);
+				pst.addBatch();
+			}
+			
+			pst.executeBatch();
+			
+			conn.commit();
+			createUserHomeworkResult = true;
 			conn.close();
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			try {
+				conn.rollback(dbSavepoint);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 		}
 
-		return userHomeworkID;
+		return createUserHomeworkResult;
 	}
 
 	public boolean deleteHomework(int userHomeworkID) {
