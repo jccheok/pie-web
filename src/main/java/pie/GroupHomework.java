@@ -16,10 +16,11 @@ public class GroupHomework {
 	private boolean isDraft;
 	private boolean isGraded;
 	private boolean isDeleted;
+	private String instructions;
 
 	public GroupHomework(int groupHomeworkID, Group group, Homework homework, Staff publisher, int markingEffort,
 			Date actualMarkingCompletionDate, Date targetMarkingCompletionDate, Date dueDate, Date publishDate,
-			boolean isDraft, boolean isGraded, boolean isDeleted) {
+			boolean isDraft, boolean isGraded, boolean isDeleted, String instructions) {
 		// TODO Auto-generated constructor stub
 		setGroupHomeworkID(groupHomeworkID);
 		setGroup(group);
@@ -33,6 +34,7 @@ public class GroupHomework {
 		setDraft(isDraft);
 		setGraded(isGraded);
 		setDeleted(isDeleted);
+		setInstructions(instructions);
 	}
 
 	public Group getGroup() {
@@ -130,6 +132,14 @@ public class GroupHomework {
 
 	public void setDeleted(boolean isDeleted) {
 		this.isDeleted = isDeleted;
+	}
+
+	public String getInstructions() {
+		return instructions;
+	}
+
+	public void setInstructions(String instructions) {
+		this.instructions = instructions;
 	}
 
 }
