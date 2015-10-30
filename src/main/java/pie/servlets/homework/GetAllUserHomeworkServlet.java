@@ -102,17 +102,8 @@ public class GetAllUserHomeworkServlet extends HttpServlet {
 							childHomeworkObject.put("childName", child.getUserFullName());
 							childHomeworkObject.put("childID", child.getUserID());
 							childHomeworkObject.put("childUserHomeworkID", childHomework.getUserHomeworkID());
-
-							if (!childHomework.isSubmitted()) {
-								childHomeworkObject.put("status", "Not Submitted");
-							} else if (!childHomework.isMarked()) {
-								childHomeworkObject.put("status", "Submitted");
-							} else if (!childHomework.getGrade().equals("-")) {
-								childHomeworkObject.put("status", "Marked");
-							} else {
-								childHomeworkObject.put("status", "Graded");
-							}
-
+							childHomeworkObject.put("status", childHomework.getUserHomeworkID());
+							
 							childrenHomework.put(childHomeworkObject);
 						}
 					}

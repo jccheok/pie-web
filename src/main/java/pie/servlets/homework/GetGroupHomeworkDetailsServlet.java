@@ -65,6 +65,7 @@ public class GetGroupHomeworkDetailsServlet extends HttpServlet {
 			homeworkObject.put("targetMarkingCompletionDate", Utilities.parseServletDateFormat(groupHomework.getTargetMarkingCompletionDate()));
 			homeworkObject.put("isGraded", groupHomework.isGraded());
 			homeworkObject.put("group", groupHomework.getGroup().getGroupName());
+			homeworkObject.put("additionalInstructions", groupHomework.getInstructions());
 			
 			responseObject.put("publishedHomeworkDetails", homeworkObject);
 			
