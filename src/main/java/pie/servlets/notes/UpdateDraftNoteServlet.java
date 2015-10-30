@@ -16,7 +16,6 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.json.JSONObject;
 
-import pie.constants.PublishNoteResult;
 import pie.services.NoteAttachmentService;
 import pie.services.NoteService;
 import pie.utilities.Utilities;
@@ -25,9 +24,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class SendDraftNoteServlet extends HttpServlet {
+public class UpdateDraftNoteServlet extends HttpServlet {
 
-	private static final long serialVersionUID = -2027039754721153702L;
+	private static final long serialVersionUID = 4005417158171470069L;
 	private static final int maxRequestSize = 1024*1024*10;
 	private static final int memorySize = 1024*1024*3;
 
@@ -35,7 +34,7 @@ public class SendDraftNoteServlet extends HttpServlet {
 	NoteAttachmentService noteAttachmentService;
 
 	@Inject
-	public SendDraftNoteServlet(NoteService noteService, NoteAttachmentService noteAttachmentService) {
+	public UpdateDraftNoteServlet(NoteService noteService, NoteAttachmentService noteAttachmentService) {
 		this.noteService = noteService;
 		this.noteAttachmentService = noteAttachmentService;
 	}
@@ -43,8 +42,6 @@ public class SendDraftNoteServlet extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		int noteID = 0;
-		int staffID = 0;
-		String groupIDList = null;
 		int responseQuestionID = 0;
 		int noteAttachmentID = 1;
 		boolean fileDetected = false;
@@ -84,11 +81,7 @@ public class SendDraftNoteServlet extends HttpServlet {
 
 					} else {
 
-						if(item.getFieldName().equalsIgnoreCase("staffID")) {
-							staffID = Integer.parseInt(item.getString());
-						} else if(item.getFieldName().equalsIgnoreCase("groupID")) {
-							groupIDList = item.getString();
-						} else if(item.getFieldName().equalsIgnoreCase("responseQuestionID")) {
+						if(item.getFieldName().equalsIgnoreCase("responseQuestionID")) {
 							responseQuestionID = Integer.parseInt(item.getString());
 						} else if(item.getFieldName().equalsIgnoreCase("noteTitle")) {
 							noteTitle = Utilities.cleanHtml(item.getString());
@@ -113,13 +106,14 @@ public class SendDraftNoteServlet extends HttpServlet {
 					fileUpload.write(storeFile);
 				}
 
-				PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupIDList, staffID);
-				responseObject.put("result", publishNoteResult.toString());
-				responseObject.put("message", publishNoteResult.getDefaultMessage());
+				responseObject.put("result", "SUCCESS");
+				responseObject.put("message", "Note successfully updated");
 
 			} else {
+
 				responseObject.put("result", "FAILED");
-				responseObject.put("message", "Note failed to update and send out");
+				responseObject.put("message", "Note failed to update");
+
 			}
 
 		} catch (Exception e) {
