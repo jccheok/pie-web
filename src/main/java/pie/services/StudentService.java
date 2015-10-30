@@ -82,7 +82,7 @@ public class StudentService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "SELECT * FROM `StudentGroup` WHERE studentID = ? AND groupID = ? AND studentGroupIsValid = ?";
+			String sql = "SELECT * FROM `StudentGroup` WHERE studentID = ? AND groupID = ? AND isValid = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, studentID);
 			pst.setInt(2, groupID);
@@ -100,7 +100,7 @@ public class StudentService {
 
 	}
 
-	public boolean enlistStudent(String userFirstName, String userLastName, String studentCode, int groupID, int studentGroupIndexNumber) {
+	public boolean enlistStudent(String userFirstName, String userLastName, String studentCode, int groupID, int studentGroupIndexNumber, String SUID) {
 		
 		boolean enlistResult = false;
 		
@@ -128,11 +128,12 @@ public class StudentService {
 				if (resultSet.next()) {
 
 					int newStudentID = resultSet.getInt(1);
-					sql = "INSERT INTO `Student` (studentID, schoolID, code) VALUES (?, ?, ?)";
+					sql = "INSERT INTO `Student` (studentID, schoolID, code, SUID) VALUES (?, ?, ?, ?)";
 					pst = conn.prepareStatement(sql);
 					pst.setInt(1, newStudentID);
 					pst.setInt(2, groupService.getGroup(groupID).getSchool().getSchoolID());
 					pst.setString(3, studentCode);
+					pst.setString(4, SUID);
 					pst.executeUpdate();
 
 					enlistResult = studentGroupService.addStudentToGroup(groupID, newStudentID, studentGroupIndexNumber);
@@ -236,8 +237,9 @@ public class StudentService {
 				School studentSchool = schoolService.getSchool(resultSet.getInt("schoolID"));
 				String studentCode = resultSet.getString("code");
 				Date studentEnlistmentDate = new Date(resultSet.getTimestamp("enlistmentDate").getTime());
+				String SUID = resultSet.getString("SUID");
 
-				student = new Student(user, studentSchool, studentCode, studentEnlistmentDate);
+				student = new Student(user, studentSchool, studentCode, studentEnlistmentDate, SUID);
 			}
 
 			conn.close();
@@ -352,5 +354,35 @@ public class StudentService {
 		}
 
 		return studentID;
+	}
+	
+	public Student studentExists (String SUID){
+		Student student = null;
+
+		try {
+
+			Connection conn = DatabaseConnector.getConnection();
+			PreparedStatement pst = null;
+			ResultSet resultSet = null;
+
+			String sql = "SELECT studentID FROM `Student` WHERE SUID = ?";
+			pst = conn.prepareStatement(sql);
+			pst.setString(1, SUID);
+
+			resultSet = pst.executeQuery();
+
+			if (resultSet.next()) {
+
+				student = getStudent(resultSet.getInt("studentID"));
+
+			}
+
+			conn.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return student;
 	}
 }

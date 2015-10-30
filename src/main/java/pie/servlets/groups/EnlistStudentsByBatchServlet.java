@@ -12,7 +12,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import pie.GroupType;
+import pie.Student;
 import pie.constants.GenericResult;
+import pie.services.GroupService;
+import pie.services.StudentGroupService;
 import pie.services.StudentService;
 import pie.utilities.Utilities;
 
@@ -25,10 +29,14 @@ public class EnlistStudentsByBatchServlet extends HttpServlet {
 	private static final long serialVersionUID = 3674377035466826694L;
 	
 	StudentService studentService;
+	StudentGroupService studentGroupService;
+	GroupService groupService;
 	
 	@Inject
-	public EnlistStudentsByBatchServlet(StudentService studentService){
+	public EnlistStudentsByBatchServlet(StudentService studentService, StudentGroupService studentGroupService, GroupService groupService){
 		this.studentService = studentService;
+		this.studentGroupService = studentGroupService;
+		this.groupService = groupService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -51,16 +59,24 @@ public class EnlistStudentsByBatchServlet extends HttpServlet {
 		JSONObject requestObject = new JSONObject(studentsData);
 		JSONArray studentList = requestObject.getJSONArray("studentList");
 		
+		GroupType groupType = groupService.getGroup(groupID).getGroupType();
+		
 		for (int index = 0; index < studentList.length(); index++) {
 			
-			JSONObject student = studentList.getJSONObject(index);
+			JSONObject studentObject = studentList.getJSONObject(index);
 			
-			String studentFirstName = student.getString("studentFirstName");
-			String studentLastName = student.getString("studentLastName");
-			String studentCode = studentService.generateStudentCode();
-			int studentIndexNumber = student.getInt("studentGroupIndexNumber");
+			String studentFirstName = studentObject.getString("studentFirstName");
+			String studentLastName = studentObject.getString("studentLastName");
+			int studentIndexNumber = studentObject.getInt("studentGroupIndexNumber");
+			String SUID = studentObject.getString("SUID");
 			
-			studentService.enlistStudent(studentFirstName, studentLastName, studentCode, groupID, studentIndexNumber);
+			Student student = studentService.studentExists(SUID);
+			if(student == null && groupType == GroupType.HOME){
+				String studentCode = studentService.generateStudentCode();
+				studentService.enlistStudent(studentFirstName, studentLastName, studentCode, groupID, studentIndexNumber, SUID);
+			}else if(student != null){
+				studentGroupService.addStudentToGroup(groupID, student.getUserID(), studentIndexNumber);	
+			}
 		}
 		
 		JSONObject responseObject = new JSONObject();
