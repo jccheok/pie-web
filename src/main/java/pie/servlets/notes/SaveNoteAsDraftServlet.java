@@ -26,7 +26,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class SaveNoteAsDraftServlet extends HttpServlet {
 
-	private static final long serialVersionUID = -9205572661568286854L;
+	private static final long serialVersionUID = 1055266642456277159L;
 	private static final int maxRequestSize = 1024*1024*10;
 	private static final int memorySize = 1024*1024*3;
 
@@ -90,35 +90,31 @@ public class SaveNoteAsDraftServlet extends HttpServlet {
 							noteTitle = Utilities.cleanHtml(item.getString());
 						} else if(item.getFieldName().equalsIgnoreCase("noteDescription")) {
 							noteDescription = Utilities.cleanHtml(item.getString());
-						}
+						} 
 					} 
 				}
 			} 
-			
-			if(staffID != 0 && responseQuestionID != 0) {
 
-				noteID = noteService.createNote(staffID, responseQuestionID, noteTitle, noteDescription);
+			noteID = noteService.createNote(staffID, responseQuestionID, noteTitle, noteDescription);
 
-				if(fileDetected) {
+			if(fileDetected) {
 
-					noteAttachmentID = noteAttachmentService.createNoteAttachment(noteAttachmentURL, noteID);
-					noteAttachmentURL = noteAttachmentService.updateNoteAttachmentName(noteAttachmentID, noteAttachmentURL);
+				noteAttachmentID = noteAttachmentService.createNoteAttachment(noteAttachmentURL, noteID);
+				noteAttachmentURL = noteAttachmentService.updateNoteAttachmentName(noteAttachmentID, noteAttachmentURL);
 
-					File storeFile = new File(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
+				File storeFile = new File(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
 
-					fileUpload.write(storeFile);
+				fileUpload.write(storeFile);
 
-				}
-			
-				if(noteID != -1) {
-					responseObject.put("result", "SUCCESS");
-					responseObject.put("message", "Note is successfully created");
-				} else {
-					responseObject.put("result", "FAILED");
-					responseObject.put("message", "Note is not created");
-				}
+			}
 
-			} 
+			if(noteID != -1) {
+				responseObject.put("result", "SUCCESS");
+				responseObject.put("message", "Note is successfully saved as draft");
+			} else {
+				responseObject.put("result", "FAILED");
+				responseObject.put("message", "Note is not created and saved as draft");
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
