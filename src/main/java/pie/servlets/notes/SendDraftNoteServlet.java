@@ -1,17 +1,23 @@
 package pie.servlets.notes;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.json.JSONObject;
 
 import pie.constants.PublishNoteResult;
+import pie.services.NoteAttachmentService;
 import pie.services.NoteService;
 import pie.utilities.Utilities;
 
@@ -21,60 +27,106 @@ import com.google.inject.Singleton;
 @Singleton
 public class SendDraftNoteServlet extends HttpServlet {
 
-	private static final long serialVersionUID = 3410379604152359585L;
+	private static final long serialVersionUID = -2027039754721153702L;
+	private static final int maxRequestSize = 1024*1024*10;
+	private static final int memorySize = 1024*1024*3;
 
 	NoteService noteService;
+	NoteAttachmentService noteAttachmentService;
 
 	@Inject
-	public SendDraftNoteServlet(NoteService noteService) {
+	public SendDraftNoteServlet(NoteService noteService, NoteAttachmentService noteAttachmentService) {
 		this.noteService = noteService;
+		this.noteAttachmentService = noteAttachmentService;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		int noteID = 0;
-		int groupID = 0;
 		int staffID = 0;
+		String groupIDList = null;
 		int responseQuestionID = 0;
+		int noteAttachmentID = 1;
+		boolean fileDetected = false;
 		String noteTitle = null;
 		String noteDescription = null;
-		boolean isUpdated = false;
+		String noteAttachmentURL = null;
+		FileItem fileUpload = null;
+
+		JSONObject responseObject = new JSONObject();
+		PrintWriter out = response.getWriter();
+
+		noteAttachmentService.checkIfNoteFolderExist();
+
+		DiskFileItemFactory factory = new DiskFileItemFactory();
+		factory.setSizeThreshold(memorySize);
+		factory.setRepository(new File(System.getenv("OPENSHIFT_TMP_DIR")));
+
+		ServletFileUpload upload = new ServletFileUpload(factory);
+		upload.setSizeMax(maxRequestSize);
 
 		try {
 
-			Map<String, String> requestParameters = Utilities.getParameters(request, "noteID", "groupID", "staffID", "responseQuestionID", 
-					"noteTitle", "noteDescription");
+			List<FileItem> items = upload.parseRequest(request);
 
-			noteID = Integer.parseInt(requestParameters.get("noteID"));
-			groupID = Integer.parseInt(requestParameters.get("groupID"));
-			staffID = Integer.parseInt(requestParameters.get("staffID"));
-			responseQuestionID = Integer.parseInt(requestParameters.get("responseQuestionID"));
-			noteTitle = requestParameters.get("noteTitle");
-			noteDescription = requestParameters.get("noteDescription");	
+			if(items != null && items.size() > 0) {
+
+				Iterator<FileItem> iter = items.iterator();
+				while (iter.hasNext()) {
+					FileItem item = iter.next();
+
+					if (!item.isFormField() && item.getSize() > 0) {
+
+						fileDetected = true;
+						fileUpload = item;
+
+						noteAttachmentURL = new File(item.getName()).getName();
+
+					} else {
+
+						if(item.getFieldName().equalsIgnoreCase("staffID")) {
+							staffID = Integer.parseInt(item.getString());
+						} else if(item.getFieldName().equalsIgnoreCase("groupID")) {
+							groupIDList = item.getString();
+						} else if(item.getFieldName().equalsIgnoreCase("responseQuestionID")) {
+							responseQuestionID = Integer.parseInt(item.getString());
+						} else if(item.getFieldName().equalsIgnoreCase("noteTitle")) {
+							noteTitle = Utilities.cleanHtml(item.getString());
+						} else if(item.getFieldName().equalsIgnoreCase("noteDescription")) {
+							noteDescription = Utilities.cleanHtml(item.getString());
+						} else if(item.getFieldName().equalsIgnoreCase("noteID")) {
+							noteID = Integer.parseInt(item.getString());
+						}
+					} 
+				}
+			}
+
+			boolean isUpdated = noteService.updateNote(noteTitle, noteDescription, responseQuestionID, noteID);
+
+			if(isUpdated == true) {
+
+				if(fileDetected) {
+					noteAttachmentID = noteAttachmentService.createNoteAttachment(noteAttachmentURL, noteID);
+					noteAttachmentURL = noteAttachmentService.updateNoteAttachmentName(noteAttachmentID, noteAttachmentURL);
+
+					File storeFile = new File(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
+					fileUpload.write(storeFile);
+				}
+
+				PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupIDList, staffID);
+				responseObject.put("result", publishNoteResult.toString());
+				responseObject.put("message", publishNoteResult.getDefaultMessage());
+
+			} else {
+				responseObject.put("result", "FAILED");
+				responseObject.put("message", "Note failed to update and send out");
+			}
 
 		} catch (Exception e) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
-			return;
+			e.printStackTrace();
 		}
 
-		isUpdated = noteService.updateNote(noteTitle, noteDescription, responseQuestionID, noteID);
-		JSONObject responseObject = new JSONObject();
-
-		if(isUpdated) {
-			PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID, staffID);
-			
-			responseObject.put("result", publishNoteResult.toString());
-			responseObject.put("message", publishNoteResult.getDefaultMessage());
-			
-			
-		} else {
-			responseObject.put("result", "FAILED");
-			responseObject.put("message", "Note is not updated!");
-		}
-		
-		PrintWriter out = response.getWriter();
 		out.write(responseObject.toString());
 
 	}
-
 }
