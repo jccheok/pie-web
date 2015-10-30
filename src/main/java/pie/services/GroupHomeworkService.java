@@ -48,9 +48,10 @@ public class GroupHomeworkService {
 				boolean isDraft = resultSet.getInt("isDraft") == 1 ? true : false;
 				boolean isGraded = resultSet.getInt("isGraded") == 1 ? true : false;
 				boolean isDeleted = resultSet.getInt("isDeleted") == 1 ? true : false;
+				String instructions = resultSet.getString("instructions");
 				groupHomework = new GroupHomework(groupHomeworkID, group, homework, publisher, markingEffort,
 						actualMarkingCompletionDate, targetMarkingCompletionDate, dueDate, publishDate, isDraft,
-						isGraded, isDeleted);
+						isGraded, isDeleted, instructions);
 			}
 
 			conn.close();
@@ -202,8 +203,8 @@ public class GroupHomeworkService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "INSERT INTO `GroupHomework` (groupID, homeworkID, publisherID, markingEffort, targetMarkingCompletionDate, dueDate, publishDate, isDraft, isGraded)"
-					+ " VALUES (?, ?, ?, ?, ?, ?, NOW(), ?, ?)";
+			String sql = "INSERT INTO `GroupHomework` (groupID, homeworkID, publisherID, markingEffort, targetMarkingCompletionDate, dueDate, publishDate, isDraft, isGraded, instructions)"
+					+ " VALUES (?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?)";
 			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			pst.setInt(1, groupHomework.getGroup().getGroupID());
 			pst.setInt(2, groupHomework.getHomework().getHomeworkID());
@@ -213,6 +214,7 @@ public class GroupHomeworkService {
 			pst.setDate(6, new java.sql.Date(groupHomework.getDueDate().getTime()));
 			pst.setInt(7, 0);
 			pst.setInt(8, groupHomework.isGraded() == true ? 1 : 0);
+			pst.setString(9, groupHomework.getInstructions());
 			pst.executeUpdate();
 
 			resultSet = pst.getGeneratedKeys();
@@ -240,8 +242,8 @@ public class GroupHomeworkService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "INSERT INTO `GroupHomework` (groupID, homeworkID, publisherID, markingEffort, targetMarkingCompletionDate, dueDate, isGraded)"
-					+ " VALUES (?, ?, ?, ?, ?, ?, ?)";
+			String sql = "INSERT INTO `GroupHomework` (groupID, homeworkID, publisherID, markingEffort, targetMarkingCompletionDate, dueDate, isGraded, instructions)"
+					+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			pst.setInt(1, groupHomework.getGroup().getGroupID());
 			pst.setInt(2, groupHomework.getHomework().getHomeworkID());
@@ -250,6 +252,7 @@ public class GroupHomeworkService {
 			pst.setDate(5, new java.sql.Date(groupHomework.getTargetMarkingCompletionDate().getTime()));
 			pst.setDate(6, new java.sql.Date(groupHomework.getDueDate().getTime()));
 			pst.setInt(7, groupHomework.isGraded() == true ? 1 : 0);
+			pst.setString(8, groupHomework.getInstructions());
 			pst.executeUpdate();
 
 			resultSet = pst.getGeneratedKeys();
@@ -326,14 +329,15 @@ public class GroupHomeworkService {
 			Connection conn = DatabaseConnector.getConnection();
 			PreparedStatement pst = null;
 
-			String sql = "UPDATE `GroupHomework` SET groupID = ?, markingEffort = ?, targetMarkingCompletionDate = ?, dueDate = ?, isGraded = ? WHERE groupHomeworkID = ?";
+			String sql = "UPDATE `GroupHomework` SET groupID = ?, markingEffort = ?, targetMarkingCompletionDate = ?, dueDate = ?, isGraded = ?, instructions = ? WHERE groupHomeworkID = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, groupHomework.getGroup().getGroupID());
 			pst.setInt(2, groupHomework.getMarkingEffort());
 			pst.setDate(3, new java.sql.Date(groupHomework.getTargetMarkingCompletionDate().getTime()));
 			pst.setDate(4, new java.sql.Date(groupHomework.getDueDate().getTime()));
 			pst.setInt(5, groupHomework.isGraded() == true ? 1 : 0);
-			pst.setInt(6, groupHomework.getGroupHomeworkID());
+			pst.setString(6, groupHomework.getInstructions());
+			pst.setInt(7, groupHomework.getGroupHomeworkID());
 
 			pst.executeUpdate();
 
