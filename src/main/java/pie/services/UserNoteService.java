@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Savepoint;
 import java.sql.Statement;
 import java.util.ArrayList;
 
@@ -208,33 +209,39 @@ public class UserNoteService {
 
 		boolean isSuccess = false;
 		Connection conn = DatabaseConnector.getConnection();
+		Savepoint dbSavepoint = null;
 
 		try {
-
+			
 			PreparedStatement pst = null;
 			conn.setAutoCommit(false);
+			dbSavepoint = conn.setSavepoint("dbSavepoint");
 
 			String sql = "INSERT INTO `UserNote` (noteID, userID) VALUES (?, ?)";
-			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			pst = conn.prepareStatement(sql);
 
 			for(Student student : user) {
 
 				pst.setInt(1, noteID);
 				pst.setInt(2, student.getUserID());
-				pst.executeUpdate();
+				pst.addBatch();
 
 			}
 
+			pst.executeBatch();
 			conn.commit();
+			
 			isSuccess = true;
 			conn.close();
 
 		} catch (SQLException e) {
+			
 			try {
-				conn.rollback();
+				conn.rollback(dbSavepoint);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
+			
 		}
 
 		return isSuccess;
@@ -245,14 +252,16 @@ public class UserNoteService {
 
 		boolean isSuccess = false;
 		Connection conn = DatabaseConnector.getConnection();
+		Savepoint dbSavepoint = null;
 
 		try {
 
 			PreparedStatement pst = null;
 			conn.setAutoCommit(false);
+			dbSavepoint = conn.setSavepoint("dbSavepoint");
 
 			String sql = "INSERT INTO `UserNote` (noteID, userID) VALUES (?, ?)";
-			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			pst = conn.prepareStatement(sql);
 
 			for(Staff staff : user) {
 
@@ -267,11 +276,13 @@ public class UserNoteService {
 			conn.close();
 
 		} catch (SQLException e) {
+			
 			try {
-				conn.rollback();
+				conn.rollback(dbSavepoint);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
+			
 		}
 
 		return isSuccess;

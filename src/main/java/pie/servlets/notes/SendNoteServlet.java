@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import pie.constants.PublishNoteResult;
@@ -49,7 +48,6 @@ public class SendNoteServlet extends HttpServlet {
 		int responseQuestionID = 0;
 		int noteAttachmentID = 1;
 		boolean fileDetected = false;
-		boolean isDuplicate = false;
 		String noteTitle = null;
 		String noteDescription = null;
 		String noteAttachmentURL = null;
@@ -100,48 +98,16 @@ public class SendNoteServlet extends HttpServlet {
 					} 
 				}
 			}
-
-/*			if(staffID != 0 && responseQuestionID != 0) {
-
-				JSONObject requestObject = new JSONObject(groupIDList);
-				JSONArray groupList = requestObject.getJSONArray("groupIDArray");
-
-				for (int index = 0; index < groupList.length(); index++) {
-
-					JSONObject group = groupList.getJSONObject(index);
-
-					noteID = noteService.createNote(staffID, responseQuestionID, noteTitle, noteDescription);
-					int groupID = group.getInt("groupID");
-
-					if(fileDetected) {
-
-						noteAttachmentID = noteAttachmentService.createNoteAttachment(noteAttachmentURL, noteID);
-
-						if(isDuplicate == false){
-
-							isDuplicate = true;
-
-							noteAttachmentURL = noteAttachmentService.updateNoteAttachmentName(noteAttachmentID, noteAttachmentURL);
-
-							File storeFile = new File(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
-
-							fileUpload.write(storeFile);
-
-						} else {
-							noteAttachmentService.updateNoteAttachmentNameShare(noteAttachmentID, noteAttachmentURL);
-						}
-
-					}
-
-					PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupID, staffID);
-					responseObject.put("result", publishNoteResult.toString());
-					responseObject.put("message", publishNoteResult.getDefaultMessage());
-
-				}
-
-			} */
 			
 			noteID = noteService.createNote(staffID, responseQuestionID, noteTitle, noteDescription);
+			
+			if(fileDetected) {
+				noteAttachmentID = noteAttachmentService.createNoteAttachment(noteAttachmentURL, noteID);
+				noteAttachmentURL = noteAttachmentService.updateNoteAttachmentName(noteAttachmentID, noteAttachmentURL);
+				
+				File storeFile = new File(noteAttachmentService.getNoteAttachmentDIR(noteAttachmentURL));
+				fileUpload.write(storeFile);
+			}
 			
 			PublishNoteResult publishNoteResult = noteService.publishNote(noteID, groupIDList, staffID);
 			responseObject.put("result", publishNoteResult.toString());
