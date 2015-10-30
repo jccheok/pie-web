@@ -58,24 +58,24 @@ public class GetUserResponseServlet extends HttpServlet {
 				userNoteObject.put("userNoteID", note.getUserNoteID());
 				userNoteObject.put("userName", note.getUser().getUserFullName());
 				userNoteObject.put("noteIsRead", note.isRead() ? true : false);
-				userNoteObject.put("userResponse", note.getResponseText());
+				userNoteObject.put("ResponseText", note.getResponseText());
 				
 				int responseOptionID = note.getResponseOption().getResponseOptionID();
 				
 				switch(responseOptionID) {
-				case 1: userNoteObject.put("responseOptionID", "Approve");
+				case 1: userNoteObject.put("responseOption", "Approve");
 				break;
-				case 2: userNoteObject.put("responseOptionID", "Reject");
+				case 2: userNoteObject.put("responseOption", "Reject");
 				break;
-				case 3: userNoteObject.put("responseOptionID", "Acknowledged");
+				case 3: userNoteObject.put("responseOption", "Acknowledged");
 				break;
-				case 4: userNoteObject.put("responseOptionID", "Not Acknowledged");
+				case 4: userNoteObject.put("responseOption", "Not Acknowledged");
 				break;
-				case 5: userNoteObject.put("responseOptionID", "Yes");
+				case 5: userNoteObject.put("responseOption", "Yes");
 				break;
-				case 6: userNoteObject.put("responseOptionID", "No");
+				case 6: userNoteObject.put("responseOption", "No");
 				break;
-				case 7: userNoteObject.put("responseOptionID", "No Response");
+				case 7: userNoteObject.put("responseOption", "No Response");
 				break;
 				
 				}
