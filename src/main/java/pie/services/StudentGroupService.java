@@ -3,8 +3,12 @@ package pie.services;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import pie.Group;
 import pie.Student;
@@ -81,31 +85,42 @@ public class StudentGroupService {
 		return studentGroup;
 	}
 	
-	public boolean addStudentToGroup(int groupID, int studentID, int studentGroupIndexNumber) {
+	public boolean addStudentToGroup(int groupID, JSONArray studentList) {
 		
 		StudentService studentService = new StudentService();
 		boolean addResult = false;
+		int studentID = 0;
+		int studentGroupIndexNumber = 0;
 
-		if (!studentService.isMember(studentID, groupID)) {
+		Connection conn = DatabaseConnector.getConnection();
 
+		try {
+			PreparedStatement pst = null;
+			String sql = "INSERT INTO `StudentGroup` (groupID, studentID, indexNumber) VALUES (?, ?, ?)";
+			pst = conn.prepareStatement(sql);
+			
+			for(int index = 0; index < studentList.length(); index ++){
+				JSONObject student = studentList.getJSONObject(index);
+				studentID = student.getInt("studentID");
+				studentGroupIndexNumber = student.getInt("studentGroupIndexNumber");
+				if (!studentService.isMember(studentID, groupID)) {
+					pst.setInt(1, groupID);
+					pst.setInt(2, studentID);
+					pst.setInt(3, studentGroupIndexNumber);
+					pst.addBatch();
+				}
+			}
+			pst.executeBatch();
+			
+			conn.commit();
+			addResult = true;
+			conn.close();
+
+		} catch (SQLException e) {
 			try {
-
-				Connection conn = DatabaseConnector.getConnection();
-				PreparedStatement pst = null;
-
-				String sql = "INSERT INTO `StudentGroup` (groupID, studentID, indexNumber) VALUES (?, ?, ?)";
-				pst = conn.prepareStatement(sql);
-				pst.setInt(1, groupID);
-				pst.setInt(2, studentID);
-				pst.setInt(3, studentGroupIndexNumber);
-				pst.executeUpdate();
-
-				addResult = true;
-
-				conn.close();
-
-			} catch (Exception e) {
-				e.printStackTrace();
+				conn.rollback();
+			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 		}
 
