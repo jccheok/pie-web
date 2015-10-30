@@ -13,7 +13,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import pie.GroupType;
-import pie.Student;
 import pie.constants.GenericResult;
 import pie.services.GroupService;
 import pie.services.StudentGroupService;

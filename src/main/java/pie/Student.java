@@ -51,7 +51,7 @@ public class Student extends User {
 	}
 
 	public void setSUID(String SUID) {
-		SUID = SUID;
+		this.SUID = SUID;
 	}
 
 }
