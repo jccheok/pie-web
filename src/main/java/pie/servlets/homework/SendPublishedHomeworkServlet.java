@@ -2,7 +2,6 @@ package pie.servlets.homework;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
@@ -13,12 +12,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import pie.Group;
 import pie.GroupHomework;
 import pie.Homework;
-import pie.Parent;
 import pie.Staff;
-import pie.Student;
 import pie.services.GroupHomeworkService;
 import pie.services.GroupService;
 import pie.services.HomeworkService;
@@ -28,9 +28,6 @@ import pie.services.StaffService;
 import pie.services.StudentGroupService;
 import pie.services.UserHomeworkService;
 import pie.utilities.Utilities;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 @Singleton
 public class SendPublishedHomeworkServlet extends HttpServlet {
@@ -106,7 +103,6 @@ public class SendPublishedHomeworkServlet extends HttpServlet {
 		groupHomeworkID = groupHomeworkService.sendPublishedHomework(groupHomework);
 
 		JSONObject responseObject = new JSONObject();
-		ArrayList<Integer> parentList = new ArrayList<Integer>();
 
 		if (groupHomeworkID != -1) {
 			boolean sendResult = userHomeworkService.createUserHomework(homework.getHomeworkID(), group.getGroupID());

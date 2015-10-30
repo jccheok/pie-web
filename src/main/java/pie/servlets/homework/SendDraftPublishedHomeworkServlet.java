@@ -12,12 +12,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import pie.Group;
 import pie.GroupHomework;
 import pie.Homework;
-import pie.Parent;
 import pie.Staff;
-import pie.Student;
 import pie.services.GroupHomeworkService;
 import pie.services.GroupService;
 import pie.services.HomeworkService;
@@ -27,9 +28,6 @@ import pie.services.StaffService;
 import pie.services.StudentGroupService;
 import pie.services.UserHomeworkService;
 import pie.utilities.Utilities;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 @Singleton
 public class SendDraftPublishedHomeworkServlet extends HttpServlet{

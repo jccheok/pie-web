@@ -34,10 +34,10 @@ public class GetIndividualStudentReportServlet extends HttpServlet {
 
 	private UserHomeworkService userHomeworkService;
 	private GroupHomeworkService groupHomeworkService;
-	
 
 	@Inject
-	public GetIndividualStudentReportServlet(UserHomeworkService userHomeworkService, GroupHomeworkService groupHomeworkService) {
+	public GetIndividualStudentReportServlet(UserHomeworkService userHomeworkService,
+			GroupHomeworkService groupHomeworkService) {
 		this.userHomeworkService = userHomeworkService;
 		this.groupHomeworkService = groupHomeworkService;
 	}
@@ -60,16 +60,20 @@ public class GetIndividualStudentReportServlet extends HttpServlet {
 			JSONObject jsonUH = new JSONObject();
 			GroupHomework groupHomework = groupHomeworkService.getGroupHomework(userHomework.getGroupHomeworkID());
 			Staff staff = groupHomework.getPublisher();
-			
 
 			Date startDate = groupHomework.getPublishDate();
 			Date endDate = groupHomework.getTargetMarkingCompletionDate();
+			double effortByStudent = userHomework.getHomework().gethomeworkMinutesReqStudent();
 			long diff = endDate.getTime() - startDate.getTime();
 			int daysTaken = (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 			String grade = userHomework.getGrade();
-			
+			double effortPerDay = Math.round((effortByStudent / daysTaken) * 100.0) / 100.0;
+
 			jsonUH.put("userHomeworkID", userHomework.getUserHomeworkID());
+			jsonUH.put("effortPerDay", effortPerDay);
 			jsonUH.put("startDate", startDate.getTime());
+			jsonUH.put("subject", userHomework.getHomework().getHomeworkSubject());
+			jsonUH.put("title", userHomework.getHomework().getHomeworkTitle());
 			jsonUH.put("author", staff.getUserFullName());
 			jsonUH.put("endDate", endDate.getTime());
 			jsonUH.put("daysTaken", daysTaken);
