@@ -215,26 +215,30 @@ public class UserNoteService {
 			conn.setAutoCommit(false);
 
 			String sql = "INSERT INTO `UserNote` (noteID, userID) VALUES (?, ?)";
-			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			pst = conn.prepareStatement(sql);
 
 			for(Student student : user) {
 
 				pst.setInt(1, noteID);
 				pst.setInt(2, student.getUserID());
-				pst.executeUpdate();
+				pst.addBatch();
 
 			}
 
+			pst.executeBatch();
 			conn.commit();
+			
 			isSuccess = true;
 			conn.close();
 
 		} catch (SQLException e) {
+			
 			try {
 				conn.rollback();
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
+			
 		}
 
 		return isSuccess;
@@ -252,7 +256,7 @@ public class UserNoteService {
 			conn.setAutoCommit(false);
 
 			String sql = "INSERT INTO `UserNote` (noteID, userID) VALUES (?, ?)";
-			pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			pst = conn.prepareStatement(sql);
 
 			for(Staff staff : user) {
 
@@ -267,11 +271,13 @@ public class UserNoteService {
 			conn.close();
 
 		} catch (SQLException e) {
+			
 			try {
 				conn.rollback();
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
+			
 		}
 
 		return isSuccess;

@@ -174,21 +174,24 @@ public class GroupNoteService {
 				pst.setInt(2, groupID);
 				pst.setInt(3, publisherID);
 
-				pst.executeUpdate();
+				pst.addBatch();
 			
 			}
 			
+			pst.executeBatch();
 			conn.commit();
-			isSuccess = true;
 			
+			isSuccess = true;
 			conn.close();
 
 		} catch (SQLException e ) {
+			
 			try {
 				conn.rollback();
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
+			
 		}
 
 		return isSuccess;
