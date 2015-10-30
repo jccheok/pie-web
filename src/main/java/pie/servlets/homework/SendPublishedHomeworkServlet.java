@@ -109,42 +109,18 @@ public class SendPublishedHomeworkServlet extends HttpServlet {
 		ArrayList<Integer> parentList = new ArrayList<Integer>();
 
 		if (groupHomeworkID != -1) {
-			Student[] studentMembers = studentGroupService.getStudentMembers(group.getGroupID());
-			Staff[] staffMembers = staffGroupService.getStaffMembers(group.getGroupID());
-
-			for (Student student : studentMembers) {
-				if (userHomeworkService.createUserHomework(student.getUserID(), homework.getHomeworkID()) == -1) {
-					responseObject.put("result", "Failed to Send Homework to student");
-					responseObject.put("message", "Failed to Publish Homework to UserHomework");
-					break;
-				}
-				
-				Parent[] parents = parentStudentService.getParents(student.getUserID());
-				
-				
-				for(Parent currParent : parents){
-					if(!parentList.contains(currParent.getUserID())){
-						if (userHomeworkService.createUserHomework(currParent.getUserID(), homework.getHomeworkID()) == -1) {
-							responseObject.put("result", "Failed to Send Homework to parent");
-							responseObject.put("message", "Failed to Publish Homework to UserHomework");
-							break;
-						}
-						parentList.add(currParent.getUserID());
-					}
-				}
+			boolean sendResult = userHomeworkService.createUserHomework(homework.getHomeworkID(), group.getGroupID());
+			
+			if(sendResult){
+				responseObject.put("result", "SUCCESS");
+				responseObject.put("message", "Sent Published Homework to all users");
+			}else{
+				responseObject.put("result", "FAILED");
+				responseObject.put("message", "Failed to publish homework to users");
 			}
-
-			for (Staff staff : staffMembers) {
-				if (userHomeworkService.createUserHomework(staff.getUserID(), homework.getHomeworkID()) == -1) {
-					responseObject.put("result", "Failed to Send Homework to staff");
-					responseObject.put("message", "Failed to Publish Homework to UserHomework");
-					break;
-				}
-			}
-			responseObject.put("result", "Success");
-			responseObject.put("message", "Sent Published Homework to all users");
+			
 		} else {
-			responseObject.put("result", "Failed to Publish Homework");
+			responseObject.put("result", "FAILED");
 			responseObject.put("message", "Failed to Publish Homework to UserHomework");
 
 		}
