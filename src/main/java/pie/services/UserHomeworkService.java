@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 
+import pie.GroupHomework;
 import pie.Homework;
 import pie.Parent;
 import pie.Staff;
@@ -470,5 +471,54 @@ public class UserHomeworkService {
 		
 		return acknowledgeResult;
 
+	}
+	
+	public String homeworkStatus(int userHomeworkID){
+		
+		String homeworkStatus = "N/A";
+		
+		GroupHomeworkService groupHomeworkService = new GroupHomeworkService();
+		UserHomework userHomework = getUserHomework(userHomeworkID);
+		
+		if(!userHomework.isSubmitted()){
+			try{
+
+				Connection conn = DatabaseConnector.getConnection();
+				PreparedStatement pst = null;
+				ResultSet resultSet = null;
+				
+				String sql = "SELECT DATEDIFF(NOW(), ?)";
+				pst = conn.prepareStatement(sql);
+				
+				GroupHomework groupHomework = groupHomeworkService.getGroupHomework(userHomework.getGroupHomeworkID());
+				
+				pst.setDate(1, new java.sql.Date(groupHomework.getDueDate().getTime()));
+				
+				resultSet = pst.executeQuery();
+
+				if(resultSet.next()){
+					int difference = resultSet.getInt(1);
+					if(difference == 0){
+						homeworkStatus = "Processing";
+					}else if(difference > 0){
+						homeworkStatus = "Not Submitted";
+					}
+				}
+
+
+				conn.close();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}else{
+			homeworkStatus = "Submitted";
+		}
+		
+		
+
+		
+		
+		
+		return homeworkStatus;
 	}
 }
