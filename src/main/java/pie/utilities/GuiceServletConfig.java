@@ -50,6 +50,7 @@ import pie.servlets.homework.SetReadHomeworkServlet;
 import pie.servlets.homework.SetSubmitHomeworkServlet;
 import pie.servlets.homework.UpdateDraftHomeworkServlet;
 import pie.servlets.homework.UpdateDraftPublishedHomeworkServlet;
+import pie.servlets.notes.DeleteDraftNoteServlet;
 import pie.servlets.notes.DeleteNoteAttachmentServlet;
 import pie.servlets.notes.DeleteNoteServlet;
 import pie.servlets.notes.DownloadNoteAttachmentServlet;
@@ -63,7 +64,7 @@ import pie.servlets.notes.SendNoteServlet;
 import pie.servlets.notes.SetNoteIsArchivedServlet;
 import pie.servlets.notes.SetNoteIsReadServlet;
 import pie.servlets.notes.SetNoteResponseServlet;
-import pie.servlets.notes.UpdateNoteDraftServlet;
+import pie.servlets.notes.UpdateDraftNoteServlet;
 import pie.servlets.parent.AddChildServlet;
 import pie.servlets.parent.SetAsMainParentServlet;
 import pie.servlets.parent.ViewParentChildrenServlet;
@@ -150,7 +151,8 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("*/servlets/secured/staff/group/deletenote").with(DeleteNoteServlet.class); // tested
 				serve("*/servlets/secured/staff/group/notedetails").with(GetNoteDetailsServlet.class); // tested
 				serve("*/servlets/secured/staff/group/allsentnotes").with(GetAllSentNotesServlet.class); // tested
-				serve("*/servlets/secured/staff/group/updatedraftnote").with(UpdateNoteDraftServlet.class); // tested
+				serve("*/servlets/secured/staff/group/updatedraftnote").with(UpdateDraftNoteServlet.class); // tested
+				serve("*/servlets/secured/staff/group/deletedraftnote").with(DeleteDraftNoteServlet.class);
 
 				serve("*/servlets/secured/staff/group/downloadnoteattachment")
 						.with(DownloadNoteAttachmentServlet.class); // tested
