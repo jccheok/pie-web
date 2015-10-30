@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Savepoint;
 import java.sql.Statement;
 import java.util.Date;
 
@@ -152,12 +153,13 @@ public class GroupNoteService {
 
 		boolean isSuccess = false;
 		Connection conn = DatabaseConnector.getConnection();
-
+		Savepoint dbSavepoint = null;
+		
 		try {
-
 
 			PreparedStatement pst = null;
 			conn.setAutoCommit(false);
+			dbSavepoint = conn.setSavepoint("dbSavepoint");
 
 			String sql = "INSERT INTO `GroupNote` (noteID, groupID, publisherID, publishDate) VALUES (?, ?, ?, NOW())";
 			pst = conn.prepareStatement(sql);
@@ -187,7 +189,7 @@ public class GroupNoteService {
 		} catch (SQLException e ) {
 			
 			try {
-				conn.rollback();
+				conn.rollback(dbSavepoint);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}

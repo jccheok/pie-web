@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Savepoint;
 import java.sql.Statement;
 import java.util.ArrayList;
 
@@ -208,11 +209,13 @@ public class UserNoteService {
 
 		boolean isSuccess = false;
 		Connection conn = DatabaseConnector.getConnection();
+		Savepoint dbSavepoint = null;
 
 		try {
-
+			
 			PreparedStatement pst = null;
 			conn.setAutoCommit(false);
+			dbSavepoint = conn.setSavepoint("dbSavepoint");
 
 			String sql = "INSERT INTO `UserNote` (noteID, userID) VALUES (?, ?)";
 			pst = conn.prepareStatement(sql);
@@ -234,7 +237,7 @@ public class UserNoteService {
 		} catch (SQLException e) {
 			
 			try {
-				conn.rollback();
+				conn.rollback(dbSavepoint);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -249,11 +252,13 @@ public class UserNoteService {
 
 		boolean isSuccess = false;
 		Connection conn = DatabaseConnector.getConnection();
+		Savepoint dbSavepoint = null;
 
 		try {
 
 			PreparedStatement pst = null;
 			conn.setAutoCommit(false);
+			dbSavepoint = conn.setSavepoint("dbSavepoint");
 
 			String sql = "INSERT INTO `UserNote` (noteID, userID) VALUES (?, ?)";
 			pst = conn.prepareStatement(sql);
@@ -273,7 +278,7 @@ public class UserNoteService {
 		} catch (SQLException e) {
 			
 			try {
-				conn.rollback();
+				conn.rollback(dbSavepoint);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
