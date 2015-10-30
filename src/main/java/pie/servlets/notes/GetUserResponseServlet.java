@@ -56,7 +56,7 @@ public class GetUserResponseServlet extends HttpServlet {
 								
 				JSONObject userNoteObject = new JSONObject();
 				userNoteObject.put("userNoteID", note.getUserNoteID());
-				userNoteObject.put("userName", note.getUser().getUserFullName());
+				userNoteObject.put("childName", note.getUser().getUserFullName());
 				userNoteObject.put("noteIsRead", note.isRead() ? true : false);
 				userNoteObject.put("ResponseText", note.getResponseText());
 				
@@ -78,6 +78,13 @@ public class GetUserResponseServlet extends HttpServlet {
 				case 7: userNoteObject.put("responseOption", "No Response");
 				break;
 				
+				}
+				
+				String mobile = note.getUser().getUserMobile();
+				if(mobile != null) {
+					userNoteObject.put("parentMobile", mobile);
+				} else {
+					userNoteObject.put("parentMobile", "-");
 				}
 				
 				userResponseList.put(userNoteObject);
