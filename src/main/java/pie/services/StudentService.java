@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Savepoint;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
@@ -118,13 +119,13 @@ public class StudentService {
 		int schoolID = groupService.getGroup(groupID).getSchool().getSchoolID();
 		
 		Connection conn = DatabaseConnector.getConnection();
-		
+		Savepoint dbSavepoint = null;
 		try {
 			
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 			conn.setAutoCommit(false);
-			
+			dbSavepoint = conn.setSavepoint("dbSavepoint");
 			JSONArray tempArray = new JSONArray();
 			JSONArray newStudents = new JSONArray();
 
@@ -175,6 +176,7 @@ public class StudentService {
 			
 			pst.executeBatch();
 			pst.clearBatch();
+			dbSavepoint = conn.setSavepoint("dbSavepoint2");
 			for(int i = 0; i < tempArray.length(); i++){
 				JSONObject tempObject = tempArray.getJSONObject(i);
 				Student student = studentExists(tempObject.getString("SUID"));
@@ -214,12 +216,12 @@ public class StudentService {
 				enlistResult = true;
 				conn.close();
 			}else{
-				conn.rollback();
+				conn.rollback(dbSavepoint);
 			}
 
 		} catch (SQLException e) {
 			try {
-				conn.rollback();
+				conn.rollback(dbSavepoint);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
