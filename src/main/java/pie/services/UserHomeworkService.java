@@ -123,6 +123,7 @@ public class UserHomeworkService {
 			conn.close();
 
 		} catch (SQLException e) {
+			e.printStackTrace();
 			try {
 				conn.rollback(dbSavepoint);
 			} catch (Exception ex) {
