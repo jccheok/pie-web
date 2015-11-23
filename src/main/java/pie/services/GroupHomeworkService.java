@@ -73,7 +73,7 @@ public class GroupHomeworkService {
 			PreparedStatement pst = null;
 			ResultSet resultSet = null;
 
-			String sql = "SELECT groupHomeworkID FROM `GroupHomework` WHERE groupID = ? AND isDraft = ? AND isDeleted = ?";
+			String sql = "SELECT `groupHomeworkID` FROM `GroupHomework` WHERE `groupID` = ? AND `isDraft` = ? AND `isDeleted` = ?";
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, groupID);
 			pst.setInt(2, 0);
